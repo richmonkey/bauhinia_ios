@@ -63,6 +63,7 @@
         self.peerMessages = [NSMutableDictionary dictionary];
         self.groupMessages = [NSMutableDictionary dictionary];
         self.uid = 13635273143;
+//        self.uid = 13635273142;
     }
     return self;
 }
@@ -84,6 +85,10 @@
     dispatch_suspend(self.connectTimer);
     dispatch_suspend(self.heartbeatTimer);
     [self close];
+}
+
+-(void)setUserID:(NSString*)uidStr{
+  self.uid =  [uidStr intValue];
 }
 
 -(void)close {

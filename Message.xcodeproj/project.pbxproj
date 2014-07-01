@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2119FE481962949900E23B4F /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE471962949900E23B4F /* UserPresent.m */; };
 		2142CB0A196263BB0002E4A9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB08196263BB0002E4A9 /* LoginViewController.m */; };
 		2142CB0B196263BB0002E4A9 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB09196263BB0002E4A9 /* LoginViewController.xib */; };
 		2142CB1A1962683E0002E4A9 /* AsyncTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB0F1962683E0002E4A9 /* AsyncTCP.m */; };
@@ -107,7 +108,6 @@
 		217261961954151300F09E33 /* messageSent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 217261601954151300F09E33 /* messageSent.aiff */; };
 		217261981954155000F09E33 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217261971954155000F09E33 /* AddressBook.framework */; };
 		2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217261991954155500F09E33 /* AddressBookUI.framework */; };
-		2172619E1954168400F09E33 /* MsgViewConctroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2172619B1954168400F09E33 /* MsgViewConctroller.xib */; };
 		2172619F1954168400F09E33 /* MsgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2172619D1954168400F09E33 /* MsgViewController.m */; };
 		217261A81954170A00F09E33 /* ConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 217261A41954170A00F09E33 /* ConversationViewController.m */; };
 		217261A91954170A00F09E33 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 217261A51954170A00F09E33 /* ConversationViewController.xib */; };
@@ -156,6 +156,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2119FE461962949900E23B4F /* UserPresent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserPresent.h; path = Message/UserPresent.h; sourceTree = "<group>"; };
+		2119FE471962949900E23B4F /* UserPresent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserPresent.m; path = Message/UserPresent.m; sourceTree = "<group>"; };
 		2142CB07196263BB0002E4A9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		2142CB08196263BB0002E4A9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		2142CB09196263BB0002E4A9 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
@@ -280,7 +282,6 @@
 		217261601954151300F09E33 /* messageSent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = messageSent.aiff; sourceTree = "<group>"; };
 		217261971954155000F09E33 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		217261991954155500F09E33 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		2172619B1954168400F09E33 /* MsgViewConctroller.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MsgViewConctroller.xib; sourceTree = "<group>"; };
 		2172619C1954168400F09E33 /* MsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MsgViewController.h; sourceTree = "<group>"; };
 		2172619D1954168400F09E33 /* MsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MsgViewController.m; sourceTree = "<group>"; };
 		217261A31954170A00F09E33 /* ConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversationViewController.h; path = Message/ConversationViewController.h; sourceTree = "<group>"; };
@@ -596,6 +597,8 @@
 		21798F8A194E9C4600B67C1F = {
 			isa = PBXGroup;
 			children = (
+				2119FE461962949900E23B4F /* UserPresent.h */,
+				2119FE471962949900E23B4F /* UserPresent.m */,
 				2142CB20196268490002E4A9 /* res */,
 				2142CB0C1962683E0002E4A9 /* backend */,
 				2142CB06196263BB0002E4A9 /* login */,
@@ -685,7 +688,6 @@
 		21A4FD7E1952E24100F117E0 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				2172619B1954168400F09E33 /* MsgViewConctroller.xib */,
 				2172619C1954168400F09E33 /* MsgViewController.h */,
 				2172619D1954168400F09E33 /* MsgViewController.m */,
 				2172611F1954151300F09E33 /* JSMessge */,
@@ -860,7 +862,6 @@
 				2142CB51196268490002E4A9 /* setting.png in Resources */,
 				2172618E1954151300F09E33 /* input-field@2x.png in Resources */,
 				217261871954151300F09E33 /* bubble-typing.png in Resources */,
-				2172619E1954168400F09E33 /* MsgViewConctroller.xib in Resources */,
 				217261741954151300F09E33 /* bubble-default-outgoing@2x.png in Resources */,
 				2172616D1954151300F09E33 /* bubble-default-incoming.png in Resources */,
 				2172618C1954151300F09E33 /* input-bar@2x.png in Resources */,
@@ -885,6 +886,7 @@
 			files = (
 				2142CB0A196263BB0002E4A9 /* LoginViewController.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
+				2119FE481962949900E23B4F /* UserPresent.m in Sources */,
 				2142CB68196268860002E4A9 /* ModalAlert.m in Sources */,
 				21A4FE011952E24100F117E0 /* UIView+AnimationOptionsForCurve.m in Sources */,
 				2142CB1B1962683E0002E4A9 /* IMessage.m in Sources */,
@@ -1047,6 +1049,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";

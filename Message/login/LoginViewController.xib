@@ -10,8 +10,8 @@
                 <outlet property="autoLogin" destination="4yp-sW-nII" id="kHM-Ch-JfG"/>
                 <outlet property="indicator" destination="Lk3-Mz-oiM" id="mGC-4f-d8K"/>
                 <outlet property="loginView" destination="c8v-Uq-RmA" id="dmv-vs-Bgq"/>
+                <outlet property="mobile" destination="z1h-Mh-lYi" id="g7p-lr-dhf"/>
                 <outlet property="pwd" destination="p86-7X-0lu" id="eUu-ZV-gXa"/>
-                <outlet property="qq" destination="z1h-Mh-lYi" id="Zc4-tF-boe"/>
                 <outlet property="rmbPwd" destination="U85-8Z-jLz" id="sm9-jP-6Ce"/>
                 <outlet property="view" destination="qdi-nb-Izs" id="6sY-go-jy5"/>
             </connections>

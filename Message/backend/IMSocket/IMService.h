@@ -22,6 +22,7 @@
 +(IMService*)instance;
 -(void)start ;
 -(void)stop;
+-(void)setUserID:(NSString*)uidStr;
 
 -(BOOL)sendPeerMessage:(IMessage*)msg;
 -(BOOL)sendGroupMessage:(IMessage*)msg;

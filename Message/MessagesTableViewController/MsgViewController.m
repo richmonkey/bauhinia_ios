@@ -10,6 +10,7 @@
 #import "IMessage.h"
 #import "MessageDB.h"
 #import "IMService.h"
+#import "UserPresent.h"
 
 @interface MsgViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -25,10 +26,10 @@
 //- (void)loadView{
 //  [super loadView];
 
-  //  UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"Title"];
-  //  item.rightBarButtonItem = rightButton;
-  //  item.hidesBackButton = YES;
-  //  [bar pushNavigationItem:item animated:NO];
+//  UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"Title"];
+//  item.rightBarButtonItem = rightButton;
+//  item.hidesBackButton = YES;
+//  [bar pushNavigationItem:item animated:NO];
 //  self.navigationController.navigationItem.leftBarButtonItem = rightButton;
 //}
 
@@ -45,9 +46,9 @@
   self.timestamps = [NSMutableArray array];
   
   UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                  style:UIBarButtonItemStyleDone
-                                                                 target:self
-                                                                 action:@selector(back)];
+                                                                 style:UIBarButtonItemStyleDone
+                                                                target:self
+                                                                action:@selector(back)];
   self.navigationItem.leftBarButtonItem = backButton;
   
   [[IMService instance] addMessageObserver:self];
@@ -55,7 +56,7 @@
 
 -(void)back{
   [self dismissViewControllerAnimated:YES completion:nil];
-
+  
 }
 #pragma mark - MessageObserver data source
 -(void)onPeerMessage:(IMessage*)msg{
@@ -65,10 +66,10 @@
   NSLog(@"receive msg ack:%d",msgLocalID);
 }
 -(void)onGroupMessage:(IMessage*)msg{
-
+  
 }
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid{
-
+  
 }
 
 #pragma mark - Table view data source
@@ -80,33 +81,34 @@
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text
 {
-
+  
   
   IMessage *msg = [[IMessage alloc] init];
-  msg.sender = 13635273142;
-  msg.receiver = 13635273143;
+  msg.sender = [UserPresent instance].userid;
+  //  msg.receiver = 13635273143;
+  msg.receiver = 13635273142;
   MessageContent *content = [[MessageContent alloc] init];
   content.raw = text;
   msg.content = content;
   msg.timestamp = time(NULL);
   [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-         BOOL r = [[IMService instance] sendPeerMessage:msg];
-     NSLog(@"send result:%d", r);
-//    if (r) {
-      [self.messageArray addObject:[NSDictionary dictionaryWithObject:text forKey:@"Text"]];
-      
-      [self.timestamps addObject:[NSDate date]];
-      
-      if((self.messageArray.count - 1) % 2)
-        [JSMessageSoundEffect playMessageSentSound];
-      else
-        [JSMessageSoundEffect playMessageReceivedSound];
-      
-      [self finishSend];
-//    }
+    BOOL r = [[IMService instance] sendPeerMessage:msg];
+    NSLog(@"send result:%d", r);
+    
+    [self.messageArray addObject:[NSDictionary dictionaryWithObject:text forKey:@"Text"]];
+    
+    [self.timestamps addObject:[NSDate date]];
+    
+    if((self.messageArray.count - 1) % 2)
+      [JSMessageSoundEffect playMessageSentSound];
+    else
+      [JSMessageSoundEffect playMessageReceivedSound];
+    
+    [self finishSend];
+    
   });
-
+  
   
 }
 
