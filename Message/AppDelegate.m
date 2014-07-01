@@ -13,6 +13,8 @@
 #import "MessageDB.h"
 #import "LoginViewController.h"
 
+#import "SUserDB.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -20,6 +22,8 @@
   //启动IM
   [[IMService instance] start];
   
+  SUserDB * db = [[SUserDB alloc] init];
+  [db createDataBase];
   
   if(addressBook == nil)
 		addressBook = ABAddressBookCreate();

@@ -60,7 +60,12 @@
 }
 #pragma mark - MessageObserver data source
 -(void)onPeerMessage:(IMessage*)msg{
-  NSLog(@"receive msg:%@",msg);
+  [JSMessageSoundEffect playMessageReceivedSound];
+   NSLog(@"receive msg:%@",msg);
+  [self.messageArray addObject:msg];
+  [self.timestamps addObject: [NSDate dateWithTimeIntervalSinceNow:msg.timestamp]];
+  [self.tableView reloadData];
+  [self scrollToBottomAnimated:YES];
 }
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
   NSLog(@"receive msg ack:%d",msgLocalID);
@@ -96,19 +101,18 @@
     BOOL r = [[IMService instance] sendPeerMessage:msg];
     NSLog(@"send result:%d", r);
     
-    [self.messageArray addObject:[NSDictionary dictionaryWithObject:text forKey:@"Text"]];
+    [self.messageArray addObject: msg];
     
     [self.timestamps addObject:[NSDate date]];
     
-    if((self.messageArray.count - 1) % 2)
-      [JSMessageSoundEffect playMessageSentSound];
-    else
-      [JSMessageSoundEffect playMessageReceivedSound];
+//    if((self.messageArray.count - 1) % 2)
+    [JSMessageSoundEffect playMessageSentSound];
+//    else
+//      [JSMessageSoundEffect playMessageReceivedSound];
     
     [self finishSend];
     
   });
-  
   
 }
 
@@ -122,7 +126,14 @@
 
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  return (indexPath.row % 2) ? JSBubbleMessageTypeIncoming : JSBubbleMessageTypeOutgoing;
+  
+  IMessage * msg =  [self.messageArray objectAtIndex:indexPath.row];
+  if(msg.sender == [UserPresent instance].userid){
+    return JSBubbleMessageTypeOutgoing;
+  }else{
+    return JSBubbleMessageTypeIncoming;
+  }
+  
 }
 
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -131,13 +142,7 @@
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
-  if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
     return JSBubbleMediaTypeText;
-  }else if ([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
-    return JSBubbleMediaTypeImage;
-  }
-  
-  return -1;
 }
 
 - (UIButton *)sendButton
@@ -196,8 +201,8 @@
 #pragma mark - Messages view data source
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
-    return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"];
+  if([self.messageArray objectAtIndex:indexPath.row]){
+    return ((IMessage*)[self.messageArray objectAtIndex:indexPath.row]).content.raw;
   }
   return nil;
 }
@@ -209,18 +214,18 @@
 
 - (UIImage *)avatarImageForIncomingMessage
 {
-  return [UIImage imageNamed:@"demo-avatar-jobs"];
+  return [UIImage imageNamed:@"head1.png"];
 }
 
 - (UIImage *)avatarImageForOutgoingMessage
 {
-  return [UIImage imageNamed:@"demo-avatar-woz"];
+  return [UIImage imageNamed:@"head2.png"];
 }
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-  if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
-    return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"];
-  }
+//  if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
+//    return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"];
+//  }
   return nil;
   
 }
@@ -233,7 +238,7 @@
 	NSLog(@"Chose image!  Details:  %@", info);
   
   self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
-  [self.messageArray addObject:[NSDictionary dictionaryWithObject:self.willSendImage forKey:@"Image"]];
+//  [self.messageArray addObject:[NSDictionary dictionaryWithObject:self.willSendImage forKey:@"Image"]];
   [self.timestamps addObject:[NSDate date]];
   [self.tableView reloadData];
   [self scrollToBottomAnimated:YES];
