@@ -10,4 +10,16 @@
 
 @implementation MessageModel
 
+-(id)initWithMessage:(IMessage* )msg{
+  if (self = [super init]) {
+    self.msgId = msg.msgLocalID;
+    self.sender = msg.sender;
+    self.receiver = msg.receiver;
+    self.type = msg.content.type;
+    self.raw = msg.content.raw;
+    self.timestamp = msg.timestamp;
+  }
+  return self;
+}
+
 @end

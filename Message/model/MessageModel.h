@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "IMessage.h"
 
 @interface MessageModel : NSObject
 
@@ -17,5 +18,7 @@
 @property(nonatomic) int type;
 @property(nonatomic) NSString *raw;
 @property(nonatomic) int timestamp;
+
+-(id)initWithMessage:(IMessage* )msg;
 
 @end

@@ -1,7 +1,6 @@
 
 
 #import "SUserDB.h"
-#import "MessageModel.h"
 
 #define kUserTableName @"SUser"
 #define kMessageTableName @"MessageDB"
@@ -73,7 +72,7 @@
     //        [AppDelegate showStatusWithText:@"数据库已经存在" duration:2];
   } else {
     // TODO: 插入新的数据库
-    NSString * sql = @"CREATE TABLE Message (msgId INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL, type INTEGER ,sender INTERGER ,receiver INTEGER, timestamp INTEGER, raw VARCHAR(300))";
+    NSString * sql = @"CREATE TABLE Message (msgId INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL, type INTEGER ,sender longlong ,receiver longlong, timestamp INTEGER, raw VARCHAR(300))";
     BOOL res = [_db executeUpdate:sql];
     if (!res) {
       //            [AppDelegate showStatusWithText:@"数据库创建失败" duration:2];
@@ -180,52 +179,55 @@
 
 //message
 
-- (void) saveMessage:(MessageModel *) msg {
+- (int64_t) saveMessage:(MessageModel *) msg {
   NSMutableString * query = [NSMutableString stringWithFormat:@"INSERT INTO Message"];
   NSMutableString * keys = [NSMutableString stringWithFormat:@" ("];
   NSMutableString * values = [NSMutableString stringWithFormat:@" ( "];
   NSMutableArray * arguments = [NSMutableArray arrayWithCapacity:5];
   
   //msgId;
-  if (msg.msgId) {
-    [keys appendString:@"name,"];
-    [values appendString:@"?,"];
-    [arguments addObject: [NSNumber numberWithInt:msg.msgId]];
-  }
+//  if (msg.msgId) {
+//    [keys appendString:@"msgId,"];
+//    [values appendString:@"?,"];
+//    [arguments addObject: nil ];
+//  }
   //type;
-  if (msg.type) {
+//  if (msg.type) {
     [keys appendString:@"type,"];
     [values appendString:@"?,"];
     [arguments addObject: [NSNumber numberWithInt:msg.type]];
     
-  }
+//  }
   //sender;
-  if (msg.type) {
+//  if (msg.sender) {
     [keys appendString:@"sender,"];
     [values appendString:@"?,"];
     [arguments addObject: [NSNumber numberWithLongLong:msg.sender]];
     
-  }
+//  }
   //receiver;
-  if (msg.receiver) {
+//  if (msg.receiver) {
     [keys appendString:@"receiver,"];
     [values appendString:@"?,"];
     [arguments addObject: [NSNumber numberWithLongLong:msg.receiver]];
     
-  }
+//  }
+  
+
+  
   //raw;
-  if (msg.raw) {
+//  if (msg.raw) {
     [keys appendString:@"raw,"];
     [values appendString:@"?,"];
     [arguments addObject: msg.raw];
-  }
+//  }
   //timestamp;
-  if (msg.timestamp) {
+//  if (msg.timestamp) {
     [keys appendString:@"timestamp,"];
     [values appendString:@"?,"];
     [arguments addObject: [NSNumber numberWithInt:msg.timestamp]];
     
-  }
+//  }
   
   [keys appendString:@")"];
   [values appendString:@")"];
@@ -234,14 +236,18 @@
    [values stringByReplacingOccurrencesOfString:@",)" withString:@")"]];
   NSLog(@"%@",query);
   //    [AppDelegate showStatusWithText:@"插入一条数据" duration:2.0];
-  [_db executeUpdate:query withArgumentsInArray:arguments];
+  bool  isok =  [_db executeUpdate:query withArgumentsInArray:arguments];
+  
+  return [_db lastInsertRowId];
+  
 }
 
 
-- (void) deleteMessageWithId:(NSString *) msgId {
-  NSString * query = [NSString stringWithFormat:@"DELETE FROM Message WHERE uid = '%@'",msgId];
+- (void) deleteMessageWithId:(NSInteger ) msgId {
+  NSString * query = [NSString stringWithFormat:@"DELETE FROM Message WHERE msgId = '%d'" , msgId];
   //    [AppDelegate showStatusWithText:@"删除一条数据" duration:2.0];
   [_db executeUpdate:query];
+
 }
 
 /*
@@ -267,22 +273,25 @@
  }
  */
 
-- (NSArray *) findWithMsId:(NSString *) uid limit:(int) limit {
-  NSString * query = @"SELECT msgId,name,description FROM SUser";
-  if (!uid) {
-    query = [query stringByAppendingFormat:@" ORDER BY uid DESC limit %d",limit];
-  } else {
-    query = [query stringByAppendingFormat:@" WHERE uid > %@ ORDER BY uid DESC limit %d",uid,limit];
-  }
+- (NSArray *) findWithSenderId:(long long) senderId limit:(int) limit {
+  NSString * query = @"SELECT msgId,type,sender,receiver,timestamp,raw FROM Message";
+//  if (senderId == 0) {
+//    query = [query stringByAppendingFormat:@" ORDER BY timestamp DESC limit %d",limit];
+//  } else {
+    query = [query stringByAppendingFormat:@" WHERE sender == %qi OR receiver = %qi ORDER BY timestamp DESC limit %d",senderId,senderId,limit];
+//  }
   
   FMResultSet * rs = [_db executeQuery:query];
   NSMutableArray * array = [NSMutableArray arrayWithCapacity:[rs columnCount]];
 	while ([rs next]) {
-    SUser * user = [SUser new];
-    user.uid = [rs stringForColumn:@"uid"];
-    user.name = [rs stringForColumn:@"name"];
-    user.description = [rs stringForColumn:@"description"];
-    [array addObject:user];
+    MessageModel * msg = [MessageModel new];
+    msg.msgId = [rs intForColumn:@"msgId"];
+    msg.type = [rs intForColumn:@"type"];
+    msg.sender = [rs longLongIntForColumn:@"sender"];
+    msg.receiver = [rs longLongIntForColumn:@"receiver"];
+    msg.timestamp = [rs intForColumn:@"timestamp"];
+    msg.raw = [rs stringForColumn:@"raw"];
+    [array addObject:msg];
 	}
 	[rs close];
   return array;

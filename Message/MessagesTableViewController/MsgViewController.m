@@ -11,6 +11,7 @@
 #import "MessageDB.h"
 #import "IMService.h"
 #import "UserPresent.h"
+#import "MessageModel.h"
 
 @interface MsgViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -22,6 +23,14 @@
 @implementation MsgViewController
 
 @synthesize messageArray;
+
+-(id)init{
+  
+  if (self = [super init]) {
+    self.userDB = [[SUserDB alloc] init];
+  }
+  return self;
+}
 
 //- (void)loadView{
 //  [super loadView];
@@ -43,7 +52,17 @@
   self.title = @"Message";
   
   self.messageArray = [NSMutableArray array];
+  
+  NSArray *msges = [self.userDB findWithSenderId:13635273142 limit:100];
+  if ([msges count] != 0) {
+    [self.messageArray addObjectsFromArray:msges];
+  }
+  
   self.timestamps = [NSMutableArray array];
+  for (MessageModel* msg in self.messageArray) {
+    [self.timestamps addObject:[NSString stringWithFormat:@"%d",msg.timestamp]];
+  }
+  
   
   UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
                                                                  style:UIBarButtonItemStyleDone
@@ -62,8 +81,13 @@
 -(void)onPeerMessage:(IMessage*)msg{
   [JSMessageSoundEffect playMessageReceivedSound];
    NSLog(@"receive msg:%@",msg);
-  [self.messageArray addObject:msg];
+  
+  MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
+  msg.msgLocalID =  (int)[self.userDB saveMessage:msgM];
+  [self.messageArray addObject:msgM];
+
   [self.timestamps addObject: [NSDate dateWithTimeIntervalSinceNow:msg.timestamp]];
+  
   [self.tableView reloadData];
   [self scrollToBottomAnimated:YES];
 }
@@ -101,8 +125,10 @@
     BOOL r = [[IMService instance] sendPeerMessage:msg];
     NSLog(@"send result:%d", r);
     
-    [self.messageArray addObject: msg];
+    MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
+    msg.msgLocalID = (int)[self.userDB saveMessage:msgM];
     
+    [self.messageArray addObject: msgM];
     [self.timestamps addObject:[NSDate date]];
     
 //    if((self.messageArray.count - 1) % 2)
@@ -202,7 +228,7 @@
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   if([self.messageArray objectAtIndex:indexPath.row]){
-    return ((IMessage*)[self.messageArray objectAtIndex:indexPath.row]).content.raw;
+    return ((MessageModel*)[self.messageArray objectAtIndex:indexPath.row]).raw;
   }
   return nil;
 }
