@@ -5,39 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>280FE962-393B-4616-A763-5F088ABB69B6</string>
+	<string>E55518C7-F4EF-42AE-BEB5-56D8415C38BA</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Message</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2CA50E5D-1EC0-418B-AAF0-C3BDB0C1FFDC</key>
-		<string>https://github.com/daibou007/Message.git/trunk</string>
+		<key>3B4BD123-A84B-4E53-9750-29662717CDD1</key>
+		<string>https://github.com/daibou007/Message.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Message.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2CA50E5D-1EC0-418B-AAF0-C3BDB0C1FFDC</key>
+		<key>3B4BD123-A84B-4E53-9750-29662717CDD1</key>
 		<string>../..</string>
 	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>2CA50E5D-1EC0-418B-AAF0-C3BDB0C1FFDC</key>
-		<string>https://gmail.com@github.com/daibou007/Message.git</string>
-	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://gmail.com@github.com/daibou007/Message.git/trunk/Message.xcodeproj</string>
+	<string>https://github.com/daibou007/Message.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2CA50E5D-1EC0-418B-AAF0-C3BDB0C1FFDC</string>
+	<string>3B4BD123-A84B-4E53-9750-29662717CDD1</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2CA50E5D-1EC0-418B-AAF0-C3BDB0C1FFDC</string>
+			<string>3B4BD123-A84B-4E53-9750-29662717CDD1</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Message</string>
 		</dict>

@@ -11,11 +11,11 @@
 #import "ABContact.h"
 @interface ContactsController : UIViewController <UITableViewDelegate, UITableViewDataSource,ABNewPersonViewControllerDelegate,
 ABPersonViewControllerDelegate,UISearchBarDelegate>{
-	IBOutlet UINavigationBar *NavBar;
-	IBOutlet UINavigationBar *ContactNavBar;
-	IBOutlet UITableView *DataTable;
-	IBOutlet UIBarButtonItem *editBtn;
-	IBOutlet UIBarButtonItem *groupBtn;
+	 UINavigationBar *NavBar;
+	 UINavigationBar *ContactNavBar;
+	 UITableView *DataTable;
+	 UIBarButtonItem *editBtn;
+	 UIBarButtonItem *groupBtn;
 	UISearchDisplayController *searchDC;
 	UISearchBar *searchBar;
 	UINavigationController *aBPersonNav;
@@ -29,7 +29,7 @@ ABPersonViewControllerDelegate,UISearchBarDelegate>{
 	CGFloat redcolor, greencolor, bluecolor;
 	BOOL isSearch, isEdit, isGroup;
 }
-@property (retain) IBOutlet UITableView *DataTable;
+@property (retain) UITableView *DataTable;
 @property (retain) NSArray *contacts;
 @property (retain) NSMutableArray *filteredArray;
 @property (retain) NSMutableArray *contactNameArray;
@@ -43,7 +43,7 @@ ABPersonViewControllerDelegate,UISearchBarDelegate>{
 
 //添加联系人
 -(void)initData;
--(IBAction)addContactItemBtn:(id)sender;
--(IBAction)editContactItemBtn:(id)sender;
--(IBAction)groupBtnAction:(id)sender;
+-(void)addContactItemBtn:(id)sender;
+-(void)editContactItemBtn:(id)sender;
+-(void)groupBtnAction:(id)sender;
 @end

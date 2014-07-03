@@ -33,8 +33,11 @@
   [super viewDidLoad];
 	isGroup = NO;
 	
+  self.DataTable = [[UITableView alloc] initWithFrame:self.view.frame];
+  [self.view addSubview: self.DataTable];
+  
 	// Create a search bar
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)] ;
+	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
@@ -126,6 +129,7 @@
 	}
 }
 
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView
 {
@@ -358,12 +362,14 @@
 	return NO;
 }
 
+#pragma mark - Action
+
 - (void)cancelBtnAction:(id)sender{
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
--(IBAction)addContactItemBtn:(id)sender{
+-(void)addContactItemBtn:(id)sender{
 	// create a new view controller
 	ABNewPersonViewController *npvc = [[ABNewPersonViewController alloc] init];
 	npvc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(addNewBackAction:)] ;
@@ -404,7 +410,7 @@
 }
 
 
--(IBAction)editContactItemBtn:(id)sender
+-(void)editContactItemBtn:(id)sender
 {
 	if(isEdit == NO)
 	{
@@ -418,7 +424,7 @@
 }
 
 
--(IBAction)groupBtnAction:(id)sender{
+-(void)groupBtnAction:(id)sender{
 	
 }
 
