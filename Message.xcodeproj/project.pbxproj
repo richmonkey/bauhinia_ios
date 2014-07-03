@@ -54,7 +54,6 @@
 		2142CB64196268860002E4A9 /* ABGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB58196268860002E4A9 /* ABGroup.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2142CB65196268860002E4A9 /* ContactData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB5A196268860002E4A9 /* ContactData.m */; };
 		2142CB66196268860002E4A9 /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB5C196268860002E4A9 /* ContactsController.m */; };
-		2142CB67196268860002E4A9 /* ContactsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB5D196268860002E4A9 /* ContactsController.xib */; };
 		2142CB68196268860002E4A9 /* ModalAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB5F196268860002E4A9 /* ModalAlert.m */; };
 		2142CB69196268860002E4A9 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB60196268860002E4A9 /* pinyin.c */; };
 		217260EA195413F800F09E33 /* MessageListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 217260E9195413F800F09E33 /* MessageListTableViewController.m */; };
@@ -121,7 +120,6 @@
 		217261A81954170A00F09E33 /* ConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 217261A41954170A00F09E33 /* ConversationViewController.m */; };
 		217261A91954170A00F09E33 /* ConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 217261A51954170A00F09E33 /* ConversationViewController.xib */; };
 		217261AD1954173200F09E33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 217261AB1954173200F09E33 /* InfoPlist.strings */; };
-		2172628D1954196C00F09E33 /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2172628B1954196C00F09E33 /* ContactViewController.xib */; };
 		217262BE1954227500F09E33 /* icon-avatar-60x60.png in Resources */ = {isa = PBXBuildFile; fileRef = 217262A11954227500F09E33 /* icon-avatar-60x60.png */; };
 		217262BF1954227500F09E33 /* icon-avatar-60x60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 217262A21954227500F09E33 /* icon-avatar-60x60@2x.png */; };
 		217262C01954227500F09E33 /* icon-checkbox-selected-green-25x25.png in Resources */ = {isa = PBXBuildFile; fileRef = 217262A31954227500F09E33 /* icon-checkbox-selected-green-25x25.png */; };
@@ -260,7 +258,6 @@
 		2142CB5A196268860002E4A9 /* ContactData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactData.m; sourceTree = "<group>"; };
 		2142CB5B196268860002E4A9 /* ContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsController.h; sourceTree = "<group>"; };
 		2142CB5C196268860002E4A9 /* ContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsController.m; sourceTree = "<group>"; };
-		2142CB5D196268860002E4A9 /* ContactsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactsController.xib; sourceTree = "<group>"; };
 		2142CB5E196268860002E4A9 /* ModalAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalAlert.h; sourceTree = "<group>"; };
 		2142CB5F196268860002E4A9 /* ModalAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalAlert.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
@@ -341,7 +338,6 @@
 		217261A41954170A00F09E33 /* ConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversationViewController.m; path = Message/ConversationViewController.m; sourceTree = "<group>"; };
 		217261A51954170A00F09E33 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = Message/ConversationViewController.xib; sourceTree = "<group>"; };
 		217261AC1954173200F09E33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
-		2172628B1954196C00F09E33 /* ContactViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactViewController.xib; sourceTree = "<group>"; };
 		217262A11954227500F09E33 /* icon-avatar-60x60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-avatar-60x60.png"; sourceTree = "<group>"; };
 		217262A21954227500F09E33 /* icon-avatar-60x60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-avatar-60x60@2x.png"; sourceTree = "<group>"; };
 		217262A31954227500F09E33 /* icon-checkbox-selected-green-25x25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-checkbox-selected-green-25x25.png"; sourceTree = "<group>"; };
@@ -544,7 +540,6 @@
 				2142CB5A196268860002E4A9 /* ContactData.m */,
 				2142CB5B196268860002E4A9 /* ContactsController.h */,
 				2142CB5C196268860002E4A9 /* ContactsController.m */,
-				2142CB5D196268860002E4A9 /* ContactsController.xib */,
 				2142CB5E196268860002E4A9 /* ModalAlert.h */,
 				2142CB5F196268860002E4A9 /* ModalAlert.m */,
 				2142CB60196268860002E4A9 /* pinyin.c */,
@@ -693,7 +688,6 @@
 				217262CC1954318200F09E33 /* Constants.h */,
 				217260E8195413F800F09E33 /* MessageListTableViewController.h */,
 				217260E9195413F800F09E33 /* MessageListTableViewController.m */,
-				2172628B1954196C00F09E33 /* ContactViewController.xib */,
 				217261A31954170A00F09E33 /* ConversationViewController.h */,
 				217261A41954170A00F09E33 /* ConversationViewController.m */,
 				217261A51954170A00F09E33 /* ConversationViewController.xib */,
@@ -929,7 +923,6 @@
 				2142CB4E196268490002E4A9 /* logout_btn_bg@2x.png in Resources */,
 				217261951954151300F09E33 /* messageReceived.aiff in Resources */,
 				2142CB3A196268490002E4A9 /* contact.png in Resources */,
-				2172628D1954196C00F09E33 /* ContactViewController.xib in Resources */,
 				2142CB4B196268490002E4A9 /* login_separator@2x.png in Resources */,
 				217261701954151300F09E33 /* bubble-default-outgoing-green@2x.png in Resources */,
 				2172617C1954151300F09E33 /* bubble-flat-outgoing-selected@2x.png in Resources */,
@@ -977,7 +970,6 @@
 				2172616F1954151300F09E33 /* bubble-default-outgoing-green.png in Resources */,
 				2172617D1954151300F09E33 /* bubble-flat-outgoing.png in Resources */,
 				2142CB4A196268490002E4A9 /* login_separator.png in Resources */,
-				2142CB67196268860002E4A9 /* ContactsController.xib in Resources */,
 				2142CB47196268490002E4A9 /* login_default_avatar@2x.png in Resources */,
 				217261691954151300F09E33 /* bubble-default-incoming-green.png in Resources */,
 				2172617A1954151300F09E33 /* bubble-flat-outgoing-old@2x.png in Resources */,

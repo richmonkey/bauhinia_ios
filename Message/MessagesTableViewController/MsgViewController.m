@@ -8,10 +8,11 @@
 
 #import "MsgViewController.h"
 #import "IMessage.h"
-#import "MessageDB.h"
+//#import "MessageDB.h"
 #import "IMService.h"
 #import "UserPresent.h"
-#import "MessageModel.h"
+//#import "MessageModel.h"
+#import "MessageDB.h"
 
 @interface MsgViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -27,7 +28,7 @@
 -(id)init{
   
   if (self = [super init]) {
-    self.userDB = [[SUserDB alloc] init];
+//    self.userDB = [[SUserDB alloc] init];
   }
   return self;
 }
@@ -53,13 +54,20 @@
   
   self.messageArray = [NSMutableArray array];
   
-  NSArray *msges = [self.userDB findWithSenderId:13635273142 limit:100];
-  if ([msges count] != 0) {
-    [self.messageArray addObjectsFromArray:msges];
+  IMessageIterator* iterator =  [[MessageDB instance] newPeerMessageIterator: 13635273142];
+  IMessage *msg = [iterator next];
+  while (msg) {
+    [self.messageArray insertObject:msg atIndex: 0];
+    msg = [iterator next];
   }
   
+//  NSArray *msges = [self.userDB findWithSenderId:13635273142 limit:100];
+//  if ([msges count] != 0) {
+//    [self.messageArray addObjectsFromArray:msges];
+//  }
+  
   self.timestamps = [NSMutableArray array];
-  for (MessageModel* msg in self.messageArray) {
+  for (IMessage* msg in self.messageArray) {
     [self.timestamps addObject:[NSString stringWithFormat:@"%d",msg.timestamp]];
   }
   
@@ -81,10 +89,10 @@
 -(void)onPeerMessage:(IMessage*)msg{
   [JSMessageSoundEffect playMessageReceivedSound];
    NSLog(@"receive msg:%@",msg);
-  
-  MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
-  msg.msgLocalID =  (int)[self.userDB saveMessage:msgM];
-  [self.messageArray addObject:msgM];
+  [[MessageDB instance] insertPeerMessage:msg uid:msg.sender];
+//  MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
+//  msg.msgLocalID =  (int)[self.userDB saveMessage:msgM];
+  [self.messageArray addObject:msg];
 
   [self.timestamps addObject: [NSDate dateWithTimeIntervalSinceNow:msg.timestamp]];
   
@@ -120,15 +128,15 @@
   content.raw = text;
   msg.content = content;
   msg.timestamp = time(NULL);
+  
   [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
     BOOL r = [[IMService instance] sendPeerMessage:msg];
     NSLog(@"send result:%d", r);
+//    MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
+//    msg.msgLocalID = (int)[self.userDB saveMessage:msgM];
     
-    MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
-    msg.msgLocalID = (int)[self.userDB saveMessage:msgM];
-    
-    [self.messageArray addObject: msgM];
+    [self.messageArray addObject: msg];
     [self.timestamps addObject:[NSDate date]];
     
 //    if((self.messageArray.count - 1) % 2)
@@ -228,7 +236,7 @@
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   if([self.messageArray objectAtIndex:indexPath.row]){
-    return ((MessageModel*)[self.messageArray objectAtIndex:indexPath.row]).raw;
+    return ((IMessage*)[self.messageArray objectAtIndex:indexPath.row]).content.raw;
   }
   return nil;
 }
