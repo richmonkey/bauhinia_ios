@@ -8,6 +8,8 @@
 
 #import "MessageListTableViewController.h"
 #import "MsgViewController.h"
+#import "MessageDB.h"
+#import "IMessage.h"
 
 @interface MessageListTableViewController ()
 
@@ -18,8 +20,14 @@
 -(id)init{
   self = [super init];
   if (self) {
-    //    CGRect frame = CGRectMake(0, 44+20, self.view.frame.size.width, self.view.frame.size.height- 44);
-    //    [self.view setFrame:frame];
+    self.conversations = [[NSMutableArray alloc] init];
+    ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
+    
+    Conversation * conversation = [iterator next];
+    while (conversation) {
+      [self.conversations addObject:conversation];
+      conversation = [iterator next];
+    }
     
   }
   return self;
@@ -35,11 +43,11 @@
 	table_.scrollEnabled = YES;
 	table_.showsVerticalScrollIndicator = NO;
 	table_.separatorStyle = UITableViewCellSeparatorStyleNone;
-//	table_.backgroundColor = [UIColor clearColor];
+  //	table_.backgroundColor = [UIColor clearColor];
   table_.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
   table_.frame = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44);
 	[self.view addSubview:table_];
-//	[self.view sendSubviewToBack:table_];
+  //	[self.view sendSubviewToBack:table_];
   
   
   //    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
@@ -68,7 +76,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
   // Return the number of rows in the section.
-  return 1;
+  return [self.conversations count];
 }
 
 
@@ -79,7 +87,8 @@
   if (cell == nil) {
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"reuse"];
   }
-  [cell.textLabel setText:@"聊天11111"];
+  Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:indexPath.row];
+  [cell.textLabel setText: covn.cid];
   // Configure the cell...
   
   return cell;
