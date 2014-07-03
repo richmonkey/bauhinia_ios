@@ -14,4 +14,7 @@
 	UITableView *table_;
 
 }
+
+@property (strong ,nonatomic) NSMutableArray *conversations;
+
 @end

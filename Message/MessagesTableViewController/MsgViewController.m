@@ -28,7 +28,7 @@
 -(id)init{
   
   if (self = [super init]) {
-//    self.userDB = [[SUserDB alloc] init];
+    
   }
   return self;
 }
@@ -61,11 +61,6 @@
     msg = [iterator next];
   }
   
-//  NSArray *msges = [self.userDB findWithSenderId:13635273142 limit:100];
-//  if ([msges count] != 0) {
-//    [self.messageArray addObjectsFromArray:msges];
-//  }
-  
   self.timestamps = [NSMutableArray array];
   for (IMessage* msg in self.messageArray) {
     [self.timestamps addObject:[NSString stringWithFormat:@"%d",msg.timestamp]];
@@ -88,12 +83,11 @@
 #pragma mark - MessageObserver data source
 -(void)onPeerMessage:(IMessage*)msg{
   [JSMessageSoundEffect playMessageReceivedSound];
-   NSLog(@"receive msg:%@",msg);
+  NSLog(@"receive msg:%@",msg);
   [[MessageDB instance] insertPeerMessage:msg uid:msg.sender];
-//  MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
-//  msg.msgLocalID =  (int)[self.userDB saveMessage:msgM];
+  
   [self.messageArray addObject:msg];
-
+  
   [self.timestamps addObject: [NSDate dateWithTimeIntervalSinceNow:msg.timestamp]];
   
   [self.tableView reloadData];
@@ -133,16 +127,13 @@
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
     BOOL r = [[IMService instance] sendPeerMessage:msg];
     NSLog(@"send result:%d", r);
-//    MessageModel *msgM = [[MessageModel alloc] initWithMessage: msg];
-//    msg.msgLocalID = (int)[self.userDB saveMessage:msgM];
+    
     
     [self.messageArray addObject: msg];
     [self.timestamps addObject:[NSDate date]];
     
-//    if((self.messageArray.count - 1) % 2)
     [JSMessageSoundEffect playMessageSentSound];
-//    else
-//      [JSMessageSoundEffect playMessageReceivedSound];
+    
     
     [self finishSend];
     
@@ -176,7 +167,7 @@
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return JSBubbleMediaTypeText;
+  return JSBubbleMediaTypeText;
 }
 
 - (UIButton *)sendButton
@@ -257,9 +248,9 @@
 }
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-//  if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
-//    return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"];
-//  }
+  //  if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
+  //    return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"];
+  //  }
   return nil;
   
 }
@@ -272,7 +263,7 @@
 	NSLog(@"Chose image!  Details:  %@", info);
   
   self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
-//  [self.messageArray addObject:[NSDictionary dictionaryWithObject:self.willSendImage forKey:@"Image"]];
+  //  [self.messageArray addObject:[NSDictionary dictionaryWithObject:self.willSendImage forKey:@"Image"]];
   [self.timestamps addObject:[NSDate date]];
   [self.tableView reloadData];
   [self scrollToBottomAnimated:YES];
