@@ -152,6 +152,7 @@
 		21A4FDFF1952E24100F117E0 /* UIColor+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A4FDC31952E24100F117E0 /* UIColor+JSMessagesView.m */; };
 		21A4FE001952E24100F117E0 /* UIImage+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A4FDC51952E24100F117E0 /* UIImage+JSMessagesView.m */; };
 		21A4FE011952E24100F117E0 /* UIView+AnimationOptionsForCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A4FDC71952E24100F117E0 /* UIView+AnimationOptionsForCurve.m */; };
+		6DB5AF491965B4E40008D279 /* libim_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB5AF441965B4920008D279 /* libim_sdk.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -162,26 +163,33 @@
 			remoteGlobalIDString = 21798F92194E9C4600B67C1F;
 			remoteInfo = Message;
 		};
-		6D2E4B151965B40800671F3E /* PBXContainerItemProxy */ = {
+		6DB5AF411965B4920008D279 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6D2E4B0F1965B40800671F3E /* im.xcodeproj */;
+			containerPortal = 6DB5AF3B1965B4920008D279 /* im.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 6D09683C1954B351006C0C89;
 			remoteInfo = im;
 		};
-		6D2E4B171965B40800671F3E /* PBXContainerItemProxy */ = {
+		6DB5AF431965B4920008D279 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6D2E4B0F1965B40800671F3E /* im.xcodeproj */;
+			containerPortal = 6DB5AF3B1965B4920008D279 /* im.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 6D1B7DE119605FDC0025357A;
 			remoteInfo = im_sdk;
 		};
-		6D2E4B191965B40800671F3E /* PBXContainerItemProxy */ = {
+		6DB5AF451965B4920008D279 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6D2E4B0F1965B40800671F3E /* im.xcodeproj */;
+			containerPortal = 6DB5AF3B1965B4920008D279 /* im.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 6D1B7DEE19605FDC0025357A;
 			remoteInfo = im_sdkTests;
+		};
+		6DB5AF471965B4E00008D279 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6DB5AF3B1965B4920008D279 /* im.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6D1B7DE019605FDC0025357A;
+			remoteInfo = im_sdk;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -379,7 +387,7 @@
 		21A4FDC51952E24100F117E0 /* UIImage+JSMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JSMessagesView.m"; sourceTree = "<group>"; };
 		21A4FDC61952E24100F117E0 /* UIView+AnimationOptionsForCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AnimationOptionsForCurve.h"; sourceTree = "<group>"; };
 		21A4FDC71952E24100F117E0 /* UIView+AnimationOptionsForCurve.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AnimationOptionsForCurve.m"; sourceTree = "<group>"; };
-		6D2E4B0F1965B40800671F3E /* im.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = im.xcodeproj; path = im_sdk/im.xcodeproj; sourceTree = "<group>"; };
+		6DB5AF3B1965B4920008D279 /* im.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = im.xcodeproj; path = im_sdk/im.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -387,6 +395,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DB5AF491965B4E40008D279 /* libim_sdk.a in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
 				2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */,
 				217261981954155000F09E33 /* AddressBook.framework in Frameworks */,
@@ -472,7 +481,7 @@
 		2142CB0C1962683E0002E4A9 /* backend */ = {
 			isa = PBXGroup;
 			children = (
-				6D2E4B0F1965B40800671F3E /* im.xcodeproj */,
+				6DB5AF3B1965B4920008D279 /* im.xcodeproj */,
 				2119FE4D1962ACE800E23B4F /* database */,
 				2142CB52196268860002E4A9 /* contact */,
 			);
@@ -784,12 +793,12 @@
 			path = Message/MessagesTableViewController;
 			sourceTree = "<group>";
 		};
-		6D2E4B101965B40800671F3E /* Products */ = {
+		6DB5AF3C1965B4920008D279 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6D2E4B161965B40800671F3E /* im.app */,
-				6D2E4B181965B40800671F3E /* libim_sdk.a */,
-				6D2E4B1A1965B40800671F3E /* im_sdkTests.xctest */,
+				6DB5AF421965B4920008D279 /* im.app */,
+				6DB5AF441965B4920008D279 /* libim_sdk.a */,
+				6DB5AF461965B4920008D279 /* im_sdkTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -808,6 +817,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				6DB5AF481965B4E00008D279 /* PBXTargetDependency */,
 			);
 			name = Message;
 			productName = Message;
@@ -858,8 +868,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 6D2E4B101965B40800671F3E /* Products */;
-					ProjectRef = 6D2E4B0F1965B40800671F3E /* im.xcodeproj */;
+					ProductGroup = 6DB5AF3C1965B4920008D279 /* Products */;
+					ProjectRef = 6DB5AF3B1965B4920008D279 /* im.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -871,25 +881,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		6D2E4B161965B40800671F3E /* im.app */ = {
+		6DB5AF421965B4920008D279 /* im.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = im.app;
-			remoteRef = 6D2E4B151965B40800671F3E /* PBXContainerItemProxy */;
+			remoteRef = 6DB5AF411965B4920008D279 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		6D2E4B181965B40800671F3E /* libim_sdk.a */ = {
+		6DB5AF441965B4920008D279 /* libim_sdk.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libim_sdk.a;
-			remoteRef = 6D2E4B171965B40800671F3E /* PBXContainerItemProxy */;
+			remoteRef = 6DB5AF431965B4920008D279 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		6D2E4B1A1965B40800671F3E /* im_sdkTests.xctest */ = {
+		6DB5AF461965B4920008D279 /* im_sdkTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = im_sdkTests.xctest;
-			remoteRef = 6D2E4B191965B40800671F3E /* PBXContainerItemProxy */;
+			remoteRef = 6DB5AF451965B4920008D279 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1070,6 +1080,11 @@
 			target = 21798F92194E9C4600B67C1F /* Message */;
 			targetProxy = 21798FB3194E9C4600B67C1F /* PBXContainerItemProxy */;
 		};
+		6DB5AF481965B4E00008D279 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = im_sdk;
+			targetProxy = 6DB5AF471965B4E00008D279 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1183,7 +1198,7 @@
 				INFOPLIST_FILE = "Message/Message-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = backend/im_sdk/im_sdk;
+				USER_HEADER_SEARCH_PATHS = Message/backend/im_sdk/im_sdk;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1198,7 +1213,7 @@
 				INFOPLIST_FILE = "Message/Message-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = backend/im_sdk/im_sdk;
+				USER_HEADER_SEARCH_PATHS = Message/backend/im_sdk/im_sdk;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

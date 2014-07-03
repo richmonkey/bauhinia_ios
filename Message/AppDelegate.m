@@ -20,7 +20,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   //启动IM
-  [[IMService instance] start];
+
   
   SUserDB * db = [[SUserDB alloc] init];
   [db createDataBase];

@@ -137,6 +137,8 @@
 #pragma mark 登录成功
 - (void)loginSuccess
 {
+    
+  [[IMService instance] start:[UserPresent instance].userid];
   // 1.停止动画
   [_indicator stopAnimating];
   
