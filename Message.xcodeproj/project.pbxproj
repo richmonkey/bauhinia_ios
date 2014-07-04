@@ -262,12 +262,12 @@
 		2142CB5F196268860002E4A9 /* ModalAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalAlert.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
 		2142CB61196268860002E4A9 /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pinyin.h; sourceTree = "<group>"; };
-		217260E8195413F800F09E33 /* MessageListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageListTableViewController.h; path = Message/MessagesTableViewController/MessageListTableViewController.h; sourceTree = "<group>"; };
-		217260E9195413F800F09E33 /* MessageListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageListTableViewController.m; path = Message/MessagesTableViewController/MessageListTableViewController.m; sourceTree = "<group>"; };
-		217261181954142400F09E33 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = Message/SettingViewController.h; sourceTree = "<group>"; };
-		217261191954142400F09E33 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingViewController.m; path = Message/SettingViewController.m; sourceTree = "<group>"; };
-		2172611A1954142400F09E33 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SettingViewController.xib; path = Message/SettingViewController.xib; sourceTree = "<group>"; };
-		2172611B1954142400F09E33 /* SystemSetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SystemSetViewController.xib; path = Message/SystemSetViewController.xib; sourceTree = "<group>"; };
+		217260E8195413F800F09E33 /* MessageListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageListTableViewController.h; path = MessagesTableViewController/MessageListTableViewController.h; sourceTree = "<group>"; };
+		217260E9195413F800F09E33 /* MessageListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageListTableViewController.m; path = MessagesTableViewController/MessageListTableViewController.m; sourceTree = "<group>"; };
+		217261181954142400F09E33 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		217261191954142400F09E33 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		2172611A1954142400F09E33 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
+		2172611B1954142400F09E33 /* SystemSetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SystemSetViewController.xib; sourceTree = "<group>"; };
 		217261201954151300F09E33 /* JSBubbleMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBubbleMessageCell.h; sourceTree = "<group>"; };
 		217261211954151300F09E33 /* JSBubbleMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBubbleMessageCell.m; sourceTree = "<group>"; };
 		217261221954151300F09E33 /* JSBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBubbleView.h; sourceTree = "<group>"; };
@@ -334,9 +334,9 @@
 		217261991954155500F09E33 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		2172619C1954168400F09E33 /* MsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MsgViewController.h; sourceTree = "<group>"; };
 		2172619D1954168400F09E33 /* MsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MsgViewController.m; sourceTree = "<group>"; };
-		217261A31954170A00F09E33 /* ConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversationViewController.h; path = Message/ConversationViewController.h; sourceTree = "<group>"; };
-		217261A41954170A00F09E33 /* ConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversationViewController.m; path = Message/ConversationViewController.m; sourceTree = "<group>"; };
-		217261A51954170A00F09E33 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConversationViewController.xib; path = Message/ConversationViewController.xib; sourceTree = "<group>"; };
+		217261A31954170A00F09E33 /* ConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationViewController.h; sourceTree = "<group>"; };
+		217261A41954170A00F09E33 /* ConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationViewController.m; sourceTree = "<group>"; };
+		217261A51954170A00F09E33 /* ConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationViewController.xib; sourceTree = "<group>"; };
 		217261AC1954173200F09E33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		217262A11954227500F09E33 /* icon-avatar-60x60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-avatar-60x60.png"; sourceTree = "<group>"; };
 		217262A21954227500F09E33 /* icon-avatar-60x60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-avatar-60x60@2x.png"; sourceTree = "<group>"; };
@@ -358,7 +358,7 @@
 		217262B21954227500F09E33 /* THContactPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THContactPickerViewController.h; sourceTree = "<group>"; };
 		217262B31954227500F09E33 /* THContactPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THContactPickerViewController.m; sourceTree = "<group>"; };
 		217262B41954227500F09E33 /* THContactPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = THContactPickerViewController.xib; sourceTree = "<group>"; };
-		217262CC1954318200F09E33 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		217262CC1954318200F09E33 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = ../Constants.h; sourceTree = "<group>"; };
 		21798F93194E9C4600B67C1F /* Message.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Message.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21798F96194E9C4600B67C1F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		21798F98194E9C4600B67C1F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -459,8 +459,7 @@
 				2119FE461962949900E23B4F /* UserPresent.h */,
 				2119FE471962949900E23B4F /* UserPresent.m */,
 			);
-			name = model;
-			path = Message/model;
+			path = model;
 			sourceTree = "<group>";
 		};
 		2142CB06196263BB0002E4A9 /* login */ = {
@@ -470,8 +469,7 @@
 				2142CB08196263BB0002E4A9 /* LoginViewController.m */,
 				2142CB09196263BB0002E4A9 /* LoginViewController.xib */,
 			);
-			name = login;
-			path = Message/login;
+			path = login;
 			sourceTree = "<group>";
 		};
 		2142CB0C1962683E0002E4A9 /* backend */ = {
@@ -481,8 +479,7 @@
 				2119FE4D1962ACE800E23B4F /* database */,
 				2142CB52196268860002E4A9 /* contact */,
 			);
-			name = backend;
-			path = Message/backend;
+			path = backend;
 			sourceTree = "<group>";
 		};
 		2142CB20196268490002E4A9 /* res */ = {
@@ -496,8 +493,7 @@
 				2142CB38196268490002E4A9 /* message.png */,
 				2142CB39196268490002E4A9 /* setting.png */,
 			);
-			name = res;
-			path = Message/res;
+			path = res;
 			sourceTree = "<group>";
 		};
 		2142CB23196268490002E4A9 /* login */ = {
@@ -646,11 +642,10 @@
 			children = (
 				217261AB1954173200F09E33 /* InfoPlist.strings */,
 			);
-			name = en.lproj;
-			path = Message/en.lproj;
+			path = en.lproj;
 			sourceTree = "<group>";
 		};
-		217262A01954227500F09E33 /* contactSelect */ = {
+		217262A01954227500F09E33 /* contact */ = {
 			isa = PBXGroup;
 			children = (
 				217262A11954227500F09E33 /* icon-avatar-60x60.png */,
@@ -674,30 +669,13 @@
 				217262B31954227500F09E33 /* THContactPickerViewController.m */,
 				217262B41954227500F09E33 /* THContactPickerViewController.xib */,
 			);
-			name = contactSelect;
-			path = Message/contactSelect;
+			name = contact;
+			path = contactSelect;
 			sourceTree = "<group>";
 		};
 		21798F8A194E9C4600B67C1F = {
 			isa = PBXGroup;
 			children = (
-				2119FE771962AEAA00E23B4F /* model */,
-				2142CB20196268490002E4A9 /* res */,
-				2142CB0C1962683E0002E4A9 /* backend */,
-				2142CB06196263BB0002E4A9 /* login */,
-				217262CC1954318200F09E33 /* Constants.h */,
-				217260E8195413F800F09E33 /* MessageListTableViewController.h */,
-				217260E9195413F800F09E33 /* MessageListTableViewController.m */,
-				217261A31954170A00F09E33 /* ConversationViewController.h */,
-				217261A41954170A00F09E33 /* ConversationViewController.m */,
-				217261A51954170A00F09E33 /* ConversationViewController.xib */,
-				217261181954142400F09E33 /* SettingViewController.h */,
-				217261191954142400F09E33 /* SettingViewController.m */,
-				2172611A1954142400F09E33 /* SettingViewController.xib */,
-				2172611B1954142400F09E33 /* SystemSetViewController.xib */,
-				217262A01954227500F09E33 /* contactSelect */,
-				217261AA1954173200F09E33 /* en.lproj */,
-				21A4FD7E1952E24100F117E0 /* Messages */,
 				21798F9C194E9C4600B67C1F /* Message */,
 				21798FB5194E9C4600B67C1F /* MessageTests */,
 				21798F95194E9C4600B67C1F /* Frameworks */,
@@ -731,6 +709,22 @@
 		21798F9C194E9C4600B67C1F /* Message */ = {
 			isa = PBXGroup;
 			children = (
+				2119FE771962AEAA00E23B4F /* model */,
+				2142CB20196268490002E4A9 /* res */,
+				2142CB0C1962683E0002E4A9 /* backend */,
+				2142CB06196263BB0002E4A9 /* login */,
+				217262A01954227500F09E33 /* contact */,
+				21A4FD7E1952E24100F117E0 /* Messages */,
+				217262CC1954318200F09E33 /* Constants.h */,
+				217260E8195413F800F09E33 /* MessageListTableViewController.h */,
+				217260E9195413F800F09E33 /* MessageListTableViewController.m */,
+				217261A31954170A00F09E33 /* ConversationViewController.h */,
+				217261A41954170A00F09E33 /* ConversationViewController.m */,
+				217261A51954170A00F09E33 /* ConversationViewController.xib */,
+				217261181954142400F09E33 /* SettingViewController.h */,
+				217261191954142400F09E33 /* SettingViewController.m */,
+				2172611A1954142400F09E33 /* SettingViewController.xib */,
+				2172611B1954142400F09E33 /* SystemSetViewController.xib */,
 				21798FA5194E9C4600B67C1F /* AppDelegate.h */,
 				21798FA6194E9C4600B67C1F /* AppDelegate.m */,
 				21798FA8194E9C4600B67C1F /* Images.xcassets */,
@@ -742,6 +736,7 @@
 		21798F9D194E9C4600B67C1F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				217261AA1954173200F09E33 /* en.lproj */,
 				21798F9E194E9C4600B67C1F /* Message-Info.plist */,
 				21798F9F194E9C4600B67C1F /* InfoPlist.strings */,
 				21798FA2194E9C4600B67C1F /* main.m */,
@@ -784,7 +779,7 @@
 				21A4FDC71952E24100F117E0 /* UIView+AnimationOptionsForCurve.m */,
 			);
 			name = Messages;
-			path = Message/MessagesTableViewController;
+			path = MessagesTableViewController;
 			sourceTree = "<group>";
 		};
 		6DB5AF3C1965B4920008D279 /* Products */ = {
