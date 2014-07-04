@@ -14,6 +14,8 @@
 //#import "MessageModel.h"
 #import "MessageDB.h"
 
+
+
 @interface MsgViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *messageArray;
@@ -80,7 +82,8 @@
   [self dismissViewControllerAnimated:YES completion:nil];
   
 }
-#pragma mark - MessageObserver data source
+#pragma mark - MessageObserver
+
 -(void)onPeerMessage:(IMessage*)msg{
   [JSMessageSoundEffect playMessageReceivedSound];
   NSLog(@"receive msg:%@",msg);
@@ -93,13 +96,49 @@
   [self.tableView reloadData];
   [self scrollToBottomAnimated:YES];
 }
+//服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
   NSLog(@"receive msg ack:%d",msgLocalID);
+
 }
+
+//接受方ack
+-(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
+  
+}
+
 -(void)onGroupMessage:(IMessage*)msg{
   
 }
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid{
+  
+}
+
+//用户连线状态
+-(void)onOnlineState:(int64_t)uid state:(BOOL)on{
+
+}
+
+//对方正在输入
+-(void)onPeerInputing:(int64_t)uid{
+  
+}
+
+//同IM服务器连接的状态变更通知
+-(void)onConnectState:(int)state{
+
+
+}
+
+#pragma mark - UITextViewDelegate
+
+-(void)textViewDidBeginEditing:(UITextView *)textView{
+  [super textViewDidBeginEditing:textView];
+  
+  MessageInputing *inputing = [[MessageInputing alloc ] init];
+  inputing.receiver = 192;
+  inputing.receiver = 111;
+  [[IMService instance] sendInputing: inputing];
   
 }
 

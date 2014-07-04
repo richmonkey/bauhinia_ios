@@ -13,7 +13,7 @@
 #import "MessageDB.h"
 #import "LoginViewController.h"
 
-#import "SUserDB.h"
+//#import "SUserDB.h"
 
 @implementation AppDelegate
 
@@ -23,8 +23,8 @@
   [IMService instance].host = @"127.0.0.1";
   [IMService instance].port = 23000;
   
-  SUserDB * db = [[SUserDB alloc] init];
-  [db createDataBase];
+//  SUserDB * db = [[SUserDB alloc] init];
+//  [db createDataBase];
   
   if(addressBook == nil)
 		addressBook = ABAddressBookCreate();
