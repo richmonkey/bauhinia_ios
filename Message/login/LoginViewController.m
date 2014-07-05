@@ -1,21 +1,17 @@
 //
 //  LoginViewController.m
-//  QQ空间-HD
-//
-//  Created by apple on 13-9-11.
-//  Copyright (c) 2013年 itcast. All rights reserved.
+
 //
 
 #import "LoginViewController.h"
 #import <QuartzCore/QuartzCore.h>
-//#import "HomeViewController.h"
+
 #import "SettingViewController.h"
 #import "ConversationViewController.h"
 #import "MessageListTableViewController.h"
 #import "ContactsController.h"
 #import "IMService.h"
 #import "UserPresent.h"
-//#import "MMAddressBookViewController.h"
 
 @interface LoginViewController ()
 
@@ -26,11 +22,21 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  
+
   // 设置背景颜色
   self.view.backgroundColor = [UIColor grayColor];
   
+#if TARGET_IPHONE_SIMULATOR
+  
+  //Simulator
   self.mobile.text = @"13635273143";
+  
+#else
+  // Device
+  self.mobile.text = @"13635273142";
+  
+#endif
+  
 }
 
 
@@ -102,9 +108,17 @@
     [self alertError:@"请输入密码"];
     return;
   }
-
+  
+#if TARGET_IPHONE_SIMULATOR
+  //Simulator
   [UserPresent instance].username = @"小张";
   [UserPresent instance].userid = [self.mobile.text longLongValue];
+#else
+  // Device
+  [UserPresent instance].username = @"小王";
+  [UserPresent instance].userid = [self.mobile.text longLongValue];
+  
+#endif
 
   // 3.登录成功
   // 3.1.开始动画

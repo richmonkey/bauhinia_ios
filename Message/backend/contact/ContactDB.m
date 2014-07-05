@@ -1,0 +1,382 @@
+//
+//  ContactDB.m
+//  Message
+//
+//  Created by daozhu on 14-7-5.
+//  Copyright (c) 2014年 daozhu. All rights reserved.
+//
+
+#import "ContactDB.h"
+#import <AddressBook/AddressBook.h>
+#import "ABContact.h"
+
+@interface ContactDB()
+@property(nonatomic, assign)ABAddressBookRef addressBook;
+@end
+
+@implementation ContactDB
+
++(ContactDB*)instance {
+  static ContactDB *db;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    if (!db) {
+      db = [[ContactDB alloc] init];
+    }
+  });
+  return db;
+}
+
+-(id)init {
+  self = [super init];
+  if (self) {
+    CFErrorRef err = nil;
+    self.addressBook = ABAddressBookCreateWithOptions(NULL, &err);
+    if (err) {
+      NSString *s = (__bridge NSString*)CFErrorCopyDescription(err);
+      NSLog(@"address book error:%@", s);
+    }
+
+    
+    ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
+    NSLog(@"status:%d", status);
+    
+    void (^block)(bool, CFErrorRef ) = ^(bool granted, CFErrorRef error){
+      NSLog(@"grant:%d", granted);
+    };
+    
+    if (status == kABAuthorizationStatusNotDetermined) {
+      ABAddressBookRequestAccessWithCompletion(self.addressBook,block);
+    }
+    
+   
+  }
+  return self;
+}
+- (NSArray *) contactsArray {
+  NSArray *thePeople = (__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(self.addressBook);
+	NSMutableArray *array = [NSMutableArray arrayWithCapacity:thePeople.count];
+	for (id person in thePeople) {
+		[array addObject:[ABContact contactWithRecord:(ABRecordRef)person]];
+  }
+  
+	return array;
+}
+
+- (id) contactWithRecordID: (ABRecordID) recordID
+{
+	ABRecordRef contactrec = ABAddressBookGetPersonWithRecordID(self.addressBook, recordID);
+  
+	ABContact *contact = [ABContact contactWithRecord:contactrec];
+	
+	return contact;
+}
+
+//以号码来检测通讯录内是否已包含该联系人
++ (NSDictionary *) hasContactsExistInAddressBookByPhone:(NSString *)phone{
+	NSString *PhoneNumber = nil;
+	NSString *PhoneLabel = nil;
+	NSString *PhoneName = nil;
+	NSArray *contactarray = [[ContactDB instance] contactsArray];
+	for(int i=0; i<[contactarray count]; i++)
+	{
+		ABContact *contact = [contactarray objectAtIndex:i];
+		NSArray *phoneCount = [ContactDB getPhoneNumberAndPhoneLabelArray:contact];
+		if([phoneCount count] > 0)
+		{
+			NSDictionary *PhoneDic = [phoneCount objectAtIndex:0];
+			PhoneNumber = [ContactDB getPhoneNumberFromDic:PhoneDic];
+			PhoneLabel = [ContactDB getPhoneLabelFromDic:PhoneDic];
+			PhoneName = contact.contactName;
+			if([PhoneNumber isEqualToString:phone])
+			{
+				NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:PhoneName,KPHONENAMEDICDEFINE,PhoneNumber,KPHONENUMBERDICDEFINE,PhoneLabel,KPHONELABELDICDEFINE,nil ];
+				return dic;
+			}
+		}
+	}
+	return nil;
+}
+
+
+//通过号码得到该联系人
++(ABContact *) byPhoneNumberAndLabelToGetContact:(NSString *)phone withLabel:(NSString *)label{
+	NSArray *array = [[ContactDB instance] contactsArray];
+	for(ABContact * contast in array)
+	{
+		NSArray *phoneArray = [ContactDB getPhoneNumberAndPhoneLabelArray:contast];
+		if(phoneArray == nil)
+			return nil;
+		for(NSDictionary *dic in phoneArray)
+		{
+			NSString *aPhone = [ContactDB getPhoneNumberFromDic:dic];
+			NSString *aLabel = [ContactDB getPhoneLabelFromDic:dic];
+			if([aPhone isEqualToString:phone] && [aLabel isEqualToString:label])
+				return (ABContact *)contast;
+		}
+	}
+	return nil;
+}
+
+//通过姓名与号码得到该联系人
++(ABContact *) byPhoneNumberAndNameToGetContact:(NSString *)name withPhone:(NSString *)phone{
+	NSArray *array = [[ContactDB instance] contactsArray];
+	for(ABContact * contast in array)
+	{
+		NSArray *phoneArray = [ContactDB getPhoneNumberAndPhoneLabelArray:contast];
+		if(phoneArray == nil)
+			return nil;
+		for(NSDictionary *dic in phoneArray)
+		{
+			NSString *aPhone = [ContactDB getPhoneNumberFromDic:dic];
+      //	NSString *aLabel = [ContactDB getPhoneLabelFromDic:dic];
+			if([aPhone isEqualToString:phone] && [name isEqualToString:contast.contactName])
+				return (ABContact *)contast;
+		}
+	}
+	return nil;
+}
+
+
+//通过姓名得到该联系人
++(ABContact *) byNameToGetContact:(NSString *)name{
+	NSArray *array = [[ContactDB instance] contactsArray];
+	for(ABContact * contast in array)
+	{
+		if([contast.contactName isEqualToString:name])
+			return (ABContact *)contast;
+	}
+	return nil;
+}
+
+
+//通过号码得到该联系人
++(ABContact *) byPhoneNumberlToGetContact:(NSString *)phone withLabel:(NSString *)label{
+	NSArray *array = [[ContactDB instance] contactsArray];
+	for(ABContact * contast in array)
+	{
+		NSArray *phoneArray = [ContactDB getPhoneNumberAndPhoneLabelArray:contast];
+		if(phoneArray == nil)
+			return nil;
+		for(NSDictionary *dic in phoneArray)
+		{
+			NSString *aPhone = [ContactDB getPhoneNumberFromDic:dic];
+			//NSString *aLabel = [ContactDB getPhoneLabelFromDic:dic];
+			if([aPhone isEqualToString:phone] && [label isEqualToString:@"未知"])
+				return (ABContact *)contast;
+		}
+	}
+	return nil;
+}
+
+
+//得到联系人的号码组与Label组
++(NSArray *) getPhoneNumberAndPhoneLabelArray:(ABContact *) contact
+{
+	NSMutableDictionary *phoneDic = [[NSMutableDictionary alloc] init];
+	NSMutableArray *phoneArray = [[NSMutableArray alloc] init];
+	ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(contact.record, kABPersonPhoneProperty);
+	int i;
+	for (i = 0;  i < ABMultiValueGetCount(phoneMulti);  i++) {
+		NSString *phone = (__bridge NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, i) ;
+		NSString *label =  (__bridge NSString*)ABMultiValueCopyLabelAtIndex(phoneMulti, i);
+		phoneDic = [NSDictionary dictionaryWithObjectsAndKeys:contact.contactName,KPHONENAMEDICDEFINE,phone,KPHONENUMBERDICDEFINE,label,KPHONELABELDICDEFINE,nil];
+		[phoneArray addObject:phoneDic];
+	}
+	return phoneArray;
+	CFRelease(phoneMulti);
+}
+
+//得到联系人的号码组与Label组
++(NSArray *) getPhoneNumberAndPhoneLabelArrayFromABRecodID:(ABRecordRef)person withABMultiValueIdentifier:(ABMultiValueIdentifier)identifierForValue
+{
+	NSString *nameStr = (__bridge NSString *)ABRecordCopyCompositeName(person);
+	NSMutableDictionary *phoneDic = [[NSMutableDictionary alloc] init];
+	NSMutableArray *phoneArray = [[NSMutableArray alloc] init];
+	ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+	NSString *phone = (__bridge NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue);
+	NSString *label =  (__bridge NSString*)ABMultiValueCopyLabelAtIndex(phoneMulti, identifierForValue);
+	phoneDic = [NSDictionary dictionaryWithObjectsAndKeys:nameStr,KPHONENAMEDICDEFINE,phone,KPHONENUMBERDICDEFINE,label,KPHONELABELDICDEFINE,nil];
+	[phoneArray addObject:phoneDic];
+	CFRelease(phoneMulti);
+	return phoneArray;
+}
+
+
+//从所存的辞典中得到当前联系人的电话号码
++(NSString *) getPhoneNumberFromDic:(NSDictionary *) Phonedic
+{
+	NSString * phoneNumber = [Phonedic objectForKey:KPHONENUMBERDICDEFINE];
+	return [ContactDB getPhoneNumberFomat:phoneNumber];
+}
+
+//从所存的辞典中得到当前联系人的姓名
++(NSString *) getPhoneNameFromDic:(NSDictionary *) Phonedic
+{
+	NSString * phoneName = [Phonedic objectForKey:KPHONENAMEDICDEFINE];
+	return phoneName;
+}
+
+
+//从所存的辞典中得到当前联系人的Label
++(NSString *) getPhoneLabelFromDic:(NSDictionary *) Phonedic
+{
+	NSString * PhoneLabel = [Phonedic objectForKey:KPHONELABELDICDEFINE];
+	if([PhoneLabel isEqualToString:@"_$!<Mobile>!$_"])
+		PhoneLabel = @"移动电话";
+	else if([PhoneLabel isEqualToString:@"_$!<Home>!$_"])
+		PhoneLabel = @"住宅";
+	else if([PhoneLabel isEqualToString:@"_$!<Work>!$_"])
+		PhoneLabel = @"工作";
+	else if([PhoneLabel isEqualToString:@"_$!<Main>!$_"])
+		PhoneLabel = @"主要";
+	else if([PhoneLabel isEqualToString:@"_$!<HomeFAX>!$_"])
+		PhoneLabel = @"住宅传真";
+	else if([PhoneLabel isEqualToString:@"_$!<WorkFAX>!$_"])
+		PhoneLabel = @"工作传真";
+	else if([PhoneLabel isEqualToString:@"_$!<Pager>!$_"])
+		PhoneLabel = @"传呼";
+	else if([PhoneLabel isEqualToString:@"_$!<Other>!$_"])
+		PhoneLabel = @"其它";
+	return PhoneLabel;
+}
+
+
+//向当前联系人表中插入一条电话记录
++ (BOOL)addPhone:(ABContact *)contact phone:(NSString*)phone{
+  ABMutableMultiValueRef multi = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+  CFErrorRef anError = NULL;
+  
+  // The multivalue identifier of the new value isn't used in this example,
+  // multivalueIdentifier is just for illustration purposes.  Real-world
+  // code can use this identifier to do additional work with this value.
+  ABMultiValueIdentifier multivalueIdentifier;
+  
+  if (!ABMultiValueAddValueAndLabel(multi, (__bridge CFStringRef)phone, kABPersonPhoneMainLabel, &multivalueIdentifier)){
+    CFRelease(multi);
+    return NO;
+  }
+	
+  if (!ABRecordSetValue(contact.record, kABPersonPhoneProperty, multi, &anError)){
+    CFRelease(multi);
+    return NO;
+  }
+  CFRelease(multi);
+  return YES;
+}
+
+
+//号码显示格式
++ (NSString *)getPhoneNumberFomat:(NSString *)phone{
+	if([phone length] <1)
+		return nil;
+	NSString* telNumber = @"";
+	for (int i=0; i<[phone length]; i++) {
+		NSString* chr = [phone substringWithRange:NSMakeRange(i, 1)];
+		if([ContactDB doesStringContain:@"0123456789" Withstr:chr]) {
+			/*if([telNumber length] == 3 || [telNumber length] == 8)
+			 telNumber = [telNumber stringByAppendingFormat:@"-%@", chr];
+			 else
+			 telNumber = [telNumber stringByAppendingFormat:@"%@", chr];*/
+			telNumber = [telNumber stringByAppendingFormat:@"%@", chr];
+		}
+	}
+	return telNumber;
+}
+
+//检测字符
++ (BOOL)doesStringContain:(NSString* )string Withstr:(NSString*)charcter{
+	if([string length] < 1)
+		return FALSE;
+	for (int i=0; i<[string length]; i++) {
+		NSString* chr = [string substringWithRange:NSMakeRange(i, 1)];
+		if([chr isEqualToString:charcter])
+			return TRUE;
+	}
+	return FALSE;
+}
+
+
++(NSString *)equalContactByAddressBookContacts:(NSString *)name withPhone:(NSString *)phone withLabel:(NSString *)label PhoneOrLabel:(BOOL)isPhone withFavorite:(BOOL)isFavorite
+{
+	ABContact *contact = nil;
+	NSArray *array;
+	NSString *phoneNumber = @"";
+	NSString *phoneLabel = @"";
+	if(isFavorite)
+		contact = [ContactDB byNameToGetContact:name];
+	if(!contact)
+		contact = [ContactDB byPhoneNumberAndLabelToGetContact:phone withLabel:label];
+	if(!contact)
+		contact = [ContactDB byPhoneNumberAndNameToGetContact:name withPhone:phone];
+	if([label isEqualToString:@"未知"] && contact == nil)
+		contact = [ContactDB byPhoneNumberlToGetContact:phone withLabel:label];
+	if(contact)
+	{
+		array = [ContactDB getPhoneNumberAndPhoneLabelArray:contact];
+	}
+	if(contact == nil)
+		return nil;
+	if([array count] == 1)
+	{
+		NSDictionary *PhoneDic = [array objectAtIndex:0];
+		phoneNumber = [ContactDB getPhoneNumberFromDic:PhoneDic];
+		phoneLabel = [ContactDB getPhoneLabelFromDic:PhoneDic];
+	}else  if([array count] > 1)
+	{
+		for(NSDictionary *dic in array)
+		{
+			NSString *aPhone = [ContactDB getPhoneNumberFromDic:dic];
+			NSString *aLabel = [ContactDB getPhoneLabelFromDic:dic];
+			if([phone isEqualToString:aPhone] && [label isEqualToString:aLabel])
+			{
+				phoneNumber = aPhone;
+				phoneLabel = aLabel;
+				break;
+			}
+		}
+	}
+	if(isPhone)
+		return phoneNumber;
+	else
+		return phoneLabel;
+}
+
+
++(NSString *)getContactsNameByPhoneNumberAndLabel:(NSString *)phone withLabel:(NSString *)label{
+	NSArray *array = [[ContactDB instance] contactsArray];
+	for(ABContact * contast in array)
+	{
+		NSArray *phoneArray = [ContactDB getPhoneNumberAndPhoneLabelArray:contast];
+		if(phoneArray == nil)
+			return nil;
+		for(NSDictionary *dic in phoneArray)
+		{
+			NSString *aPhone = [ContactDB getPhoneNumberFromDic:dic];
+			NSString *aLabel = [ContactDB getPhoneLabelFromDic:dic];
+			if([aPhone isEqualToString:phone] && [aLabel isEqualToString:label])
+				return contast.contactName;
+		}
+	}
+	return nil;
+}
+
+
+// 从通讯录中删除联联人
++(BOOL) removeSelfFromAddressBook:(ABContact *)contact withErrow:(NSError **) error
+{
+  //	if (!ABAddressBookRemoveRecord(addressBook, contact.record, (CFErrorRef *) error)) return NO;
+  //	return ABAddressBookSave(addressBook,  (CFErrorRef *) error);
+  return YES;
+}
+
++(BOOL)searchResult:(NSString *)contactName searchText:(NSString *)searchT{
+	NSComparisonResult result = [contactName compare:searchT options:NSCaseInsensitiveSearch
+                                             range:NSMakeRange(0, searchT.length)];
+	if (result == NSOrderedSame)
+		return YES;
+	else
+		return NO;
+}
+
+@end

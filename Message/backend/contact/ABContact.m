@@ -5,7 +5,7 @@
  */
 
 #import "ABContact.h"
-#import "ABContactsHelper.h"
+//#import "ABContactsHelper.h"
 
 
 @implementation ABContact
@@ -20,16 +20,10 @@
 
 + (id) contactWithRecord: (ABRecordRef) person
 {
-	return [[[ABContact alloc] initWithRecord:person] autorelease];
+	return [[ABContact alloc] initWithRecord:person] ;
 }
 
-+ (id) contactWithRecordID: (ABRecordID) recordID
-{
-	ABRecordRef contactrec = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
-	ABContact *contact = [self contactWithRecord:contactrec];
-	// CFRelease(contactrec); // Thanks Gary Fung
-	return contact;
-}
+
 
 // Thanks to Ciaran
 + (id) contact
@@ -43,13 +37,13 @@
 - (void) dealloc
 {
 	if (record) CFRelease(record);
-	[super dealloc];
+
 }
 
 #pragma mark utilities
 + (NSString *) localizedPropertyName: (ABPropertyID) aProperty
 {
-	return [(NSString *)ABPersonCopyLocalizedPropertyName(aProperty) autorelease];
+	return (__bridge NSString *)ABPersonCopyLocalizedPropertyName(aProperty) ;
 }
 
 + (ABPropertyType) propertyType: (ABPropertyID) aProperty
@@ -169,21 +163,21 @@
 {
 	// Recover the property for a given record
 	CFTypeRef theProperty = ABRecordCopyValue(record, anID);
-	NSArray *items = (NSArray *)ABMultiValueCopyArrayOfAllValues(theProperty);
+	NSArray *items = (__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(theProperty);
 	CFRelease(theProperty);
-	return [items autorelease];
+	return items;
 }
 
 + (id) objectForProperty: (ABPropertyID) anID inRecord: (ABRecordRef) record
 {
-	return [(id) ABRecordCopyValue(record, anID) autorelease];
+	return (__bridge id) ABRecordCopyValue(record, anID);
 }
 
 + (NSDictionary *) dictionaryWithValue: (id) value andLabel: (CFStringRef) label
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 	if (value) [dict setObject:value forKey:@"value"];
-	if (label) [dict setObject:(NSString *)label forKey:@"label"];
+	if (label) [dict setObject:(__bridge NSString *)label forKey:@"label"];
 	return dict;
 }
 
@@ -204,7 +198,7 @@
 + (NSDictionary *) smsWithService: (CFStringRef) service andUser: (NSString *) userName
 {
 	NSMutableDictionary *sms = [NSMutableDictionary dictionary];
-	if (service) [sms setObject:(NSString *) service forKey:(NSString *) kABPersonInstantMessageServiceKey];
+	if (service) [sms setObject:(__bridge NSString *) service forKey:(NSString *) kABPersonInstantMessageServiceKey];
 	if (userName) [sms setObject:userName forKey:(NSString *) kABPersonInstantMessageUsernameKey];
 	return sms;
 }
@@ -217,7 +211,7 @@
 #pragma mark Getting Single Value Strings
 - (NSString *) getRecordString:(ABPropertyID) anID
 {
-	return [(NSString *) ABRecordCopyValue(record, anID) autorelease];
+	return (__bridge NSString *) ABRecordCopyValue(record, anID) ;
 }
 - (NSString *) firstname {return [self getRecordString:kABPersonFirstNameProperty];}
 - (NSString *) lastname {return [self getRecordString:kABPersonLastNameProperty];}
@@ -258,15 +252,15 @@
 
 - (NSString *) compositeName
 {
-	NSString *string = (NSString *)ABRecordCopyCompositeName(record);
-	return [string autorelease];
+	NSString *string = (__bridge NSString *)ABRecordCopyCompositeName(record);
+	return string;
 }
 
 
 #pragma mark Dates
 - (NSDate *) getRecordDate:(ABPropertyID) anID
 {
-	return [(NSDate *) ABRecordCopyValue(record, anID) autorelease];
+	return (__bridge NSDate *) ABRecordCopyValue(record, anID);
 }
 
 - (NSDate *) birthday {return [self getRecordDate:kABPersonBirthdayProperty];}
@@ -277,9 +271,9 @@
 - (NSArray *) arrayForProperty: (ABPropertyID) anID
 {
 	CFTypeRef theProperty = ABRecordCopyValue(record, anID);
-	NSArray *items = (NSArray *)ABMultiValueCopyArrayOfAllValues(theProperty);
+	NSArray *items = (__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(theProperty);
 	CFRelease(theProperty);
-	return [items autorelease];
+	return items;
 }
 
 
@@ -289,9 +283,9 @@
 	NSMutableArray *labels = [NSMutableArray array];
 	for (int i = 0; i < ABMultiValueGetCount(theProperty); i++)
 	{
-		NSString *label = (NSString *)ABMultiValueCopyLabelAtIndex(theProperty, i);
+		NSString *label = (__bridge NSString *)ABMultiValueCopyLabelAtIndex(theProperty, i);
 		[labels addObject:label];
-		[label release];
+
 	}
 	CFRelease(theProperty);
 	return labels;
@@ -373,7 +367,7 @@
 - (BOOL) setString: (NSString *) aString forProperty:(ABPropertyID) anID
 {
 	CFErrorRef error;
-	BOOL success = ABRecordSetValue(record, anID, (CFStringRef) aString, &error);
+	BOOL success = ABRecordSetValue(record, anID, (__bridge CFStringRef) aString, &error);
 //	if (!success) NSLog(@"Error: %@", [(NSError *)error localizedDescription]);
 	return success;
 }
@@ -397,7 +391,7 @@
 - (BOOL) setDate: (NSDate *) aDate forProperty:(ABPropertyID) anID
 {
 	CFErrorRef error;
-	BOOL success = ABRecordSetValue(record, anID, (CFDateRef) aDate, &error);
+	BOOL success = ABRecordSetValue(record, anID, (__bridge CFDateRef) aDate, &error);
 	//if (!success) NSLog(@"Error: %@", [(NSError *)error localizedDescription]);
 	return success;
 }
@@ -418,7 +412,7 @@
 {
 	ABMutableMultiValueRef multi = ABMultiValueCreateMutable(aType);
 	for (NSDictionary *dict in anArray)
-		ABMultiValueAddValueAndLabel(multi, (CFTypeRef) [dict objectForKey:@"value"], (CFTypeRef) [dict objectForKey:@"label"], NULL);
+		ABMultiValueAddValueAndLabel(multi, (__bridge CFTypeRef) [dict objectForKey:@"value"], (__bridge CFTypeRef) [dict objectForKey:@"label"], NULL);
 	return multi;
 }
 
@@ -496,7 +490,7 @@
 {
 	if (!ABPersonHasImageData(record)) return nil;
 	CFDataRef imageData = ABPersonCopyImageData(record);
-	UIImage *image = [UIImage imageWithData:(NSData *) imageData];
+	UIImage *image = [UIImage imageWithData:(__bridge NSData *) imageData];
 	CFRelease(imageData);
 	return image;
 }
@@ -515,7 +509,7 @@
 	}
 	
 	NSData *data = UIImagePNGRepresentation(image);
-	success = ABPersonSetImageData(record, (CFDataRef) data, &error);
+	success = ABPersonSetImageData(record, (__bridge CFDataRef) data, &error);
 //	if (!success) NSLog(@"Error: %@", [(NSError *)error localizedDescription]);
 }
 @end

@@ -8,7 +8,7 @@
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
 
-extern ABAddressBookRef addressBook;
+
 
 @interface ABContact : NSObject
 {

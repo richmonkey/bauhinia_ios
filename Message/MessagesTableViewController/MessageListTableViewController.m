@@ -37,6 +37,14 @@
 {
   [super viewDidLoad];
   
+  self.title = @"对话";
+  
+  UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                 style:UIBarButtonItemStyleDone
+                                                                target:self
+                                                                action:@selector(back)];
+  self.navigationItem.leftBarButtonItem = backButton;
+  
   table_ = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	table_.delegate = self;
 	table_.dataSource = self;
