@@ -157,6 +157,10 @@
 		6D0D76851967B8AC0058DECF /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767D1967B8AC0058DECF /* Message.m */; };
 		6D0D76861967B8AC0058DECF /* MessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767F1967B8AC0058DECF /* MessageDB.m */; };
 		6D0D76871967B8AC0058DECF /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76801967B8AC0058DECF /* util.c */; };
+		6D0D76971967C1430058DECF /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D0D76901967C1430058DECF /* libleveldb.a */; };
+		6D0D769C1967C1680058DECF /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76991967C1680058DECF /* Group.m */; };
+		6D0D769D1967C1680058DECF /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769B1967C1680058DECF /* GroupDB.m */; };
+		6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769F1967C1850058DECF /* LevelDB.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -375,6 +379,26 @@
 		6D0D767F1967B8AC0058DECF /* MessageDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageDB.m; sourceTree = "<group>"; };
 		6D0D76801967B8AC0058DECF /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
 		6D0D76811967B8AC0058DECF /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		6D0D76891967C1430058DECF /* c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = c.h; sourceTree = "<group>"; };
+		6D0D768A1967C1430058DECF /* cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cache.h; sourceTree = "<group>"; };
+		6D0D768B1967C1430058DECF /* comparator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comparator.h; sourceTree = "<group>"; };
+		6D0D768C1967C1430058DECF /* db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = db.h; sourceTree = "<group>"; };
+		6D0D768D1967C1430058DECF /* env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = env.h; sourceTree = "<group>"; };
+		6D0D768E1967C1430058DECF /* filter_policy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filter_policy.h; sourceTree = "<group>"; };
+		6D0D768F1967C1430058DECF /* iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iterator.h; sourceTree = "<group>"; };
+		6D0D76901967C1430058DECF /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleveldb.a; sourceTree = "<group>"; };
+		6D0D76911967C1430058DECF /* options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
+		6D0D76921967C1430058DECF /* slice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = slice.h; sourceTree = "<group>"; };
+		6D0D76931967C1430058DECF /* status.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = status.h; sourceTree = "<group>"; };
+		6D0D76941967C1430058DECF /* table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = table.h; sourceTree = "<group>"; };
+		6D0D76951967C1430058DECF /* table_builder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = table_builder.h; sourceTree = "<group>"; };
+		6D0D76961967C1430058DECF /* write_batch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = write_batch.h; sourceTree = "<group>"; };
+		6D0D76981967C1680058DECF /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		6D0D76991967C1680058DECF /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
+		6D0D769A1967C1680058DECF /* GroupDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDB.h; sourceTree = "<group>"; };
+		6D0D769B1967C1680058DECF /* GroupDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDB.m; sourceTree = "<group>"; };
+		6D0D769E1967C1850058DECF /* LevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelDB.h; sourceTree = "<group>"; };
+		6D0D769F1967C1850058DECF /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -382,6 +406,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D0D76971967C1430058DECF /* libleveldb.a in Frameworks */,
 				2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
 				2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */,
@@ -466,6 +491,7 @@
 		2142CB0C1962683E0002E4A9 /* backend */ = {
 			isa = PBXGroup;
 			children = (
+				6D0D76881967C1430058DECF /* leveldb */,
 				6D0D76751967B8AC0058DECF /* im_sdk */,
 				2119FE4D1962ACE800E23B4F /* database */,
 				2142CB52196268860002E4A9 /* contact */,
@@ -778,6 +804,12 @@
 		6D0D76751967B8AC0058DECF /* im_sdk */ = {
 			isa = PBXGroup;
 			children = (
+				6D0D769E1967C1850058DECF /* LevelDB.h */,
+				6D0D769F1967C1850058DECF /* LevelDB.mm */,
+				6D0D76981967C1680058DECF /* Group.h */,
+				6D0D76991967C1680058DECF /* Group.m */,
+				6D0D769A1967C1680058DECF /* GroupDB.h */,
+				6D0D769B1967C1680058DECF /* GroupDB.m */,
 				6D0D76761967B8AC0058DECF /* AsyncTCP.h */,
 				6D0D76771967B8AC0058DECF /* AsyncTCP.m */,
 				6D0D76781967B8AC0058DECF /* IMessage.h */,
@@ -792,6 +824,27 @@
 				6D0D76811967B8AC0058DECF /* util.h */,
 			);
 			path = im_sdk;
+			sourceTree = "<group>";
+		};
+		6D0D76881967C1430058DECF /* leveldb */ = {
+			isa = PBXGroup;
+			children = (
+				6D0D76891967C1430058DECF /* c.h */,
+				6D0D768A1967C1430058DECF /* cache.h */,
+				6D0D768B1967C1430058DECF /* comparator.h */,
+				6D0D768C1967C1430058DECF /* db.h */,
+				6D0D768D1967C1430058DECF /* env.h */,
+				6D0D768E1967C1430058DECF /* filter_policy.h */,
+				6D0D768F1967C1430058DECF /* iterator.h */,
+				6D0D76901967C1430058DECF /* libleveldb.a */,
+				6D0D76911967C1430058DECF /* options.h */,
+				6D0D76921967C1430058DECF /* slice.h */,
+				6D0D76931967C1430058DECF /* status.h */,
+				6D0D76941967C1430058DECF /* table.h */,
+				6D0D76951967C1430058DECF /* table_builder.h */,
+				6D0D76961967C1430058DECF /* write_batch.h */,
+			);
+			path = leveldb;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -976,6 +1029,7 @@
 			files = (
 				2142CB0A196263BB0002E4A9 /* LoginViewController.m in Sources */,
 				2119FE6D1962ACE800E23B4F /* SUserDB.m in Sources */,
+				6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
 				2119FE481962949900E23B4F /* UserPresent.m in Sources */,
 				2142CB68196268860002E4A9 /* ModalAlert.m in Sources */,
@@ -1007,6 +1061,7 @@
 				6D0D76841967B8AC0058DECF /* IMService.m in Sources */,
 				217261621954151300F09E33 /* JSBubbleView.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
+				6D0D769D1967C1680058DECF /* GroupDB.m in Sources */,
 				217261A81954170A00F09E33 /* ConversationViewController.m in Sources */,
 				2119FE6A1962ACE800E23B4F /* FMResultSet.m in Sources */,
 				6D0D76871967B8AC0058DECF /* util.c in Sources */,
@@ -1017,6 +1072,7 @@
 				6D0D76851967B8AC0058DECF /* Message.m in Sources */,
 				21798FA3194E9C4600B67C1F /* main.m in Sources */,
 				217262CA1954227500F09E33 /* THContactPickerViewController.m in Sources */,
+				6D0D769C1967C1680058DECF /* Group.m in Sources */,
 				21A4FE001952E24100F117E0 /* UIImage+JSMessagesView.m in Sources */,
 				2142CB64196268860002E4A9 /* ABGroup.m in Sources */,
 				2142CB63196268860002E4A9 /* ABContactsHelper.m in Sources */,
@@ -1156,9 +1212,13 @@
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Message/backend/leveldb",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = Message/backend/im_sdk/im_sdk;
+				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1172,9 +1232,13 @@
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Message/backend/leveldb",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = Message/backend/im_sdk/im_sdk;
+				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
