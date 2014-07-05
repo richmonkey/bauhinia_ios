@@ -21,7 +21,7 @@
 #define BARBUTTON(TITLE, SELECTOR)		[[[UIBarButtonItem alloc] initWithTitle:TITLE style:UIBarButtonItemStylePlain target:self action:SELECTOR] autorelease]//UIBarButtonItem
 #define NUMBER(X) [NSNumber numberWithInt:X]
 
-ABAddressBookRef addressBook;
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

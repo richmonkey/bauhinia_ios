@@ -28,9 +28,14 @@
 @synthesize aBPersonNav;
 @synthesize aBNewPersonNav;
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  if(addressBook == nil){
+		addressBook = ABAddressBookCreate();
+  }
+  
 	isGroup = NO;
 	
   self.DataTable = [[UITableView alloc] initWithFrame:self.view.frame];
@@ -72,10 +77,16 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
 	[super viewDidDisappear:animated];
+  
+  if(addressBook){
+		CFRelease(addressBook);
+  }
+  
 }
 
 
 -(void)initData{
+  
 	self.contacts = [ContactData contactsArray];
 	if([contacts count] <1)
 	{

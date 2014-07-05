@@ -15,6 +15,7 @@
 #import "ContactsController.h"
 #import "IMService.h"
 #import "UserPresent.h"
+//#import "MMAddressBookViewController.h"
 
 @interface LoginViewController ()
 
@@ -154,6 +155,7 @@
   
   MessageListTableViewController* msgController = [[MessageListTableViewController alloc] init];
   msgController.title = @"消息";
+  
   
   
   ContactsController* contactViewController = [[ContactsController alloc] init];

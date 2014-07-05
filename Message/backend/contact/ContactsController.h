@@ -9,13 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "ABContactsHelper.h"
 #import "ABContact.h"
+
+ABAddressBookRef addressBook;
+
 @interface ContactsController : UIViewController <UITableViewDelegate, UITableViewDataSource,ABNewPersonViewControllerDelegate,
 ABPersonViewControllerDelegate,UISearchBarDelegate>{
-	 UINavigationBar *NavBar;
-	 UINavigationBar *ContactNavBar;
-	 UITableView *DataTable;
-	 UIBarButtonItem *editBtn;
-	 UIBarButtonItem *groupBtn;
+  UINavigationBar *NavBar;
+  UINavigationBar *ContactNavBar;
+  UITableView *DataTable;
+  UIBarButtonItem *editBtn;
+  UIBarButtonItem *groupBtn;
 	UISearchDisplayController *searchDC;
 	UISearchBar *searchBar;
 	UINavigationController *aBPersonNav;

@@ -134,6 +134,7 @@
 		217262C91954227500F09E33 /* THContactPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 217262B11954227500F09E33 /* THContactPickerView.m */; };
 		217262CA1954227500F09E33 /* THContactPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 217262B31954227500F09E33 /* THContactPickerViewController.m */; };
 		217262CB1954227500F09E33 /* THContactPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 217262B41954227500F09E33 /* THContactPickerViewController.xib */; };
+		2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2173C09F19668B8800BC3BDF /* libxml2.2.dylib */; };
 		21798F97194E9C4600B67C1F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21798F96194E9C4600B67C1F /* Foundation.framework */; };
 		21798F99194E9C4600B67C1F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21798F98194E9C4600B67C1F /* CoreGraphics.framework */; };
 		21798F9B194E9C4600B67C1F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21798F9A194E9C4600B67C1F /* UIKit.framework */; };
@@ -256,8 +257,8 @@
 		2142CB58196268860002E4A9 /* ABGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABGroup.m; sourceTree = "<group>"; };
 		2142CB59196268860002E4A9 /* ContactData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactData.h; sourceTree = "<group>"; };
 		2142CB5A196268860002E4A9 /* ContactData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactData.m; sourceTree = "<group>"; };
-		2142CB5B196268860002E4A9 /* ContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsController.h; sourceTree = "<group>"; };
-		2142CB5C196268860002E4A9 /* ContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsController.m; sourceTree = "<group>"; };
+		2142CB5B196268860002E4A9 /* ContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactsController.h; path = backend/contact/ContactsController.h; sourceTree = "<group>"; };
+		2142CB5C196268860002E4A9 /* ContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactsController.m; path = backend/contact/ContactsController.m; sourceTree = "<group>"; };
 		2142CB5E196268860002E4A9 /* ModalAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalAlert.h; sourceTree = "<group>"; };
 		2142CB5F196268860002E4A9 /* ModalAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalAlert.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
@@ -359,6 +360,8 @@
 		217262B31954227500F09E33 /* THContactPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THContactPickerViewController.m; sourceTree = "<group>"; };
 		217262B41954227500F09E33 /* THContactPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = THContactPickerViewController.xib; sourceTree = "<group>"; };
 		217262CC1954318200F09E33 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = ../Constants.h; sourceTree = "<group>"; };
+		2173C09F19668B8800BC3BDF /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
+		2173C0A019668B8900BC3BDF /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		21798F93194E9C4600B67C1F /* Message.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Message.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21798F96194E9C4600B67C1F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		21798F98194E9C4600B67C1F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -391,6 +394,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */,
 				6DB5AF491965B4E40008D279 /* libim_sdk.a in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
 				2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */,
@@ -534,8 +538,6 @@
 				2142CB58196268860002E4A9 /* ABGroup.m */,
 				2142CB59196268860002E4A9 /* ContactData.h */,
 				2142CB5A196268860002E4A9 /* ContactData.m */,
-				2142CB5B196268860002E4A9 /* ContactsController.h */,
-				2142CB5C196268860002E4A9 /* ContactsController.m */,
 				2142CB5E196268860002E4A9 /* ModalAlert.h */,
 				2142CB5F196268860002E4A9 /* ModalAlert.m */,
 				2142CB60196268860002E4A9 /* pinyin.c */,
@@ -695,6 +697,8 @@
 		21798F95194E9C4600B67C1F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2173C09F19668B8800BC3BDF /* libxml2.2.dylib */,
+				2173C0A019668B8900BC3BDF /* libxml2.dylib */,
 				2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */,
 				217261991954155500F09E33 /* AddressBookUI.framework */,
 				217261971954155000F09E33 /* AddressBook.framework */,
@@ -718,6 +722,8 @@
 				217262CC1954318200F09E33 /* Constants.h */,
 				217260E8195413F800F09E33 /* MessageListTableViewController.h */,
 				217260E9195413F800F09E33 /* MessageListTableViewController.m */,
+				2142CB5B196268860002E4A9 /* ContactsController.h */,
+				2142CB5C196268860002E4A9 /* ContactsController.m */,
 				217261A31954170A00F09E33 /* ConversationViewController.h */,
 				217261A41954170A00F09E33 /* ConversationViewController.m */,
 				217261A51954170A00F09E33 /* ConversationViewController.xib */,
@@ -1183,6 +1189,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/im_sdk/im_sdk;
@@ -1198,6 +1205,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/im_sdk/im_sdk;
