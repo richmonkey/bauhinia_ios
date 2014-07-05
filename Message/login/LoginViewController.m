@@ -30,17 +30,7 @@
   // 设置背景颜色
   self.view.backgroundColor = [UIColor grayColor];
   
-#if TARGET_IPHONE_SIMULATOR
-  
-  //Simulator
   self.mobile.text = @"13635273143";
-  
-#else
-  // Device
-  self.mobile.text = @"13635273142";
-  
-#endif
-  
 }
 
 
@@ -112,17 +102,9 @@
     [self alertError:@"请输入密码"];
     return;
   }
-  
-#if TARGET_IPHONE_SIMULATOR
-  //Simulator
+
   [UserPresent instance].username = @"小张";
-  [UserPresent instance].userid = [self.mobile.text intValue];
-#else
-  // Device
-  [UserPresent instance].username = @"小王";
-  [UserPresent instance].userid = [self.mobile.text intValue];
-  
-#endif
+  [UserPresent instance].userid = [self.mobile.text longLongValue];
 
   // 3.登录成功
   // 3.1.开始动画

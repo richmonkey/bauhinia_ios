@@ -51,13 +51,15 @@
         p += 8;
         writeInt64(m.receiver, p);
         p += 8;
+        writeInt32(m.msgLocalID, p);
+        p += 4;
         const char *s = [m.content UTF8String];
         int l = strlen(s);
-        if ((l + 24) > 64*1024) {
+        if ((l + 28) > 64*1024) {
             return nil;
         }
         memcpy(p, s, l);
-        return [NSData dataWithBytes:buf length:HEAD_SIZE + 16 +l];
+        return [NSData dataWithBytes:buf length:HEAD_SIZE + 20 +l];
     } else if (self.cmd == MSG_ACK) {
         writeInt32([(NSNumber*)self.body intValue], p);
         return [NSData dataWithBytes:buf length:HEAD_SIZE+4];
@@ -99,6 +101,8 @@
         p += 8;
         m.receiver = readInt64(p);
         p += 8;
+        m.msgLocalID = readInt32(p);
+        p += 4;
         m.content = [[NSString alloc] initWithBytes:p length:data.length-24 encoding:NSUTF8StringEncoding];
         self.body = m;
         return YES;

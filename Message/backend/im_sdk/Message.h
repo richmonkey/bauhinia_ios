@@ -24,6 +24,7 @@
 @interface IMMessage : NSObject
 @property(nonatomic, assign)int64_t sender;
 @property(nonatomic, assign)int64_t receiver;
+@property(nonatomic, assign)int32_t msgLocalID;
 @property(nonatomic, copy)NSString *content;
 @end
 

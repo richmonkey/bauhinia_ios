@@ -16,4 +16,7 @@
   #import <UIKit/UIKit.h>
   #import <Foundation/Foundation.h>
   #import "Constants.h" 
+
+  #define IMLog(fmt, ...) NSLog(@"%s:%d %@", __FILE__, __LINE__, [NSString stringWithFormat:fmt, ##__VA_ARGS__])
 #endif
+
