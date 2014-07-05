@@ -45,16 +45,16 @@
                                                                 action:@selector(back)];
   self.navigationItem.leftBarButtonItem = backButton;
   
-  table_ = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
-	table_.delegate = self;
-	table_.dataSource = self;
-	table_.scrollEnabled = YES;
-	table_.showsVerticalScrollIndicator = NO;
-	table_.separatorStyle = UITableViewCellSeparatorStyleNone;
+  _table = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
+	_table.delegate = self;
+	_table.dataSource = self;
+	_table.scrollEnabled = YES;
+	_table.showsVerticalScrollIndicator = NO;
+	_table.separatorStyle = UITableViewCellSeparatorStyleNone;
   //	table_.backgroundColor = [UIColor clearColor];
-  table_.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
-  table_.frame = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44);
-	[self.view addSubview:table_];
+  _table.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
+  _table.frame = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44);
+	[self.view addSubview:_table];
   //	[self.view sendSubviewToBack:table_];
   
   

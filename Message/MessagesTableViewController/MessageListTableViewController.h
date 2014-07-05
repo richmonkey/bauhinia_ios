@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MessageListTableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource >
+@interface MessageListTableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource , UISearchBarDelegate >
 {
   
-	UITableView *table_;
-
+	UITableView *_table;
+	UISearchDisplayController *searchDC;
+	UISearchBar *searchBar;
 }
 
 @property (strong ,nonatomic) NSMutableArray *conversations;

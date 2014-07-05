@@ -11,17 +11,13 @@
 #import "ContactDB.h"
 
 @interface ContactsController : UIViewController <UITableViewDelegate, UITableViewDataSource,
-ABPersonViewControllerDelegate,
-UISearchBarDelegate>{
-//  UINavigationBar *NavBar;
-//  UINavigationBar *ContactNavBar;
-  UITableView *_tableView;
-  UIBarButtonItem *editBtn;
-  UIBarButtonItem *groupBtn;
+                                                    ABPersonViewControllerDelegate, UISearchBarDelegate> {
+    UITableView *_tableView;
+    UIBarButtonItem *editBtn;
+    UIBarButtonItem *groupBtn;
 	UISearchDisplayController *searchDC;
 	UISearchBar *searchBar;
 	UINavigationController *aBPersonNav;
-//	UINavigationController *aBNewPersonNav;
 	NSMutableArray *filteredArray;
 	NSMutableArray *contactNameArray;
 	NSMutableDictionary *contactNameDic;
@@ -31,21 +27,15 @@ UISearchBarDelegate>{
 	CGFloat redcolor, greencolor, bluecolor;
 	BOOL isSearch, isEdit, isGroup;
 }
-@property (retain) UITableView *_tableView;
-@property (retain) NSArray *contacts;
-@property (retain) NSMutableArray *filteredArray;
-@property (retain) NSMutableArray *contactNameArray;
-@property (retain) NSMutableDictionary *contactNameDic;
-@property (retain) NSMutableArray *sectionArray;
-@property (retain) UISearchDisplayController *searchDC;
-@property (retain) UISearchBar *searchBar;
-@property (retain) UINavigationController *aBPersonNav;
-//@property (retain) UINavigationController *aBNewPersonNav;
 
+@property (nonatomic) UITableView *_tableView;
+@property (nonatomic) NSArray *contacts;
+@property (nonatomic) NSMutableArray *filteredArray;
+@property (nonatomic) NSMutableArray *contactNameArray;
+@property (nonatomic) NSMutableDictionary *contactNameDic;
+@property (nonatomic) NSMutableArray *sectionArray;
+@property (nonatomic) UISearchDisplayController *searchDC;
+@property (nonatomic) UISearchBar *searchBar;
+@property (nonatomic) UINavigationController *aBPersonNav;
 
-//添加联系人
--(void)initData;
-//-(void)addContactItemBtn:(id)sender;
-//-(void)editContactItemBtn:(id)sender;
-//-(void)groupBtnAction:(id)sender;
 @end
