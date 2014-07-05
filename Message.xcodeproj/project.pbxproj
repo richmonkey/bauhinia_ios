@@ -10,17 +10,6 @@
 		2119FE481962949900E23B4F /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE471962949900E23B4F /* UserPresent.m */; };
 		2119FE4B1962A2D100E23B4F /* head1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE491962A2D100E23B4F /* head1.png */; };
 		2119FE4C1962A2D100E23B4F /* head2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE4A1962A2D100E23B4F /* head2.png */; };
-		2119FE661962ACE800E23B4F /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE501962ACE800E23B4F /* FMDatabase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2119FE671962ACE800E23B4F /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE521962ACE800E23B4F /* FMDatabaseAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2119FE681962ACE800E23B4F /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE541962ACE800E23B4F /* FMDatabasePool.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2119FE691962ACE800E23B4F /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE561962ACE800E23B4F /* FMDatabaseQueue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2119FE6A1962ACE800E23B4F /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE581962ACE800E23B4F /* FMResultSet.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2119FE6B1962ACE800E23B4F /* SDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE5A1962ACE800E23B4F /* SDBManager.m */; };
-		2119FE6C1962ACE800E23B4F /* SUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE5C1962ACE800E23B4F /* SUser.m */; };
-		2119FE6D1962ACE800E23B4F /* SUserDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE5E1962ACE800E23B4F /* SUserDB.m */; };
-		2119FE6E1962ACE800E23B4F /* SUserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE601962ACE800E23B4F /* SUserTableViewController.m */; };
-		2119FE6F1962ACE800E23B4F /* SUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE621962ACE800E23B4F /* SUserViewController.m */; };
-		2119FE701962ACE800E23B4F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE641962ACE800E23B4F /* ViewController.m */; };
 		2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */; };
 		2119FE7A1962AEE800E23B4F /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE791962AEE800E23B4F /* MessageModel.m */; };
 		2142CB0A196263BB0002E4A9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB08196263BB0002E4A9 /* LoginViewController.m */; };
@@ -178,28 +167,6 @@
 		2119FE471962949900E23B4F /* UserPresent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserPresent.m; path = ../UserPresent.m; sourceTree = "<group>"; };
 		2119FE491962A2D100E23B4F /* head1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head1.png; sourceTree = "<group>"; };
 		2119FE4A1962A2D100E23B4F /* head2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head2.png; sourceTree = "<group>"; };
-		2119FE4F1962ACE800E23B4F /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
-		2119FE501962ACE800E23B4F /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
-		2119FE511962ACE800E23B4F /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
-		2119FE521962ACE800E23B4F /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
-		2119FE531962ACE800E23B4F /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
-		2119FE541962ACE800E23B4F /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
-		2119FE551962ACE800E23B4F /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
-		2119FE561962ACE800E23B4F /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
-		2119FE571962ACE800E23B4F /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
-		2119FE581962ACE800E23B4F /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
-		2119FE591962ACE800E23B4F /* SDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDBManager.h; sourceTree = "<group>"; };
-		2119FE5A1962ACE800E23B4F /* SDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDBManager.m; sourceTree = "<group>"; };
-		2119FE5B1962ACE800E23B4F /* SUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUser.h; sourceTree = "<group>"; };
-		2119FE5C1962ACE800E23B4F /* SUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUser.m; sourceTree = "<group>"; };
-		2119FE5D1962ACE800E23B4F /* SUserDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUserDB.h; sourceTree = "<group>"; };
-		2119FE5E1962ACE800E23B4F /* SUserDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUserDB.m; sourceTree = "<group>"; };
-		2119FE5F1962ACE800E23B4F /* SUserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUserTableViewController.h; sourceTree = "<group>"; };
-		2119FE601962ACE800E23B4F /* SUserTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUserTableViewController.m; sourceTree = "<group>"; };
-		2119FE611962ACE800E23B4F /* SUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUserViewController.h; sourceTree = "<group>"; };
-		2119FE621962ACE800E23B4F /* SUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUserViewController.m; sourceTree = "<group>"; };
-		2119FE631962ACE800E23B4F /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		2119FE641962ACE800E23B4F /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		2119FE781962AEE800E23B4F /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
 		2119FE791962AEE800E23B4F /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
@@ -430,43 +397,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2119FE4D1962ACE800E23B4F /* database */ = {
-			isa = PBXGroup;
-			children = (
-				2119FE4E1962ACE800E23B4F /* FMDB */,
-				2119FE591962ACE800E23B4F /* SDBManager.h */,
-				2119FE5A1962ACE800E23B4F /* SDBManager.m */,
-				2119FE5B1962ACE800E23B4F /* SUser.h */,
-				2119FE5C1962ACE800E23B4F /* SUser.m */,
-				2119FE5D1962ACE800E23B4F /* SUserDB.h */,
-				2119FE5E1962ACE800E23B4F /* SUserDB.m */,
-				2119FE5F1962ACE800E23B4F /* SUserTableViewController.h */,
-				2119FE601962ACE800E23B4F /* SUserTableViewController.m */,
-				2119FE611962ACE800E23B4F /* SUserViewController.h */,
-				2119FE621962ACE800E23B4F /* SUserViewController.m */,
-				2119FE631962ACE800E23B4F /* ViewController.h */,
-				2119FE641962ACE800E23B4F /* ViewController.m */,
-			);
-			path = database;
-			sourceTree = "<group>";
-		};
-		2119FE4E1962ACE800E23B4F /* FMDB */ = {
-			isa = PBXGroup;
-			children = (
-				2119FE4F1962ACE800E23B4F /* FMDatabase.h */,
-				2119FE501962ACE800E23B4F /* FMDatabase.m */,
-				2119FE511962ACE800E23B4F /* FMDatabaseAdditions.h */,
-				2119FE521962ACE800E23B4F /* FMDatabaseAdditions.m */,
-				2119FE531962ACE800E23B4F /* FMDatabasePool.h */,
-				2119FE541962ACE800E23B4F /* FMDatabasePool.m */,
-				2119FE551962ACE800E23B4F /* FMDatabaseQueue.h */,
-				2119FE561962ACE800E23B4F /* FMDatabaseQueue.m */,
-				2119FE571962ACE800E23B4F /* FMResultSet.h */,
-				2119FE581962ACE800E23B4F /* FMResultSet.m */,
-			);
-			path = FMDB;
-			sourceTree = "<group>";
-		};
 		2119FE771962AEAA00E23B4F /* model */ = {
 			isa = PBXGroup;
 			children = (
@@ -493,7 +423,6 @@
 			children = (
 				6D0D76881967C1430058DECF /* leveldb */,
 				6D0D76751967B8AC0058DECF /* im_sdk */,
-				2119FE4D1962ACE800E23B4F /* database */,
 				2142CB52196268860002E4A9 /* contact */,
 			);
 			path = backend;
@@ -1028,7 +957,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2142CB0A196263BB0002E4A9 /* LoginViewController.m in Sources */,
-				2119FE6D1962ACE800E23B4F /* SUserDB.m in Sources */,
 				6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
 				2119FE481962949900E23B4F /* UserPresent.m in Sources */,
@@ -1038,32 +966,23 @@
 				217261671954151300F09E33 /* JSMessageTextView.m in Sources */,
 				217260EA195413F800F09E33 /* MessageListTableViewController.m in Sources */,
 				2142CB65196268860002E4A9 /* ContactData.m in Sources */,
-				2119FE671962ACE800E23B4F /* FMDatabaseAdditions.m in Sources */,
 				217262C41954227500F09E33 /* THBubbleColor.m in Sources */,
 				2172619F1954168400F09E33 /* MsgViewController.m in Sources */,
-				2119FE6E1962ACE800E23B4F /* SUserTableViewController.m in Sources */,
 				217261631954151300F09E33 /* JSDismissiveTextView.m in Sources */,
 				217261641954151300F09E33 /* JSMessageInputView.m in Sources */,
 				217261651954151300F09E33 /* JSMessageSoundEffect.m in Sources */,
 				217261611954151300F09E33 /* JSBubbleMessageCell.m in Sources */,
 				2142CB62196268860002E4A9 /* ABContact.m in Sources */,
-				2119FE6C1962ACE800E23B4F /* SUser.m in Sources */,
 				2172611C1954142400F09E33 /* SettingViewController.m in Sources */,
-				2119FE701962ACE800E23B4F /* ViewController.m in Sources */,
 				217262C61954227500F09E33 /* THContactBubble.m in Sources */,
 				217262C91954227500F09E33 /* THContactPickerView.m in Sources */,
-				2119FE6F1962ACE800E23B4F /* SUserViewController.m in Sources */,
 				6D0D76861967B8AC0058DECF /* MessageDB.m in Sources */,
-				2119FE6B1962ACE800E23B4F /* SDBManager.m in Sources */,
 				217261661954151300F09E33 /* JSMessagesViewController.m in Sources */,
-				2119FE661962ACE800E23B4F /* FMDatabase.m in Sources */,
-				2119FE681962ACE800E23B4F /* FMDatabasePool.m in Sources */,
 				6D0D76841967B8AC0058DECF /* IMService.m in Sources */,
 				217261621954151300F09E33 /* JSBubbleView.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
 				6D0D769D1967C1680058DECF /* GroupDB.m in Sources */,
 				217261A81954170A00F09E33 /* ConversationViewController.m in Sources */,
-				2119FE6A1962ACE800E23B4F /* FMResultSet.m in Sources */,
 				6D0D76871967B8AC0058DECF /* util.c in Sources */,
 				21A4FDFE1952E24100F117E0 /* UIButton+JSMessagesView.m in Sources */,
 				217262C71954227500F09E33 /* THContactPickerTableViewCell.m in Sources */,
@@ -1080,7 +999,6 @@
 				217261681954151300F09E33 /* NSString+JSMessagesView.m in Sources */,
 				2142CB66196268860002E4A9 /* ContactsController.m in Sources */,
 				217262C51954227500F09E33 /* THContact.m in Sources */,
-				2119FE691962ACE800E23B4F /* FMDatabaseQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
