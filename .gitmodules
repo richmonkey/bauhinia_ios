@@ -1,3 +1,0 @@
-[submodule "Message/backend/im_sdk"]
-	path = Message/backend/im_sdk
-	url = https://github.com/richmonkey/im_ios_sdk.git
