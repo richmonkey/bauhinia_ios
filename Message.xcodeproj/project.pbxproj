@@ -38,8 +38,7 @@
 		2142CB4F196268490002E4A9 /* logout_btn_bg_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB37196268490002E4A9 /* logout_btn_bg_highlighted@2x.png */; };
 		2142CB50196268490002E4A9 /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB38196268490002E4A9 /* message.png */; };
 		2142CB51196268490002E4A9 /* setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB39196268490002E4A9 /* setting.png */; };
-		2142CB62196268860002E4A9 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB54196268860002E4A9 /* ABContact.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2142CB66196268860002E4A9 /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB5C196268860002E4A9 /* ContactsController.m */; };
+		2142CB62196268860002E4A9 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB54196268860002E4A9 /* ABContact.m */; };
 		2142CB69196268860002E4A9 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB60196268860002E4A9 /* pinyin.c */; };
 		217260EA195413F800F09E33 /* MessageListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 217260E9195413F800F09E33 /* MessageListTableViewController.m */; };
 		2172611C1954142400F09E33 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 217261191954142400F09E33 /* SettingViewController.m */; };
@@ -147,6 +146,7 @@
 		6D0D769C1967C1680058DECF /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76991967C1680058DECF /* Group.m */; };
 		6D0D769D1967C1680058DECF /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769B1967C1680058DECF /* GroupDB.m */; };
 		6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769F1967C1850058DECF /* LevelDB.mm */; };
+		6D0D76A619686A330058DECF /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A519686A330058DECF /* ContactsController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,8 +196,6 @@
 		2142CB39196268490002E4A9 /* setting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting.png; sourceTree = "<group>"; };
 		2142CB53196268860002E4A9 /* ABContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABContact.h; sourceTree = "<group>"; };
 		2142CB54196268860002E4A9 /* ABContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABContact.m; sourceTree = "<group>"; };
-		2142CB5B196268860002E4A9 /* ContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactsController.h; path = backend/contact/ContactsController.h; sourceTree = "<group>"; };
-		2142CB5C196268860002E4A9 /* ContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactsController.m; path = backend/contact/ContactsController.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
 		2142CB61196268860002E4A9 /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pinyin.h; sourceTree = "<group>"; };
 		217260E8195413F800F09E33 /* MessageListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageListTableViewController.h; path = MessagesTableViewController/MessageListTableViewController.h; sourceTree = "<group>"; };
@@ -357,6 +355,8 @@
 		6D0D769B1967C1680058DECF /* GroupDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDB.m; sourceTree = "<group>"; };
 		6D0D769E1967C1850058DECF /* LevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelDB.h; sourceTree = "<group>"; };
 		6D0D769F1967C1850058DECF /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
+		6D0D76A419686A330058DECF /* ContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsController.h; sourceTree = "<group>"; };
+		6D0D76A519686A330058DECF /* ContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -647,10 +647,10 @@
 				217262A01954227500F09E33 /* contact */,
 				21A4FD7E1952E24100F117E0 /* Messages */,
 				217262CC1954318200F09E33 /* Constants.h */,
+				6D0D76A419686A330058DECF /* ContactsController.h */,
+				6D0D76A519686A330058DECF /* ContactsController.m */,
 				217260E8195413F800F09E33 /* MessageListTableViewController.h */,
 				217260E9195413F800F09E33 /* MessageListTableViewController.m */,
-				2142CB5B196268860002E4A9 /* ContactsController.h */,
-				2142CB5C196268860002E4A9 /* ContactsController.m */,
 				217261A31954170A00F09E33 /* ConversationViewController.h */,
 				217261A41954170A00F09E33 /* ConversationViewController.m */,
 				217261A51954170A00F09E33 /* ConversationViewController.xib */,
@@ -943,6 +943,7 @@
 			files = (
 				2142CB0A196263BB0002E4A9 /* LoginViewController.m in Sources */,
 				6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */,
+				6D0D76A619686A330058DECF /* ContactsController.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
 				2119FE481962949900E23B4F /* UserPresent.m in Sources */,
 				21A4FE011952E24100F117E0 /* UIView+AnimationOptionsForCurve.m in Sources */,
@@ -979,7 +980,6 @@
 				21A4FE001952E24100F117E0 /* UIImage+JSMessagesView.m in Sources */,
 				2119FE7A1962AEE800E23B4F /* MessageModel.m in Sources */,
 				217261681954151300F09E33 /* NSString+JSMessagesView.m in Sources */,
-				2142CB66196268860002E4A9 /* ContactsController.m in Sources */,
 				217262C51954227500F09E33 /* THContact.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

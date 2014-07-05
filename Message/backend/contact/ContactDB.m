@@ -39,8 +39,6 @@
 
     
     ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
-    NSLog(@"status:%d", status);
-    
     void (^block)(bool, CFErrorRef ) = ^(bool granted, CFErrorRef error){
       NSLog(@"grant:%d", granted);
     };
@@ -48,11 +46,10 @@
     if (status == kABAuthorizationStatusNotDetermined) {
       ABAddressBookRequestAccessWithCompletion(self.addressBook,block);
     }
-    
-   
   }
   return self;
 }
+
 - (NSArray *) contactsArray {
   NSArray *thePeople = (__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(self.addressBook);
 	NSMutableArray *array = [NSMutableArray arrayWithCapacity:thePeople.count];
