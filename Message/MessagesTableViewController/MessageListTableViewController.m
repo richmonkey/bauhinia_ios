@@ -10,6 +10,10 @@
 #import "MsgViewController.h"
 #import "MessageDB.h"
 #import "IMessage.h"
+#import "MessageConversationCell.h"
+#import "MessageGroupConversationCell.h"
+#import "MessageConversationActionTableViewCell.h"
+
 
 @interface MessageListTableViewController ()
 
@@ -17,99 +21,202 @@
 
 @implementation MessageListTableViewController
 
+@synthesize _table;
+@synthesize filteredArray;
+@synthesize searchBar;
+@synthesize searchDC;
+@synthesize conversations;
+
 -(id)init{
-  self = [super init];
-  if (self) {
-    self.conversations = [[NSMutableArray alloc] init];
-    ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
-    
-    Conversation * conversation = [iterator next];
-    while (conversation) {
-      [self.conversations addObject:conversation];
-      conversation = [iterator next];
+    self = [super init];
+    if (self) {
+        self.conversations = [[NSMutableArray alloc] init];
+        ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
+        
+        Conversation * conversation = [iterator next];
+        while (conversation) {
+            [self.conversations addObject:conversation];
+            conversation = [iterator next];
+        }
+        
     }
-    
-  }
-  return self;
+    return self;
 }
 
 - (void)viewDidLoad
 {
-  [super viewDidLoad];
-  
-  self.title = @"对话";
-  
-  UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                 style:UIBarButtonItemStyleDone
-                                                                target:self
-                                                                action:@selector(back)];
-  self.navigationItem.leftBarButtonItem = backButton;
-  
-  _table = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
-	_table.delegate = self;
-	_table.dataSource = self;
-	_table.scrollEnabled = YES;
-	_table.showsVerticalScrollIndicator = NO;
-	_table.separatorStyle = UITableViewCellSeparatorStyleNone;
-  //	table_.backgroundColor = [UIColor clearColor];
-  _table.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
-  _table.frame = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - 44);
-	[self.view addSubview:_table];
-  //	[self.view sendSubviewToBack:table_];
-  
-  
-  //    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
-  //      self.edgesForExtendedLayout = UIRectEdgeNone;
-  // Uncomment the following line to preserve selection between presentations.
-  // self.clearsSelectionOnViewWillAppear = NO;
-  
-  // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-  // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [super viewDidLoad];
+    
+    self.title = @"对话";
+    
+    UIBarButtonItem *editorButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
+                                                                   style:UIBarButtonItemStyleDone
+                                                                  target:self
+                                                                  action:@selector(editorAction)];
+    self.navigationItem.leftBarButtonItem = editorButton;
+    
+    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithTitle:@"新建"
+                                                                     style:UIBarButtonItemStyleDone
+                                                                    target:self
+                                                                    action:@selector(newAction)];
+    self.navigationItem.rightBarButtonItem = newButton;
+    
+    
+    self._table = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
+	self._table.delegate = self;
+	self._table.dataSource = self;
+	self._table.scrollEnabled = YES;
+	self._table.showsVerticalScrollIndicator = NO;
+	self._table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    
+    self._table.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
+    self._table.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+	[self.view addSubview:self._table];
+    
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
+	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	self.searchBar.keyboardType = UIKeyboardTypeDefault;
+	self.searchBar.delegate = self;
+	self._table.tableHeaderView = self.searchBar;
+	
+    self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
+	self.searchDC.searchResultsDataSource = self;
+	self.searchDC.searchResultsDelegate = self;
+    
+    
+    
+    
+    //    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+    //      self.edgesForExtendedLayout = UIRectEdgeNone;
+    // Uncomment the following line to preserve selection between presentations.
+    // self.clearsSelectionOnViewWillAppear = NO;
+    
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning
 {
-  [super didReceiveMemoryWarning];
-  // Dispose of any resources that can be recreated.
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  // Return the number of sections.
-  return 1;
+    // Return the number of sections.
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  // Return the number of rows in the section.
-  return [self.conversations count];
+    if (tableView == self._table) {
+        // Return the number of rows in the section.
+        return [self.conversations count] + 1;
+    }else{
+//        for (Conversation *covn in self.conversations ) {
+//            if (covn.) {
+//                statements
+//            }
+//        }
+        
+        return 1;
+    }
+
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row == 0) {
+        return 44;
+    }else{
+        return 70;
+    }
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"reuse"];
-  
-  if (cell == nil) {
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"reuse"];
-  }
-  Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:indexPath.row];
-  [cell.textLabel setText: covn.cid];
-  // Configure the cell...
-  
-  return cell;
+    if (indexPath.row == 0) {
+        MessageConversationActionTableViewCell *actionCell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationActionTableViewCell"];
+        if (actionCell == nil) {
+            NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageConversationActionTableViewCell" owner:self options:nil];
+            
+            actionCell = [nib objectAtIndex:0];
+            [actionCell.broadCastListBtn addTarget:self action:@selector(broadcastAction) forControlEvents:UIControlEventTouchUpInside];
+            
+            [actionCell.creatGroupBtn addTarget:self action:@selector(createGroupAction) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
+        return actionCell;
+        
+    }else{
+        MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
+        
+        if (cell == nil) {
+            NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row - 1)];
+        cell.messageContent.text = covn.message.content.raw;
+        [cell.headView setImage:[UIImage imageNamed:@"head1.png"]];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
+        [dateFormatter setDateFormat:@"yyyy-mm-dd"];
+        
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
+        NSLog(@"date:%@",[date description]);
+        
+        cell.timelabel.text = [date description];
+        cell.namelabel.text = @"小张";
+        return cell;
+    }
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-  MsgViewController* msg = [[MsgViewController alloc] init];
-  UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:msg];
-  navigation.view.backgroundColor = [UIColor grayColor];
-  navigation.navigationBarHidden = NO;
-  [self presentViewController:navigation animated:YES completion:nil];
-  
+    MsgViewController* msg = [[MsgViewController alloc] init];
+    UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:msg];
+    navigation.view.backgroundColor = [UIColor grayColor];
+    navigation.navigationBarHidden = NO;
+    [self presentViewController:navigation animated:YES completion:nil];
+    
 }
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar{
+	self.searchBar.prompt = @"搜索";
+}
+
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+	[self.searchBar setText:@""];
+	self.searchBar.prompt = nil;
+	[self.searchBar setFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
+	self._table.tableHeaderView = self.searchBar;
+}
+
+#pragma mark - Action
+
+- (void) editorAction{
+    NSLog(@"editorAction");
+}
+
+- (void) newAction{
+    NSLog(@"newAction");
+}
+
+- (void) broadcastAction{
+    NSLog(@"broadcastAction");
+}
+
+-(void) createGroupAction{
+    NSLog(@"createGroupAction");
+}
+
 /*
  // Override to support conditional editing of the table view.
  - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

@@ -142,29 +142,26 @@
   // 2.让登录界面可以跟用户交互
   self.view.userInteractionEnabled = YES;
   
-  // 3.跳到主界面
-  //[self performSegueWithIdentifier:@"home" sender:nil];
-  
-  //    HomeViewController *homeviewcontroller = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-  //    [self presentViewController:homeviewcontroller animated:NO completion:nil];
-  
-  
-  MessageListTableViewController* msgController = [[MessageListTableViewController alloc] init];
-  msgController.title = @"消息";
-  
-  
+    ConversationViewController* conversationController = [[ConversationViewController alloc] init];
+    conversationController.title = @"消息";
+    
+    UINavigationController *conversationNavigationController = [[UINavigationController alloc] initWithRootViewController:conversationController];
   
   ContactsController* contactViewController = [[ContactsController alloc] init];
   contactViewController.title = @"通讯录";
   
-  ConversationViewController* conversationController = [[ConversationViewController alloc] init];
-  conversationController.title = @"对话";
+
   
+    MessageListTableViewController* msgController = [[MessageListTableViewController alloc] init];
+    msgController.title = @"对话";
+    
+    UINavigationController *messageListNavigationController = [[UINavigationController alloc] initWithRootViewController:msgController];
+    
   SettingViewController* settingController = [[SettingViewController alloc] init];
   settingController.title = @"设置";
   
   UITabBarController *tabController = [[UITabBarController alloc] init] ;
-  tabController.viewControllers = [NSArray arrayWithObjects:msgController, contactViewController,settingController,conversationController, nil];
+  tabController.viewControllers = [NSArray arrayWithObjects: conversationNavigationController,contactViewController,messageListNavigationController, settingController,nil];
   
   UITabBarItem *tabBarItem1 = [self.tabBarController.tabBar.items objectAtIndex:0];
   UITabBarItem *tabBarItem2 = [self.tabBarController.tabBar.items objectAtIndex:1];
