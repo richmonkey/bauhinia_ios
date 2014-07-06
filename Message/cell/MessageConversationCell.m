@@ -42,8 +42,7 @@
 	scrollView.delegate = self;
 	scrollView.showsHorizontalScrollIndicator = NO;
 	
-	[self.contentView addSubview:scrollView];
-	self.myScrollView = scrollView;
+
 	
 	UIView *scrollViewButtonView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - kCatchWidth, 0.0f, kCatchWidth, CGRectGetHeight(self.bounds))];
 	self.scrollViewButtonView = scrollViewButtonView;
@@ -69,9 +68,23 @@
 	
     //使用自己的contentView
     self.scrollViewContentView = self.myContentView;
-	[scrollView addSubview: self.myContentView];
+    
+    UITapGestureRecognizer *singleFingerTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(handleSingleTap:)];
+    [self.scrollViewContentView addGestureRecognizer:singleFingerTap];
+    
+	[scrollView addSubview: self.scrollViewContentView];
    
+    [self addSubview:scrollView];
+	self.myScrollView = scrollView;
 }
+
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+    [self.delegate orignalCellDidSelected:self];
+}
+
 
 - (void)hideMenuOptions {
 	[self.myScrollView setContentOffset:CGPointZero animated:YES];
@@ -132,6 +145,13 @@
     }
     
     self.scrollViewButtonView.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - kCatchWidth), 0.0f, kCatchWidth, CGRectGetHeight(self.bounds));
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
+    
+    // Configure the view for the selected state
 }
 
 @end

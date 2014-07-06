@@ -198,15 +198,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
-        MsgViewController* msg = [[MsgViewController alloc] init];
-        UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:msg];
-        navigation.view.backgroundColor = [UIColor grayColor];
-        navigation.navigationBarHidden = NO;
-        [self presentViewController:navigation animated:YES completion:nil];
-    }
-    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -223,6 +214,17 @@
 }
 
 #pragma mark - TLSwipeForOptionsCellDelegate Methods
+
+-(void)orignalCellDidSelected:(MessageConversationCell *)cell{
+    if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
+        MsgViewController* msg = [[MsgViewController alloc] init];
+        UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:msg];
+        navigation.view.backgroundColor = [UIColor grayColor];
+        navigation.navigationBarHidden = NO;
+        [self presentViewController:navigation animated:YES completion:nil];
+    }
+
+}
 
 -(void)cellDidSelectDelete:(MessageConversationCell *)cell {
     

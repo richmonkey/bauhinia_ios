@@ -17,6 +17,8 @@
 
 - (void)cellDidSelectMore:(MessageConversationCell *)cell;
 
+- (void)orignalCellDidSelected:(MessageConversationCell *)cell;
+
 @end
 
 
