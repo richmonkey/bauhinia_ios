@@ -44,21 +44,6 @@
 
 #define kAllowsMedia		YES
 
-typedef enum {
-    JSMessagesViewTimestampPolicyAll = 0,
-    JSMessagesViewTimestampPolicyAlternating,
-    JSMessagesViewTimestampPolicyEveryThree,
-    JSMessagesViewTimestampPolicyEveryFive,
-    JSMessagesViewTimestampPolicyCustom
-} JSMessagesViewTimestampPolicy;
-
-
-typedef enum {
-    JSMessagesViewAvatarPolicyIncomingOnly = 0,
-    JSMessagesViewAvatarPolicyBoth,
-    JSMessagesViewAvatarPolicyNone
-} JSMessagesViewAvatarPolicy;
-
 
 @protocol JSMessagesViewDelegate <NSObject>
 @required
@@ -67,12 +52,6 @@ typedef enum {
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (JSMessagesViewTimestampPolicy)timestampPolicy;
-- (JSMessagesViewAvatarPolicy)avatarPolicy;
-- (JSAvatarStyle)avatarStyle;
-
-@optional
-- (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
@@ -81,9 +60,7 @@ typedef enum {
 @protocol JSMessagesViewDataSource <NSObject>
 @required
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (UIImage *)avatarImageForIncomingMessage;
-- (UIImage *)avatarImageForOutgoingMessage;
+
 @optional
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
@@ -106,8 +83,6 @@ typedef enum {
 - (void)sendPressed:(UIButton *)sender;
 
 #pragma mark - Messages view controller
-- (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)shouldHaveAvatarForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)finishSend;
 - (void)setBackgroundColor:(UIColor *)color;
 - (void)scrollToBottomAnimated:(BOOL)animated;

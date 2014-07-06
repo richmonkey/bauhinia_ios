@@ -8,7 +8,7 @@
 
 #import "SettingViewController.h"
 #import "ConversationViewController.h"
-#import "MessageListTableViewController.h"
+#import "MessageListViewController.h"
 #import "ContactListTableViewController.h"
 #import "IMService.h"
 #import "UserPresent.h"
@@ -152,7 +152,7 @@
   
 
   
-    MessageListTableViewController* msgController = [[MessageListTableViewController alloc] init];
+    MessageListViewController* msgController = [[MessageListViewController alloc] init];
     msgController.title = @"对话";
     
     UINavigationController *messageListNavigationController = [[UINavigationController alloc] initWithRootViewController:msgController];
@@ -162,7 +162,12 @@
   
   UITabBarController *tabController = [[UITabBarController alloc] init] ;
   tabController.viewControllers = [NSArray arrayWithObjects: conversationNavigationController,contactViewController,messageListNavigationController, settingController,nil];
-  
+    
+    
+    msgController.mainTabController = tabController;
+
+    
+    
   UITabBarItem *tabBarItem1 = [self.tabBarController.tabBar.items objectAtIndex:0];
   UITabBarItem *tabBarItem2 = [self.tabBarController.tabBar.items objectAtIndex:1];
   UITabBarItem *tabBarItem3 = [self.tabBarController.tabBar.items objectAtIndex:2];

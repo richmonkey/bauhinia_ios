@@ -357,7 +357,7 @@ CGFloat const kJSAvatarSize = 50.0f;
 
 + (UIFont *)font
 {
-    return [UIFont systemFontOfSize:16.0f];
+    return [UIFont systemFontOfSize:14.0f];
 }
 
 + (CGSize)textSizeForText:(NSString *)txt

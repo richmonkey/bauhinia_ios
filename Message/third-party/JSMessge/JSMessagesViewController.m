@@ -61,7 +61,7 @@
     
     CGSize size = self.view.frame.size;
 	
-    CGRect tableFrame = CGRectMake(0.0f, 40.0f, size.width, size.height - 40 - INPUT_HEIGHT);
+    CGRect tableFrame = CGRectMake(0.0f, 0.0f, size.width, size.height - INPUT_HEIGHT);
 	self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
 	self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.tableView.dataSource = self;
@@ -228,35 +228,20 @@
     JSBubbleMessageType type = [self.delegate messageTypeForRowAtIndexPath:indexPath];
     JSBubbleMessageStyle bubbleStyle = [self.delegate messageStyleForRowAtIndexPath:indexPath];
     JSBubbleMediaType mediaType = [self.delegate messageMediaTypeForRowAtIndexPath:indexPath];
-    JSAvatarStyle avatarStyle = [self.delegate avatarStyle];
     
-    BOOL hasTimestamp = [self shouldHaveTimestampForRowAtIndexPath:indexPath];
-    BOOL hasAvatar = [self shouldHaveAvatarForRowAtIndexPath:indexPath];
+
     
-    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d", type, bubbleStyle, hasTimestamp, hasAvatar];
+    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d", type, bubbleStyle];
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     
     if(!cell)
         cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
                                                    bubbleStyle:bubbleStyle
-                                                   avatarStyle:(hasAvatar) ? avatarStyle : JSAvatarStyleNone mediaType:mediaType
-                                                  hasTimestamp:hasTimestamp
+                                                     mediaType:mediaType
                                                reuseIdentifier:CellID];
     
-    if(hasTimestamp)
-        [cell setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
     
-    if(hasAvatar) {
-        switch (type) {
-            case JSBubbleMessageTypeIncoming:
-                [cell setAvatarImage:[self.dataSource avatarImageForIncomingMessage]];
-                break;
-                
-            case JSBubbleMessageTypeOutgoing:
-                [cell setAvatarImage:[self.dataSource avatarImageForOutgoingMessage]];
-                break;
-        }
-    }
+
     
 	if (kAllowsMedia)
 		[cell setMedia:[self.dataSource dataForRowAtIndexPath:indexPath]];
@@ -270,53 +255,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(![self.delegate messageMediaTypeForRowAtIndexPath:indexPath]){
-        return [JSBubbleMessageCell neededHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]
-                                              timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
-                                                 avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
+        return [JSBubbleMessageCell neededHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]];
     }else{
-        return [JSBubbleMessageCell neededHeightForImage:[self.dataSource dataForRowAtIndexPath:indexPath]
-                                               timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
-                                                  avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
-    }
-}
-
-#pragma mark - Messages view controller
-- (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch ([self.delegate timestampPolicy]) {
-        case JSMessagesViewTimestampPolicyAll:
-            return YES;
-            
-        case JSMessagesViewTimestampPolicyAlternating:
-            return indexPath.row % 2 == 0;
-            
-        case JSMessagesViewTimestampPolicyEveryThree:
-            return indexPath.row % 3 == 0;
-            
-        case JSMessagesViewTimestampPolicyEveryFive:
-            return indexPath.row % 5 == 0;
-            
-        case JSMessagesViewTimestampPolicyCustom:
-            if([self.delegate respondsToSelector:@selector(hasTimestampForRowAtIndexPath:)])
-                return [self.delegate hasTimestampForRowAtIndexPath:indexPath];
-            
-        default:
-            return NO;
-    }
-}
-
-- (BOOL)shouldHaveAvatarForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch ([self.delegate avatarPolicy]) {
-        case JSMessagesViewAvatarPolicyIncomingOnly:
-            return [self.delegate messageTypeForRowAtIndexPath:indexPath] == JSBubbleMessageTypeIncoming;
-            
-        case JSMessagesViewAvatarPolicyBoth:
-            return YES;
-            
-        case JSMessagesViewAvatarPolicyNone:
-        default:
-            return NO;
+        return [JSBubbleMessageCell neededHeightForImage:[self.dataSource dataForRowAtIndexPath:indexPath]];
     }
 }
 

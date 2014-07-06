@@ -6,8 +6,8 @@
 //  Copyright (c) 2014年 daozhu. All rights reserved.
 //
 
-#import "MessageListTableViewController.h"
-#import "MsgViewController.h"
+#import "MessageListViewController.h"
+#import "MessageViewController.h"
 #import "MessageDB.h"
 #import "IMessage.h"
 
@@ -15,11 +15,15 @@
 #import "MessageConversationActionTableViewCell.h"
 
 
-@interface MessageListTableViewController ()
+#define kPeerConversationCellHeight         50
+#define kGroupConversationCellHeight        44
+#define kConversationActionCellHeight       44
+
+@interface MessageListViewController ()
 
 @end
 
-@implementation MessageListTableViewController
+@implementation MessageListViewController
 
 @synthesize _table;
 @synthesize filteredArray;
@@ -38,9 +42,13 @@
             [self.conversations addObject:conversation];
             conversation = [iterator next];
         }
-        
     }
     return self;
+}
+- (void)viewDidAppear:(BOOL)animated{
+    
+    self.mainTabController.tabBar.hidden = NO;
+
 }
 
 - (void)viewDidLoad
@@ -81,7 +89,7 @@
     self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
 	self.searchDC.searchResultsDataSource = self;
 	self.searchDC.searchResultsDelegate = self;
-    
+     
 }
 
 - (void)didReceiveMemoryWarning
@@ -111,9 +119,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0) {
-        return 44;
+        return kConversationActionCellHeight;
     }else{
-        return 53;
+        return kPeerConversationCellHeight;
     }
 }
 
@@ -217,13 +225,12 @@
 
 -(void)orignalCellDidSelected:(MessageConversationCell *)cell{
     if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
-        MsgViewController* msg = [[MsgViewController alloc] init];
-        UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:msg];
-        navigation.view.backgroundColor = [UIColor grayColor];
-        navigation.navigationBarHidden = NO;
-        [self presentViewController:navigation animated:YES completion:nil];
-    }
+        
+        MessageViewController* msgController = [[MessageViewController alloc] init];
 
+        [self.navigationController pushViewController:msgController animated:YES];
+        self.mainTabController.tabBar.hidden = YES;
+    }
 }
 
 -(void)cellDidSelectDelete:(MessageConversationCell *)cell {

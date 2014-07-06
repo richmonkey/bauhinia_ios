@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SettingViewController.h"
 #import "ConversationViewController.h"
-#import "MessageListTableViewController.h"
+#import "MessageListViewController.h"
 #import "ContactListTableViewController.h"
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>

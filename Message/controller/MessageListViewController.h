@@ -1,5 +1,5 @@
 //
-//  MessageListTableViewController.h
+//  MessageListViewController
 //  Message
 //
 //  Created by daozhu on 14-6-19.
@@ -11,7 +11,7 @@
 #import "MessageConversationCell.h"
 
 
-@interface MessageListTableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate>
+@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate>
 {
   
 	UITableView *_table;
@@ -28,6 +28,6 @@
 
 @property (nonatomic, weak) UITableViewCell *cellDisplayingMenuOptions;
 @property (nonatomic, weak) UITableViewCell *mostRecentlySelectedMoreCell;
-
+@property  (weak,nonatomic) UITabBarController *mainTabController;
 
 @end
