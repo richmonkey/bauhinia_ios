@@ -147,7 +147,6 @@
     [[MessageDB instance] insertPeerMessage:m uid:im.sender];
     
     NSLog(@"sender:%lld receiver:%lld content:%s", im.sender, im.receiver, [im.content UTF8String]);
-    
     Message *ack = [[Message alloc] init];
     ack.cmd = MSG_ACK;
     ack.body = [NSNumber numberWithInt:msg.seq];
@@ -303,7 +302,7 @@
     
     self.tcp = [[AsyncTCP alloc] init];
     __weak IMService *wself = self;
-    [self.tcp connect:@"127.0.0.1" port:23000 cb:^(AsyncTCP *tcp, int err) {
+    [self.tcp connect:self.host port:self.port cb:^(AsyncTCP *tcp, int err) {
         if (err) {
             NSLog(@"tcp connect err");
             wself.connectFailCount = wself.connectFailCount + 1;
@@ -335,7 +334,6 @@
     IMMessage *im = [[IMMessage alloc] init];
     im.sender = msg.sender;
     im.receiver = msg.receiver;
-    im.msgLocalID = msg.msgLocalID;
     im.content = msg.content.raw;
     m.body = im;
     BOOL r = [self sendMessage:m];
@@ -351,7 +349,6 @@
     IMMessage *im = [[IMMessage alloc] init];
     im.sender = msg.sender;
     im.receiver = msg.receiver;
-    im.msgLocalID = msg.msgLocalID;
     im.content = msg.content.raw;
     m.body = im;
     BOOL r = [self sendMessage:m];

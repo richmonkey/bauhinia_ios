@@ -14,8 +14,13 @@
 	UITableView *_table;
 	UISearchDisplayController *searchDC;
 	UISearchBar *searchBar;
+	NSMutableArray *filteredArray;
 }
 
-@property (strong ,nonatomic) NSMutableArray *conversations;
+@property (strong , nonatomic) NSMutableArray *conversations;
+@property (strong , nonatomic) UISearchDisplayController *searchDC;
+@property (strong , nonatomic) UISearchBar *searchBar;
+@property (strong , nonatomic) NSMutableArray *filteredArray;
+@property (strong , nonatomic) UITableView *_table;
 
 @end
