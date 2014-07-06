@@ -8,37 +8,26 @@
 
 #import <Foundation/Foundation.h>
 #import "ABContact.h"
+#import "User.h"
+#import "IMContact.h"
+
+@protocol ContactDBObserver<NSObject>
+-(void)onExternalChange;
+@end
+
 
 @interface ContactDB : NSObject
+
+@property(nonatomic, weak)id<ContactDBObserver> observer;
+
 +(ContactDB*)instance;
-- (NSArray *) contactsArray;
-//Equal contacts was exist in address book
-+ (NSDictionary *) hasContactsExistInAddressBookByPhone:(NSString *)phone;
 
-//Get contact
-+(ABContact *) byPhoneNumberAndLabelToGetContact:(NSString *)phone withLabel:(NSString *)label;
-+(ABContact *) byPhoneNumberAndNameToGetContact:(NSString *)name withPhone:(NSString *)phone;
-+(ABContact *) byNameToGetContact:(NSString *)name;
-+(ABContact *) byPhoneNumberlToGetContact:(NSString *)phone withLabel:(NSString *)label;
+-(NSArray *)contactsArray;
 
-+(NSArray *) getPhoneNumberAndPhoneLabelArray:(ABContact *) contact;
-+(NSArray *) getPhoneNumberAndPhoneLabelArrayFromABRecodID:(ABRecordRef)person withABMultiValueIdentifier:(ABMultiValueIdentifier)identifierForValue;
+-(ABRecordRef)recordRefWithRecordID:(ABRecordID)recordID;
+-(int64_t)uidFromPhoneNumber:(NSString*)phone;
 
-+(NSString *) getPhoneNumberFromDic:(NSDictionary *) Phonedic;
-+(NSString *) getPhoneLabelFromDic:(NSDictionary *) Phonedic;
-+(NSString *) getPhoneNameFromDic:(NSDictionary *) Phonedic;
+-(IMUser*)loadIMUser:(int64_t)uid;
+-(IMContact*)loadIMContact:(ABRecordID)recordID;
 
-+ (BOOL)addPhone:(ABContact *)contact phone:(NSString*)phone;
-
-+ (NSString *)getPhoneNumberFomat:(NSString *)phone;
-
-+ (BOOL)doesStringContain:(NSString* )string Withstr:(NSString*)charcter;
-
-+(NSString *)equalContactByAddressBookContacts:(NSString *)name withPhone:(NSString *)phone withLabel:(NSString *)label PhoneOrLabel:(BOOL)isPhone withFavorite:(BOOL)isFavorite;
-
-+(NSString *)getContactsNameByPhoneNumberAndLabel:(NSString *)phone withLabel:(NSString *)label;
-
-+ (BOOL) removeSelfFromAddressBook:(ABContact *)contact withErrow:(NSError **) error;
-
-+(BOOL)searchResult:(NSString *)contactName searchText:(NSString *)searchT;
 @end

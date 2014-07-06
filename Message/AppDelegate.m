@@ -23,15 +23,7 @@
   [IMService instance].host = @"127.0.0.1";
   [IMService instance].port = 23000;
   
-//  SUserDB * db = [[SUserDB alloc] init];
-//  [db createDataBase];
-
-  //  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  // Override point for customization after application launch.
-  
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  [self.window makeKeyAndVisible];
-  
   application.statusBarHidden = NO;
   self.viewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
   self.window.backgroundColor = [UIColor whiteColor];
