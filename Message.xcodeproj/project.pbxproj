@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2105646519694FA5008D3A83 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105646419694FA5008D3A83 /* arrow.png */; };
-		210564C519695FC1008D3A83 /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646819695FC0008D3A83 /* ContactsController.m */; };
+		210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646819695FC0008D3A83 /* ContactListTableViewController.m */; };
 		210564C619695FC1008D3A83 /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646A19695FC0008D3A83 /* ContactViewController.m */; };
 		210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646B19695FC0008D3A83 /* ContactViewController.xib */; };
 		210564C819695FC1008D3A83 /* ConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646D19695FC0008D3A83 /* ConversationViewController.m */; };
@@ -158,8 +158,8 @@
 
 /* Begin PBXFileReference section */
 		2105646419694FA5008D3A83 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
-		2105646719695FC0008D3A83 /* ContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsController.h; sourceTree = "<group>"; };
-		2105646819695FC0008D3A83 /* ContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsController.m; sourceTree = "<group>"; };
+		2105646719695FC0008D3A83 /* ContactListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListTableViewController.h; sourceTree = "<group>"; };
+		2105646819695FC0008D3A83 /* ContactListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListTableViewController.m; sourceTree = "<group>"; };
 		2105646919695FC0008D3A83 /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
 		2105646A19695FC0008D3A83 /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
 		2105646B19695FC0008D3A83 /* ContactViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactViewController.xib; sourceTree = "<group>"; };
@@ -386,8 +386,8 @@
 		2105646619695FC0008D3A83 /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				2105646719695FC0008D3A83 /* ContactsController.h */,
-				2105646819695FC0008D3A83 /* ContactsController.m */,
+				2105646719695FC0008D3A83 /* ContactListTableViewController.h */,
+				2105646819695FC0008D3A83 /* ContactListTableViewController.m */,
 				2105646919695FC0008D3A83 /* ContactViewController.h */,
 				2105646A19695FC0008D3A83 /* ContactViewController.m */,
 				2105646B19695FC0008D3A83 /* ContactViewController.xib */,
@@ -976,7 +976,7 @@
 				2119FE7A1962AEE800E23B4F /* MessageModel.m in Sources */,
 				210564D219695FC1008D3A83 /* JSDismissiveTextView.m in Sources */,
 				210564C819695FC1008D3A83 /* ConversationViewController.m in Sources */,
-				210564C519695FC1008D3A83 /* ContactsController.m in Sources */,
+				210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

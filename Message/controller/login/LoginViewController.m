@@ -9,7 +9,7 @@
 #import "SettingViewController.h"
 #import "ConversationViewController.h"
 #import "MessageListTableViewController.h"
-#import "ContactsController.h"
+#import "ContactListTableViewController.h"
 #import "IMService.h"
 #import "UserPresent.h"
 
@@ -147,7 +147,7 @@
     
     UINavigationController *conversationNavigationController = [[UINavigationController alloc] initWithRootViewController:conversationController];
   
-  ContactsController* contactViewController = [[ContactsController alloc] init];
+  ContactListTableViewController* contactViewController = [[ContactListTableViewController alloc] init];
   contactViewController.title = @"通讯录";
   
 

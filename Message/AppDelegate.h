@@ -10,7 +10,7 @@
 #import "SettingViewController.h"
 #import "ConversationViewController.h"
 #import "MessageListTableViewController.h"
-#import "ContactsController.h"
+#import "ContactListTableViewController.h"
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
 #import <QuartzCore/QuartzCore.h>

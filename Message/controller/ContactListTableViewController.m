@@ -1,7 +1,7 @@
-#import "ContactsController.h"
+#import "ContactListTableViewController.h"
 #import "pinyin.h"
 
-@interface ContactsController()
+@interface ContactListTableViewController()
 @property (nonatomic) NSArray *contacts;
 @property (nonatomic) NSMutableArray *filteredArray;
 @property (nonatomic) NSMutableArray *sectionArray;
@@ -13,7 +13,7 @@
 
 @end
 
-@implementation ContactsController
+@implementation ContactListTableViewController
 - (id)init{
     self = [super init];
     if (self) {
