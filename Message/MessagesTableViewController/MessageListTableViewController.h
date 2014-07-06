@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MessageListTableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource , UISearchBarDelegate >
+#import "MessageConversationCell.h"
+
+
+@interface MessageListTableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate>
 {
   
 	UITableView *_table;
@@ -22,5 +25,9 @@
 @property (strong , nonatomic) UISearchBar *searchBar;
 @property (strong , nonatomic) NSMutableArray *filteredArray;
 @property (strong , nonatomic) UITableView *_table;
+
+@property (nonatomic, weak) UITableViewCell *cellDisplayingMenuOptions;
+@property (nonatomic, weak) UITableViewCell *mostRecentlySelectedMoreCell;
+
 
 @end

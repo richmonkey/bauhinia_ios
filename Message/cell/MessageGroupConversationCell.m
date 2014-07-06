@@ -12,7 +12,16 @@
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
+    
+    [self setAccessoryType: UITableViewCellAccessoryDisclosureIndicator];
+
     // Initialization code
+    CALayer *imageLayer = [self.gHeadView layer];   //获取ImageView的层
+    
+    [imageLayer setMasksToBounds:YES];
+    
+    [imageLayer setCornerRadius:self.gHeadView.frame.size.width/2];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

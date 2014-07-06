@@ -10,7 +10,7 @@
 #import "MsgViewController.h"
 #import "MessageDB.h"
 #import "IMessage.h"
-#import "MessageConversationCell.h"
+
 #import "MessageGroupConversationCell.h"
 #import "MessageConversationActionTableViewCell.h"
 
@@ -50,15 +50,13 @@
     self.title = @"对话";
     
     UIBarButtonItem *editorButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
-                                                                   style:UIBarButtonItemStyleDone
-                                                                  target:self
-                                                                  action:@selector(editorAction)];
-    self.navigationItem.leftBarButtonItem = editorButton;
-    
-    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithTitle:@"新建"
                                                                      style:UIBarButtonItemStyleDone
                                                                     target:self
-                                                                    action:@selector(newAction)];
+                                                                    action:@selector(editorAction)];
+    self.navigationItem.leftBarButtonItem = editorButton;
+    
+    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(newAction)];
+    
     self.navigationItem.rightBarButtonItem = newButton;
     
     
@@ -84,54 +82,38 @@
 	self.searchDC.searchResultsDataSource = self;
 	self.searchDC.searchResultsDelegate = self;
     
-    
-    
-    
-    //    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
-    //      self.edgesForExtendedLayout = UIRectEdgeNone;
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
+    
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == self._table) {
-        // Return the number of rows in the section.
+       
         return [self.conversations count] + 1;
     }else{
-//        for (Conversation *covn in self.conversations ) {
-//            if (covn.) {
-//                statements
-//            }
-//        }
-        
         return 1;
     }
-
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row == 0) {
         return 44;
     }else{
-        return 70;
+        return 53;
     }
 }
 
@@ -141,23 +123,29 @@
         MessageConversationActionTableViewCell *actionCell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationActionTableViewCell"];
         if (actionCell == nil) {
             NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageConversationActionTableViewCell" owner:self options:nil];
-            
             actionCell = [nib objectAtIndex:0];
-            [actionCell.broadCastListBtn addTarget:self action:@selector(broadcastAction) forControlEvents:UIControlEventTouchUpInside];
-            
-            [actionCell.creatGroupBtn addTarget:self action:@selector(createGroupAction) forControlEvents:UIControlEventTouchUpInside];
         }
+        
+        [actionCell.broadCastListBtn addTarget:self action:@selector(broadcastAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        [actionCell.creatGroupBtn addTarget:self action:@selector(createGroupAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        [actionCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         
         return actionCell;
         
     }else{
+        Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row - 1)];
+        
+        //if (covn.type == CONVERSATION_PEER) {
+        //peer
         MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
         
         if (cell == nil) {
             NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
-        Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row - 1)];
+        
         cell.messageContent.text = covn.message.content.raw;
         [cell.headView setImage:[UIImage imageNamed:@"head1.png"]];
         
@@ -170,17 +158,96 @@
         
         cell.timelabel.text = [date description];
         cell.namelabel.text = @"小张";
+        
+        //            cell.rightUtilityButtons = [self createCellRightButtons];
+        
+        cell.delegate = self;
+        
         return cell;
+        /*  }
+         
+         else{
+         //group
+         MessageGroupConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageGroupConversationCell"];
+         
+         if (cell == nil) {
+         NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageGroupConversationCell" owner:self options:nil];
+         cell = [nib objectAtIndex:0];
+         }
+         cell.titlelabel.text = @"群组";
+         cell.messageContent.text = covn.message.content.raw;
+         [cell.gHeadView setImage:[UIImage imageNamed:@"head2.png"]];
+         
+         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+         dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
+         [dateFormatter setDateFormat:@"yyyy-mm-dd"];
+         
+         NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
+         NSLog(@"date:%@",[date description]);
+         
+         cell.timelabel.text = [date description];
+         cell.namelabel.text = @"您";
+         return cell;
+         
+         }*/
+        
+        
     }
     
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    MsgViewController* msg = [[MsgViewController alloc] init];
-    UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:msg];
-    navigation.view.backgroundColor = [UIColor grayColor];
-    navigation.navigationBarHidden = NO;
-    [self presentViewController:navigation animated:YES completion:nil];
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
+        MsgViewController* msg = [[MsgViewController alloc] init];
+        UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:msg];
+        navigation.view.backgroundColor = [UIColor grayColor];
+        navigation.navigationBarHidden = NO;
+        [self presentViewController:navigation animated:YES completion:nil];
+    }
+    
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+	return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return UITableViewCellEditingStyleNone;
+}
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+	[super setEditing:editing animated:animated];
+	
+}
+
+#pragma mark - TLSwipeForOptionsCellDelegate Methods
+
+-(void)cellDidSelectDelete:(MessageConversationCell *)cell {
+    
+    NSLog(@"删除！！！");
+    
+}
+
+-(void)cellDidSelectMore:(MessageConversationCell *)cell {
+    self.mostRecentlySelectedMoreCell = cell;
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle: nil otherButtonTitles:@"联系资讯", @"发送对话记录", @"清除对话", nil];
+    actionSheet.destructiveButtonIndex= 2 ;
+    
+    [actionSheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        
+    }
+    else if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        NSIndexPath *indexPath = [self._table indexPathForCell:self.mostRecentlySelectedMoreCell];
+        
+        
+        [self._table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
     
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2105646519694FA5008D3A83 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105646419694FA5008D3A83 /* arrow.png */; };
 		2119FE481962949900E23B4F /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE471962949900E23B4F /* UserPresent.m */; };
 		2119FE4B1962A2D100E23B4F /* head1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE491962A2D100E23B4F /* head1.png */; };
 		2119FE4C1962A2D100E23B4F /* head2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE4A1962A2D100E23B4F /* head2.png */; };
@@ -155,6 +156,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2105646419694FA5008D3A83 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		2119FE461962949900E23B4F /* UserPresent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserPresent.h; path = ../UserPresent.h; sourceTree = "<group>"; };
 		2119FE471962949900E23B4F /* UserPresent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserPresent.m; path = ../UserPresent.m; sourceTree = "<group>"; };
 		2119FE491962A2D100E23B4F /* head1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head1.png; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 		2142CB20196268490002E4A9 /* res */ = {
 			isa = PBXGroup;
 			children = (
+				2105646419694FA5008D3A83 /* arrow.png */,
 				2119FE491962A2D100E23B4F /* head1.png */,
 				2119FE4A1962A2D100E23B4F /* head2.png */,
 				2142CB23196268490002E4A9 /* login */,
@@ -837,6 +840,7 @@
 				217261951954151300F09E33 /* messageReceived.aiff in Resources */,
 				2142CB3A196268490002E4A9 /* contact.png in Resources */,
 				2142CB4B196268490002E4A9 /* login_separator@2x.png in Resources */,
+				2105646519694FA5008D3A83 /* arrow.png in Resources */,
 				217261701954151300F09E33 /* bubble-default-outgoing-green@2x.png in Resources */,
 				2172617C1954151300F09E33 /* bubble-flat-outgoing-selected@2x.png in Resources */,
 				2142CB3B196268490002E4A9 /* conversation.png in Resources */,
