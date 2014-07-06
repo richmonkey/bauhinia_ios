@@ -83,6 +83,18 @@
 		2105651419698D9A008D3A83 /* MessageHeaderActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105651319698D9A008D3A83 /* MessageHeaderActionsView.m */; };
 		21056517196996BD008D3A83 /* MessageTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 21056516196996BD008D3A83 /* MessageTableSectionHeaderView.m */; };
 		2105651B196996E5008D3A83 /* MessageTableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105651A196996E5008D3A83 /* MessageTableSectionHeaderView.xib */; };
+		2105652819699BA8008D3A83 /* TabBarIconChats.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651C19699BA8008D3A83 /* TabBarIconChats.png */; };
+		2105652919699BA8008D3A83 /* TabBarIconChats@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651D19699BA8008D3A83 /* TabBarIconChats@2x.png */; };
+		2105652A19699BA8008D3A83 /* TabBarIconChatsOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651E19699BA8008D3A83 /* TabBarIconChatsOff@2x.png */; };
+		2105652B19699BA8008D3A83 /* TabBarIconChatsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651F19699BA8008D3A83 /* TabBarIconChatsOn@2x.png */; };
+		2105652C19699BA8008D3A83 /* TabBarIconSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652019699BA8008D3A83 /* TabBarIconSettings.png */; };
+		2105652D19699BA8008D3A83 /* TabBarIconSettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652119699BA8008D3A83 /* TabBarIconSettings@2x.png */; };
+		2105652E19699BA8008D3A83 /* TabBarIconSettingsOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652219699BA8008D3A83 /* TabBarIconSettingsOff@2x.png */; };
+		2105652F19699BA8008D3A83 /* TabBarIconSettingsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652319699BA8008D3A83 /* TabBarIconSettingsOn@2x.png */; };
+		2105653019699BA8008D3A83 /* TabBarIconStatus.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652419699BA8008D3A83 /* TabBarIconStatus.png */; };
+		2105653119699BA8008D3A83 /* TabBarIconStatus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */; };
+		2105653219699BA8008D3A83 /* TabBarIconStatusOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */; };
+		2105653319699BA8008D3A83 /* TabBarIconStatusOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */; };
 		2119FE481962949900E23B4F /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE471962949900E23B4F /* UserPresent.m */; };
 		2119FE4B1962A2D100E23B4F /* head1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE491962A2D100E23B4F /* head1.png */; };
 		2119FE4C1962A2D100E23B4F /* head2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE4A1962A2D100E23B4F /* head2.png */; };
@@ -261,6 +273,18 @@
 		21056515196996BD008D3A83 /* MessageTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableSectionHeaderView.h; sourceTree = "<group>"; };
 		21056516196996BD008D3A83 /* MessageTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableSectionHeaderView.m; sourceTree = "<group>"; };
 		2105651A196996E5008D3A83 /* MessageTableSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableSectionHeaderView.xib; sourceTree = "<group>"; };
+		2105651C19699BA8008D3A83 /* TabBarIconChats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarIconChats.png; sourceTree = "<group>"; };
+		2105651D19699BA8008D3A83 /* TabBarIconChats@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconChats@2x.png"; sourceTree = "<group>"; };
+		2105651E19699BA8008D3A83 /* TabBarIconChatsOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconChatsOff@2x.png"; sourceTree = "<group>"; };
+		2105651F19699BA8008D3A83 /* TabBarIconChatsOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconChatsOn@2x.png"; sourceTree = "<group>"; };
+		2105652019699BA8008D3A83 /* TabBarIconSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarIconSettings.png; sourceTree = "<group>"; };
+		2105652119699BA8008D3A83 /* TabBarIconSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconSettings@2x.png"; sourceTree = "<group>"; };
+		2105652219699BA8008D3A83 /* TabBarIconSettingsOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconSettingsOff@2x.png"; sourceTree = "<group>"; };
+		2105652319699BA8008D3A83 /* TabBarIconSettingsOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconSettingsOn@2x.png"; sourceTree = "<group>"; };
+		2105652419699BA8008D3A83 /* TabBarIconStatus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarIconStatus.png; sourceTree = "<group>"; };
+		2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatus@2x.png"; sourceTree = "<group>"; };
+		2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatusOff@2x.png"; sourceTree = "<group>"; };
+		2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatusOn@2x.png"; sourceTree = "<group>"; };
 		2119FE461962949900E23B4F /* UserPresent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserPresent.h; path = ../UserPresent.h; sourceTree = "<group>"; };
 		2119FE471962949900E23B4F /* UserPresent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserPresent.m; path = ../UserPresent.m; sourceTree = "<group>"; };
 		2119FE491962A2D100E23B4F /* head1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head1.png; sourceTree = "<group>"; };
@@ -580,6 +604,18 @@
 		2142CB20196268490002E4A9 /* res */ = {
 			isa = PBXGroup;
 			children = (
+				2105651C19699BA8008D3A83 /* TabBarIconChats.png */,
+				2105651D19699BA8008D3A83 /* TabBarIconChats@2x.png */,
+				2105651E19699BA8008D3A83 /* TabBarIconChatsOff@2x.png */,
+				2105651F19699BA8008D3A83 /* TabBarIconChatsOn@2x.png */,
+				2105652019699BA8008D3A83 /* TabBarIconSettings.png */,
+				2105652119699BA8008D3A83 /* TabBarIconSettings@2x.png */,
+				2105652219699BA8008D3A83 /* TabBarIconSettingsOff@2x.png */,
+				2105652319699BA8008D3A83 /* TabBarIconSettingsOn@2x.png */,
+				2105652419699BA8008D3A83 /* TabBarIconStatus.png */,
+				2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */,
+				2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */,
+				2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */,
 				2105646419694FA5008D3A83 /* arrow.png */,
 				2119FE491962A2D100E23B4F /* head1.png */,
 				2119FE4A1962A2D100E23B4F /* head2.png */,
@@ -880,8 +916,10 @@
 				210564F419695FC1008D3A83 /* bubble-square-outgoing.png in Resources */,
 				2142CB44196268490002E4A9 /* login_checkbox_normal.png in Resources */,
 				2142CB3C196268490002E4A9 /* login_add_account.png in Resources */,
+				2105653119699BA8008D3A83 /* TabBarIconStatus@2x.png in Resources */,
 				2142CB3E196268490002E4A9 /* login_avatar_mask_normal.png in Resources */,
 				2142CB4D196268490002E4A9 /* login_stack_bg@2x.png in Resources */,
+				2105653319699BA8008D3A83 /* TabBarIconStatusOn@2x.png in Resources */,
 				2142CB4E196268490002E4A9 /* logout_btn_bg@2x.png in Resources */,
 				210564FB19695FC1008D3A83 /* input-bar@2x.png in Resources */,
 				2105650119695FC1008D3A83 /* send-highlighted@2x.png in Resources */,
@@ -902,16 +940,22 @@
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
 				2142CB48196268490002E4A9 /* login_input_bg.png in Resources */,
 				210564E919695FC1008D3A83 /* bubble-flat-outgoing-old@2x.png in Resources */,
+				2105652919699BA8008D3A83 /* TabBarIconChats@2x.png in Resources */,
 				2119FE4B1962A2D100E23B4F /* head1.png in Resources */,
 				210564F219695FC1008D3A83 /* bubble-square-outgoing-selected.png in Resources */,
 				2142CB3D196268490002E4A9 /* login_add_account@2x.png in Resources */,
 				210564E019695FC1008D3A83 /* bubble-default-outgoing-selected.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
+				2105652A19699BA8008D3A83 /* TabBarIconChatsOff@2x.png in Resources */,
 				2142CB43196268490002E4A9 /* login_checkbox_checked@2x.png in Resources */,
+				2105652F19699BA8008D3A83 /* TabBarIconSettingsOn@2x.png in Resources */,
 				210564DA19695FC1008D3A83 /* bubble-default-incoming-selected.png in Resources */,
 				210564E319695FC1008D3A83 /* bubble-default-outgoing@2x.png in Resources */,
 				210564E719695FC1008D3A83 /* bubble-flat-incoming@2x.png in Resources */,
 				210564F319695FC1008D3A83 /* bubble-square-outgoing-selected@2x.png in Resources */,
+				2105653019699BA8008D3A83 /* TabBarIconStatus.png in Resources */,
+				2105652819699BA8008D3A83 /* TabBarIconChats.png in Resources */,
+				2105652C19699BA8008D3A83 /* TabBarIconSettings.png in Resources */,
 				2142CB3F196268490002E4A9 /* login_avatar_mask_normal@2x.png in Resources */,
 				2119FE4C1962A2D100E23B4F /* head2.png in Resources */,
 				2142CB42196268490002E4A9 /* login_checkbox_checked.png in Resources */,
@@ -930,10 +974,13 @@
 				2142CB4A196268490002E4A9 /* login_separator.png in Resources */,
 				2142CB47196268490002E4A9 /* login_default_avatar@2x.png in Resources */,
 				210564DB19695FC1008D3A83 /* bubble-default-incoming-selected@2x.png in Resources */,
+				2105652B19699BA8008D3A83 /* TabBarIconChatsOn@2x.png in Resources */,
 				2142CB45196268490002E4A9 /* login_checkbox_normal@2x.png in Resources */,
+				2105652E19699BA8008D3A83 /* TabBarIconSettingsOff@2x.png in Resources */,
 				210564FA19695FC1008D3A83 /* input-bar.png in Resources */,
 				2105651119698D7B008D3A83 /* MessageHeaderActionsView.xib in Resources */,
 				210564F919695FC1008D3A83 /* input-bar-flat@2x.png in Resources */,
+				2105652D19699BA8008D3A83 /* TabBarIconSettings@2x.png in Resources */,
 				2142CB4F196268490002E4A9 /* logout_btn_bg_highlighted@2x.png in Resources */,
 				210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */,
 				210564F119695FC1008D3A83 /* bubble-square-incoming@2x.png in Resources */,
@@ -952,6 +999,7 @@
 				21FCF2431968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib in Resources */,
 				210564E819695FC1008D3A83 /* bubble-flat-outgoing-old.png in Resources */,
 				21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */,
+				2105653219699BA8008D3A83 /* TabBarIconStatusOff@2x.png in Resources */,
 				21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
