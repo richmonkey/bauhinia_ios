@@ -100,8 +100,6 @@
 		2119FE4C1962A2D100E23B4F /* head2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE4A1962A2D100E23B4F /* head2.png */; };
 		2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */; };
 		2119FE7A1962AEE800E23B4F /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE791962AEE800E23B4F /* MessageModel.m */; };
-		2142CB3A196268490002E4A9 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB21196268490002E4A9 /* contact.png */; };
-		2142CB3B196268490002E4A9 /* conversation.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB22196268490002E4A9 /* conversation.png */; };
 		2142CB3C196268490002E4A9 /* login_add_account.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB24196268490002E4A9 /* login_add_account.png */; };
 		2142CB3D196268490002E4A9 /* login_add_account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB25196268490002E4A9 /* login_add_account@2x.png */; };
 		2142CB3E196268490002E4A9 /* login_avatar_mask_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB26196268490002E4A9 /* login_avatar_mask_normal.png */; };
@@ -122,8 +120,6 @@
 		2142CB4D196268490002E4A9 /* login_stack_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB35196268490002E4A9 /* login_stack_bg@2x.png */; };
 		2142CB4E196268490002E4A9 /* logout_btn_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB36196268490002E4A9 /* logout_btn_bg@2x.png */; };
 		2142CB4F196268490002E4A9 /* logout_btn_bg_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB37196268490002E4A9 /* logout_btn_bg_highlighted@2x.png */; };
-		2142CB50196268490002E4A9 /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB38196268490002E4A9 /* message.png */; };
-		2142CB51196268490002E4A9 /* setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB39196268490002E4A9 /* setting.png */; };
 		2142CB62196268860002E4A9 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB54196268860002E4A9 /* ABContact.m */; };
 		2142CB69196268860002E4A9 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB60196268860002E4A9 /* pinyin.c */; };
 		217261981954155000F09E33 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217261971954155000F09E33 /* AddressBook.framework */; };
@@ -292,8 +288,6 @@
 		2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		2119FE781962AEE800E23B4F /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
 		2119FE791962AEE800E23B4F /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
-		2142CB21196268490002E4A9 /* contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact.png; sourceTree = "<group>"; };
-		2142CB22196268490002E4A9 /* conversation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = conversation.png; sourceTree = "<group>"; };
 		2142CB24196268490002E4A9 /* login_add_account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_add_account.png; sourceTree = "<group>"; };
 		2142CB25196268490002E4A9 /* login_add_account@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_add_account@2x.png"; sourceTree = "<group>"; };
 		2142CB26196268490002E4A9 /* login_avatar_mask_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_avatar_mask_normal.png; sourceTree = "<group>"; };
@@ -314,8 +308,6 @@
 		2142CB35196268490002E4A9 /* login_stack_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_stack_bg@2x.png"; sourceTree = "<group>"; };
 		2142CB36196268490002E4A9 /* logout_btn_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout_btn_bg@2x.png"; sourceTree = "<group>"; };
 		2142CB37196268490002E4A9 /* logout_btn_bg_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout_btn_bg_highlighted@2x.png"; sourceTree = "<group>"; };
-		2142CB38196268490002E4A9 /* message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message.png; sourceTree = "<group>"; };
-		2142CB39196268490002E4A9 /* setting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting.png; sourceTree = "<group>"; };
 		2142CB53196268860002E4A9 /* ABContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABContact.h; sourceTree = "<group>"; };
 		2142CB54196268860002E4A9 /* ABContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABContact.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
@@ -620,10 +612,6 @@
 				2119FE491962A2D100E23B4F /* head1.png */,
 				2119FE4A1962A2D100E23B4F /* head2.png */,
 				2142CB23196268490002E4A9 /* login */,
-				2142CB21196268490002E4A9 /* contact.png */,
-				2142CB22196268490002E4A9 /* conversation.png */,
-				2142CB38196268490002E4A9 /* message.png */,
-				2142CB39196268490002E4A9 /* setting.png */,
 			);
 			path = res;
 			sourceTree = "<group>";
@@ -923,15 +911,12 @@
 				2142CB4E196268490002E4A9 /* logout_btn_bg@2x.png in Resources */,
 				210564FB19695FC1008D3A83 /* input-bar@2x.png in Resources */,
 				2105650119695FC1008D3A83 /* send-highlighted@2x.png in Resources */,
-				2142CB3A196268490002E4A9 /* contact.png in Resources */,
 				2142CB4B196268490002E4A9 /* login_separator@2x.png in Resources */,
 				210564D919695FC1008D3A83 /* bubble-default-incoming-green@2x.png in Resources */,
 				2105646519694FA5008D3A83 /* arrow.png in Resources */,
 				210564E119695FC1008D3A83 /* bubble-default-outgoing-selected@2x.png in Resources */,
 				2105650F1969839F008D3A83 /* ConversationHeadButtonView.xib in Resources */,
 				210564E519695FC1008D3A83 /* bubble-flat-incoming-selected@2x.png in Resources */,
-				2142CB3B196268490002E4A9 /* conversation.png in Resources */,
-				2142CB50196268490002E4A9 /* message.png in Resources */,
 				2105650219695FC1008D3A83 /* send.png in Resources */,
 				2142CB4C196268490002E4A9 /* login_stack_bg.png in Resources */,
 				210564EB19695FC1008D3A83 /* bubble-flat-outgoing-selected@2x.png in Resources */,
@@ -994,7 +979,6 @@
 				210564CB19695FC1008D3A83 /* LoginViewController.xib in Resources */,
 				2142CB40196268490002E4A9 /* login_button_normal.png in Resources */,
 				210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */,
-				2142CB51196268490002E4A9 /* setting.png in Resources */,
 				210564C919695FC1008D3A83 /* ConversationViewController.xib in Resources */,
 				21FCF2431968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib in Resources */,
 				210564E819695FC1008D3A83 /* bubble-flat-outgoing-old.png in Resources */,
