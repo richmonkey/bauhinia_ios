@@ -95,11 +95,9 @@
 		2105653119699BA8008D3A83 /* TabBarIconStatus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */; };
 		2105653219699BA8008D3A83 /* TabBarIconStatusOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */; };
 		2105653319699BA8008D3A83 /* TabBarIconStatusOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */; };
-		2119FE481962949900E23B4F /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE471962949900E23B4F /* UserPresent.m */; };
 		2119FE4B1962A2D100E23B4F /* head1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE491962A2D100E23B4F /* head1.png */; };
 		2119FE4C1962A2D100E23B4F /* head2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE4A1962A2D100E23B4F /* head2.png */; };
 		2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */; };
-		2119FE7A1962AEE800E23B4F /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2119FE791962AEE800E23B4F /* MessageModel.m */; };
 		2142CB3C196268490002E4A9 /* login_add_account.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB24196268490002E4A9 /* login_add_account.png */; };
 		2142CB3D196268490002E4A9 /* login_add_account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB25196268490002E4A9 /* login_add_account@2x.png */; };
 		2142CB3E196268490002E4A9 /* login_avatar_mask_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB26196268490002E4A9 /* login_avatar_mask_normal.png */; };
@@ -155,9 +153,14 @@
 		6D0D769C1967C1680058DECF /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76991967C1680058DECF /* Group.m */; };
 		6D0D769D1967C1680058DECF /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769B1967C1680058DECF /* GroupDB.m */; };
 		6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769F1967C1850058DECF /* LevelDB.mm */; };
-		6D0D76A319685EDB0058DECF /* UserDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A219685EDB0058DECF /* UserDB.m */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
-		6D0D76AC1969107D0058DECF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76AB1969107D0058DECF /* User.m */; };
+		6D0D76AF196AF7B60058DECF /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76AE196AF7B60058DECF /* Config.m */; };
+		6D0D76B3196AF92F0058DECF /* TAHttpOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76B1196AF92F0058DECF /* TAHttpOperation.m */; };
+		6D0D76B6196B03760058DECF /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76B5196B03760058DECF /* Token.m */; };
+		6D0D76B9196D772C0058DECF /* PhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76B8196D772C0058DECF /* PhoneNumber.m */; };
+		6D0D76BE196D824B0058DECF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76BB196D824B0058DECF /* User.m */; };
+		6D0D76BF196D824B0058DECF /* UserDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76BD196D824B0058DECF /* UserDB.m */; };
+		6D0D76C2196D82A40058DECF /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76C1196D82A40058DECF /* UserPresent.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -281,13 +284,9 @@
 		2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatus@2x.png"; sourceTree = "<group>"; };
 		2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatusOff@2x.png"; sourceTree = "<group>"; };
 		2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatusOn@2x.png"; sourceTree = "<group>"; };
-		2119FE461962949900E23B4F /* UserPresent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserPresent.h; path = ../UserPresent.h; sourceTree = "<group>"; };
-		2119FE471962949900E23B4F /* UserPresent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserPresent.m; path = ../UserPresent.m; sourceTree = "<group>"; };
 		2119FE491962A2D100E23B4F /* head1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head1.png; sourceTree = "<group>"; };
 		2119FE4A1962A2D100E23B4F /* head2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head2.png; sourceTree = "<group>"; };
 		2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		2119FE781962AEE800E23B4F /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
-		2119FE791962AEE800E23B4F /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
 		2142CB24196268490002E4A9 /* login_add_account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_add_account.png; sourceTree = "<group>"; };
 		2142CB25196268490002E4A9 /* login_add_account@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_add_account@2x.png"; sourceTree = "<group>"; };
 		2142CB26196268490002E4A9 /* login_avatar_mask_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_avatar_mask_normal.png; sourceTree = "<group>"; };
@@ -377,12 +376,22 @@
 		6D0D769B1967C1680058DECF /* GroupDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDB.m; sourceTree = "<group>"; };
 		6D0D769E1967C1850058DECF /* LevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelDB.h; sourceTree = "<group>"; };
 		6D0D769F1967C1850058DECF /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
-		6D0D76A119685EDB0058DECF /* UserDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDB.h; sourceTree = "<group>"; };
-		6D0D76A219685EDB0058DECF /* UserDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDB.m; sourceTree = "<group>"; };
 		6D0D76A7196910130058DECF /* IMContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMContact.h; sourceTree = "<group>"; };
 		6D0D76A8196910130058DECF /* IMContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMContact.m; sourceTree = "<group>"; };
-		6D0D76AA1969107D0058DECF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		6D0D76AB1969107D0058DECF /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		6D0D76AD196AF7B60058DECF /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		6D0D76AE196AF7B60058DECF /* Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Config.m; sourceTree = "<group>"; };
+		6D0D76B0196AF92F0058DECF /* TAHttpOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAHttpOperation.h; sourceTree = "<group>"; };
+		6D0D76B1196AF92F0058DECF /* TAHttpOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAHttpOperation.m; sourceTree = "<group>"; };
+		6D0D76B4196B03760058DECF /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
+		6D0D76B5196B03760058DECF /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
+		6D0D76B7196D772C0058DECF /* PhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneNumber.h; sourceTree = "<group>"; };
+		6D0D76B8196D772C0058DECF /* PhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneNumber.m; sourceTree = "<group>"; };
+		6D0D76BA196D824B0058DECF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		6D0D76BB196D824B0058DECF /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		6D0D76BC196D824B0058DECF /* UserDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDB.h; sourceTree = "<group>"; };
+		6D0D76BD196D824B0058DECF /* UserDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDB.m; sourceTree = "<group>"; };
+		6D0D76C0196D82A40058DECF /* UserPresent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPresent.h; sourceTree = "<group>"; };
+		6D0D76C1196D82A40058DECF /* UserPresent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPresent.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -450,6 +459,8 @@
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
+				6D0D76B0196AF92F0058DECF /* TAHttpOperation.h */,
+				6D0D76B1196AF92F0058DECF /* TAHttpOperation.m */,
 				2105647B19695FC0008D3A83 /* JSMessge */,
 				210564BD19695FC1008D3A83 /* UIButton+JSMessagesView.h */,
 				210564BE19695FC1008D3A83 /* UIButton+JSMessagesView.m */,
@@ -575,10 +586,12 @@
 		2119FE771962AEAA00E23B4F /* model */ = {
 			isa = PBXGroup;
 			children = (
-				2119FE781962AEE800E23B4F /* MessageModel.h */,
-				2119FE791962AEE800E23B4F /* MessageModel.m */,
-				2119FE461962949900E23B4F /* UserPresent.h */,
-				2119FE471962949900E23B4F /* UserPresent.m */,
+				6D0D76C0196D82A40058DECF /* UserPresent.h */,
+				6D0D76C1196D82A40058DECF /* UserPresent.m */,
+				6D0D76BA196D824B0058DECF /* User.h */,
+				6D0D76BB196D824B0058DECF /* User.m */,
+				6D0D76BC196D824B0058DECF /* UserDB.h */,
+				6D0D76BD196D824B0058DECF /* UserDB.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -654,6 +667,8 @@
 				2142CB61196268860002E4A9 /* pinyin.h */,
 				6D0D76A7196910130058DECF /* IMContact.h */,
 				6D0D76A8196910130058DECF /* IMContact.m */,
+				6D0D76B7196D772C0058DECF /* PhoneNumber.h */,
+				6D0D76B8196D772C0058DECF /* PhoneNumber.m */,
 			);
 			path = contact;
 			sourceTree = "<group>";
@@ -714,6 +729,10 @@
 				217262CC1954318200F09E33 /* Constants.h */,
 				21798FA5194E9C4600B67C1F /* AppDelegate.h */,
 				21798FA6194E9C4600B67C1F /* AppDelegate.m */,
+				6D0D76B4196B03760058DECF /* Token.h */,
+				6D0D76B5196B03760058DECF /* Token.m */,
+				6D0D76AD196AF7B60058DECF /* Config.h */,
+				6D0D76AE196AF7B60058DECF /* Config.m */,
 				21798FA8194E9C4600B67C1F /* Images.xcassets */,
 				21798F9D194E9C4600B67C1F /* Supporting Files */,
 			);
@@ -787,10 +806,6 @@
 				6D0D767F1967B8AC0058DECF /* MessageDB.m */,
 				6D0D76801967B8AC0058DECF /* util.c */,
 				6D0D76811967B8AC0058DECF /* util.h */,
-				6D0D76A119685EDB0058DECF /* UserDB.h */,
-				6D0D76A219685EDB0058DECF /* UserDB.m */,
-				6D0D76AA1969107D0058DECF /* User.h */,
-				6D0D76AB1969107D0058DECF /* User.m */,
 			);
 			path = im_sdk;
 			sourceTree = "<group>";
@@ -1003,14 +1018,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D0D76AC1969107D0058DECF /* User.m in Sources */,
 				2105651419698D9A008D3A83 /* MessageHeaderActionsView.m in Sources */,
 				6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
-				2119FE481962949900E23B4F /* UserPresent.m in Sources */,
+				6D0D76B3196AF92F0058DECF /* TAHttpOperation.m in Sources */,
 				210564CD19695FC1008D3A83 /* MessageViewController.m in Sources */,
 				6D0D76831967B8AC0058DECF /* IMessage.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
+				6D0D76BE196D824B0058DECF /* User.m in Sources */,
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
 				21FCF2421968E84600DFA0E5 /* MessageConversationActionTableViewCell.m in Sources */,
 				2105650619695FC1008D3A83 /* UIButton+JSMessagesView.m in Sources */,
@@ -1027,12 +1042,13 @@
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
 				6D0D769D1967C1680058DECF /* GroupDB.m in Sources */,
 				210564CC19695FC1008D3A83 /* MessageListViewController.m in Sources */,
+				6D0D76B6196B03760058DECF /* Token.m in Sources */,
 				210564CA19695FC1008D3A83 /* LoginViewController.m in Sources */,
+				6D0D76AF196AF7B60058DECF /* Config.m in Sources */,
 				6D0D76871967B8AC0058DECF /* util.c in Sources */,
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				210564C619695FC1008D3A83 /* ContactViewController.m in Sources */,
 				6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */,
-				6D0D76A319685EDB0058DECF /* UserDB.m in Sources */,
 				6D0D76851967B8AC0058DECF /* Message.m in Sources */,
 				2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */,
 				210564D719695FC1008D3A83 /* NSString+JSMessagesView.m in Sources */,
@@ -1041,9 +1057,11 @@
 				210564D319695FC1008D3A83 /* JSMessageInputView.m in Sources */,
 				210564D619695FC1008D3A83 /* JSMessageTextView.m in Sources */,
 				210564D419695FC1008D3A83 /* JSMessageSoundEffect.m in Sources */,
+				6D0D76BF196D824B0058DECF /* UserDB.m in Sources */,
 				210564D119695FC1008D3A83 /* JSBubbleView.m in Sources */,
 				2105650E1969839F008D3A83 /* ConversationHeadButtonView.m in Sources */,
-				2119FE7A1962AEE800E23B4F /* MessageModel.m in Sources */,
+				6D0D76C2196D82A40058DECF /* UserPresent.m in Sources */,
+				6D0D76B9196D772C0058DECF /* PhoneNumber.m in Sources */,
 				210564D219695FC1008D3A83 /* JSDismissiveTextView.m in Sources */,
 				210564C819695FC1008D3A83 /* ConversationViewController.m in Sources */,
 				210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */,

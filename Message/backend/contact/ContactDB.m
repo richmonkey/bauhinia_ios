@@ -10,6 +10,7 @@
 #import <AddressBook/AddressBook.h>
 #import "ABContact.h"
 #import "UserDB.h"
+#import "PhoneNumber.h"
 
 @interface ContactDB()
 @property(nonatomic, assign)ABAddressBookRef addressBook;
@@ -78,19 +79,33 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
     NSArray *thePeople = (__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(self.addressBook);
 	NSMutableArray *array = [NSMutableArray arrayWithCapacity:thePeople.count];
     for (id person in thePeople) {
-		[array addObject:[ABContact contactWithRecord:(ABRecordRef)person]];
+        ABContact *contact = [[ABContact alloc] init];
+        [self copyRecord:(ABRecordRef)person to:contact];
+		[array addObject:contact];
     }
-    
 	self.contacts = array;
 }
 
 -(NSArray*)contactsArray {
     NSMutableArray *array = [NSMutableArray array];
     for (ABContact *contact in self.contacts) {
-        IMSimpleContact *c = [[IMSimpleContact alloc] init];
-        c.name = contact.contactName;
-        c.state = @"At work";
+        IMContact *c = [[IMContact alloc] init];
+        c.firstname = contact.firstname;
+        c.middlename = contact.middlename;
+        c.lastname = contact.lastname;
         c.recordID = contact.recordID;
+        NSMutableArray *users = [NSMutableArray array];
+        for (NSDictionary *dict in contact.phoneDictionaries) {
+            NSString *phone = [dict objectForKey:@"value"];
+            PhoneNumber *phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:phone];
+            User *u = [[UserDB instance] loadUserWithNumber:phoneNumber];
+            if (u) {
+                [users addObject:u];
+            }
+        }
+        if ([users count] > 0) {
+            c.users = users;
+        }
         [array addObject:c];
     }
     return array;
@@ -100,6 +115,7 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
 	ABRecordRef contactrec = ABAddressBookGetPersonWithRecordID(self.addressBook, recordID);
     return contactrec;
 }
+
 
 -(int64_t)uidFromPhoneNumber:(NSString*)phone {
     char tmp[64] = {0};
@@ -114,41 +130,103 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
     }
     return [[NSString stringWithUTF8String:tmp] longLongValue];
 }
-
--(IMUser*)loadIMUser:(int64_t)uid {
-    NSLog(@"is number:%d", isnumber(0x31));
+-(ABContact*)loadContactWithNumber:(PhoneNumber*)number {
     for (ABContact *contact in self.contacts) {
         for (NSDictionary *dict in contact.phoneDictionaries) {
-            NSString *phone = [dict objectForKey:@"value"];
-            int64_t phoneUid = [self uidFromPhoneNumber:phone];
-            NSLog(@"phone:%@ uid:%lld", phone, uid);
-            if (uid == phoneUid) {
-                IMUser *u = [[IMUser alloc] init];
-                u.contact = contact;
-                u.uid = uid;
-                return u;
+            NSString *s = [dict objectForKey:@"value"];
+            PhoneNumber *n = [[PhoneNumber alloc] initWithPhoneNumber:s];
+            if ([n.zoneNumber isEqualToString:number.zoneNumber]) {
+                return contact;
             }
         }
     }
     return nil;
 }
 
+
 -(IMContact*)loadIMContact:(ABRecordID)recordID {
     IMContact *contact = [[IMContact alloc] init];
     ABRecordRef ref = [self recordRefWithRecordID:recordID];
-    contact.contact = [ABContact contactWithRecord:ref];
+    [self copyRecord:ref to:contact];
+    
     NSMutableArray *users = [NSMutableArray array];
-    for (NSDictionary *dict in contact.contact.phoneDictionaries) {
+    for (NSDictionary *dict in contact.phoneDictionaries) {
         NSString *phone = [dict objectForKey:@"value"];
-        int64_t phoneUid = [self uidFromPhoneNumber:phone];
+        PhoneNumber *number = [[PhoneNumber alloc] initWithPhoneNumber:phone];
         UserDB *db = [UserDB instance];
-        User *u = [db loadUser:phoneUid];
+        User *u = [db loadUserWithNumber:number];
         if (!u) {
             [users addObject:u];
         }
     }
     contact.users = users;
     return contact;
+}
+
+
+-(NSString *)getRecordString:(ABPropertyID)anID record:(ABRecordRef)record {
+	return (__bridge NSString *) ABRecordCopyValue(record, anID);
+}
+#pragma mark Getting MultiValue Elements
+- (NSArray *) arrayForProperty: (ABPropertyID) anID record:(ABRecordRef)record
+{
+	CFTypeRef theProperty = ABRecordCopyValue(record, anID);
+	NSArray *items = (__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(theProperty);
+	CFRelease(theProperty);
+	return items;
+}
+
+
+- (NSArray *) labelsForProperty:(ABPropertyID)anID record:(ABRecordRef)record{
+	CFTypeRef theProperty = ABRecordCopyValue(record, anID);
+	NSMutableArray *labels = [NSMutableArray array];
+	for (int i = 0; i < ABMultiValueGetCount(theProperty); i++)
+	{
+		NSString *label = (__bridge NSString *)ABMultiValueCopyLabelAtIndex(theProperty, i);
+		[labels addObject:label];
+        
+	}
+	CFRelease(theProperty);
+	return labels;
+}
+
+
+
+- (NSArray *) dictionaryArrayForProperty:(ABPropertyID)aProperty record:(ABRecordRef)record
+{
+	NSArray *valueArray = [self arrayForProperty:aProperty record:record];
+	NSArray *labelArray = [self labelsForProperty:aProperty record:record];
+	
+	int num = MIN(valueArray.count, labelArray.count);
+	NSMutableArray *items = [NSMutableArray array];
+	for (int i = 0; i < num; i++)
+	{
+		NSMutableDictionary *md = [NSMutableDictionary dictionary];
+		[md setObject:[valueArray objectAtIndex:i] forKey:@"value"];
+		[md setObject:[labelArray objectAtIndex:i] forKey:@"label"];
+		[items addObject:md];
+	}
+	return items;
+}
+
+
+-(void)copyRecord:(ABRecordRef)record to:(ABContact*)contact{
+    contact.recordID = ABRecordGetRecordID(record);
+    contact.recordType = ABRecordGetRecordType(record);
+    contact.firstname = [self getRecordString:kABPersonFirstNameProperty record:record];
+    contact.lastname = [self getRecordString:kABPersonLastNameProperty record:record];
+    contact.middlename = [self getRecordString:kABPersonMiddleNameProperty record:record];
+    contact.prefix = [self getRecordString:kABPersonPrefixProperty record:record];
+    contact.suffix = [self getRecordString:kABPersonSuffixProperty record:record];
+    contact.nickname = [self getRecordString:kABPersonNicknameProperty record:record];
+    
+    contact.emailDictionaries = [self dictionaryArrayForProperty:kABPersonEmailProperty record:record];
+    contact.phoneDictionaries = [self dictionaryArrayForProperty:kABPersonPhoneProperty record:record];
+    contact.relatedNameDictionaries = [self dictionaryArrayForProperty:kABPersonRelatedNamesProperty record:record];
+    contact.urlDictionaries =  [self dictionaryArrayForProperty:kABPersonURLProperty record:record];
+    contact.dateDictionaries = [self dictionaryArrayForProperty:kABPersonDateProperty record:record];
+    contact.addressDictionaries = [self dictionaryArrayForProperty:kABPersonAddressProperty record:record];
+    contact.smsDictionaries = [self dictionaryArrayForProperty:kABPersonInstantMessageProperty record:record];
 }
 
 @end

@@ -13,9 +13,5 @@
 - (IBAction)login;
 @property (weak, nonatomic) IBOutlet UITextField *mobile;
 @property (weak, nonatomic) IBOutlet UITextField *pwd;
-- (IBAction)rmbPwd:(UIButton *)sender;
-- (IBAction)autoLogin:(UIButton *)sender;
-@property (weak, nonatomic) IBOutlet UIButton *autoLogin;
-@property (weak, nonatomic) IBOutlet UIButton *rmbPwd;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 @end

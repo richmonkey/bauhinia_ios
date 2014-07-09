@@ -70,6 +70,7 @@
         exit(1);
     }
     NSLog(@"start im service");
+
     self.uid = uid;
     self.stopped = NO;
     dispatch_time_t w = dispatch_walltime(NULL, 0);

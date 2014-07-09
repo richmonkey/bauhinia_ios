@@ -199,13 +199,9 @@
 }
 
 #pragma mark - Messages view delegate
-- (void)sendPressed:(UIButton *)sender withText:(NSString *)text
-{
-    
-    
+- (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
     IMessage *msg = [[IMessage alloc] init];
-    msg.sender = [UserPresent instance].userid;
-    //  msg.receiver = 13635273143;
+    msg.sender = [UserPresent instance].uid;
     msg.receiver = 13635273142;
     MessageContent *content = [[MessageContent alloc] init];
     content.raw = text;
@@ -242,7 +238,7 @@
 {
     
     IMessage * msg =  [self.messageArray objectAtIndex:indexPath.row];
-    if(msg.sender == [UserPresent instance].userid){
+    if(msg.sender == [UserPresent instance].uid){
         return JSBubbleMessageTypeOutgoing;
     }else{
         return JSBubbleMessageTypeIncoming;
