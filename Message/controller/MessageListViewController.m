@@ -130,8 +130,7 @@
     if (indexPath.row == 0) {
         MessageConversationActionTableViewCell *actionCell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationActionTableViewCell"];
         if (actionCell == nil) {
-            NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageConversationActionTableViewCell" owner:self options:nil];
-            actionCell = [nib objectAtIndex:0];
+            actionCell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationActionTableViewCell" owner:self options:nil] lastObject];
         }
         
         [actionCell.broadCastListBtn addTarget:self action:@selector(broadcastAction) forControlEvents:UIControlEventTouchUpInside];
@@ -150,8 +149,7 @@
         MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
         
         if (cell == nil) {
-            NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil];
-            cell = [nib objectAtIndex:0];
+            cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil] lastObject];
         }
         
         cell.messageContent.text = covn.message.content.raw;
@@ -179,8 +177,7 @@
          MessageGroupConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageGroupConversationCell"];
          
          if (cell == nil) {
-         NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageGroupConversationCell" owner:self options:nil];
-         cell = [nib objectAtIndex:0];
+         cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageGroupConversationCell" owner:self options:nil] lastObject];
          }
          cell.titlelabel.text = @"群组";
          cell.messageContent.text = covn.message.content.raw;

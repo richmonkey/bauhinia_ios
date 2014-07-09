@@ -52,8 +52,7 @@
     
     self.navigationItem.rightBarButtonItem = navBarHeadButton;
     
-    NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil];
-    self.headButtonView  = [nib objectAtIndex:0];
+    self.headButtonView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
     self.headButtonView.center = self.navigationController.navigationBar.center;
 }
 
@@ -68,8 +67,7 @@
     self.title = @"Message";
     
     
-    NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageHeaderActionsView" owner:self options:nil];
-    MessageHeaderActionsView *tableHeaderView = [nib objectAtIndex:0];
+    MessageHeaderActionsView *tableHeaderView = [[[NSBundle mainBundle]loadNibNamed:@"MessageHeaderActionsView" owner:self options:nil] lastObject];
     self.tableView.tableHeaderView = tableHeaderView;
     
     [self setBackgroundColor: [UIColor grayColor]];
@@ -88,9 +86,6 @@
     for (IMessage* msg in self.messageArray) {
         [self.timestamps addObject:[NSString stringWithFormat:@"%d",msg.timestamp]];
     }
-    
-    
-
     
     [[IMService instance] addMessageObserver:self];
 }
@@ -194,8 +189,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
 
-    NSArray *nib = [[NSBundle mainBundle]loadNibNamed:@"MessageTableSectionHeaderView" owner:self options:nil];
-    MessageTableSectionHeaderView *sectionHeader  = [nib objectAtIndex:0];
+    MessageTableSectionHeaderView *sectionHeader = [[[NSBundle mainBundle]loadNibNamed:@"MessageTableSectionHeaderView" owner:self options:nil] lastObject];
     
     return sectionHeader;
 }
