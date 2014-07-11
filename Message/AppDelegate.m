@@ -20,7 +20,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   //配置im server地址
-  [IMService instance].host = @"192.168.1.9";
+  [IMService instance].host = @"127.0.0.1";
   [IMService instance].port = 23000;
   
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

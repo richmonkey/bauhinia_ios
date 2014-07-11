@@ -13,6 +13,8 @@
 #import "MessageHeaderActionsView.h"
 #import "MessageTableSectionHeaderView.h"
 
+#import "MessageShowThePotraitViewController.h"
+
 #define navBarHeadButtonSize 35
 
 
@@ -64,7 +66,7 @@
     self.delegate = self;
     self.dataSource = self;
     
-    self.title = @"Message";
+    self.title = @"消息";
     
     
     MessageHeaderActionsView *tableHeaderView = [[[NSBundle mainBundle]loadNibNamed:@"MessageHeaderActionsView" owner:self options:nil] lastObject];
@@ -252,7 +254,7 @@
 
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return JSBubbleMessageStyleDefault;
+    return JSBubbleMessageStyleFlat;
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -339,6 +341,10 @@
 
 - (void)navBarUserheadAction{
     NSLog(@"头像");
+    
+    MessageShowThePotraitViewController *controller = [[MessageShowThePotraitViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+
 }
 
 @end

@@ -38,6 +38,16 @@
 
 
 @interface JSBubbleMessageCell : UITableViewCell
+{
+
+}
+
+@property (nonatomic, strong) UIImageView *server;
+
+@property (nonatomic)bool isServerReach;
+
+@property (nonatomic)bool isMobileReach;
+
 
 #pragma mark - Initialization
 - (id)initWithBubbleType:(JSBubbleMessageType)type
@@ -48,7 +58,6 @@
 #pragma mark - Message cell
 - (void)setMessage:(NSString *)msg;
 - (void)setMedia:(id)data;
-
 
 + (CGFloat)neededHeightForText:(NSString *)bubbleViewText;
 
