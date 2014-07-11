@@ -7,8 +7,6 @@
 //
 
 #import "IMContact.h"
-@implementation IMSimpleContact
-@end
 
 @implementation IMContact
 

@@ -36,6 +36,7 @@
 #define CONVERSATION_GROUP 2
 @interface Conversation : NSObject
 @property(nonatomic)int type;
-@property(nonatomic, copy)NSString *cid;
+@property(nonatomic, assign)int64_t cid;
+@property(nonatomic, copy)NSString *name;
 @property(nonatomic)IMessage *message;
 @end

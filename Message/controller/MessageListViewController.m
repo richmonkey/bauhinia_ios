@@ -13,7 +13,7 @@
 
 #import "MessageGroupConversationCell.h"
 #import "MessageConversationActionTableViewCell.h"
-
+#import "UserDB.h"
 
 #define kPeerConversationCellHeight         50
 #define kGroupConversationCellHeight        44
@@ -35,10 +35,13 @@
     self = [super init];
     if (self) {
         self.conversations = [[NSMutableArray alloc] init];
+        UserDB *db = [UserDB instance];
         ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
         
         Conversation * conversation = [iterator next];
         while (conversation) {
+            IMUser *user = [db loadUser:conversation.cid];
+            conversation.name = user.contact.contactName;
             [self.conversations addObject:conversation];
             conversation = [iterator next];
         }

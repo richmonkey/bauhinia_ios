@@ -22,10 +22,10 @@
 
 int64_t hton64(int64_t val )
 {
-    long high, low;
-    low = (long)(val & 0x00000000FFFFFFFF);
+    int64_t high, low;
+    low = (int64_t)(val & 0x00000000FFFFFFFF);
     val >>= 32;
-    high = (long)(val & 0x00000000FFFFFFFF);
+    high = (int64_t)(val & 0x00000000FFFFFFFF);
     low = htonl( low );
     high = htonl( high );
     
@@ -34,10 +34,10 @@ int64_t hton64(int64_t val )
 
 int64_t ntoh64(int64_t val )
 {
-    long high, low;
-    low = (long)(val & 0x00000000FFFFFFFF);
+    int64_t high, low;
+    low = (int64_t)(val & 0x00000000FFFFFFFF);
     val>>=32;
-    high = (long)(val & 0x00000000FFFFFFFF);
+    high = (int64_t)(val & 0x00000000FFFFFFFF);
     low = ntohl( low );
     high = ntohl( high );
 

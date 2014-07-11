@@ -184,7 +184,8 @@
             if ([name hasPrefix:@"p_"]) {
                 Conversation *c = [[Conversation alloc] init];
                 int64_t uid = [[name substringFromIndex:2] longLongValue];
-                c.cid = name;
+                c.cid = uid;
+                c.type = CONVERSATION_PEER;
                 c.message = [self getLastPeerMessage:uid];
                 if (c.message) return c;
             } else if ([name hasPrefix:@"g_"]) {

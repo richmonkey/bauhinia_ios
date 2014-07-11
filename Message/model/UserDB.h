@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "User.h"
+#import "PhoneNumber.h"
 
 @interface UserDB : NSObject
 +(UserDB*)instance;
 
 -(BOOL)addUser:(User*)user;
--(User*)loadUser:(int64_t)uid;
--(NSString*)loadUserState:(int64_t)uid;
-
+-(IMUser*)loadUser:(int64_t)uid;
+-(User*)loadUserWithNumber:(PhoneNumber*)number;
 @end

@@ -16,7 +16,9 @@
 @end
 
 
-@interface ContactDB : NSObject
+@interface ContactDB : NSObject {
+    
+}
 
 @property(nonatomic, weak)id<ContactDBObserver> observer;
 
@@ -27,7 +29,6 @@
 -(ABRecordRef)recordRefWithRecordID:(ABRecordID)recordID;
 -(int64_t)uidFromPhoneNumber:(NSString*)phone;
 
--(IMUser*)loadIMUser:(int64_t)uid;
 -(IMContact*)loadIMContact:(ABRecordID)recordID;
-
+-(ABContact*)loadContactWithNumber:(PhoneNumber*)number;
 @end

@@ -104,7 +104,6 @@
   leveldb::Status s;
   leveldb::Slice ks([key UTF8String]);
   s = self.db->Get(leveldb::ReadOptions(), ks, &value);
-  assert(s.ok());
   if (!s.ok()) {
     NSLog(@"get value fail");
     return nil;

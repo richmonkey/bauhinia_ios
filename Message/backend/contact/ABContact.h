@@ -12,8 +12,7 @@
 
 @interface ABContact : NSObject
 {
-@private
-	ABRecordRef record;
+
 }
 
 @property (nonatomic, assign) ABRecordID recordID;

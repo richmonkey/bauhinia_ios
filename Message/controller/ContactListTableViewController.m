@@ -98,8 +98,8 @@
         return;
 	}
     
-	for (IMSimpleContact *contact in self.contacts) {
-        NSString *string = contact.name;
+	for (IMContact *contact in self.contacts) {
+        NSString *string = contact.contactName;
         
         NSString *sectionName;
         if ([string length] > 0) {
@@ -196,8 +196,8 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     [self.filteredArray removeAllObjects];
 
-    for(IMSimpleContact *contact in self.contacts) {
-        NSString *string = contact.name;
+    for(IMContact *contact in self.contacts) {
+        NSString *string = contact.contactName;
         if (string.length == 0) {
             continue;
         }
@@ -236,8 +236,8 @@
         }
         
         NSArray *section = [self.sectionArray objectAtIndex:indexPath.section];
-        IMSimpleContact *contact = [section objectAtIndex:indexPath.row];
-        [cell.textLabel setText:contact.name];
+        IMContact *contact = [section objectAtIndex:indexPath.row];
+        [cell.textLabel setText:contact.contactName];
         return cell;
     } else {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell"];
@@ -246,8 +246,8 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"ContactCell"];
         }
 
-        IMSimpleContact *contact = [self.filteredArray objectAtIndex:indexPath.row];
-        [cell.textLabel setText:contact.name];
+        IMContact *contact = [self.filteredArray objectAtIndex:indexPath.row];
+        [cell.textLabel setText:contact.contactName];
         return cell;
     }
 }
@@ -260,7 +260,7 @@
                                                                           target:self
                                                                           action:@selector(cancelBtnAction:)] ;
     pvc.title = @"联系人详细";
-	IMSimpleContact *contact;
+	IMContact *contact;
 	if (aTableView == self.tableView){
 		contact = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 	}else{

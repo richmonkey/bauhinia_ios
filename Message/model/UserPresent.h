@@ -7,15 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "User.h"
 
-@interface UserPresent : NSObject
-
-@property (strong, nonatomic)NSString* username;
-@property (assign, nonatomic)UInt64 userid;
-@property (strong,nonatomic)NSString* password;
-
-
+@interface UserPresent : User
 +(UserPresent*)instance;
-
 
 @end
