@@ -30,6 +30,6 @@
     return self;
 }
 -(NSString*)URL {
-    return @"http://192.168.33.10:5000";
+    return @"http://127.0.0.1:5000";
 }
 @end

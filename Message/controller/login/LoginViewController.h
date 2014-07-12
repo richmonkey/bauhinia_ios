@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LoginViewController : UIViewController
+@interface LoginViewController : UIViewController <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIView *loginView;
-- (IBAction)login;
+- (IBAction) login;
+- (IBAction) onTap:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *mobile;
 @property (weak, nonatomic) IBOutlet UITextField *pwd;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;

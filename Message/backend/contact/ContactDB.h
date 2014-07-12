@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "ABContact.h"
-#import "User.h"
 #import "IMContact.h"
+#import "PhoneNumber.h"
 
 @protocol ContactDBObserver<NSObject>
 -(void)onExternalChange;

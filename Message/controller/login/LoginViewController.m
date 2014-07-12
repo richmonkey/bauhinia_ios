@@ -17,6 +17,8 @@
 #import "Token.h"
 #import "UserDB.h"
 
+#define Debug
+
 @interface LoginViewController ()
 @end
 
@@ -27,6 +29,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor grayColor];
     self.mobile.text = @"13635273143";
+    self.pwd.text = @"123";
 }
 
 
@@ -56,7 +59,45 @@
 - (BOOL)shouldAutorotate {
     return YES;
 }
+- (IBAction)onTap:(id)sender
+{
+    [self.mobile   resignFirstResponder];
+    [self.pwd  resignFirstResponder];
+//    [self.verifyCodeTF resignFirstResponder];
+}
 
+#pragma mark- UITextFieldDelegate
+//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+//    return YES;
+//}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    [self animateTextField:YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [self animateTextField:NO];
+}
+
+
+- (void)animateTextField:(BOOL)up
+{
+    const int movementDistance = 50;
+    const float movementDuration = 0.3f;
+    
+    int movement = (up ? -movementDistance : movementDistance);
+    
+    [UIView beginAnimations: @"anim" context: nil];
+    
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    
+    [UIView setAnimationDuration: movementDuration];
+    
+    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+    
+    [UIView commitAnimations];
+    
+}
 
 #pragma mark 弹出错误提示
 - (void)alertError:(NSString *)error
@@ -93,8 +134,11 @@
     
     // 3.2.让整个登录界面停止跟用户交互
     self.view.userInteractionEnabled = NO;
-    
+#ifdef Debug
+    [self loginSuccess];
+#else
     [self requestAuthToken:self.pwd.text zone:@"86" number:self.mobile.text];
+#endif
 }
 
 - (IBAction)onVerifyCode:(id)sender {

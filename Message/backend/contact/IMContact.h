@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ABContact.h"
-#import "User.h"
+
 
 @interface IMContact : ABContact
 @property(nonatomic)NSArray *users;
