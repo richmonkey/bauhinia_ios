@@ -107,11 +107,6 @@
     self.hidesBottomBarWhenPushed = YES;
 }
 
-- (void)viewWillDisappear: (BOOL)animated {
-    [self setHidesBottomBarWhenPushed:NO];
-    [super viewDidDisappear:animated];
-}
-
 #pragma mark - MessageObserver
 
 -(void)onPeerMessage:(IMessage*)msg{

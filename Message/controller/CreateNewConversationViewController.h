@@ -10,8 +10,7 @@
 #import "ABContact.h"
 #import "ContactDB.h"
 
-@interface CreateNewConversationViewController : UIViewController< UITableViewDelegate, UITableViewDataSource,
-ABPersonViewControllerDelegate, UISearchBarDelegate,
+@interface CreateNewConversationViewController : UIViewController< UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,
 ContactDBObserver> {
     
 }

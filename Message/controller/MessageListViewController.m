@@ -60,11 +60,11 @@
 }
 
 
-//- (void)viewDidAppear:(BOOL)animated{
-//    
-//    self.mainTabController.tabBar.hidden = NO;
-//
-//}
+- (void)viewDidAppear:(BOOL)animated{
+    
+    self.mainTabController.tabBar.hidden = NO;
+
+}
 
 - (void)viewDidLoad
 {
