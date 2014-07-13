@@ -52,7 +52,8 @@
 -(void)sendInputing:(MessageInputing*)inputing;
 
 //订阅用户在线状态通知消息
--(void)subscribeState:(MessageSubsribe*)sub;
+-(void)subscribeState:(int64_t)uid;
+-(void)unsubscribeState:(int64_t)uid;
 
 -(void)addMessageObserver:(id<MessageObserver>)ob;
 -(void)removeMessageObserver:(id<MessageObserver>)ob;

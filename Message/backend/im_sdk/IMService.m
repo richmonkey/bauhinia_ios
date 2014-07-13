@@ -15,8 +15,6 @@
 
 #define HEARTBEAT (10ull*NSEC_PER_SEC)
 
-
-
 @interface IMService()
 @property(nonatomic, assign)BOOL stopped;
 @property(nonatomic)AsyncTCP *tcp;
@@ -29,6 +27,7 @@
 @property(nonatomic)int64_t uid;
 @property(nonatomic)NSMutableDictionary *peerMessages;
 @property(nonatomic)NSMutableDictionary *groupMessages;
+@property(nonatomic)NSMutableSet *subs;
 @end
 
 @implementation IMService
@@ -57,6 +56,7 @@
             [self sendHeartbeat];
         });
         self.observers = [NSMutableArray array];
+        self.subs = [NSMutableSet set];
         self.data = [NSMutableData data];
         self.peerMessages = [NSMutableDictionary dictionary];
         self.groupMessages = [NSMutableDictionary dictionary];
@@ -177,6 +177,11 @@
 -(void)handleAuthStatus:(Message*)msg {
     int status = [(NSNumber*)msg.body intValue];
     NSLog(@"auth status:%d", status);
+    if (status == 0 && [self.subs count]) {
+        MessageSubsribe *sub = [[MessageSubsribe alloc] init];
+        sub.uids = [self.subs allObjects];
+        [self sendSubscribe:sub];
+    }
 }
 
 -(void)handleInputing:(Message*)msg {
@@ -401,11 +406,27 @@
     [self sendMessage:msg];
 }
 
-//订阅用户在线状态通知消息
--(void)subscribeState:(MessageSubsribe*)sub {
+-(void)sendSubscribe:(MessageSubsribe*)sub {
     Message *msg = [[Message alloc] init];
     msg.cmd = MSG_SUBSCRIBE_ONLINE_STATE;
     msg.body = sub;
     [self sendMessage:msg];
 }
+
+//订阅用户在线状态通知消息
+-(void)subscribeState:(int64_t)uid {
+    NSNumber *n = [NSNumber numberWithLongLong:uid];
+    if (![self.subs containsObject:n]) {
+        [self.subs addObject:n];
+        MessageSubsribe *sub = [[MessageSubsribe alloc] init];
+        sub.uids = [NSArray arrayWithObject:n];
+        [self sendSubscribe:sub];
+    }
+}
+
+-(void)unsubscribeState:(int64_t)uid {
+    NSNumber *n = [NSNumber numberWithLongLong:uid];
+    [self.subs removeObject:n];
+}
+
 @end
