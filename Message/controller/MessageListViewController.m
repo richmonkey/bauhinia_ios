@@ -178,7 +178,7 @@
         NSLog(@"date:%@",[date description]);
         
         cell.timelabel.text = [date description];
-        cell.namelabel.text = @"小张";
+        cell.namelabel.text = covn.name;
         
         //            cell.rightUtilityButtons = [self createCellRightButtons];
         

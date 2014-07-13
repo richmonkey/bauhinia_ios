@@ -30,6 +30,7 @@
     
   Token *token = [Token instance];
   if (token.accessToken) {
+      [token startRefreshTimer];
       [[IMService instance] start:[UserPresent instance].uid];
       ConversationViewController* conversationController = [[ConversationViewController alloc] init];
       conversationController.title = @"消息";
