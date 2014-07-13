@@ -285,6 +285,8 @@
 
 - (void) newAction{
     NSLog(@"newAction");
+    
+    
 }
 
 - (void) broadcastAction{

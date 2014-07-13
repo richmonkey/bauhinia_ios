@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "MessageConversationCell.h"
+#import "CreateNewConversationViewController.h"
 
 
 @interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate>
