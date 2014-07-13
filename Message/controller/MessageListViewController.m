@@ -63,7 +63,11 @@
 - (void)viewDidAppear:(BOOL)animated{
     
     self.mainTabController.tabBar.hidden = NO;
+    self.hidesBottomBarWhenPushed = NO;
+}
 
+- (void)viewWillDisappear: (BOOL)animated {
+    self.mainTabController.tabBar.hidden = YES;
 }
 
 - (void)viewDidLoad
