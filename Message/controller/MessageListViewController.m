@@ -225,8 +225,10 @@
 
 -(void)orignalCellDidSelected:(MessageConversationCell *)cell{
     if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
+        NSIndexPath  *path = [self._table indexPathForCell:cell];
+        Conversation *con = [self.conversations objectAtIndex:path.row - 1];
         
-        MessageViewController* msgController = [[MessageViewController alloc] init];
+        MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
 
         [self.navigationController pushViewController:msgController animated:YES];
         self.mainTabController.tabBar.hidden = YES;

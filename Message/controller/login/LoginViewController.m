@@ -17,7 +17,6 @@
 #import "Token.h"
 #import "UserDB.h"
 
-#define Debug
 
 @interface LoginViewController ()
 @end
@@ -29,7 +28,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor grayColor];
     self.mobile.text = @"13635273143";
-    self.pwd.text = @"123";
 }
 
 
@@ -63,13 +61,12 @@
 {
     [self.mobile   resignFirstResponder];
     [self.pwd  resignFirstResponder];
-//    [self.verifyCodeTF resignFirstResponder];
 }
 
 #pragma mark- UITextFieldDelegate
-//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-//    return YES;
-//}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    return YES;
+}
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     [self animateTextField:YES];
@@ -134,11 +131,7 @@
     
     // 3.2.让整个登录界面停止跟用户交互
     self.view.userInteractionEnabled = NO;
-#ifdef Debug
-    [self loginSuccess];
-#else
     [self requestAuthToken:self.pwd.text zone:@"86" number:self.mobile.text];
-#endif
 }
 
 - (IBAction)onVerifyCode:(id)sender {
@@ -155,6 +148,7 @@
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
         NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
         NSString *code = [resp objectForKey:@"code"];
+        self.pwd.text = code;
         IMLog(@"code:%@", code);
     };
     request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {

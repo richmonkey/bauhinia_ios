@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "JSMessagesViewController.h"
 #import "IMService.h"
+#import "IMessage.h"
 
 @class ConversationHeadButtonView;
 
@@ -16,5 +17,8 @@
 
 
 @property (strong,nonatomic) ConversationHeadButtonView *headButtonView;
+@property (weak,nonatomic) Conversation* currentConversation;
+
+-(id)initWithConversation:(Conversation *) con;
 
 @end

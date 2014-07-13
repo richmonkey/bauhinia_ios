@@ -38,6 +38,14 @@
     return self;
 }
 
+
+-(id) initWithConversation:(Conversation *) con{
+    if (self = [super init]) {
+        self.currentConversation = con;
+    }
+    return self;
+}
+
 - (void)loadView{
     [super loadView];
     
@@ -65,9 +73,12 @@
     
     self.delegate = self;
     self.dataSource = self;
-    
+    if (!self.currentConversation.name) {
+        
     self.title = @"消息";
-    
+    }else{
+        self.title = self.currentConversation.name;
+    }
     
     MessageHeaderActionsView *tableHeaderView = [[[NSBundle mainBundle]loadNibNamed:@"MessageHeaderActionsView" owner:self options:nil] lastObject];
     self.tableView.tableHeaderView = tableHeaderView;
@@ -77,7 +88,7 @@
     
     self.messageArray = [NSMutableArray array];
     
-    IMessageIterator* iterator =  [[MessageDB instance] newPeerMessageIterator: 13635273142];
+    IMessageIterator* iterator =  [[MessageDB instance] newPeerMessageIterator: self.currentConversation.cid];
     IMessage *msg = [iterator next];
     while (msg) {
         [self.messageArray insertObject:msg atIndex: 0];
@@ -147,8 +158,8 @@
         self.navigationItem.titleView = self.headButtonView;
         
     }else if(state == STATE_CONNECTFAIL){
-        
         [self.headButtonView.nameLabel setText: @"小张"];
+        
         [self.headButtonView.conectInformationLabel setText:@"最近登录时间昨天下午"];
 
         self.navigationItem.titleView = self.headButtonView;
@@ -169,8 +180,10 @@
     [super textViewDidBeginEditing:textView];
     
     MessageInputing *inputing = [[MessageInputing alloc ] init];
-    inputing.receiver = 192;
-    inputing.receiver = 111;
+    
+    inputing.sender = [UserPresent instance].uid;
+    inputing.receiver =self.currentConversation.cid;
+    
     [[IMService instance] sendInputing: inputing];
     
 }
@@ -203,8 +216,10 @@
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
     IMessage *msg = [[IMessage alloc] init];
+    
     msg.sender = [UserPresent instance].uid;
-    msg.receiver = 13635273142;
+    msg.receiver = self.currentConversation.cid;
+    
     MessageContent *content = [[MessageContent alloc] init];
     content.raw = text;
     msg.content = content;
