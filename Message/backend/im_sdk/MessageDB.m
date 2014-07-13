@@ -117,12 +117,14 @@
     char *p = buf + 8;
     msg.flags = readInt32(p);
     p += 4;
+    msg.timestamp = readInt32(p);
+    p += 4;
     msg.sender = readInt64(p);
     p += 8;
     msg.receiver = readInt64(p);
     p += 8;
     MessageContent *content = [[MessageContent alloc] init];
-    content.raw = [[NSString alloc] initWithBytes:p length:len - 20 encoding:NSUTF8StringEncoding];
+    content.raw = [[NSString alloc] initWithBytes:p length:len - 24 encoding:NSUTF8StringEncoding];
     msg.content = content;
     return msg;
 }
@@ -253,13 +255,13 @@
 }
 
 //4字节magic + 4字节消息长度 + 消息主体 + 4字节消息长度 + 4字节magic
-//消息主体：4字节标志 ＋ 8字节发送者id + 8字节接受者id ＋ 消息内容
+//消息主体：4字节标志 ＋ 4字节时间戳 + 8字节发送者id + 8字节接受者id ＋ 消息内容
 -(BOOL)writeMessage:(IMessage*)msg fd:(int)fd {
     char buf[64*1024];
     char *p = buf;
     
     const char *raw = [msg.content.raw UTF8String];
-    int len = strlen(raw) + 8 + 8 + 4;
+    int len = strlen(raw) + 8 + 8 + 4 + 4;
     
     if (4 + 4 + len + 4 + 4 > 64*1024) return NO;
     
@@ -268,6 +270,8 @@
     writeInt32(len, p);
     p += 4;
     writeInt32(msg.flags, p);
+    p += 4;
+    writeInt32(msg.timestamp, p);
     p += 4;
     writeInt64(msg.sender, p);
     p += 8;
