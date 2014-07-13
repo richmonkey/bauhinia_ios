@@ -12,24 +12,63 @@
 #import "IMessage.h"
 #import "MessageDB.h"
 #import "LoginViewController.h"
-
-////#import "SUserDB.h"
+#import "Token.h"
+#import "UserPresent.h"
+#import "Config.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   //配置im server地址
-  [IMService instance].host = @"127.0.0.1";
-  [IMService instance].port = 23000;
+  [IMService instance].host = [Config instance].host;
+  [IMService instance].port = [Config instance].port;
   
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   application.statusBarHidden = NO;
-  self.viewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-  self.window.backgroundColor = [UIColor whiteColor];
-  self.window.rootViewController = self.viewController;
-  [self.window addSubview:self.viewController.view];
-  
+    
+    
+  Token *token = [Token instance];
+  if (token.accessToken) {
+      [[IMService instance] start:[UserPresent instance].uid];
+      ConversationViewController* conversationController = [[ConversationViewController alloc] init];
+      conversationController.title = @"消息";
+      
+      UINavigationController *conversationNavigationController = [[UINavigationController alloc] initWithRootViewController:conversationController];
+      
+      ContactListTableViewController* contactViewController = [[ContactListTableViewController alloc] init];
+      contactViewController.title = @"通讯录";
+      
+      MessageListViewController* msgController = [[MessageListViewController alloc] init];
+      msgController.title = @"对话";
+      
+      UINavigationController *messageListNavigationController = [[UINavigationController alloc] initWithRootViewController:msgController];
+      
+      SettingViewController* settingController = [[SettingViewController alloc] init];
+      settingController.title = @"设置";
+      
+      UITabBarController *tabController = [[UITabBarController alloc] init] ;
+      tabController.viewControllers = [NSArray arrayWithObjects: conversationNavigationController,contactViewController,messageListNavigationController, settingController,nil];
+      
+      
+      msgController.mainTabController = tabController;
+      
+      UITabBarItem *tabBarItem1 = [self.tabBarController.tabBar.items objectAtIndex:0];
+      UITabBarItem *tabBarItem2 = [self.tabBarController.tabBar.items objectAtIndex:1];
+      UITabBarItem *tabBarItem3 = [self.tabBarController.tabBar.items objectAtIndex:2];
+      UITabBarItem *tabBarItem4 = [self.tabBarController.tabBar.items objectAtIndex:3];
+      
+      [tabBarItem1 setImage:[UIImage imageNamed:@"message.png"]];
+      [tabBarItem2 setImage:[UIImage imageNamed:@"contact.png"]];
+      [tabBarItem3 setImage:[UIImage imageNamed:@"setting.png"]];
+      [tabBarItem4 setImage:[UIImage imageNamed:@"conversation.png"]];
+      
+      
+      self.window.rootViewController = tabController;
+  } else {
+      self.viewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+      self.window.rootViewController = self.viewController;
+  }
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];
   return YES;

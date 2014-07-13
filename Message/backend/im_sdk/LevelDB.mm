@@ -105,7 +105,6 @@
   leveldb::Slice ks([key UTF8String]);
   s = self.db->Get(leveldb::ReadOptions(), ks, &value);
   if (!s.ok()) {
-    NSLog(@"get value fail");
     return nil;
   }
   return [NSString stringWithUTF8String:value.c_str()];

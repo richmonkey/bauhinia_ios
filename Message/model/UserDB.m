@@ -82,7 +82,9 @@
 
     NSString *k = [NSString stringWithFormat:@"numbers_%@", number.zoneNumber];
     int64_t uid = [db intForKey:k];
-
+    if (uid == 0) {
+        return nil;
+    }
     NSString *key = [self userKey:uid];
     NSString *k1 = [key stringByAppendingString:@"_avatar"];
     NSString *k2 = [key stringByAppendingString:@"_state"];
@@ -100,6 +102,6 @@
         !u.phoneNumber.isValid) {
         return nil;
     }
-    return nil;
+    return u;
 }
 @end

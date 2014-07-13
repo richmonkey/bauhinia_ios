@@ -131,6 +131,7 @@
     
     // 3.2.让整个登录界面停止跟用户交互
     self.view.userInteractionEnabled = NO;
+
     [self requestAuthToken:self.pwd.text zone:@"86" number:self.mobile.text];
 }
 
@@ -183,10 +184,10 @@
         token.accessToken = [resp objectForKey:@"access_token"];
         token.refreshToken = [resp objectForKey:@"refresh_token"];
         token.expireTimestamp = time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
-        token.uid = [[resp objectForKey:@"user_id"] longLongValue];
+        token.uid = [[resp objectForKey:@"uid"] longLongValue];
         [token save];
         
-        [UserPresent instance].uid = [[resp objectForKey:@"user_id"] longLongValue];
+        [UserPresent instance].uid = [[resp objectForKey:@"uid"] longLongValue];
         [UserPresent instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.mobile.text];
         [[UserDB instance] addUser:[UserPresent instance]];
         

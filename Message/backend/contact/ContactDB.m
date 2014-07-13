@@ -94,6 +94,8 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
         c.middlename = contact.middlename;
         c.lastname = contact.lastname;
         c.recordID = contact.recordID;
+        c.phoneDictionaries = contact.phoneDictionaries;
+        
         NSMutableArray *users = [NSMutableArray array];
         for (NSDictionary *dict in contact.phoneDictionaries) {
             NSString *phone = [dict objectForKey:@"value"];

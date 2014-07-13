@@ -29,13 +29,13 @@
 
 @property (nonatomic, readonly) NSString *contactName;
 
-@property (nonatomic, assign) NSArray *emailDictionaries;
-@property (nonatomic, assign) NSArray *phoneDictionaries;
-@property (nonatomic, assign) NSArray *relatedNameDictionaries;
-@property (nonatomic, assign) NSArray *urlDictionaries;
-@property (nonatomic, assign) NSArray *dateDictionaries;
-@property (nonatomic, assign) NSArray *addressDictionaries;
-@property (nonatomic, assign) NSArray *smsDictionaries;
+@property (nonatomic) NSArray *emailDictionaries;
+@property (nonatomic) NSArray *phoneDictionaries;
+@property (nonatomic) NSArray *relatedNameDictionaries;
+@property (nonatomic) NSArray *urlDictionaries;
+@property (nonatomic) NSArray *dateDictionaries;
+@property (nonatomic) NSArray *addressDictionaries;
+@property (nonatomic) NSArray *smsDictionaries;
 
 
 +(id)contactWithRecord: (ABRecordRef) record;

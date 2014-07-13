@@ -24,13 +24,13 @@
     self = [super init];
     if (self) {
         self.host = @"192.168.33.10";
-//        self.host = @"127.0.0.1";
+        //self.host = @"127.0.0.1";
         self.port = 23000;
     }
     return self;
 }
 -(NSString*)URL {
     return @"http://192.168.33.10:5000";
-//    return @"http://127.0.0.1:5000";
+    //return @"http://127.0.0.1:5000";
 }
 @end
