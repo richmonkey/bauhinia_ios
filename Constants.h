@@ -19,5 +19,8 @@
 #define KPHONENAMEDICDEFINE	@"KPhoneNameDicDefine"
 
 
+#define CREATE_NEW_CONVERSATION @"creat_new_conversation"
+
+
 
 #endif

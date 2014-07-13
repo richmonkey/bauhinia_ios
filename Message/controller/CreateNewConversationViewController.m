@@ -13,6 +13,8 @@
 #import "Config.h"
 #import "UserDB.h"
 #import "Token.h"
+#import "IMessage.h"
+#import "MessageViewController.h"
 
 @interface CreateNewConversationViewController ()
 @property (nonatomic) NSArray *contacts;
@@ -38,6 +40,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationItem setTitle:@"选择联系人"];
+    
+    self.navigationItem.rightBarButtonItem =  [[UIBarButtonItem alloc] initWithTitle:@"取消"
+    
+                                                                           style:UIBarButtonItemStyleBordered
+                                                                          target:self
+                                                                          action:@selector(cancelBtnAction:)] ;
     self.tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	self.tableView.delegate = self;
 	self.tableView.dataSource = self;
@@ -357,28 +366,19 @@
 
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    /*
-	ABPersonViewController *pvc = [[ABPersonViewController alloc] init] ;
-    pvc.navigationItem.backBarButtonItem =[[UIBarButtonItem alloc] initWithTitle:@"取消"
-                                                                           style:UIBarButtonItemStyleBordered
-                                                                          target:self
-                                                                          action:@selector(cancelBtnAction:)] ;
-    pvc.title = @"联系人详细";
-	IMContact *contact;
-	if (aTableView == self.tableView){
-		contact = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-	}else{
-		contact = [self.filteredArray objectAtIndex:indexPath.row];
-    }
+    NSLog(@"新建会话");
+    IMContact *contact = [self.contacts objectAtIndex:indexPath.row];
     
-	pvc.displayedPerson = [[ContactDB instance] recordRefWithRecordID:contact.recordID];
-	pvc.allowsEditing = YES;
-	pvc.personViewDelegate = self;
+    Conversation *newconversation = [[Conversation alloc] init];
+    newconversation.cid = 13635273142;
+    newconversation.name = contact.nickname;
+    NSNotification* notification = [[NSNotification alloc] initWithName:CREATE_NEW_CONVERSATION object:newconversation userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:CREATE_NEW_CONVERSATION object:newconversation ];
+     postNotificationName:@"ConverterAdded" object:self];
+//    MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: newconversation];
     
-	self.aBPersonNav = [[UINavigationController alloc] initWithRootViewController:pvc];
-    self.aBPersonNav.view.backgroundColor = [UIColor grayColor];
-	[self presentViewController: self.aBPersonNav animated:NO completion:nil];
-     */
+//    [self.navigationController pushViewController:msgController animated:YES];
+//    self.mainTabController.tabBar.hidden = YES;
 }
 
 - (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifierForValue

@@ -14,6 +14,7 @@
 #import "MessageGroupConversationCell.h"
 #import "MessageConversationActionTableViewCell.h"
 #import "UserDB.h"
+#import "CreateNewConversationViewController.h"
 
 #define kPeerConversationCellHeight         50
 #define kGroupConversationCellHeight        44
@@ -46,6 +47,8 @@
             conversation = [iterator next];
         }
         [[IMService instance] addMessageObserver:self];
+        
+        [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newConversation:) name:CREATE_NEW_CONVERSATION object:nil];
     }
     return self;
 }
@@ -222,6 +225,11 @@
 	
 }
 
+-(void) newConversation:(Conversation *)con{
+
+    
+}
+
 #pragma mark - TLSwipeForOptionsCellDelegate Methods
 
 -(void)orignalCellDidSelected:(MessageConversationCell *)cell{
@@ -286,7 +294,10 @@
 
 - (void) newAction{
     NSLog(@"newAction");
-    
+
+    CreateNewConversationViewController *newcontroller = [[CreateNewConversationViewController alloc] init];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController: newcontroller];
+    [self presentViewController: navigationController animated:YES completion:nil ];
     
 }
 
