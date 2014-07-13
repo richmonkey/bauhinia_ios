@@ -10,7 +10,12 @@
 
 
 @implementation MessageContent
-
+-(int)type {
+    return MESSAGE_TEXT;
+}
+-(NSString*)text {
+    return self.raw;
+}
 @end
 
 @implementation IMessage

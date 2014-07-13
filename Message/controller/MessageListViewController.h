@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "MessageConversationCell.h"
+#import "IMService.h"
 
-
-@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate>
+@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver>
 {
   
 	UITableView *_table;
