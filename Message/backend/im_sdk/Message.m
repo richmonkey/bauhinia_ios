@@ -103,7 +103,7 @@
         p += 8;
         m.msgLocalID = readInt32(p);
         p += 4;
-        m.content = [[NSString alloc] initWithBytes:p length:data.length-24 encoding:NSUTF8StringEncoding];
+        m.content = [[NSString alloc] initWithBytes:p length:data.length-28 encoding:NSUTF8StringEncoding];
         self.body = m;
         return YES;
     } else if (self.cmd == MSG_ACK) {

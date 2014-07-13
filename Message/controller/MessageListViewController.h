@@ -11,8 +11,7 @@
 #import "MessageConversationCell.h"
 #import "CreateNewConversationViewController.h"
 
-
-@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate>
+@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver>
 {
   
 	UITableView *_table;
