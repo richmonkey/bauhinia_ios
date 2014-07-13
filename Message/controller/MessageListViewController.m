@@ -52,11 +52,19 @@
     }
     return self;
 }
-- (void)viewDidAppear:(BOOL)animated{
+
+-(void)dealloc{
     
-    self.mainTabController.tabBar.hidden = NO;
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 
 }
+
+
+//- (void)viewDidAppear:(BOOL)animated{
+//    
+//    self.mainTabController.tabBar.hidden = NO;
+//
+//}
 
 - (void)viewDidLoad
 {
@@ -225,9 +233,13 @@
 	
 }
 
--(void) newConversation:(Conversation *)con{
+-(void) newConversation:(NSNotification*) notification{
 
-    
+    Conversation *con = [notification object];
+    MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
+    [self setHidesBottomBarWhenPushed:YES];
+
+    [self.navigationController pushViewController:msgController animated:NO];
 }
 
 #pragma mark - TLSwipeForOptionsCellDelegate Methods
@@ -239,9 +251,10 @@
         
         MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
 
-        [self.navigationController pushViewController:msgController animated:YES];
-        self.mainTabController.tabBar.hidden = YES;
+        [self setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:msgController animated:NO];
     }
+    
 }
 
 -(void)cellDidSelectDelete:(MessageConversationCell *)cell {

@@ -373,12 +373,9 @@
     newconversation.cid = 13635273142;
     newconversation.name = contact.nickname;
     NSNotification* notification = [[NSNotification alloc] initWithName:CREATE_NEW_CONVERSATION object:newconversation userInfo:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:CREATE_NEW_CONVERSATION object:newconversation ];
-     postNotificationName:@"ConverterAdded" object:self];
-//    MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: newconversation];
+    [[NSNotificationCenter defaultCenter] postNotificationName:CREATE_NEW_CONVERSATION object: notification ];
     
-//    [self.navigationController pushViewController:msgController animated:YES];
-//    self.mainTabController.tabBar.hidden = YES;
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifierForValue
