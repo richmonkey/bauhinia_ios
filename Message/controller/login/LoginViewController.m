@@ -210,7 +210,7 @@
 #pragma mark 登录成功
 - (void)loginSuccess
 {
-    
+    [[Token instance] startRefreshTimer];
     [[IMService instance] start:[UserPresent instance].uid];
     // 1.停止动画
     [self.indicator stopAnimating];

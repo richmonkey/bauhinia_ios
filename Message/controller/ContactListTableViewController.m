@@ -95,7 +95,7 @@
     NSString *key = @"request_timestamp";
     int t = (int)[db intForKey:key];
     if (time(NULL) - t < 24*3600) {
-        return;
+      //  return;
     }
     
     TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];

@@ -17,4 +17,6 @@
 @property(assign)int64_t uid;
 -(void)save;
 
+-(void)startRefreshTimer;
+-(void)stopRefreshTimer;
 @end
