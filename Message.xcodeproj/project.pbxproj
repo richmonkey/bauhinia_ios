@@ -90,26 +90,6 @@
 		21150CAB196F7910009DE9DE /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CA9196F7910009DE9DE /* Token.m */; };
 		21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CAD196F79AA009DE9DE /* TAHttpOperation.m */; };
 		2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */; };
-		2142CB3C196268490002E4A9 /* login_add_account.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB24196268490002E4A9 /* login_add_account.png */; };
-		2142CB3D196268490002E4A9 /* login_add_account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB25196268490002E4A9 /* login_add_account@2x.png */; };
-		2142CB3E196268490002E4A9 /* login_avatar_mask_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB26196268490002E4A9 /* login_avatar_mask_normal.png */; };
-		2142CB3F196268490002E4A9 /* login_avatar_mask_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB27196268490002E4A9 /* login_avatar_mask_normal@2x.png */; };
-		2142CB40196268490002E4A9 /* login_button_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB28196268490002E4A9 /* login_button_normal.png */; };
-		2142CB41196268490002E4A9 /* login_button_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB29196268490002E4A9 /* login_button_normal@2x.png */; };
-		2142CB42196268490002E4A9 /* login_checkbox_checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB2A196268490002E4A9 /* login_checkbox_checked.png */; };
-		2142CB43196268490002E4A9 /* login_checkbox_checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB2B196268490002E4A9 /* login_checkbox_checked@2x.png */; };
-		2142CB44196268490002E4A9 /* login_checkbox_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB2C196268490002E4A9 /* login_checkbox_normal.png */; };
-		2142CB45196268490002E4A9 /* login_checkbox_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB2D196268490002E4A9 /* login_checkbox_normal@2x.png */; };
-		2142CB46196268490002E4A9 /* login_default_avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB2E196268490002E4A9 /* login_default_avatar.png */; };
-		2142CB47196268490002E4A9 /* login_default_avatar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB2F196268490002E4A9 /* login_default_avatar@2x.png */; };
-		2142CB48196268490002E4A9 /* login_input_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB30196268490002E4A9 /* login_input_bg.png */; };
-		2142CB49196268490002E4A9 /* login_input_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB31196268490002E4A9 /* login_input_bg@2x.png */; };
-		2142CB4A196268490002E4A9 /* login_separator.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB32196268490002E4A9 /* login_separator.png */; };
-		2142CB4B196268490002E4A9 /* login_separator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB33196268490002E4A9 /* login_separator@2x.png */; };
-		2142CB4C196268490002E4A9 /* login_stack_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB34196268490002E4A9 /* login_stack_bg.png */; };
-		2142CB4D196268490002E4A9 /* login_stack_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB35196268490002E4A9 /* login_stack_bg@2x.png */; };
-		2142CB4E196268490002E4A9 /* logout_btn_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB36196268490002E4A9 /* logout_btn_bg@2x.png */; };
-		2142CB4F196268490002E4A9 /* logout_btn_bg_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB37196268490002E4A9 /* logout_btn_bg_highlighted@2x.png */; };
 		2142CB62196268860002E4A9 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB54196268860002E4A9 /* ABContact.m */; };
 		2142CB69196268860002E4A9 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB60196268860002E4A9 /* pinyin.c */; };
 		217261981954155000F09E33 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217261971954155000F09E33 /* AddressBook.framework */; };
@@ -273,26 +253,6 @@
 		21150CAC196F79AA009DE9DE /* TAHttpOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAHttpOperation.h; sourceTree = "<group>"; };
 		21150CAD196F79AA009DE9DE /* TAHttpOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAHttpOperation.m; sourceTree = "<group>"; };
 		2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		2142CB24196268490002E4A9 /* login_add_account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_add_account.png; sourceTree = "<group>"; };
-		2142CB25196268490002E4A9 /* login_add_account@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_add_account@2x.png"; sourceTree = "<group>"; };
-		2142CB26196268490002E4A9 /* login_avatar_mask_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_avatar_mask_normal.png; sourceTree = "<group>"; };
-		2142CB27196268490002E4A9 /* login_avatar_mask_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_avatar_mask_normal@2x.png"; sourceTree = "<group>"; };
-		2142CB28196268490002E4A9 /* login_button_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_button_normal.png; sourceTree = "<group>"; };
-		2142CB29196268490002E4A9 /* login_button_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_button_normal@2x.png"; sourceTree = "<group>"; };
-		2142CB2A196268490002E4A9 /* login_checkbox_checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_checkbox_checked.png; sourceTree = "<group>"; };
-		2142CB2B196268490002E4A9 /* login_checkbox_checked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_checkbox_checked@2x.png"; sourceTree = "<group>"; };
-		2142CB2C196268490002E4A9 /* login_checkbox_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_checkbox_normal.png; sourceTree = "<group>"; };
-		2142CB2D196268490002E4A9 /* login_checkbox_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_checkbox_normal@2x.png"; sourceTree = "<group>"; };
-		2142CB2E196268490002E4A9 /* login_default_avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_default_avatar.png; sourceTree = "<group>"; };
-		2142CB2F196268490002E4A9 /* login_default_avatar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_default_avatar@2x.png"; sourceTree = "<group>"; };
-		2142CB30196268490002E4A9 /* login_input_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_input_bg.png; sourceTree = "<group>"; };
-		2142CB31196268490002E4A9 /* login_input_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_input_bg@2x.png"; sourceTree = "<group>"; };
-		2142CB32196268490002E4A9 /* login_separator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_separator.png; sourceTree = "<group>"; };
-		2142CB33196268490002E4A9 /* login_separator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_separator@2x.png"; sourceTree = "<group>"; };
-		2142CB34196268490002E4A9 /* login_stack_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_stack_bg.png; sourceTree = "<group>"; };
-		2142CB35196268490002E4A9 /* login_stack_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_stack_bg@2x.png"; sourceTree = "<group>"; };
-		2142CB36196268490002E4A9 /* logout_btn_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout_btn_bg@2x.png"; sourceTree = "<group>"; };
-		2142CB37196268490002E4A9 /* logout_btn_bg_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout_btn_bg_highlighted@2x.png"; sourceTree = "<group>"; };
 		2142CB53196268860002E4A9 /* ABContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABContact.h; sourceTree = "<group>"; };
 		2142CB54196268860002E4A9 /* ABContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABContact.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
@@ -589,36 +549,8 @@
 		2142CB20196268490002E4A9 /* res */ = {
 			isa = PBXGroup;
 			children = (
-				2142CB23196268490002E4A9 /* login */,
 			);
 			path = res;
-			sourceTree = "<group>";
-		};
-		2142CB23196268490002E4A9 /* login */ = {
-			isa = PBXGroup;
-			children = (
-				2142CB24196268490002E4A9 /* login_add_account.png */,
-				2142CB25196268490002E4A9 /* login_add_account@2x.png */,
-				2142CB26196268490002E4A9 /* login_avatar_mask_normal.png */,
-				2142CB27196268490002E4A9 /* login_avatar_mask_normal@2x.png */,
-				2142CB28196268490002E4A9 /* login_button_normal.png */,
-				2142CB29196268490002E4A9 /* login_button_normal@2x.png */,
-				2142CB2A196268490002E4A9 /* login_checkbox_checked.png */,
-				2142CB2B196268490002E4A9 /* login_checkbox_checked@2x.png */,
-				2142CB2C196268490002E4A9 /* login_checkbox_normal.png */,
-				2142CB2D196268490002E4A9 /* login_checkbox_normal@2x.png */,
-				2142CB2E196268490002E4A9 /* login_default_avatar.png */,
-				2142CB2F196268490002E4A9 /* login_default_avatar@2x.png */,
-				2142CB30196268490002E4A9 /* login_input_bg.png */,
-				2142CB31196268490002E4A9 /* login_input_bg@2x.png */,
-				2142CB32196268490002E4A9 /* login_separator.png */,
-				2142CB33196268490002E4A9 /* login_separator@2x.png */,
-				2142CB34196268490002E4A9 /* login_stack_bg.png */,
-				2142CB35196268490002E4A9 /* login_stack_bg@2x.png */,
-				2142CB36196268490002E4A9 /* logout_btn_bg@2x.png */,
-				2142CB37196268490002E4A9 /* logout_btn_bg_highlighted@2x.png */,
-			);
-			path = login;
 			sourceTree = "<group>";
 		};
 		2142CB52196268860002E4A9 /* contact */ = {
@@ -873,7 +805,6 @@
 			files = (
 				210564E619695FC1008D3A83 /* bubble-flat-incoming.png in Resources */,
 				210564EF19695FC1008D3A83 /* bubble-square-incoming-selected@2x.png in Resources */,
-				2142CB46196268490002E4A9 /* login_default_avatar.png in Resources */,
 				217261AD1954173200F09E33 /* InfoPlist.strings in Resources */,
 				210564DE19695FC1008D3A83 /* bubble-default-outgoing-green.png in Resources */,
 				21798FA1194E9C4600B67C1F /* InfoPlist.strings in Resources */,
@@ -882,41 +813,27 @@
 				210564FD19695FC1008D3A83 /* input-field@2x.png in Resources */,
 				210564F719695FC1008D3A83 /* bubble-typing@2x.png in Resources */,
 				210564F419695FC1008D3A83 /* bubble-square-outgoing.png in Resources */,
-				2142CB44196268490002E4A9 /* login_checkbox_normal.png in Resources */,
-				2142CB3C196268490002E4A9 /* login_add_account.png in Resources */,
-				2142CB3E196268490002E4A9 /* login_avatar_mask_normal.png in Resources */,
-				2142CB4D196268490002E4A9 /* login_stack_bg@2x.png in Resources */,
-				2142CB4E196268490002E4A9 /* logout_btn_bg@2x.png in Resources */,
 				210564FB19695FC1008D3A83 /* input-bar@2x.png in Resources */,
 				2105650119695FC1008D3A83 /* send-highlighted@2x.png in Resources */,
-				2142CB4B196268490002E4A9 /* login_separator@2x.png in Resources */,
 				210564D919695FC1008D3A83 /* bubble-default-incoming-green@2x.png in Resources */,
 				210564E119695FC1008D3A83 /* bubble-default-outgoing-selected@2x.png in Resources */,
 				2105650F1969839F008D3A83 /* ConversationHeadButtonView.xib in Resources */,
 				210564E519695FC1008D3A83 /* bubble-flat-incoming-selected@2x.png in Resources */,
 				2105650219695FC1008D3A83 /* send.png in Resources */,
-				2142CB4C196268490002E4A9 /* login_stack_bg.png in Resources */,
 				210564EB19695FC1008D3A83 /* bubble-flat-outgoing-selected@2x.png in Resources */,
 				210564D819695FC1008D3A83 /* bubble-default-incoming-green.png in Resources */,
 				210564F819695FC1008D3A83 /* input-bar-flat.png in Resources */,
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
-				2142CB48196268490002E4A9 /* login_input_bg.png in Resources */,
 				210564E919695FC1008D3A83 /* bubble-flat-outgoing-old@2x.png in Resources */,
 				210564F219695FC1008D3A83 /* bubble-square-outgoing-selected.png in Resources */,
-				2142CB3D196268490002E4A9 /* login_add_account@2x.png in Resources */,
 				210564E019695FC1008D3A83 /* bubble-default-outgoing-selected.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
-				2142CB43196268490002E4A9 /* login_checkbox_checked@2x.png in Resources */,
 				210564DA19695FC1008D3A83 /* bubble-default-incoming-selected.png in Resources */,
 				210564E319695FC1008D3A83 /* bubble-default-outgoing@2x.png in Resources */,
 				210564E719695FC1008D3A83 /* bubble-flat-incoming@2x.png in Resources */,
 				210564F319695FC1008D3A83 /* bubble-square-outgoing-selected@2x.png in Resources */,
-				2142CB3F196268490002E4A9 /* login_avatar_mask_normal@2x.png in Resources */,
-				2142CB42196268490002E4A9 /* login_checkbox_checked.png in Resources */,
 				210564F519695FC1008D3A83 /* bubble-square-outgoing@2x.png in Resources */,
 				210564FF19695FC1008D3A83 /* PhotoIcon@2x.png in Resources */,
-				2142CB41196268490002E4A9 /* login_button_normal@2x.png in Resources */,
-				2142CB49196268490002E4A9 /* login_input_bg@2x.png in Resources */,
 				210564EE19695FC1008D3A83 /* bubble-square-incoming-selected.png in Resources */,
 				210564FE19695FC1008D3A83 /* PhotoIcon.png in Resources */,
 				210564DD19695FC1008D3A83 /* bubble-default-incoming@2x.png in Resources */,
@@ -925,14 +842,10 @@
 				210564EC19695FC1008D3A83 /* bubble-flat-outgoing.png in Resources */,
 				210564DC19695FC1008D3A83 /* bubble-default-incoming.png in Resources */,
 				210564DF19695FC1008D3A83 /* bubble-default-outgoing-green@2x.png in Resources */,
-				2142CB4A196268490002E4A9 /* login_separator.png in Resources */,
-				2142CB47196268490002E4A9 /* login_default_avatar@2x.png in Resources */,
 				210564DB19695FC1008D3A83 /* bubble-default-incoming-selected@2x.png in Resources */,
-				2142CB45196268490002E4A9 /* login_checkbox_normal@2x.png in Resources */,
 				210564FA19695FC1008D3A83 /* input-bar.png in Resources */,
 				2105651119698D7B008D3A83 /* MessageHeaderActionsView.xib in Resources */,
 				210564F919695FC1008D3A83 /* input-bar-flat@2x.png in Resources */,
-				2142CB4F196268490002E4A9 /* logout_btn_bg_highlighted@2x.png in Resources */,
 				210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */,
 				210564F119695FC1008D3A83 /* bubble-square-incoming@2x.png in Resources */,
 				21798FA9194E9C4600B67C1F /* Images.xcassets in Resources */,
@@ -943,7 +856,6 @@
 				210564EA19695FC1008D3A83 /* bubble-flat-outgoing-selected.png in Resources */,
 				210564E419695FC1008D3A83 /* bubble-flat-incoming-selected.png in Resources */,
 				210564CB19695FC1008D3A83 /* LoginViewController.xib in Resources */,
-				2142CB40196268490002E4A9 /* login_button_normal.png in Resources */,
 				210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */,
 				210564C919695FC1008D3A83 /* ConversationViewController.xib in Resources */,
 				21FCF2431968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib in Resources */,

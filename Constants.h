@@ -19,6 +19,9 @@
 #define KPHONENAMEDICDEFINE	@"KPhoneNameDicDefine"
 
 
+
+//NSNotificaiton
+
 #define CREATE_NEW_CONVERSATION @"creat_new_conversation"
 #define SEND_FIRST_MESSAGE_OK   @"send_first_message_ok"
 

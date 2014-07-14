@@ -210,6 +210,7 @@
 
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
+    
     IMessage *msg = [[IMessage alloc] init];
     
     msg.sender = [UserPresent instance].uid;
@@ -221,20 +222,26 @@
     msg.timestamp = time(NULL);
     
     [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        BOOL r = [[IMService instance] sendPeerMessage:msg];
-        NSLog(@"send result:%d", r);
+    
+    BOOL r = [[IMService instance] sendPeerMessage:msg];
+    NSLog(@"send result:%d", r);
+    
+    
+    [self.messageArray addObject: msg];
+    [self.timestamps addObject:[NSDate date]];
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SEND_FIRST_MESSAGE_OK object: notification ];
+    
+    
+    
+    [self finishSend];
         
-        
-        [self.messageArray addObject: msg];
-        [self.timestamps addObject:[NSDate date]];
-        
-        [JSMessageSoundEffect playMessageSentSound];
-        
-        
-        [self finishSend];
-        
-    });
+    
+    
     
 }
 
