@@ -29,14 +29,11 @@
 
 @implementation MessageViewController
 
-@synthesize messageArray;
-
-
 
 -(id) initWithConversation:(Conversation *) con{
     if (self = [super init]) {
         self.currentConversation = con;
-
+        
     }
     return self;
 }
@@ -70,7 +67,7 @@
     self.dataSource = self;
     if (!self.currentConversation.name) {
         
-    self.title = @"消息";
+        self.title = @"消息";
     }else{
         self.title = self.currentConversation.name;
     }
@@ -79,21 +76,9 @@
     self.tableView.tableHeaderView = tableHeaderView;
     
     [self setBackgroundColor: [UIColor grayColor]];
-
     
-    self.messageArray = [NSMutableArray array];
+    [self processConversationData];
     
-    IMessageIterator* iterator =  [[MessageDB instance] newPeerMessageIterator: self.currentConversation.cid];
-    IMessage *msg = [iterator next];
-    while (msg) {
-        [self.messageArray insertObject:msg atIndex: 0];
-        msg = [iterator next];
-    }
-    
-    self.timestamps = [NSMutableArray array];
-    for (IMessage* msg in self.messageArray) {
-        [self.timestamps addObject:[NSString stringWithFormat:@"%d",msg.timestamp]];
-    }
     
     [[IMService instance] addMessageObserver:self];
 }
@@ -104,11 +89,7 @@
 -(void)onPeerMessage:(IMessage*)msg{
     [JSMessageSoundEffect playMessageReceivedSound];
     NSLog(@"receive msg:%@",msg);
-    [[MessageDB instance] insertPeerMessage:msg uid:msg.sender];
-    
-    [self.messageArray addObject:msg];
-    
-    [self.timestamps addObject: [NSDate dateWithTimeIntervalSinceNow:msg.timestamp]];
+    [self insertMsgToMessageBlokArray: msg];
     
     [self.tableView reloadData];
     [self scrollToBottomAnimated:YES];
@@ -149,21 +130,21 @@
         aiView.hidesWhenStopped = NO; //I added this just so I could see it
         self.navigationItem.titleView = aiView;
     }else if(state == STATE_CONNECTED){
-
+        
         self.navigationItem.titleView = self.headButtonView;
         
     }else if(state == STATE_CONNECTFAIL){
         [self.headButtonView.nameLabel setText: @"小张"];
         
         [self.headButtonView.conectInformationLabel setText:@"最近登录时间昨天下午"];
-
+        
         self.navigationItem.titleView = self.headButtonView;
         
     }else{
         
         [self.headButtonView.nameLabel setText: @"小张"];
         [self.headButtonView.conectInformationLabel setText:@"最近登录时间昨天下午"];
-
+        
         self.navigationItem.titleView = self.headButtonView;
         
     }
@@ -187,21 +168,45 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    if (self.timestamps != nil) {
+        return [self.timestamps count];
+    }
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.messageArray.count;
+    if (self.messageArray != nil) {
+        
+        NSMutableArray *array = [self.messageArray objectAtIndex: section];
+        return [array count];
+    }
+    
+    return 1;
 }
 
 #pragma mark -  UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-
-    MessageTableSectionHeaderView *sectionHeader = [[[NSBundle mainBundle]loadNibNamed:@"MessageTableSectionHeaderView" owner:self options:nil] lastObject];
     
-    return sectionHeader;
+    MessageTableSectionHeaderView *sectionView = [[[NSBundle mainBundle]loadNibNamed:@"MessageTableSectionHeaderView" owner:self options:nil] lastObject];
+    NSDate *curtDate = [self.timestamps objectAtIndex: section];
+    NSDate *todayDate = [NSDate date];
+    NSString *timeStr = nil;
+    if ([PublicFunc isTheDay:curtDate sameToThatDay:todayDate] ) {
+        //当天
+        int hour = [PublicFunc getHourComponentOfDate:curtDate];
+        int minute = [PublicFunc getMinuteComponentOfDate:curtDate];
+        int second = [PublicFunc getSecondeComponentOfDate:curtDate];
+        timeStr = [NSString stringWithFormat:@"%d:%d:%D",hour,minute,second];
+        sectionView.sectionHeader.text = timeStr;
+        
+    }else{
+        int week = [PublicFunc getWeekDayComponentOfDate: curtDate];
+        NSString *weekStr = [PublicFunc getWeekDayString: week];
+        sectionView.sectionHeader.text = weekStr;
+    }
+    return sectionView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
@@ -221,27 +226,16 @@
     msg.content = content;
     msg.timestamp = time(NULL);
     
-    [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    
+    [self insertMsgToMessageBlokArray: msg];
     BOOL r = [[IMService instance] sendPeerMessage:msg];
     NSLog(@"send result:%d", r);
     
-    
-    [self.messageArray addObject: msg];
-    [self.timestamps addObject:[NSDate date]];
-    
     [JSMessageSoundEffect playMessageSentSound];
     
-
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:SEND_FIRST_MESSAGE_OK object: notification ];
     
-    
-    
     [self finishSend];
-        
-    
-    
     
 }
 
@@ -255,8 +249,8 @@
 
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    IMessage * msg =  [self.messageArray objectAtIndex:indexPath.row];
+    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
+    IMessage * msg =  [array objectAtIndex:indexPath.row];
     if(msg.sender == [UserPresent instance].uid){
         return JSBubbleMessageTypeOutgoing;
     }else{
@@ -298,8 +292,10 @@
 #pragma mark - Messages view data source
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if([self.messageArray objectAtIndex:indexPath.row]){
-        return ((IMessage*)[self.messageArray objectAtIndex:indexPath.row]).content.raw;
+    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
+    
+    if([array objectAtIndex:indexPath.row]){
+        return ((IMessage*)[array objectAtIndex:indexPath.row]).content.raw;
     }
     return nil;
 }
@@ -352,12 +348,81 @@
     
 }
 
+
 - (void)navBarUserheadAction{
     NSLog(@"头像");
     
     MessageShowThePotraitViewController *controller = [[MessageShowThePotraitViewController alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
+    
+}
 
+- (void) processConversationData{
+    
+    self.messageArray = [NSMutableArray array];
+    self.timestamps = [NSMutableArray array];
+    
+    NSDate *lastDate = nil;
+    NSDate *curtDate = nil;
+    NSMutableArray *msgBlockArray = nil;
+    IMessageIterator* iterator =  [[MessageDB instance] newPeerMessageIterator: self.currentConversation.cid];
+    IMessage *msg = [iterator next];
+    while (msg) {
+        curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
+        
+        if (lastDate == nil) {
+            //first
+            msgBlockArray  = [[NSMutableArray alloc] init];
+            [self.messageArray addObject: msgBlockArray];
+            [msgBlockArray addObject:msg];
+            
+            [self.timestamps addObject: curtDate];
+            lastDate = curtDate;
+            
+        }
+        if ([PublicFunc isTheDay:lastDate sameToThatDay:curtDate]) {
+            //同一天
+            [msgBlockArray addObject:msg];
+        }else{
+            //新一天
+            msgBlockArray  = [[NSMutableArray alloc] init];
+            [self.messageArray addObject: msgBlockArray];
+            [msgBlockArray addObject:msg];
+            
+            [self.timestamps addObject: curtDate];
+            lastDate = curtDate;
+        }
+        msg = [iterator next];
+    }
+}
+
+-(void) insertMsgToMessageBlokArray:(IMessage*)msg{
+    
+    [[MessageDB instance] insertPeerMessage:msg uid:msg.sender];
+    NSDate *curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
+    NSMutableArray *msgBlockArray = nil;
+    //收到第一个消息
+    if ([self.messageArray count] == 0 ) {
+        
+        msgBlockArray = [[NSMutableArray alloc] init];
+        [self.messageArray addObject: msgBlockArray];
+        [msgBlockArray addObject:msg];
+        
+        [self.timestamps addObject: curtDate];
+    }else{
+        NSDate *lastDate = [self.timestamps lastObject];
+        if ([PublicFunc isTheDay: lastDate sameToThatDay: curtDate]) {
+            //same day
+            msgBlockArray = [self.messageArray lastObject];
+            [msgBlockArray addObject:msg];
+        }else{
+            //next day
+            msgBlockArray = [[NSMutableArray alloc] init];
+            [msgBlockArray addObject: msg];
+            [self.messageArray addObject: msgBlockArray];
+            [self.timestamps addObject:curtDate];
+        }
+    }
 }
 
 @end

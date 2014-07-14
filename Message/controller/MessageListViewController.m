@@ -158,7 +158,7 @@
         
     }else{
         Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row - 1)];
-        
+
         //if (covn.type == CONVERSATION_PEER) {
         //peer
         MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
@@ -183,48 +183,17 @@
         }
         
         cell.messageContent.text = covn.message.content.raw;
-
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
-        [dateFormatter setDateFormat:@"yyyy-mm-dd"];
         
         NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
-        NSLog(@"date:%@",[date description]);
         
-        cell.timelabel.text = [date description];
+        cell.timelabel.text = [PublicFunc getTimeString:date format:@"yy-mm-dd"];
         cell.namelabel.text = covn.name;
         
-        //            cell.rightUtilityButtons = [self createCellRightButtons];
+        
         
         cell.delegate = self;
         
         return cell;
-        /*  }
-         
-         else{
-         //group
-         MessageGroupConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageGroupConversationCell"];
-         
-         if (cell == nil) {
-         cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageGroupConversationCell" owner:self options:nil] lastObject];
-         }
-         cell.titlelabel.text = @"群组";
-         cell.messageContent.text = covn.message.content.raw;
-         [cell.gHeadView setImage:[UIImage imageNamed:@"head2.png"]];
-         
-         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-         dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
-         [dateFormatter setDateFormat:@"yyyy-mm-dd"];
-         
-         NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
-         NSLog(@"date:%@",[date description]);
-         
-         cell.timelabel.text = [date description];
-         cell.namelabel.text = @"您";
-         return cell;
-         
-         }*/
         
         
     }

@@ -10,6 +10,7 @@
 
 #import "MessageConversationCell.h"
 #import "IMService.h"
+#import "PublicFunc.h"
 #import "CreateNewConversationViewController.h"
 
 @interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver>

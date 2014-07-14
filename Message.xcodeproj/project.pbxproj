@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21050A3819741B1900F26E43 /* PublicFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 21050A3719741B1900F26E43 /* PublicFunc.m */; };
 		210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646819695FC0008D3A83 /* ContactListTableViewController.m */; };
 		210564C619695FC1008D3A83 /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646A19695FC0008D3A83 /* ContactViewController.m */; };
 		210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646B19695FC0008D3A83 /* ContactViewController.xib */; };
@@ -155,6 +156,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		21050A3619741B1900F26E43 /* PublicFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicFunc.h; sourceTree = "<group>"; };
+		21050A3719741B1900F26E43 /* PublicFunc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicFunc.m; sourceTree = "<group>"; };
 		2105646719695FC0008D3A83 /* ContactListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListTableViewController.h; sourceTree = "<group>"; };
 		2105646819695FC0008D3A83 /* ContactListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListTableViewController.m; sourceTree = "<group>"; };
 		2105646919695FC0008D3A83 /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
@@ -704,6 +707,8 @@
 				21798FA6194E9C4600B67C1F /* AppDelegate.m */,
 				21798FA8194E9C4600B67C1F /* Images.xcassets */,
 				21798F9D194E9C4600B67C1F /* Supporting Files */,
+				21050A3619741B1900F26E43 /* PublicFunc.h */,
+				21050A3719741B1900F26E43 /* PublicFunc.m */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -970,6 +975,7 @@
 				2173C66619738745004A88A5 /* SDWebImageDownloader.m in Sources */,
 				2173C66819738745004A88A5 /* SDWebImageManager.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
+				21050A3819741B1900F26E43 /* PublicFunc.m in Sources */,
 				2173C66B19738745004A88A5 /* UIImage+GIF.m in Sources */,
 				21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */,
 				2142CB62196268860002E4A9 /* ABContact.m in Sources */,
