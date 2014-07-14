@@ -21,6 +21,7 @@
 
 @interface MessageViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
+
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic,strong) UIImage *willSendImage;
 @property (strong, nonatomic) NSMutableArray *timestamps;
@@ -30,18 +31,12 @@
 
 @synthesize messageArray;
 
--(id)init{
-    
-    if (self = [super init]) {
-        
-    }
-    return self;
-}
 
 
 -(id) initWithConversation:(Conversation *) con{
     if (self = [super init]) {
         self.currentConversation = con;
+
     }
     return self;
 }
@@ -103,14 +98,6 @@
     [[IMService instance] addMessageObserver:self];
 }
 
-- (void)viewWillAppear: (BOOL)animated {
-    self.hidesBottomBarWhenPushed = YES;
-}
-
-- (void)viewWillDisappear: (BOOL)animated {
-//    [self setHidesBottomBarWhenPushed:NO];
-//    [super viewDidDisappear:animated];
-}
 
 #pragma mark - MessageObserver
 

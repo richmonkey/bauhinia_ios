@@ -35,6 +35,7 @@
 -(id)init{
     self = [super init];
     if (self) {
+        
         self.conversations = [[NSMutableArray alloc] init];
         UserDB *db = [UserDB instance];
         ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
@@ -69,9 +70,9 @@
 //    self.hidesBottomBarWhenPushed = NO;
 //}
 
-- (void)viewWillDisappear: (BOOL)animated {
-    self.mainTabController.tabBar.hidden = YES;
-}
+//- (void)viewWillDisappear: (BOOL)animated {
+//    self.mainTabController.tabBar.hidden = YES;
+//}
 
 - (void)viewDidLoad
 {
@@ -244,7 +245,7 @@
 
     Conversation *con = [notification object];
     MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
-    [self setHidesBottomBarWhenPushed:YES];
+    msgController.hidesBottomBarWhenPushed = YES;
 
     [self.navigationController pushViewController:msgController animated:NO];
 }
@@ -257,9 +258,8 @@
         Conversation *con = [self.conversations objectAtIndex:path.row - 1];
         
         MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
-
-        [self setHidesBottomBarWhenPushed:YES];
-        [self.navigationController pushViewController:msgController animated:NO];
+        msgController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:msgController animated: YES];
     }
     
 }

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2105646519694FA5008D3A83 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105646419694FA5008D3A83 /* arrow.png */; };
 		210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646819695FC0008D3A83 /* ContactListTableViewController.m */; };
 		210564C619695FC1008D3A83 /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646A19695FC0008D3A83 /* ContactViewController.m */; };
 		210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646B19695FC0008D3A83 /* ContactViewController.xib */; };
@@ -83,18 +82,6 @@
 		2105651419698D9A008D3A83 /* MessageHeaderActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105651319698D9A008D3A83 /* MessageHeaderActionsView.m */; };
 		21056517196996BD008D3A83 /* MessageTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 21056516196996BD008D3A83 /* MessageTableSectionHeaderView.m */; };
 		2105651B196996E5008D3A83 /* MessageTableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105651A196996E5008D3A83 /* MessageTableSectionHeaderView.xib */; };
-		2105652819699BA8008D3A83 /* TabBarIconChats.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651C19699BA8008D3A83 /* TabBarIconChats.png */; };
-		2105652919699BA8008D3A83 /* TabBarIconChats@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651D19699BA8008D3A83 /* TabBarIconChats@2x.png */; };
-		2105652A19699BA8008D3A83 /* TabBarIconChatsOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651E19699BA8008D3A83 /* TabBarIconChatsOff@2x.png */; };
-		2105652B19699BA8008D3A83 /* TabBarIconChatsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105651F19699BA8008D3A83 /* TabBarIconChatsOn@2x.png */; };
-		2105652C19699BA8008D3A83 /* TabBarIconSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652019699BA8008D3A83 /* TabBarIconSettings.png */; };
-		2105652D19699BA8008D3A83 /* TabBarIconSettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652119699BA8008D3A83 /* TabBarIconSettings@2x.png */; };
-		2105652E19699BA8008D3A83 /* TabBarIconSettingsOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652219699BA8008D3A83 /* TabBarIconSettingsOff@2x.png */; };
-		2105652F19699BA8008D3A83 /* TabBarIconSettingsOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652319699BA8008D3A83 /* TabBarIconSettingsOn@2x.png */; };
-		2105653019699BA8008D3A83 /* TabBarIconStatus.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652419699BA8008D3A83 /* TabBarIconStatus.png */; };
-		2105653119699BA8008D3A83 /* TabBarIconStatus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */; };
-		2105653219699BA8008D3A83 /* TabBarIconStatusOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */; };
-		2105653319699BA8008D3A83 /* TabBarIconStatusOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */; };
 		21150CA0196F78A5009DE9DE /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9B196F78A5009DE9DE /* User.m */; };
 		21150CA1196F78A5009DE9DE /* UserDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9D196F78A5009DE9DE /* UserDB.m */; };
 		21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9F196F78A5009DE9DE /* UserPresent.m */; };
@@ -102,8 +89,6 @@
 		21150CAA196F7910009DE9DE /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CA7196F7910009DE9DE /* Config.m */; };
 		21150CAB196F7910009DE9DE /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CA9196F7910009DE9DE /* Token.m */; };
 		21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CAD196F79AA009DE9DE /* TAHttpOperation.m */; };
-		2119FE4B1962A2D100E23B4F /* head1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE491962A2D100E23B4F /* head1.png */; };
-		2119FE4C1962A2D100E23B4F /* head2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2119FE4A1962A2D100E23B4F /* head2.png */; };
 		2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */; };
 		2142CB3C196268490002E4A9 /* login_add_account.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB24196268490002E4A9 /* login_add_account.png */; };
 		2142CB3D196268490002E4A9 /* login_add_account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2142CB25196268490002E4A9 /* login_add_account@2x.png */; };
@@ -144,7 +129,6 @@
 		21798FBA194E9C4600B67C1F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 21798FB8194E9C4600B67C1F /* InfoPlist.strings */; };
 		21798FBC194E9C4600B67C1F /* MessageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21798FBB194E9C4600B67C1F /* MessageTests.m */; };
 		217F2C30196D62680064F478 /* MessageShowThePotraitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 217F2C2F196D62680064F478 /* MessageShowThePotraitViewController.m */; };
-		217F2C32196D65940064F478 /* potrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 217F2C31196D65940064F478 /* potrait.png */; };
 		2195CAF219726E40009E9888 /* CreateNewConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2195CAF119726E40009E9888 /* CreateNewConversationViewController.m */; };
 		21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF22D1968659C00DFA0E5 /* ContactDB.m */; };
 		21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF2361968E6A500DFA0E5 /* MessageConversationCell.m */; };
@@ -177,7 +161,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2105646419694FA5008D3A83 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		2105646719695FC0008D3A83 /* ContactListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListTableViewController.h; sourceTree = "<group>"; };
 		2105646819695FC0008D3A83 /* ContactListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListTableViewController.m; sourceTree = "<group>"; };
 		2105646919695FC0008D3A83 /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
@@ -275,18 +258,6 @@
 		21056515196996BD008D3A83 /* MessageTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableSectionHeaderView.h; sourceTree = "<group>"; };
 		21056516196996BD008D3A83 /* MessageTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableSectionHeaderView.m; sourceTree = "<group>"; };
 		2105651A196996E5008D3A83 /* MessageTableSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableSectionHeaderView.xib; sourceTree = "<group>"; };
-		2105651C19699BA8008D3A83 /* TabBarIconChats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarIconChats.png; sourceTree = "<group>"; };
-		2105651D19699BA8008D3A83 /* TabBarIconChats@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconChats@2x.png"; sourceTree = "<group>"; };
-		2105651E19699BA8008D3A83 /* TabBarIconChatsOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconChatsOff@2x.png"; sourceTree = "<group>"; };
-		2105651F19699BA8008D3A83 /* TabBarIconChatsOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconChatsOn@2x.png"; sourceTree = "<group>"; };
-		2105652019699BA8008D3A83 /* TabBarIconSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarIconSettings.png; sourceTree = "<group>"; };
-		2105652119699BA8008D3A83 /* TabBarIconSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconSettings@2x.png"; sourceTree = "<group>"; };
-		2105652219699BA8008D3A83 /* TabBarIconSettingsOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconSettingsOff@2x.png"; sourceTree = "<group>"; };
-		2105652319699BA8008D3A83 /* TabBarIconSettingsOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconSettingsOn@2x.png"; sourceTree = "<group>"; };
-		2105652419699BA8008D3A83 /* TabBarIconStatus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarIconStatus.png; sourceTree = "<group>"; };
-		2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatus@2x.png"; sourceTree = "<group>"; };
-		2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatusOff@2x.png"; sourceTree = "<group>"; };
-		2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarIconStatusOn@2x.png"; sourceTree = "<group>"; };
 		21150C9A196F78A5009DE9DE /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		21150C9B196F78A5009DE9DE /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		21150C9C196F78A5009DE9DE /* UserDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDB.h; sourceTree = "<group>"; };
@@ -301,8 +272,6 @@
 		21150CA9196F7910009DE9DE /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Token.m; path = Message/Token.m; sourceTree = SOURCE_ROOT; };
 		21150CAC196F79AA009DE9DE /* TAHttpOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAHttpOperation.h; sourceTree = "<group>"; };
 		21150CAD196F79AA009DE9DE /* TAHttpOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAHttpOperation.m; sourceTree = "<group>"; };
-		2119FE491962A2D100E23B4F /* head1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head1.png; sourceTree = "<group>"; };
-		2119FE4A1962A2D100E23B4F /* head2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head2.png; sourceTree = "<group>"; };
 		2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		2142CB24196268490002E4A9 /* login_add_account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_add_account.png; sourceTree = "<group>"; };
 		2142CB25196268490002E4A9 /* login_add_account@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_add_account@2x.png"; sourceTree = "<group>"; };
@@ -352,7 +321,6 @@
 		21798FBB194E9C4600B67C1F /* MessageTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageTests.m; sourceTree = "<group>"; };
 		217F2C2E196D62680064F478 /* MessageShowThePotraitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageShowThePotraitViewController.h; sourceTree = "<group>"; };
 		217F2C2F196D62680064F478 /* MessageShowThePotraitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageShowThePotraitViewController.m; sourceTree = "<group>"; };
-		217F2C31196D65940064F478 /* potrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = potrait.png; sourceTree = "<group>"; };
 		2195CAF019726E40009E9888 /* CreateNewConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateNewConversationViewController.h; sourceTree = "<group>"; };
 		2195CAF119726E40009E9888 /* CreateNewConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateNewConversationViewController.m; sourceTree = "<group>"; };
 		21FCF22C1968659C00DFA0E5 /* ContactDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactDB.h; sourceTree = "<group>"; };
@@ -621,22 +589,6 @@
 		2142CB20196268490002E4A9 /* res */ = {
 			isa = PBXGroup;
 			children = (
-				217F2C31196D65940064F478 /* potrait.png */,
-				2105651C19699BA8008D3A83 /* TabBarIconChats.png */,
-				2105651D19699BA8008D3A83 /* TabBarIconChats@2x.png */,
-				2105651E19699BA8008D3A83 /* TabBarIconChatsOff@2x.png */,
-				2105651F19699BA8008D3A83 /* TabBarIconChatsOn@2x.png */,
-				2105652019699BA8008D3A83 /* TabBarIconSettings.png */,
-				2105652119699BA8008D3A83 /* TabBarIconSettings@2x.png */,
-				2105652219699BA8008D3A83 /* TabBarIconSettingsOff@2x.png */,
-				2105652319699BA8008D3A83 /* TabBarIconSettingsOn@2x.png */,
-				2105652419699BA8008D3A83 /* TabBarIconStatus.png */,
-				2105652519699BA8008D3A83 /* TabBarIconStatus@2x.png */,
-				2105652619699BA8008D3A83 /* TabBarIconStatusOff@2x.png */,
-				2105652719699BA8008D3A83 /* TabBarIconStatusOn@2x.png */,
-				2105646419694FA5008D3A83 /* arrow.png */,
-				2119FE491962A2D100E23B4F /* head1.png */,
-				2119FE4A1962A2D100E23B4F /* head2.png */,
 				2142CB23196268490002E4A9 /* login */,
 			);
 			path = res;
@@ -925,7 +877,6 @@
 				217261AD1954173200F09E33 /* InfoPlist.strings in Resources */,
 				210564DE19695FC1008D3A83 /* bubble-default-outgoing-green.png in Resources */,
 				21798FA1194E9C4600B67C1F /* InfoPlist.strings in Resources */,
-				217F2C32196D65940064F478 /* potrait.png in Resources */,
 				210564ED19695FC1008D3A83 /* bubble-flat-outgoing@2x.png in Resources */,
 				210564E219695FC1008D3A83 /* bubble-default-outgoing.png in Resources */,
 				210564FD19695FC1008D3A83 /* input-field@2x.png in Resources */,
@@ -933,16 +884,13 @@
 				210564F419695FC1008D3A83 /* bubble-square-outgoing.png in Resources */,
 				2142CB44196268490002E4A9 /* login_checkbox_normal.png in Resources */,
 				2142CB3C196268490002E4A9 /* login_add_account.png in Resources */,
-				2105653119699BA8008D3A83 /* TabBarIconStatus@2x.png in Resources */,
 				2142CB3E196268490002E4A9 /* login_avatar_mask_normal.png in Resources */,
 				2142CB4D196268490002E4A9 /* login_stack_bg@2x.png in Resources */,
-				2105653319699BA8008D3A83 /* TabBarIconStatusOn@2x.png in Resources */,
 				2142CB4E196268490002E4A9 /* logout_btn_bg@2x.png in Resources */,
 				210564FB19695FC1008D3A83 /* input-bar@2x.png in Resources */,
 				2105650119695FC1008D3A83 /* send-highlighted@2x.png in Resources */,
 				2142CB4B196268490002E4A9 /* login_separator@2x.png in Resources */,
 				210564D919695FC1008D3A83 /* bubble-default-incoming-green@2x.png in Resources */,
-				2105646519694FA5008D3A83 /* arrow.png in Resources */,
 				210564E119695FC1008D3A83 /* bubble-default-outgoing-selected@2x.png in Resources */,
 				2105650F1969839F008D3A83 /* ConversationHeadButtonView.xib in Resources */,
 				210564E519695FC1008D3A83 /* bubble-flat-incoming-selected@2x.png in Resources */,
@@ -954,24 +902,16 @@
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
 				2142CB48196268490002E4A9 /* login_input_bg.png in Resources */,
 				210564E919695FC1008D3A83 /* bubble-flat-outgoing-old@2x.png in Resources */,
-				2105652919699BA8008D3A83 /* TabBarIconChats@2x.png in Resources */,
-				2119FE4B1962A2D100E23B4F /* head1.png in Resources */,
 				210564F219695FC1008D3A83 /* bubble-square-outgoing-selected.png in Resources */,
 				2142CB3D196268490002E4A9 /* login_add_account@2x.png in Resources */,
 				210564E019695FC1008D3A83 /* bubble-default-outgoing-selected.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
-				2105652A19699BA8008D3A83 /* TabBarIconChatsOff@2x.png in Resources */,
 				2142CB43196268490002E4A9 /* login_checkbox_checked@2x.png in Resources */,
-				2105652F19699BA8008D3A83 /* TabBarIconSettingsOn@2x.png in Resources */,
 				210564DA19695FC1008D3A83 /* bubble-default-incoming-selected.png in Resources */,
 				210564E319695FC1008D3A83 /* bubble-default-outgoing@2x.png in Resources */,
 				210564E719695FC1008D3A83 /* bubble-flat-incoming@2x.png in Resources */,
 				210564F319695FC1008D3A83 /* bubble-square-outgoing-selected@2x.png in Resources */,
-				2105653019699BA8008D3A83 /* TabBarIconStatus.png in Resources */,
-				2105652819699BA8008D3A83 /* TabBarIconChats.png in Resources */,
-				2105652C19699BA8008D3A83 /* TabBarIconSettings.png in Resources */,
 				2142CB3F196268490002E4A9 /* login_avatar_mask_normal@2x.png in Resources */,
-				2119FE4C1962A2D100E23B4F /* head2.png in Resources */,
 				2142CB42196268490002E4A9 /* login_checkbox_checked.png in Resources */,
 				210564F519695FC1008D3A83 /* bubble-square-outgoing@2x.png in Resources */,
 				210564FF19695FC1008D3A83 /* PhotoIcon@2x.png in Resources */,
@@ -988,13 +928,10 @@
 				2142CB4A196268490002E4A9 /* login_separator.png in Resources */,
 				2142CB47196268490002E4A9 /* login_default_avatar@2x.png in Resources */,
 				210564DB19695FC1008D3A83 /* bubble-default-incoming-selected@2x.png in Resources */,
-				2105652B19699BA8008D3A83 /* TabBarIconChatsOn@2x.png in Resources */,
 				2142CB45196268490002E4A9 /* login_checkbox_normal@2x.png in Resources */,
-				2105652E19699BA8008D3A83 /* TabBarIconSettingsOff@2x.png in Resources */,
 				210564FA19695FC1008D3A83 /* input-bar.png in Resources */,
 				2105651119698D7B008D3A83 /* MessageHeaderActionsView.xib in Resources */,
 				210564F919695FC1008D3A83 /* input-bar-flat@2x.png in Resources */,
-				2105652D19699BA8008D3A83 /* TabBarIconSettings@2x.png in Resources */,
 				2142CB4F196268490002E4A9 /* logout_btn_bg_highlighted@2x.png in Resources */,
 				210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */,
 				210564F119695FC1008D3A83 /* bubble-square-incoming@2x.png in Resources */,
@@ -1012,7 +949,6 @@
 				21FCF2431968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib in Resources */,
 				210564E819695FC1008D3A83 /* bubble-flat-outgoing-old.png in Resources */,
 				21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */,
-				2105653219699BA8008D3A83 /* TabBarIconStatusOff@2x.png in Resources */,
 				21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

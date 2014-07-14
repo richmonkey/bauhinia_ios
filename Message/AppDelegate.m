@@ -35,35 +35,39 @@
       ConversationViewController* conversationController = [[ConversationViewController alloc] init];
       conversationController.title = @"消息";
       
+      conversationController.tabBarItem.title = @"消息";
+      conversationController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChats"];
+       conversationController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
+      
       UINavigationController *conversationNavigationController = [[UINavigationController alloc] initWithRootViewController:conversationController];
       
       ContactListTableViewController* contactViewController = [[ContactListTableViewController alloc] init];
       contactViewController.title = @"通讯录";
       
+      contactViewController.tabBarItem.title = @"通讯录";
+      contactViewController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconStatus"];
+      contactViewController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconStatusOff"];
+
+      
       MessageListViewController* msgController = [[MessageListViewController alloc] init];
       msgController.title = @"对话";
+      msgController.tabBarItem.title = @"对话";
+      msgController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChats"];
+      msgController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
+
       
       UINavigationController *messageListNavigationController = [[UINavigationController alloc] initWithRootViewController:msgController];
       
       SettingViewController* settingController = [[SettingViewController alloc] init];
       settingController.title = @"设置";
-      
+      settingController.tabBarItem.title = @"设置";
+      settingController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconSettingsOn"];
+      settingController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconSettingsOff"];
+
       UITabBarController *tabController = [[UITabBarController alloc] init] ;
       tabController.viewControllers = [NSArray arrayWithObjects: conversationNavigationController,contactViewController,messageListNavigationController, settingController,nil];
       
-      
       msgController.mainTabController = tabController;
-      
-      UITabBarItem *tabBarItem1 = [self.tabBarController.tabBar.items objectAtIndex:0];
-      UITabBarItem *tabBarItem2 = [self.tabBarController.tabBar.items objectAtIndex:1];
-      UITabBarItem *tabBarItem3 = [self.tabBarController.tabBar.items objectAtIndex:2];
-      UITabBarItem *tabBarItem4 = [self.tabBarController.tabBar.items objectAtIndex:3];
-      
-      [tabBarItem1 setImage:[UIImage imageNamed:@"message.png"]];
-      [tabBarItem2 setImage:[UIImage imageNamed:@"contact.png"]];
-      [tabBarItem3 setImage:[UIImage imageNamed:@"setting.png"]];
-      [tabBarItem4 setImage:[UIImage imageNamed:@"conversation.png"]];
-      
       
       self.window.rootViewController = tabController;
   } else {

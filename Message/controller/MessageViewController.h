@@ -10,6 +10,7 @@
 #import "JSMessagesViewController.h"
 #import "IMService.h"
 #import "IMessage.h"
+#import "MessageListViewController.h"
 
 @class ConversationHeadButtonView;
 
@@ -19,6 +20,6 @@
 @property (strong,nonatomic) ConversationHeadButtonView *headButtonView;
 @property (weak,nonatomic) Conversation* currentConversation;
 
--(id)initWithConversation:(Conversation *) con;
+- (id) initWithConversation:(Conversation *) con;
 
 @end
