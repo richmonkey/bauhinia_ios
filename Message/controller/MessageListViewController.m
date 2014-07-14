@@ -16,6 +16,8 @@
 #import "UserDB.h"
 #import "CreateNewConversationViewController.h"
 
+#import "UIImageView+WebCache.h"
+
 #define kPeerConversationCellHeight         50
 #define kGroupConversationCellHeight        44
 #define kConversationActionCellHeight       44
@@ -57,25 +59,15 @@
 -(void)dealloc{
     
     [[NSNotificationCenter defaultCenter] removeObserver: self];
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     self.mainTabController.tabBar.hidden = NO;
 }
 
-//- (void)viewDidAppear:(BOOL)animated{
-//    
-//    self.mainTabController.tabBar.hidden = NO;
-//    self.hidesBottomBarWhenPushed = NO;
-//}
 
-//- (void)viewWillDisappear: (BOOL)animated {
-//    self.mainTabController.tabBar.hidden = YES;
-//}
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
     
     self.title = @"对话";
@@ -112,7 +104,7 @@
     self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
 	self.searchDC.searchResultsDataSource = self;
 	self.searchDC.searchResultsDelegate = self;
-     
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -132,7 +124,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == self._table) {
-       
+        
         return [self.conversations count] + 1;
     }else{
         return 1;
@@ -175,8 +167,23 @@
             cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil] lastObject];
         }
         
+        
+        IMUser *currentUser =  [[UserDB instance] loadUser:covn.cid];
+        
+        if(!currentUser.avatarURL && ![currentUser.avatarURL isEqualToString:@""]){
+            [cell.headView setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+        }else{
+            [cell.headView setImage:[UIImage imageNamed:@"head1"]];
+        }
+        
+        if ([currentUser.contact.nickname isEqualToString:@""]) {
+            cell.namelabel.text =  currentUser.phoneNumber.number;
+        }else{
+            cell.namelabel.text = currentUser.contact.nickname;
+        }
+        
         cell.messageContent.text = covn.message.content.raw;
-        [cell.headView setImage:[UIImage imageNamed:@"head1.png"]];
+
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
@@ -242,11 +249,11 @@
 }
 
 -(void) newConversation:(NSNotification*) notification{
-
+    
     Conversation *con = [notification object];
     MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
     msgController.hidesBottomBarWhenPushed = YES;
-
+    
     [self.navigationController pushViewController:msgController animated:NO];
 }
 
@@ -314,9 +321,9 @@
 
 - (void) newAction{
     NSLog(@"newAction");
-
+    
     CreateNewConversationViewController *newcontroller = [[CreateNewConversationViewController alloc] init];
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController: newcontroller];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController: newcontroller];
     [self presentViewController: navigationController animated:YES completion:nil ];
     
 }
