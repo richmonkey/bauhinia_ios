@@ -103,13 +103,13 @@
     [[IMService instance] addMessageObserver:self];
 }
 
-//- (void)viewWillAppear: (BOOL)animated {
-//    self.hidesBottomBarWhenPushed = YES;
-//}
-//
+- (void)viewWillAppear: (BOOL)animated {
+    self.hidesBottomBarWhenPushed = YES;
+}
+
 - (void)viewWillDisappear: (BOOL)animated {
-    [self setHidesBottomBarWhenPushed:NO];
-    [super viewDidDisappear:animated];
+//    [self setHidesBottomBarWhenPushed:NO];
+//    [super viewDidDisappear:animated];
 }
 
 #pragma mark - MessageObserver
