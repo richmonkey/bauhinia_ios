@@ -10,9 +10,7 @@
 #import "UserPresent.h"
 #import "MessageDB.h"
 #import "ConversationHeadButtonView.h"
-#import "MessageHeaderActionsView.h"
 #import "MessageTableSectionHeaderView.h"
-
 #import "MessageShowThePotraitViewController.h"
 
 #define navBarHeadButtonSize 35
@@ -41,21 +39,6 @@
 - (void)loadView{
     [super loadView];
     
-    UIButton *imgButton = [[UIButton alloc] initWithFrame: CGRectMake(0,0,navBarHeadButtonSize,navBarHeadButtonSize)];
-    
-    [imgButton setImage: [UIImage  imageNamed:@"head1.png"] forState: UIControlStateNormal];
-    [imgButton addTarget:self action:@selector(navBarUserheadAction) forControlEvents:UIControlEventTouchUpInside];
-    
-    CALayer *imageLayer = [imgButton layer];   //获取ImageView的层
-    [imageLayer setMasksToBounds:YES];
-    [imageLayer setCornerRadius:imgButton.frame.size.width/2];
-    
-    UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithCustomView: imgButton];
-    
-    self.navigationItem.rightBarButtonItem = navBarHeadButton;
-    
-    self.headButtonView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
-    self.headButtonView.center = self.navigationController.navigationBar.center;
 }
 
 #pragma mark - View lifecycle
@@ -71,10 +54,13 @@
     }else{
         self.title = self.currentConversation.name;
     }
+    [self setNormalNavigationButtons];
     
-    MessageHeaderActionsView *tableHeaderView = [[[NSBundle mainBundle]loadNibNamed:@"MessageHeaderActionsView" owner:self options:nil] lastObject];
-    self.tableView.tableHeaderView = tableHeaderView;
     
+    self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
+    self.navigationBarButtonsView.center = self.navigationController.navigationBar.center;
+    [self setTableViewCustomHeaderView];
+ 
     [self setBackgroundColor: [UIColor grayColor]];
     
     [self processConversationData];
@@ -131,21 +117,21 @@
         self.navigationItem.titleView = aiView;
     }else if(state == STATE_CONNECTED){
         
-        self.navigationItem.titleView = self.headButtonView;
+        self.navigationItem.titleView = self.navigationBarButtonsView;
         
     }else if(state == STATE_CONNECTFAIL){
-        [self.headButtonView.nameLabel setText: @"小张"];
+        [self.navigationBarButtonsView.nameLabel setText: @"小张"];
         
-        [self.headButtonView.conectInformationLabel setText:@"最近登录时间昨天下午"];
+        [self.navigationBarButtonsView.conectInformationLabel setText:@"最近登录时间昨天下午"];
         
-        self.navigationItem.titleView = self.headButtonView;
+        self.navigationItem.titleView = self.navigationBarButtonsView;
         
     }else{
         
-        [self.headButtonView.nameLabel setText: @"小张"];
-        [self.headButtonView.conectInformationLabel setText:@"最近登录时间昨天下午"];
+        [self.navigationBarButtonsView.nameLabel setText: @"小张"];
+        [self.navigationBarButtonsView.conectInformationLabel setText:@"最近登录时间昨天下午"];
         
-        self.navigationItem.titleView = self.headButtonView;
+        self.navigationItem.titleView = self.navigationBarButtonsView;
         
     }
 }
@@ -186,6 +172,25 @@
 }
 
 #pragma mark -  UITableViewDelegate
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView == self.tableView) {
+        if (indexPath.section == 0 &&  indexPath.row == 0) {
+            return NO;
+        }else{
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
@@ -423,6 +428,82 @@
             [self.timestamps addObject:curtDate];
         }
     }
+}
+#pragma mark - action
+-(void) HeaderViewIntroductionAction{
+    
+}
+-(void) HeaderViewDailingAction{
+    
+}
+-(void) HeaderViewEditorAction{
+    
+   [self.tableHeaderView removeFromSuperview];
+    
+    [self.tableView setContentOffset:CGPointMake(0, self.tableHeaderView.frame.size.height) animated:YES];
+
+    [self.tableView setEditing:YES animated:YES];
+    [self setEditorNavigationButtons];
+
+}
+
+-(void) deleteAllAction{
+    
+}
+
+-(void) cancelDeleteAction{
+    [self setTableViewCustomHeaderView];
+    [self.tableView setContentOffset:CGPointMake(0, -self.tableHeaderView.frame.size.height) animated:YES];
+    [self.tableView setEditing:NO animated:YES];
+    [self setNormalNavigationButtons];
+}
+
+#pragma mark - function
+
+-(void) setTableViewCustomHeaderView{
+    
+    self.tableHeaderView = [[[NSBundle mainBundle]loadNibNamed:@"MessageHeaderActionsView" owner:self options:nil] lastObject];
+    [self.tableHeaderView.editorBtn addTarget:self action:@selector(HeaderViewEditorAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.tableHeaderView.phoneingBtn addTarget:self action:@selector(HeaderViewDailingAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.tableHeaderView.introductionBtn addTarget:self action:@selector(HeaderViewIntroductionAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.tableView.tableHeaderView = self.tableHeaderView;
+ 
+}
+
+-(void) setNormalNavigationButtons{
+    
+    UIButton *imgButton = [[UIButton alloc] initWithFrame: CGRectMake(0,0,navBarHeadButtonSize,navBarHeadButtonSize)];
+    
+    [imgButton setImage: [UIImage  imageNamed:@"head1.png"] forState: UIControlStateNormal];
+    [imgButton addTarget:self action:@selector(navBarUserheadAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    CALayer *imageLayer = [imgButton layer];   //获取ImageView的层
+    [imageLayer setMasksToBounds:YES];
+    [imageLayer setCornerRadius:imgButton.frame.size.width/2];
+    
+    UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithCustomView: imgButton];
+    self.navigationItem.rightBarButtonItem = navBarHeadButton;
+ 
+}
+
+-(void) setEditorNavigationButtons{
+    
+    UIBarButtonItem *editorDoneButton = [[UIBarButtonItem alloc] initWithTitle:@"全部删除"
+                                                                         style:UIBarButtonItemStyleDone
+                                                                        target:self
+                                                                        action:@selector(deleteAllAction)];
+    self.navigationItem.leftBarButtonItem = editorDoneButton;
+    UIBarButtonItem *deletAllButton = [[UIBarButtonItem alloc] initWithTitle:@"取消"
+                                                                       style:UIBarButtonItemStyleDone
+                                                                      target:self
+                                                                      action:@selector(cancelDeleteAction)];
+    
+    
+    self.navigationItem.rightBarButtonItem = deletAllButton;
+    
 }
 
 @end

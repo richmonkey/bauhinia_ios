@@ -11,14 +11,16 @@
 #import "IMService.h"
 #import "IMessage.h"
 #import "MessageListViewController.h"
+#import "MessageHeaderActionsView.h"
 
 @class ConversationHeadButtonView;
 
 @interface MessageViewController : JSMessagesViewController <MessageObserver>
 
 
-@property (strong,nonatomic) ConversationHeadButtonView *headButtonView;
+@property (strong,nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
 @property (weak,nonatomic) Conversation* currentConversation;
+@property (nonatomic,strong) MessageHeaderActionsView *tableHeaderView;
 
 - (id) initWithConversation:(Conversation *) con;
 

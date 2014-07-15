@@ -70,18 +70,7 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    self.title = @"对话";
-    
-    UIBarButtonItem *editorButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
-                                                                     style:UIBarButtonItemStyleDone
-                                                                    target:self
-                                                                    action:@selector(editorAction)];
-    self.navigationItem.leftBarButtonItem = editorButton;
-    
-    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(newAction)];
-    
-    self.navigationItem.rightBarButtonItem = newButton;
-    
+    [self setNormalNavigationButtons];
     
     self._table = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	self._table.delegate = self;
@@ -200,16 +189,29 @@
     
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView == self._table) {
+        if (indexPath.section == 0 &&  indexPath.row == 0) {
+            return NO;
+        }else{
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
+#pragma mark - UITableViewDelegate
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return UITableViewCellEditingStyleNone;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -286,14 +288,23 @@
 
 - (void) editorAction{
     NSLog(@"editorAction");
+    [self setEditorNavigationButtons];
+    [self._table setEditing: YES animated:YES];
 }
 
 - (void) newAction{
     NSLog(@"newAction");
-    
     CreateNewConversationViewController *newcontroller = [[CreateNewConversationViewController alloc] init];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController: newcontroller];
     [self presentViewController: navigationController animated:YES completion:nil ];
+    
+}
+-(void) editorDoneAction{
+    [self._table setEditing:NO animated:YES];
+    [self setNormalNavigationButtons];
+}
+
+-(void) deleteAllAction{
     
 }
 
@@ -305,54 +316,7 @@
     NSLog(@"createGroupAction");
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
 
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 -(void)onPeerMessage:(IMessage*)msg {
     MessageContent *c = msg.content;
@@ -392,4 +356,43 @@
 -(void)onConnectState:(int)state {
     
 }
+#pragma mark - function
+
+-(void) setNormalNavigationButtons{
+    
+    self.title = @"对话";
+    
+    UIBarButtonItem *editorButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
+                                                                     style:UIBarButtonItemStyleDone
+                                                                    target:self
+                                                                    action:@selector(editorAction)];
+    self.navigationItem.leftBarButtonItem = editorButton;
+    
+    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(newAction)];
+    
+    self.navigationItem.rightBarButtonItem = newButton;
+
+
+}
+
+-(void) setEditorNavigationButtons{
+    
+    self.title = [NSString stringWithFormat:@"对话(%d)",[self.conversations count]];
+    UIBarButtonItem *editorDoneButton = [[UIBarButtonItem alloc] initWithTitle:@"完成"
+                                                                     style:UIBarButtonItemStyleDone
+                                                                    target:self
+                                                                    action:@selector(editorDoneAction)];
+    self.navigationItem.leftBarButtonItem = editorDoneButton;
+    UIBarButtonItem *deletAllButton = [[UIBarButtonItem alloc] initWithTitle:@"全部删除"
+                                                                         style:UIBarButtonItemStyleDone
+                                                                        target:self
+                                                                        action:@selector(deleteAllAction)];
+ 
+    
+    self.navigationItem.rightBarButtonItem = deletAllButton;
+
+}
+
+
+
 @end

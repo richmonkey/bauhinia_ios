@@ -75,7 +75,7 @@
     
 	[scrollView addSubview: self.scrollViewContentView];
    
-    [self addSubview:scrollView];
+    [self.contentView addSubview: scrollView];
 	self.myScrollView = scrollView;
 }
 
