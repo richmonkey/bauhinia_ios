@@ -66,6 +66,7 @@
 	self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
+    self.tableView.allowsMultipleSelectionDuringEditing = YES;
 	[self.view addSubview:self.tableView]; 
 	
 	UIButton* mediaButton = nil;
@@ -237,6 +238,7 @@
     if(!cell)
         cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
                                                    bubbleStyle:bubbleStyle
+                                                  messageState:MessageReceiveStateNone
                                                      mediaType:mediaType
                                                reuseIdentifier:CellID];
     

@@ -59,13 +59,6 @@ CGFloat const kJSAvatarSize = 50.0f;
 
 @implementation JSBubbleView
 
-@synthesize type;
-@synthesize style;
-@synthesize mediaType;
-@synthesize text;
-@synthesize data;
-@synthesize selectedToShowCopyMenu;
-
 #pragma mark - Setup
 - (void)setup
 {
@@ -77,6 +70,7 @@ CGFloat const kJSAvatarSize = 50.0f;
 - (id)initWithFrame:(CGRect)rect
          bubbleType:(JSBubbleMessageType)bubleType
         bubbleStyle:(JSBubbleMessageStyle)bubbleStyle
+       messageState:(MessageReceiveStateType)msgState
           mediaType:(JSBubbleMediaType)bubbleMediaType
 {
     self = [super initWithFrame:rect];
@@ -85,6 +79,7 @@ CGFloat const kJSAvatarSize = 50.0f;
         self.type = bubleType;
         self.style = bubbleStyle;
         self.mediaType = bubbleMediaType;
+        self.msgStateType = msgState;
     }
     return self;
 }
@@ -97,35 +92,40 @@ CGFloat const kJSAvatarSize = 50.0f;
 #pragma mark - Setters
 - (void)setType:(JSBubbleMessageType)newType
 {
-    type = newType;
+    _type = newType;
+    [self setNeedsDisplay];
+}
+
+- (void) setMsgStateType:(MessageReceiveStateType)type{
+    _msgStateType = type;
     [self setNeedsDisplay];
 }
 
 - (void)setStyle:(JSBubbleMessageStyle)newStyle
 {
-    style = newStyle;
+   _style = newStyle;
     [self setNeedsDisplay];
 }
 
 - (void)setMediaType:(JSBubbleMediaType)newMediaType{
-    mediaType = newMediaType;
+    _mediaType = newMediaType;
     [self setNeedsDisplay];
 }
 
 - (void)setText:(NSString *)newText
 {
-    text = newText;
+    _text = newText;
     [self setNeedsDisplay];
 }
 
 - (void)setData:(id)newData{
-    data = newData;
+    _data = newData;
     [self setNeedsDisplay];
 }
 
 - (void)setSelectedToShowCopyMenu:(BOOL)isSelected
 {
-    selectedToShowCopyMenu = isSelected;
+    _selectedToShowCopyMenu = isSelected;
     [self setNeedsDisplay];
 }
 
@@ -183,8 +183,12 @@ CGFloat const kJSAvatarSize = 50.0f;
     CGRect bubbleFrame = [self bubbleFrame];
 	[image drawInRect:bubbleFrame];
     
-	
+    
+    [self drawMsgStateSign: frame];
 
+    
+    
+    
 	if (self.mediaType == JSBubbleMediaTypeText)
 	{
         CGSize textSize = [JSBubbleView textSizeForText:self.text];
@@ -298,6 +302,37 @@ CGFloat const kJSAvatarSize = 50.0f;
             
 		}
 	}
+
+    
+}
+
+-(void) drawMsgStateSign:(CGRect) frame{
+        UIImage *msgSignImg = nil;
+    switch (_msgStateType) {
+        case MessageReceiveStateNone:
+        {
+            msgSignImg = [UIImage imageNamed:@"CheckDoubleLight"];
+        }
+            break;
+        case MessageReceiveStateClient:
+        {
+            msgSignImg = [UIImage imageNamed:@"CheckDoubleGreen"];
+        }
+            break;
+        case MessageReceiveStateServer:
+        {
+            msgSignImg = [UIImage imageNamed:@"CheckSingleGreen"];
+        }
+            break;
+        default:
+            break;
+    }
+
+    CGFloat imgX = frame.size.width - msgSignImg.size.width;
+    CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
+    
+    [msgSignImg drawInRect:msgStateSignRect];
+
 }
 
 #pragma mark - Bubble view

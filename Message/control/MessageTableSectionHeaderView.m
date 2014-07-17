@@ -7,11 +7,13 @@
 //
 
 #import "MessageTableSectionHeaderView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation MessageTableSectionHeaderView
 
 -(void)awakeFromNib{
-    
+    self.sectionHeader.layer.cornerRadius = 10;
+    self.sectionHeader.layer.masksToBounds = YES;
 }
 
 /*

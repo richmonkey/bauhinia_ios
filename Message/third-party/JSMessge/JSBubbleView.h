@@ -38,6 +38,12 @@
 extern CGFloat const kJSAvatarSize;
 
 typedef enum {
+    MessageReceiveStateNone = 0,
+    MessageReceiveStateServer,
+    MessageReceiveStateClient
+}MessageReceiveStateType;
+
+typedef enum {
     JSBubbleMessageTypeIncoming = 0,
     JSBubbleMessageTypeOutgoing
 } JSBubbleMessageType;
@@ -60,14 +66,18 @@ typedef enum {
 @property (assign, nonatomic) JSBubbleMessageType type;
 @property (assign, nonatomic) JSBubbleMessageStyle style;
 @property (nonatomic,assign) JSBubbleMediaType mediaType;
-@property (copy, nonatomic) NSString *text;
-@property (copy, nonatomic) id data;
+
+@property (strong, nonatomic) NSString *text;
+@property (strong, nonatomic) id data;
 @property (assign, nonatomic) BOOL selectedToShowCopyMenu;
+@property (nonatomic) MessageReceiveStateType msgStateType;
+@property (nonatomic,strong) UIImageView *receiveStateImgSign;
 
 #pragma mark - Initialization
 - (id)initWithFrame:(CGRect)rect
          bubbleType:(JSBubbleMessageType)bubleType
         bubbleStyle:(JSBubbleMessageStyle)bubbleStyle
+       messageState:(MessageReceiveStateType)msgState
           mediaType:(JSBubbleMediaType)bubbleMediaType;
 
 #pragma mark - Drawing

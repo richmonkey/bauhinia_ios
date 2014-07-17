@@ -45,6 +45,7 @@
 
 - (void)configureWithType:(JSBubbleMessageType)type
               bubbleStyle:(JSBubbleMessageStyle)bubbleStyle
+             messageState:(MessageReceiveStateType)msgState
                 mediaType:(JSBubbleMediaType)mediaType;
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)longPress;
@@ -80,7 +81,7 @@
 
 - (void)configureWithType:(JSBubbleMessageType)type
               bubbleStyle:(JSBubbleMessageStyle)bubbleStyle
-
+             messageState:(MessageReceiveStateType)msgState
                 mediaType:(JSBubbleMediaType)mediaType
 
 {
@@ -99,6 +100,7 @@
     self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
                                                bubbleType:type
                                               bubbleStyle:bubbleStyle
+                                             messageState:msgState
                                                 mediaType:mediaType];
     
     [self.contentView addSubview:self.bubbleView];
@@ -108,6 +110,7 @@
 #pragma mark - Initialization
 - (id)initWithBubbleType:(JSBubbleMessageType)type
              bubbleStyle:(JSBubbleMessageStyle)bubbleStyle
+            messageState:(MessageReceiveStateType)msgState
                mediaType:(JSBubbleMediaType)mediaType
          reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -117,6 +120,7 @@
 
         [self configureWithType:type
                     bubbleStyle:bubbleStyle
+                   messageState:msgState
                       mediaType:mediaType];
     }
     return self;
@@ -143,7 +147,6 @@
     self.bubbleView.text = msg;
 }
 
-
 - (void)setMedia:(id)data
 {
 	if ([data isKindOfClass:[UIImage class]])
@@ -159,7 +162,10 @@
 	}
 }
 
-
+- (void)setMessageState:(MessageReceiveStateType)messageState{
+    self.bubbleView.msgStateType = messageState;
+    
+}
 
 
 

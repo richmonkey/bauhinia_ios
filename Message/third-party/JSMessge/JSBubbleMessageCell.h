@@ -37,6 +37,7 @@
 #import "JSBubbleView.h"
 
 
+
 @interface JSBubbleMessageCell : UITableViewCell
 {
 
@@ -44,20 +45,17 @@
 
 @property (nonatomic, strong) UIImageView *server;
 
-@property (nonatomic)bool isServerReach;
-
-@property (nonatomic)bool isMobileReach;
-
-
 #pragma mark - Initialization
 - (id)initWithBubbleType:(JSBubbleMessageType)type
              bubbleStyle:(JSBubbleMessageStyle)bubbleStyle
+            messageState:(MessageReceiveStateType)msgState
                mediaType:(JSBubbleMediaType)mediaType
          reuseIdentifier:(NSString *)reuseIdentifier;
 
 #pragma mark - Message cell
 - (void)setMessage:(NSString *)msg;
 - (void)setMedia:(id)data;
+- (void)setMessageState:(MessageReceiveStateType)messageState;
 
 + (CGFloat)neededHeightForText:(NSString *)bubbleViewText;
 

@@ -46,6 +46,8 @@
 {
     [super viewDidLoad];
     
+    self.headerArray = [NSMutableArray array];
+    
     self.delegate = self;
     self.dataSource = self;
     if (!self.currentConversation.name) {
@@ -60,7 +62,7 @@
     self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
     self.navigationBarButtonsView.center = self.navigationController.navigationBar.center;
     [self setTableViewCustomHeaderView];
- 
+    
     [self setBackgroundColor: [UIColor grayColor]];
     
     [self processConversationData];
@@ -82,13 +84,16 @@
 }
 //服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
-    NSLog(@"receive msg ack:%d",msgLocalID);
+    
+    JSBubbleMessageCell* findCell = [self getImMessageById:msgLocalID];
+    [findCell setMessageState:MessageReceiveStateServer];
     
 }
 
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
-    
+    JSBubbleMessageCell* findCell = [self getImMessageById:msgLocalID];
+    [findCell setMessageState:MessageReceiveStateClient];
 }
 
 -(void)onGroupMessage:(IMessage*)msg{
@@ -211,12 +216,51 @@
         NSString *weekStr = [PublicFunc getWeekDayString: week];
         sectionView.sectionHeader.text = weekStr;
     }
+    
+    [self.headerArray addObject: sectionView];
+    
     return sectionView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 44;
 }
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+
+    for (UIView *header in self.headerArray) {
+        [header setHidden: NO];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    [self updateHeaderArray];
+    
+}
+
+- (void)updateHeaderArray {
+    
+    CGRect containerRect = CGRectMake(self.tableView.contentOffset.x, self.tableView.contentOffset.y,
+                                      self.tableView.frame.size.width, self.tableView.frame.size.height);
+    //hide the first sectionView
+    for (UIView *header in self.headerArray) {
+        if (CGRectIntersectsRect(header.frame, containerRect)) {
+            [header setHidden: YES];
+            break;
+        }
+    }
+    
+    if(CGRectIntersectsRect(self.tableHeaderView.frame, containerRect)){
+        for (UIView *header in self.headerArray) {
+            [header setHidden: NO];
+        }
+    }
+}
+
+
 
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
@@ -438,13 +482,13 @@
 }
 -(void) HeaderViewEditorAction{
     
-   [self.tableHeaderView removeFromSuperview];
+    [self.tableHeaderView removeFromSuperview];
     
     [self.tableView setContentOffset:CGPointMake(0, self.tableHeaderView.frame.size.height) animated:YES];
-
+    
     [self.tableView setEditing:YES animated:YES];
     [self setEditorNavigationButtons];
-
+    
 }
 
 -(void) deleteAllAction{
@@ -470,7 +514,7 @@
     [self.tableHeaderView.introductionBtn addTarget:self action:@selector(HeaderViewIntroductionAction) forControlEvents:UIControlEventTouchUpInside];
     
     self.tableView.tableHeaderView = self.tableHeaderView;
- 
+    
 }
 
 -(void) setNormalNavigationButtons{
@@ -486,7 +530,7 @@
     
     UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithCustomView: imgButton];
     self.navigationItem.rightBarButtonItem = navBarHeadButton;
- 
+    
 }
 
 -(void) setEditorNavigationButtons{
@@ -504,6 +548,23 @@
     
     self.navigationItem.rightBarButtonItem = deletAllButton;
     
+}
+
+- (JSBubbleMessageCell*) getImMessageById:(int)msgLocalID{
+    
+    for ( int index = [self.messageArray count] - 1; index <= 0; index--) {
+        IMMessage *tmpMsg = [self.messageArray objectAtIndex:index];
+        if (tmpMsg.msgLocalID == msgLocalID) {
+           NSIndexPath *findpath = [NSIndexPath indexPathForRow:0 inSection: index];
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:findpath];
+            if (cell) {
+                if ([cell isKindOfClass:[JSBubbleMessageCell class]]) {
+                    return (JSBubbleMessageCell*)cell;
+                }
+            }
+        }
+    }
+    return nil;
 }
 
 @end

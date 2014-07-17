@@ -15,12 +15,13 @@
 
 @class ConversationHeadButtonView;
 
-@interface MessageViewController : JSMessagesViewController <MessageObserver>
+@interface MessageViewController : JSMessagesViewController <UIScrollViewDelegate,MessageObserver>
 
 
 @property (strong,nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
 @property (weak,nonatomic) Conversation* currentConversation;
 @property (nonatomic,strong) MessageHeaderActionsView *tableHeaderView;
+@property (nonatomic, strong) NSMutableArray *headerArray;
 
 - (id) initWithConversation:(Conversation *) con;
 
