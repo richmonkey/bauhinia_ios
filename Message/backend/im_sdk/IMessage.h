@@ -12,6 +12,7 @@
 
 #define MESSAGE_FLAG_DELETE 1
 #define MESSAGE_FLAG_ACK 2
+#define MESSAGE_FLAG_PEER_ACK 4
 
 @interface MessageContent : NSObject
 @property(nonatomic)int type;
@@ -29,6 +30,8 @@
 @property(nonatomic) int64_t receiver;
 @property(nonatomic) MessageContent *content;
 @property(nonatomic) int timestamp;
+@property(nonatomic, readonly) BOOL isACK;
+@property(nonatomic, readonly) BOOL isPeerACK;
 @end
 
 

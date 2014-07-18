@@ -362,7 +362,11 @@
 -(BOOL)acknowledgePeerMessage:(int)msgLocalID uid:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];
     return [self addFlag:msgLocalID path:path flag:MESSAGE_FLAG_ACK];
+}
 
+-(BOOL)acknowledgePeerMessageFromRemote:(int)msgLocalID uid:(int64_t)uid {
+    NSString *path = [self getPeerPath:uid];
+    return [self addFlag:msgLocalID path:path flag:MESSAGE_FLAG_PEER_ACK];
 }
 
 -(BOOL)insertGroupMessage:(IMessage*)msg {

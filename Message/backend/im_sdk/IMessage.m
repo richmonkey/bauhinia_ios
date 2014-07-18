@@ -20,6 +20,13 @@
 
 @implementation IMessage
 
+-(BOOL)isACK {
+    return self.flags&MESSAGE_FLAG_ACK;
+}
+
+-(BOOL)isPeerACK {
+    return self.flags&MESSAGE_FLAG_PEER_ACK;
+}
 
 @end
 

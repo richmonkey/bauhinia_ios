@@ -29,6 +29,7 @@
 -(BOOL)removePeerMessage:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)clearConversation:(int64_t)uid;
 -(BOOL)acknowledgePeerMessage:(int)msgLocalID uid:(int64_t)uid;
+-(BOOL)acknowledgePeerMessageFromRemote:(int)msgLocalID uid:(int64_t)uid;
 
 -(BOOL)insertGroupMessage:(IMessage*)msg;
 -(BOOL)removeGroupMessage:(int)msgLocalID gid:(int64_t)gid;
