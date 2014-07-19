@@ -308,11 +308,6 @@
     
 }
 
-- (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return JSBubbleMessageStyleFlat;
-}
-
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
     return JSBubbleMediaTypeText;
 }
@@ -531,6 +526,9 @@
     UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithCustomView: imgButton];
     self.navigationItem.rightBarButtonItem = navBarHeadButton;
     
+    //remove the leftbarButtonItem
+    self.navigationItem.leftBarButtonItem = nil;
+
 }
 
 -(void) setEditorNavigationButtons{

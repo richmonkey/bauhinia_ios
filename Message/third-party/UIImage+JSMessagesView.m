@@ -166,7 +166,7 @@
 #pragma mark - Incoming message bubbles
 + (UIImage *)bubbleDefaultIncoming
 {
-    return [[UIImage imageNamed:@"bubble-default-incoming"] makeStretchableDefaultIncoming];
+    return [[UIImage imageNamed:@"BlueBubbleIn"] makeStretchableDefaultIncoming];
 }
 
 + (UIImage *)bubbleDefaultIncomingSelected
@@ -179,32 +179,11 @@
     return [[UIImage imageNamed:@"bubble-default-incoming-green"] makeStretchableDefaultIncoming];
 }
 
-+ (UIImage *)bubbleSquareIncoming
-{
-    return [[UIImage imageNamed:@"bubble-square-incoming"] makeStretchableSquareIncoming];
-}
-
-+ (UIImage *)bubbleSquareIncomingSelected
-{
-    return [[UIImage imageNamed:@"bubble-square-incoming-selected"] makeStretchableSquareIncoming];
-}
-
-// JeremyStone
-+ (UIImage *)bubbleFlatIncoming
-{
-  return [[UIImage imageNamed:@"bubble-flat-incoming"] makeStretchableFlatIncoming];
-}
-
-// JeremyStone
-+ (UIImage *)bubbleFlatIncomingSelected
-{
-  return [[UIImage imageNamed:@"bubble-flat-incoming-selected"] makeStretchableFlatIncoming];
-}
 
 #pragma mark - Outgoing message bubbles
 + (UIImage *)bubbleDefaultOutgoing
 {
-    return [[UIImage imageNamed:@"bubble-default-outgoing"] makeStretchableDefaultOutgoing];
+    return [[UIImage imageNamed:@"BlueBubbleOut"] makeStretchableDefaultOutgoing];
 }
 
 + (UIImage *)bubbleDefaultOutgoingSelected

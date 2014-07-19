@@ -2,12 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "BlueBubbleOut.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "CheckSingleLight7@2x.png"
+      "filename" : "BlueBubbleOut@2x.png"
     }
   ],
   "info" : {
