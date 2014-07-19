@@ -54,8 +54,7 @@
                withDiamter:(CGFloat)diameter
                borderColor:(UIColor *)borderColor
                borderWidth:(CGFloat)borderWidth
-              shadowOffSet:(CGSize)shadowOffset
-{
+              shadowOffSet:(CGSize)shadowOffset{
     // increase given size for border and shadow
     CGFloat increase = diameter * 0.15f;
     CGFloat newSize = diameter + increase;
@@ -108,16 +107,14 @@
 
 
 #pragma mark - Input bar
-+ (UIImage *)inputBar
-{
++ (UIImage *)inputBar{
   if ([JSMessageInputView inputBarStyle] == JSInputBarStyleFlat)
     return [UIImage imageNamed:@"input-bar-flat"];
   else      // jSInputBarStyleDefault
     return [[UIImage imageNamed:@"input-bar"] resizableImageWithCapInsets:UIEdgeInsetsMake(19.0f, 3.0f, 19.0f, 3.0f)];
 }
 
-+ (UIImage *)inputField
-{
++ (UIImage *)inputField{
   if ([JSMessageInputView inputBarStyle] == JSInputBarStyleFlat)
     return nil; // no graphic around input field.
   else          // jSInputBarStyleDefault
@@ -125,97 +122,32 @@
 }
 
 #pragma mark - Bubble cap insets
-- (UIImage *)makeStretchableDefaultIncoming
-{
-    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(15.0f, 20.0f, 15.0f, 20.0f)
+- (UIImage *)makeStretchableDefaultIncoming{
+    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(10.0f, 10.0f, 15.0f, 20.0f)
                                 resizingMode:UIImageResizingModeStretch];
 }
 
-- (UIImage *)makeStretchableDefaultOutgoing
-{
-    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(15.0f, 20.0f, 15.0f, 20.0f)
+- (UIImage *)makeStretchableDefaultOutgoing{
+    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(10.0f, 10.0f, 5.0f, 25.0f)
                                 resizingMode:UIImageResizingModeStretch];
-}
-
-- (UIImage *)makeStretchableSquareIncoming
-{
-    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(15.0f, 25.0f, 16.0f, 23.0f)
-                                resizingMode:UIImageResizingModeStretch];
-}
-
-- (UIImage *)makeStretchableSquareOutgoing
-{
-    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(15.0f, 18.0f, 16.0f, 23.0f)
-                                resizingMode:UIImageResizingModeStretch];
-}
-
-// JeremyStone
-- (UIImage *)makeStretchableFlatIncoming
-{
-  return [self resizableImageWithCapInsets:UIEdgeInsetsMake(15.0f, 20.0f, 15.0f, 20.0f)
-                              resizingMode:UIImageResizingModeStretch];
-}
-
-// JeremyStone
-- (UIImage *)makeStretchableFlatOutgoing
-{
-  return [self resizableImageWithCapInsets:UIEdgeInsetsMake(14.0f, 15.0f, 14.0f, 20.0f)
-                              resizingMode:UIImageResizingModeStretch];
 }
 
 #pragma mark - Incoming message bubbles
-+ (UIImage *)bubbleDefaultIncoming
-{
-    return [[UIImage imageNamed:@"BlueBubbleIn"] makeStretchableDefaultIncoming];
++ (UIImage *)bubbleDefaultIncoming{
+    return [[UIImage imageNamed:@"BubbleIncoming"] makeStretchableDefaultIncoming];
 }
 
-+ (UIImage *)bubbleDefaultIncomingSelected
-{
-    return [[UIImage imageNamed:@"bubble-default-incoming-selected"] makeStretchableDefaultIncoming];
++ (UIImage *)bubbleDefaultIncomingSelected{
+    return [[UIImage imageNamed:@"BubbleIncoming"] makeStretchableDefaultIncoming];
 }
-
-+ (UIImage *)bubbleDefaultIncomingGreen
-{
-    return [[UIImage imageNamed:@"bubble-default-incoming-green"] makeStretchableDefaultIncoming];
-}
-
 
 #pragma mark - Outgoing message bubbles
-+ (UIImage *)bubbleDefaultOutgoing
-{
-    return [[UIImage imageNamed:@"BlueBubbleOut"] makeStretchableDefaultOutgoing];
++ (UIImage *)bubbleDefaultOutgoing{
+    return [[UIImage imageNamed:@"BubbleOutgoing"] makeStretchableDefaultOutgoing];
 }
 
-+ (UIImage *)bubbleDefaultOutgoingSelected
-{
-    return [[UIImage imageNamed:@"bubble-default-outgoing-selected"] makeStretchableDefaultOutgoing];
-}
-
-+ (UIImage *)bubbleDefaultOutgoingGreen
-{
-    return [[UIImage imageNamed:@"bubble-default-outgoing-green"] makeStretchableDefaultOutgoing];
-}
-
-+ (UIImage *)bubbleSquareOutgoing
-{
-    return [[UIImage imageNamed:@"bubble-square-outgoing"] makeStretchableSquareOutgoing];
-}
-
-+ (UIImage *)bubbleSquareOutgoingSelected
-{
-    return [[UIImage imageNamed:@"bubble-square-outgoing-selected"] makeStretchableSquareOutgoing];
-}
-
-// JeremyStone
-+ (UIImage *)bubbleFlatOutgoing
-{
-  return [[UIImage imageNamed:@"bubble-flat-outgoing-selected"] makeStretchableFlatOutgoing];
-}
-
-// JeremyStone
-+ (UIImage *)bubbleFlatOutgoingSelected
-{
-  return [[UIImage imageNamed:@"bubble-flat-outgoing"] makeStretchableFlatOutgoing];
++ (UIImage *)bubbleDefaultOutgoingSelected{
+    return [[UIImage imageNamed:@"BubbleOutgoing"] makeStretchableDefaultOutgoing];
 }
 
 @end

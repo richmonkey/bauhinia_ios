@@ -23,10 +23,10 @@
 
 CGFloat const kJSAvatarSize = 50.0f;
 
-#define kMarginTop 2.0f
-#define kMarginBottom 2.0f
-#define kPaddingTop 4.0f
-#define kPaddingBottom 4.0f
+#define kMarginTop 4.0f
+#define kMarginBottom 4.0f
+#define kPaddingTop 8.0f
+#define kPaddingBottom 8.0f
 #define kBubblePaddingRight 45.0f
 
 @interface JSBubbleView()
@@ -154,10 +154,10 @@ CGFloat const kJSAvatarSize = 50.0f;
                                       textSize.height);
         
         if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending){
-            UIColor* textColor = [UIColor whiteColor];
-            if (self.selectedToShowCopyMenu)
+            UIColor* textColor = [UIColor blackColor];
+            if (self.selectedToShowCopyMenu){
                 textColor = [UIColor lightTextColor];
-            
+            }
             
             NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
             [paragraphStyle setAlignment:NSTextAlignmentLeft];
@@ -220,7 +220,7 @@ CGFloat const kJSAvatarSize = 50.0f;
             break;
     }
     
-    CGFloat imgX = frame.size.width - msgSignImg.size.width;
+    CGFloat imgX = frame.size.width - msgSignImg.size.width - 15;
     CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
     
     [msgSignImg drawInRect:msgStateSignRect];
