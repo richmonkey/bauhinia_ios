@@ -110,12 +110,12 @@
 }
 
 #pragma mark - Setters
-- (void)setBackgroundColor:(UIColor *)color
-{
-    [super setBackgroundColor:color];
-    [self.contentView setBackgroundColor:color];
-    [self.bubbleView setBackgroundColor:color];
-}
+//- (void)setBackgroundColor:(UIColor *)color
+//{
+//    [super setBackgroundColor:color];
+//    [self.contentView setBackgroundColor:color];
+//    [self.bubbleView setBackgroundColor:color];
+//}
 
 #pragma mark - Message Cell
 - (void)setMessage:(NSString *)msg
