@@ -556,14 +556,20 @@
 
 - (JSBubbleMessageCell*) getImMessageById:(int)msgLocalID{
     
-    for ( int index = [self.messageArray count] - 1; index <= 0; index--) {
-        IMMessage *tmpMsg = [self.messageArray objectAtIndex:index];
-        if (tmpMsg.msgLocalID == msgLocalID) {
-           NSIndexPath *findpath = [NSIndexPath indexPathForRow:0 inSection: index];
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:findpath];
-            if (cell) {
-                if ([cell isKindOfClass:[JSBubbleMessageCell class]]) {
-                    return (JSBubbleMessageCell*)cell;
+    for ( int sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
+        
+        NSMutableArray *rowArrays = [self.messageArray objectAtIndex:sectionIndex];
+        for (int rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
+        
+            IMMessage *tmpMsg = [rowArrays objectAtIndex:rowindex];
+            if (tmpMsg.msgLocalID == msgLocalID) {
+                
+               NSIndexPath *findpath = [NSIndexPath indexPathForRow:sectionIndex inSection: rowindex];
+                UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:findpath];
+                if (cell) {
+                    if ([cell isKindOfClass:[JSBubbleMessageCell class]]) {
+                        return (JSBubbleMessageCell*)cell;
+                    }
                 }
             }
         }
