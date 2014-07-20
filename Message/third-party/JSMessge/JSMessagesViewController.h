@@ -42,7 +42,7 @@
 @protocol JSMessagesViewDataSource <NSObject>
 @required
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath;
-
+- (IMessage*)messageForRowAtIndexPath:(NSIndexPath *)indexPath;
 @optional
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end

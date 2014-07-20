@@ -199,36 +199,37 @@ CGFloat const kJSAvatarSize = 50.0f;
 }
 
 -(void) drawMsgStateSign:(CGRect) frame{
-    UIImage *msgSignImg = nil;
-    switch (_msgStateType) {
-        case MessageReceiveStateNone:
-        {
-            msgSignImg = [UIImage imageNamed:@"CheckDoubleLight"];
+    if (self.type == JSBubbleMessageTypeOutgoing) {
+        UIImage *msgSignImg = nil;
+        switch (_msgStateType) {
+            case MessageReceiveStateNone:
+            {
+                msgSignImg = [UIImage imageNamed:@"CheckDoubleLight"];
+            }
+                break;
+            case MessageReceiveStateClient:
+            {
+                msgSignImg = [UIImage imageNamed:@"CheckDoubleGreen"];
+            }
+                break;
+            case MessageReceiveStateServer:
+            {
+                msgSignImg = [UIImage imageNamed:@"CheckSingleGreen"];
+            }
+                break;
+            default:
+                break;
         }
-            break;
-        case MessageReceiveStateClient:
-        {
-            msgSignImg = [UIImage imageNamed:@"CheckDoubleGreen"];
-        }
-            break;
-        case MessageReceiveStateServer:
-        {
-            msgSignImg = [UIImage imageNamed:@"CheckSingleGreen"];
-        }
-            break;
-        default:
-            break;
+        
+        CGRect bubbleFrame = [self bubbleFrame];
+        
+        CGFloat imgX = bubbleFrame.origin.x + bubbleFrame.size.width - msgSignImg.size.width;
+        imgX = self.type == JSBubbleMessageTypeOutgoing ?(imgX - 15):(imgX - 5);
+       
+        CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
+        
+        [msgSignImg drawInRect:msgStateSignRect];
     }
-    
-    CGRect bubbleFrame = [self bubbleFrame];
-    
-    CGFloat imgX = bubbleFrame.origin.x + bubbleFrame.size.width - msgSignImg.size.width;
-    imgX = self.type == JSBubbleMessageTypeOutgoing ?(imgX - 15):(imgX - 5);
-   
-    CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
-    
-    [msgSignImg drawInRect:msgStateSignRect];
-    
 }
 
 #pragma mark - Bubble view

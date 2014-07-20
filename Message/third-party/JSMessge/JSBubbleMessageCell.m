@@ -138,9 +138,15 @@
 	}
 }
 
-- (void)setMessageState:(MessageReceiveStateType)messageState{
-    self.bubbleView.msgStateType = messageState;
-    
+- (void)setMessageState:(IMessage *)msg{
+    if(msg.isACK){
+        if (msg.isPeerACK) {
+            self.bubbleView.msgStateType =  MessageReceiveStateClient;
+        }else{
+            self.bubbleView.msgStateType =  MessageReceiveStateServer;
+        }
+    }
+    self.bubbleView.msgStateType =  MessageReceiveStateNone;
 }
 
 

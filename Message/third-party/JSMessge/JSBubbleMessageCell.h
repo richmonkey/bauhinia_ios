@@ -17,7 +17,7 @@
 
 #import <UIKit/UIKit.h>
 #import "JSBubbleView.h"
-
+#import "IMessage.h"
 
 
 @interface JSBubbleMessageCell : UITableViewCell
@@ -36,7 +36,7 @@
 #pragma mark - Message cell
 - (void)setMessage:(NSString *)msg;
 - (void)setMedia:(id)data;
-- (void)setMessageState:(MessageReceiveStateType)messageState;
+- (void)setMessageState:(IMessage *)msg;
 
 + (CGFloat)neededHeightForText:(NSString *)bubbleViewText;
 

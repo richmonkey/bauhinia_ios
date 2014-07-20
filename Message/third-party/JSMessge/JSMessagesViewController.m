@@ -242,7 +242,7 @@
     
 	if (kAllowsMedia)
 		[cell setMedia:[self.dataSource dataForRowAtIndexPath:indexPath]];
-    
+    [cell setMessageState:[self.dataSource messageForRowAtIndexPath:indexPath]];
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
     [cell setBackgroundColor:[UIColor clearColor]];
     return cell;

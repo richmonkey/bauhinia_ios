@@ -86,15 +86,17 @@
 //服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
     
-    JSBubbleMessageCell* findCell = [self getImMessageById:msgLocalID];
-    [findCell setMessageState:MessageReceiveStateServer];
+    IMessage *msg = [self getImMessageById:msgLocalID];
+    JSBubbleMessageCell* findCell = [self getMessageCellById:msgLocalID];
+    [findCell setMessageState:msg];
     
 }
 
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
-    JSBubbleMessageCell* findCell = [self getImMessageById:msgLocalID];
-    [findCell setMessageState:MessageReceiveStateClient];
+       IMessage *msg = [self getImMessageById:msgLocalID];
+    JSBubbleMessageCell* findCell = [self getMessageCellById:msgLocalID];
+    [findCell setMessageState: msg];
 }
 
 -(void)onGroupMessage:(IMessage*)msg{
@@ -337,6 +339,17 @@
 //
 
 #pragma mark - Messages view data source
+
+- (IMessage*)messageForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
+    IMessage *msg =  ((IMessage*)[array objectAtIndex:indexPath.row]);
+    if(msg){
+        return msg;
+    }
+    return nil;
+}
+
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
@@ -553,8 +566,23 @@
     self.navigationItem.rightBarButtonItem = deletAllButton;
     
 }
+- (IMessage*) getImMessageById:(int)msgLocalID{
+    
+    for ( int sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
+        
+        NSMutableArray *rowArrays = [self.messageArray objectAtIndex:sectionIndex];
+        for (int rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
+            
+            IMessage *tmpMsg = (IMessage*) [rowArrays objectAtIndex:rowindex];
+            if (tmpMsg.msgLocalID == msgLocalID) {
+                    return tmpMsg;
+            }
+        }
+    }
+    return nil;
+}
 
-- (JSBubbleMessageCell*) getImMessageById:(int)msgLocalID{
+- (JSBubbleMessageCell*) getMessageCellById:(int)msgLocalID{
     
     for ( int sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
         
