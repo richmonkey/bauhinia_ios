@@ -6,9 +6,14 @@ Message for IOS
 
 TODO
 =======
-1.对方输入状态
-2.对方在线状态
-3.消息ack状态
-4.发送消息需要广播一个notification
-5.消息时间戳显示(去掉AAAAAAA)
-6.MessageViewController界面配色感觉还是不够whatsapp干净
+1.状态界面
+2.联系人详情界面
+3.设置界面
+4.新建会话，确认多号码问题
+5.messageviewcontroller去掉对conversation的引用
+6.我的电话号码显示颜色
+7.会话界面显示连接状态变化
+
+8.会话界面监听联系人变化
+9.messagedb添加删除会话的接口以及删除全部会话接口
+
