@@ -65,6 +65,7 @@
     }
     self.navigationItem.titleView = self.navigationBarButtonsView;
     
+    [[self sendButton] setUserInteractionEnabled: NO];
     
     [self processConversationData];
     
@@ -124,11 +125,15 @@
 //用户连线状态
 -(void)onOnlineState:(int64_t)uid state:(BOOL)on{
     if (on) {
+        
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
+        self.curUser.onlineState = UserOnlineStateOnline;
     }else{
+        
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
+        self.curUser.onlineState = UserOnlineStateOffline;
     }
-    self.curUser.online = on;
+    
 }
 
 //对方正在输入
@@ -148,9 +153,9 @@
     
     [self.inputStatusTimer invalidate];
     self.inputStatusTimer = nil;
-    if (self.curUser.online) {
+    if (self.curUser.onlineState == UserOnlineStateOnline) {
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-    }else{
+    }else if(self.curUser.onlineState == UserOnlineStateOffline){
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
     }
  
@@ -162,11 +167,11 @@
     
     if (state == STATE_CONNECTING) {
         UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        aiView.hidesWhenStopped = NO; //I added this just so I could see it
+        aiView.hidesWhenStopped = NO;
         self.navigationItem.titleView = aiView;
     }else if(state == STATE_CONNECTED){
-        
-        
+       self.navigationItem.titleView = self.navigationBarButtonsView;
+        [[self sendButton] setUserInteractionEnabled:YES];
     }else if(state == STATE_CONNECTFAIL){
         
         

@@ -11,6 +11,12 @@
 #import "ABContact.h"
 #import "PhoneNumber.h"
 
+typedef enum {
+    UserOnlineStateNone = 0,
+    UserOnlineStateOnline,
+    UserOnlineStateOffline
+} UserOnlineStateType;
+
 @interface User : NSObject
 @property(nonatomic, assign)int64_t uid;
 @property(nonatomic)PhoneNumber *phoneNumber;
@@ -20,7 +26,7 @@
 @property(nonatomic, copy)NSString *state;
 
 //是否在线
-@property(nonatomic, assign)BOOL online;
+@property(nonatomic, assign)UserOnlineStateType onlineState;
 
 @end
 
