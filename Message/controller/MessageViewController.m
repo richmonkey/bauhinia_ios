@@ -13,6 +13,9 @@
 #import "MessageTableSectionHeaderView.h"
 #import "MessageShowThePotraitViewController.h"
 #import "AppDelegate.h"
+#import "UserDB.h"
+
+
 
 #define navBarHeadButtonSize 35
 
@@ -31,8 +34,10 @@
 
 -(id) initWithConversation:(Conversation *) con{
     if (self = [super init]) {
-        self.currentConversation = con;
         
+        self.currentConversation = con;
+        self.curUser = [[UserDB instance] loadUser:con.cid];
+    
     }
     return self;
 }
@@ -46,25 +51,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.headerArray = [NSMutableArray array];
     
     self.delegate = self;
     self.dataSource = self;
-    if (!self.currentConversation.name) {
-        
-        self.title = @"消息";
-    }else{
-        self.title = self.currentConversation.name;
-    }
+//    if (!self.currentConversation.name) {
+//        
+//        self.title = @"消息";
+//    }else{
+//        self.title = self.currentConversation.name;
+//    }
     [self setNormalNavigationButtons];
-    
     
     self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
     self.navigationBarButtonsView.center = self.navigationController.navigationBar.center;
-    [self setTableViewCustomHeaderView];
+    if ([self.curUser.contact.contactName length] == 0) {
+        [self.navigationBarButtonsView.nameLabel setText:@"消息"];
+    }else{
+        [self.navigationBarButtonsView.nameLabel setText:self.curUser.contact.contactName];
+    }
+    self.navigationItem.titleView = self.navigationBarButtonsView;
     
-//    [self setBackgroundColor: [UIColor grayColor]];
+    [self setTableViewCustomHeaderView];
     
     [self processConversationData];
     
@@ -72,6 +80,16 @@
     [[IMService instance] addMessageObserver:self];
 }
 
+-(void) viewDidAppear:(BOOL)animated{
+
+    [[IMService instance] subscribeState:self.currentConversation.cid];
+ 
+}
+
+-(void) viewDidDisappear:(BOOL)animated{
+    
+   [[IMService instance] unsubscribeState:self.currentConversation.cid];
+}
 
 #pragma mark - MessageObserver
 
@@ -113,13 +131,39 @@
 
 //用户连线状态
 -(void)onOnlineState:(int64_t)uid state:(BOOL)on{
-    
+    if (on) {
+        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
+    }else{
+        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
+    }
+    self.curUser.online = on;
 }
 
 //对方正在输入
 -(void)onPeerInputing:(int64_t)uid{
+  
+    [self.navigationBarButtonsView.conectInformationLabel setText:@"对方正在输入"];
+  
+    self.inputStatusTimer = [NSTimer scheduledTimerWithTimeInterval:3
+                                           target:self
+                                         selector:@selector(changeStatusBack)
+                                         userInfo:nil
+                                        repeats:NO];
     
 }
+
+-(void)changeStatusBack{
+    
+    [self.inputStatusTimer invalidate];
+    self.inputStatusTimer = nil;
+    if (self.curUser.online) {
+        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
+    }else{
+        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
+    }
+ 
+}
+
 
 //同IM服务器连接的状态变更通知
 -(void)onConnectState:(int)state{
@@ -130,36 +174,36 @@
         self.navigationItem.titleView = aiView;
     }else if(state == STATE_CONNECTED){
         
-        self.navigationItem.titleView = self.navigationBarButtonsView;
         
     }else if(state == STATE_CONNECTFAIL){
-        [self.navigationBarButtonsView.nameLabel setText: @"小张"];
         
-        [self.navigationBarButtonsView.conectInformationLabel setText:@"最近登录时间昨天下午"];
-        
-        self.navigationItem.titleView = self.navigationBarButtonsView;
         
     }else{
         
-        [self.navigationBarButtonsView.nameLabel setText: @"小张"];
-        [self.navigationBarButtonsView.conectInformationLabel setText:@"最近登录时间昨天下午"];
-        
-        self.navigationItem.titleView = self.navigationBarButtonsView;
         
     }
 }
 
 #pragma mark - UITextViewDelegate
 
+- (void)textViewDidChange:(UITextView *)textView{
+    if((time(NULL) -  self.inputTimestamp) > 10){
+        self.inputTimestamp = time(NULL);
+        
+        MessageInputing *inputing = [[MessageInputing alloc ] init];
+        inputing.sender = [UserPresent instance].uid;
+        inputing.receiver =self.currentConversation.cid;
+        
+        [[IMService instance] sendInputing: inputing];
+ 
+    }
+    
+}
+
 -(void)textViewDidBeginEditing:(UITextView *)textView{
     [super textViewDidBeginEditing:textView];
     
-    MessageInputing *inputing = [[MessageInputing alloc ] init];
-    
-    inputing.sender = [UserPresent instance].uid;
-    inputing.receiver =self.currentConversation.cid;
-    
-    [[IMService instance] sendInputing: inputing];
+
     
 }
 

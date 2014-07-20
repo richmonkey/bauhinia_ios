@@ -12,6 +12,9 @@
 #import "IMessage.h"
 #import "MessageListViewController.h"
 #import "MessageHeaderActionsView.h"
+#import "user.h"
+
+
 
 @class ConversationHeadButtonView;
 
@@ -22,7 +25,9 @@
 @property (nonatomic) Conversation* currentConversation;
 @property (nonatomic) MessageHeaderActionsView *tableHeaderView;
 @property (nonatomic) NSMutableArray *headerArray;
-
+@property (nonatomic) int  inputTimestamp;
+@property (nonatomic) IMUser *curUser;
+@property (nonatomic) NSTimer  *inputStatusTimer;
 - (id) initWithConversation:(Conversation *) con;
 
 @end
