@@ -369,6 +369,11 @@
     return [self addFlag:msgLocalID path:path flag:MESSAGE_FLAG_PEER_ACK];
 }
 
+-(BOOL)markPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid {
+    NSString *path = [self getPeerPath:uid];
+    return [self addFlag:msgLocalID path:path flag:MESSAGE_FLAG_FAILURE];
+}
+
 -(BOOL)insertGroupMessage:(IMessage*)msg {
     NSString *path = [self getGroupPath:msg.receiver];
     return [self insertIMessage:msg path:path];
@@ -392,6 +397,11 @@
 -(BOOL)acknowledgeGroupMessage:(int)msgLocalID gid:(int64_t)gid {
     NSString *path = [self getGroupPath:gid];
     return [self addFlag:msgLocalID path:path flag:MESSAGE_FLAG_ACK];
+}
+
+-(BOOL)markGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid {
+    NSString *path = [self getGroupPath:gid];
+    return [self addFlag:msgLocalID path:path flag:MESSAGE_FLAG_FAILURE];
 }
 
 -(IMessageIterator*)newPeerMessageIterator:(int64_t)uid {

@@ -100,6 +100,8 @@
 
 -(void)onClose {
     NSLog(@"im service on close");
+    [self handleClose];
+    
     self.tcp = nil;
     if (self.stopped) return;
     
@@ -116,6 +118,20 @@
     dispatch_time_t w = dispatch_walltime(NULL, t);
     dispatch_source_set_timer(self.connectTimer, w, DISPATCH_TIME_FOREVER, 0);
 
+}
+
+-(void)handleClose {
+    MessageDB *db = [MessageDB instance];
+    
+    for (IMessage *msg in self.peerMessages) {
+        [db markPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
+        [self publishPeerMessageFailure:msg];
+    }
+    
+    for (IMessage *msg in self.groupMessages) {
+        [db markGroupMessageFailure:msg.msgLocalID gid:msg.receiver];
+        [self publishGroupMessageFailure:msg];
+    }
 }
 
 -(void)handleACK:(Message*)msg {
@@ -205,6 +221,18 @@
     MessageOnlineState *state = (MessageOnlineState*)msg.body;
     for (id<MessageObserver> ob in self.observers) {
         [ob onOnlineState:state.sender state:state.online];
+    }
+}
+
+-(void)publishPeerMessageFailure:(IMessage*)msg {
+    for (id<MessageObserver> ob in self.observers) {
+        [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
+    }
+}
+
+-(void)publishGroupMessageFailure:(IMessage*)msg {
+    for (id<MessageObserver> ob in self.observers) {
+        [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
     }
 }
 

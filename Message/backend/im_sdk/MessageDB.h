@@ -30,10 +30,12 @@
 -(BOOL)clearConversation:(int64_t)uid;
 -(BOOL)acknowledgePeerMessage:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)acknowledgePeerMessageFromRemote:(int)msgLocalID uid:(int64_t)uid;
+-(BOOL)markPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
 
 -(BOOL)insertGroupMessage:(IMessage*)msg;
 -(BOOL)removeGroupMessage:(int)msgLocalID gid:(int64_t)gid;
 -(BOOL)clearGroupConversation:(int64_t)gid;
 -(BOOL)acknowledgeGroupMessage:(int)msgLocalID gid:(int64_t)gid;
+-(BOOL)markGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid;
 
 @end

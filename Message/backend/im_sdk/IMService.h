@@ -22,6 +22,8 @@
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid;
 
+-(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
+
 -(void)onGroupMessage:(IMessage*)msg;
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid;
 
