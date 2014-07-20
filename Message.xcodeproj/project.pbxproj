@@ -49,10 +49,6 @@
 		2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 210564C419695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m */; };
 		2105650E1969839F008D3A83 /* ConversationHeadButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105650C1969839F008D3A83 /* ConversationHeadButtonView.m */; };
 		2105650F1969839F008D3A83 /* ConversationHeadButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105650D1969839F008D3A83 /* ConversationHeadButtonView.xib */; };
-		2105651119698D7B008D3A83 /* MessageHeaderActionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105651019698D7B008D3A83 /* MessageHeaderActionsView.xib */; };
-		2105651419698D9A008D3A83 /* MessageHeaderActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105651319698D9A008D3A83 /* MessageHeaderActionsView.m */; };
-		21056517196996BD008D3A83 /* MessageTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 21056516196996BD008D3A83 /* MessageTableSectionHeaderView.m */; };
-		2105651B196996E5008D3A83 /* MessageTableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105651A196996E5008D3A83 /* MessageTableSectionHeaderView.xib */; };
 		21150CA0196F78A5009DE9DE /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9B196F78A5009DE9DE /* User.m */; };
 		21150CA1196F78A5009DE9DE /* UserDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9D196F78A5009DE9DE /* UserDB.m */; };
 		21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9F196F78A5009DE9DE /* UserPresent.m */; };
@@ -61,6 +57,8 @@
 		21150CAB196F7910009DE9DE /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CA9196F7910009DE9DE /* Token.m */; };
 		21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CAD196F79AA009DE9DE /* TAHttpOperation.m */; };
 		2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */; };
+		212F28FC197BF6420066A166 /* MessageTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 212F28FA197BF6420066A166 /* MessageTableSectionHeaderView.m */; };
+		212F28FD197BF6420066A166 /* MessageTableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 212F28FB197BF6420066A166 /* MessageTableSectionHeaderView.xib */; };
 		2142CB62196268860002E4A9 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB54196268860002E4A9 /* ABContact.m */; };
 		2142CB69196268860002E4A9 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB60196268860002E4A9 /* pinyin.c */; };
 		217261981954155000F09E33 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217261971954155000F09E33 /* AddressBook.framework */; };
@@ -190,12 +188,6 @@
 		2105650B1969839F008D3A83 /* ConversationHeadButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationHeadButtonView.h; sourceTree = "<group>"; };
 		2105650C1969839F008D3A83 /* ConversationHeadButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationHeadButtonView.m; sourceTree = "<group>"; };
 		2105650D1969839F008D3A83 /* ConversationHeadButtonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationHeadButtonView.xib; sourceTree = "<group>"; };
-		2105651019698D7B008D3A83 /* MessageHeaderActionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageHeaderActionsView.xib; sourceTree = "<group>"; };
-		2105651219698D9A008D3A83 /* MessageHeaderActionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageHeaderActionsView.h; sourceTree = "<group>"; };
-		2105651319698D9A008D3A83 /* MessageHeaderActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageHeaderActionsView.m; sourceTree = "<group>"; };
-		21056515196996BD008D3A83 /* MessageTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableSectionHeaderView.h; sourceTree = "<group>"; };
-		21056516196996BD008D3A83 /* MessageTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableSectionHeaderView.m; sourceTree = "<group>"; };
-		2105651A196996E5008D3A83 /* MessageTableSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableSectionHeaderView.xib; sourceTree = "<group>"; };
 		21150C9A196F78A5009DE9DE /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		21150C9B196F78A5009DE9DE /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		21150C9C196F78A5009DE9DE /* UserDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDB.h; sourceTree = "<group>"; };
@@ -211,6 +203,9 @@
 		21150CAC196F79AA009DE9DE /* TAHttpOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAHttpOperation.h; sourceTree = "<group>"; };
 		21150CAD196F79AA009DE9DE /* TAHttpOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAHttpOperation.m; sourceTree = "<group>"; };
 		2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		212F28F9197BF6420066A166 /* MessageTableSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableSectionHeaderView.h; sourceTree = "<group>"; };
+		212F28FA197BF6420066A166 /* MessageTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableSectionHeaderView.m; sourceTree = "<group>"; };
+		212F28FB197BF6420066A166 /* MessageTableSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableSectionHeaderView.xib; sourceTree = "<group>"; };
 		2142CB53196268860002E4A9 /* ABContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABContact.h; sourceTree = "<group>"; };
 		2142CB54196268860002E4A9 /* ABContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABContact.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
@@ -472,15 +467,12 @@
 		2105650A1969839F008D3A83 /* control */ = {
 			isa = PBXGroup;
 			children = (
+				212F28F9197BF6420066A166 /* MessageTableSectionHeaderView.h */,
+				212F28FA197BF6420066A166 /* MessageTableSectionHeaderView.m */,
+				212F28FB197BF6420066A166 /* MessageTableSectionHeaderView.xib */,
 				2105650B1969839F008D3A83 /* ConversationHeadButtonView.h */,
 				2105650C1969839F008D3A83 /* ConversationHeadButtonView.m */,
 				2105650D1969839F008D3A83 /* ConversationHeadButtonView.xib */,
-				2105651019698D7B008D3A83 /* MessageHeaderActionsView.xib */,
-				2105651219698D9A008D3A83 /* MessageHeaderActionsView.h */,
-				2105651319698D9A008D3A83 /* MessageHeaderActionsView.m */,
-				21056515196996BD008D3A83 /* MessageTableSectionHeaderView.h */,
-				21056516196996BD008D3A83 /* MessageTableSectionHeaderView.m */,
-				2105651A196996E5008D3A83 /* MessageTableSectionHeaderView.xib */,
 			);
 			path = control;
 			sourceTree = "<group>";
@@ -807,17 +799,16 @@
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
 				210564FF19695FC1008D3A83 /* PhotoIcon@2x.png in Resources */,
+				212F28FD197BF6420066A166 /* MessageTableSectionHeaderView.xib in Resources */,
 				210564FE19695FC1008D3A83 /* PhotoIcon.png in Resources */,
 				2105650019695FC1008D3A83 /* send-highlighted.png in Resources */,
 				2105650519695FC1008D3A83 /* messageSent.aiff in Resources */,
 				210564FA19695FC1008D3A83 /* input-bar.png in Resources */,
-				2105651119698D7B008D3A83 /* MessageHeaderActionsView.xib in Resources */,
 				210564F919695FC1008D3A83 /* input-bar-flat@2x.png in Resources */,
 				210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */,
 				21798FA9194E9C4600B67C1F /* Images.xcassets in Resources */,
 				2105650319695FC1008D3A83 /* send@2x.png in Resources */,
 				2105650419695FC1008D3A83 /* messageReceived.aiff in Resources */,
-				2105651B196996E5008D3A83 /* MessageTableSectionHeaderView.xib in Resources */,
 				210564CB19695FC1008D3A83 /* LoginViewController.xib in Resources */,
 				210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */,
 				210564C919695FC1008D3A83 /* ConversationViewController.xib in Resources */,
@@ -844,7 +835,6 @@
 			files = (
 				21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */,
 				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
-				2105651419698D9A008D3A83 /* MessageHeaderActionsView.m in Sources */,
 				6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */,
 				2173C66919738745004A88A5 /* SDWebImagePrefetcher.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
@@ -857,7 +847,6 @@
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
 				2105650619695FC1008D3A83 /* UIButton+JSMessagesView.m in Sources */,
 				2105650819695FC1008D3A83 /* UIImage+JSMessagesView.m in Sources */,
-				21056517196996BD008D3A83 /* MessageTableSectionHeaderView.m in Sources */,
 				2173C66619738745004A88A5 /* SDWebImageDownloader.m in Sources */,
 				2173C66819738745004A88A5 /* SDWebImageManager.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
@@ -905,6 +894,7 @@
 				210564D219695FC1008D3A83 /* JSDismissiveTextView.m in Sources */,
 				21150CAA196F7910009DE9DE /* Config.m in Sources */,
 				210564C819695FC1008D3A83 /* ConversationViewController.m in Sources */,
+				212F28FC197BF6420066A166 /* MessageTableSectionHeaderView.m in Sources */,
 				210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */,
 				2173C66419738745004A88A5 /* SDWebImageCompat.m in Sources */,
 			);
