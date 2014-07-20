@@ -18,10 +18,10 @@
 @interface MessageViewController : JSMessagesViewController <UIScrollViewDelegate,MessageObserver>
 
 
-@property (strong,nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
-@property (weak,nonatomic) Conversation* currentConversation;
-@property (nonatomic,strong) MessageHeaderActionsView *tableHeaderView;
-@property (nonatomic, strong) NSMutableArray *headerArray;
+@property (nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
+@property (nonatomic) Conversation* currentConversation;
+@property (nonatomic) MessageHeaderActionsView *tableHeaderView;
+@property (nonatomic) NSMutableArray *headerArray;
 
 - (id) initWithConversation:(Conversation *) con;
 
