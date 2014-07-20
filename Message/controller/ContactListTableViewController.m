@@ -6,6 +6,7 @@
 #import "UserDB.h"
 #import "Token.h"
 #import "ContactViewController.h"
+#import "UserPresent.h"
 
 @interface ContactListTableViewController()
 @property (nonatomic) NSArray *contacts;
@@ -56,6 +57,11 @@
     self.tableView.frame = CGRectMake(0, top+44.0, self.view.frame.size.width, self.view.frame.size.height - top);
 	[self.view addSubview:self.tableView];
 
+    UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    PhoneNumber *phoneNumber = [UserPresent instance].phoneNumber;
+    NSString *s = [NSString stringWithFormat:@"   我的电话号码:+%@ %@", phoneNumber.zone, phoneNumber.number];
+    [head setText:s];
+    self.tableView.tableHeaderView = head;
  
     [ContactDB instance].observer = self;
     [self loadData];

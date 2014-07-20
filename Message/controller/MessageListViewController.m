@@ -32,12 +32,10 @@
 @synthesize filteredArray;
 @synthesize searchBar;
 @synthesize searchDC;
-@synthesize conversations;
 
 -(id)init{
     self = [super init];
     if (self) {
-        
         self.conversations = [[NSMutableArray alloc] init];
         UserDB *db = [UserDB instance];
         ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
@@ -51,7 +49,7 @@
         }
         [[IMService instance] addMessageObserver:self];
         
-        [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newConversation:) name:CREATE_NEW_CONVERSATION object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:SEND_FIRST_MESSAGE_OK object:nil];
     }
     return self;
 }
@@ -211,6 +209,12 @@
 	
 }
 
+-(void) newMessage:(NSNotification*) notification{
+    IMessage *m = notification.object;
+    NSLog(@"new message:%lld, %lld", m.sender, m.receiver);
+    [self onNewMessage:m cid:m.receiver];
+}
+
 -(void) newConversation:(NSNotification*) notification{
     
     Conversation *con = [notification object];
@@ -308,13 +312,50 @@
     NSLog(@"createGroupAction");
 }
 
+-(void)onNewMessage:(IMessage*)msg cid:(int64_t)cid{
+    int index = -1;
+    for (int i = 0; i < [self.conversations count]; i++) {
+        Conversation *con = [self.conversations objectAtIndex:i];
+        if (con.type == CONVERSATION_PEER && con.cid == cid) {
+            con.message = msg;
+            index = i;
+            break;
+        }
+    }
+    
+    if (index != -1) {
+        Conversation *con = [self.conversations objectAtIndex:index];
+        [self.conversations removeObjectAtIndex:index];
+        con.message = msg;
+        if (index != 0) {
+            NSIndexPath *path1 = [NSIndexPath indexPathForRow:index+1 inSection:0];
+            NSIndexPath *path2 = [NSIndexPath indexPathForRow:1 inSection:0];
+            [self._table moveRowAtIndexPath:path1 toIndexPath:path2];
+        }
+    } else {
+        Conversation *con = [[Conversation alloc] init];
+        con.message = msg;
+        con.type = CONVERSATION_PEER;
+        con.cid = cid;
+        
+        UserDB *db = [UserDB instance];
+        IMUser *user = [db loadUser:con.cid];
+        con.name = user.contact.contactName;
+        
+        [self.conversations insertObject:con atIndex:0];
+        NSIndexPath *path = [NSIndexPath indexPathForRow:1 inSection:0];
+        NSArray *array = [NSArray arrayWithObject:path];
+        [self._table insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
+    }
 
-
+    
+}
 -(void)onPeerMessage:(IMessage*)msg {
     MessageContent *c = msg.content;
     if (c.type == MESSAGE_TEXT) {
         IMLog(@"message:%@", c.text);
     }
+    [self onNewMessage:msg cid:msg.sender];
 }
 
 //服务器ack

@@ -276,6 +276,7 @@
     msg.content = content;
     msg.timestamp = time(NULL);
     
+    [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     [self insertMsgToMessageBlokArray: msg];
     BOOL r = [[IMService instance] sendPeerMessage:msg];
     NSLog(@"send result:%d", r);
@@ -283,7 +284,8 @@
     [JSMessageSoundEffect playMessageSentSound];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SEND_FIRST_MESSAGE_OK object: notification ];
+
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
     
     [self finishSend];
     
@@ -442,8 +444,6 @@
 }
 
 -(void) insertMsgToMessageBlokArray:(IMessage*)msg{
-    
-    [[MessageDB instance] insertPeerMessage:msg uid:msg.sender];
     NSDate *curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
     NSMutableArray *msgBlockArray = nil;
     //收到第一个消息
