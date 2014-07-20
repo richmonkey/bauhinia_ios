@@ -60,6 +60,7 @@
         self.data = [NSMutableData data];
         self.peerMessages = [NSMutableDictionary dictionary];
         self.groupMessages = [NSMutableDictionary dictionary];
+        self.connectState = STATE_UNCONNECTED;
     }
     return self;
 }
@@ -102,6 +103,9 @@
     NSLog(@"im service on close");
     [self handleClose];
     
+    self.connectState = STATE_UNCONNECTED;
+    [self publishConnectState:STATE_UNCONNECTED];
+
     self.tcp = nil;
     if (self.stopped) return;
     
@@ -337,6 +341,7 @@
         return;
     }
     
+    self.connectState = STATE_CONNECTING;
     [self publishConnectState:STATE_CONNECTING];
     
     self.tcp = [[AsyncTCP alloc] init];
@@ -346,11 +351,13 @@
             NSLog(@"tcp connect err");
             wself.connectFailCount = wself.connectFailCount + 1;
             [wself close];
+            self.connectState = STATE_CONNECTFAIL;
             [self publishConnectState:STATE_CONNECTFAIL];
             return;
         } else {
             NSLog(@"tcp connected");
             wself.connectFailCount = 0;
+            self.connectState = STATE_CONNECTED;
             [self publishConnectState:STATE_CONNECTED];
             [self sendAuth];
             [wself.tcp startRead:^(AsyncTCP *tcp, NSData *data, int err) {

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "Message.h"
+
+#define STATE_UNCONNECTED 0
 #define STATE_CONNECTING 1
 #define STATE_CONNECTED 2
 #define STATE_CONNECTFAIL 3
@@ -41,6 +43,7 @@
 
 @property(nonatomic)NSString *host;
 @property(nonatomic)int port;
+@property(nonatomic, assign)int connectState;
 
 +(IMService*)instance;
 
