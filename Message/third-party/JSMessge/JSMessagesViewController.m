@@ -78,8 +78,6 @@
     CGRect inputFrame = CGRectMake(0.0f, size.height - INPUT_HEIGHT, size.width, INPUT_HEIGHT);
     self.inputToolBarView = [[JSMessageInputView alloc] initWithFrame:inputFrame delegate:self];
     
-    // TODO: refactor
- //   self.inputToolBarView.textView.dismissivePanGestureRecognizer = self.tableView.panGestureRecognizer;
     self.inputToolBarView.textView.keyboardDelegate = self;
     
     self.inputToolBarView.textView.placeHolder = @"说点什么呢？";
@@ -111,8 +109,12 @@
 		frame.size.width += 16;		// from the send button adjustment above
 		self.inputToolBarView.textView.frame = frame;
 	}
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
+    [self.tableView addGestureRecognizer:tapRecognizer];//关键语句，给self.view添加一个手势监测；
+    tapRecognizer.numberOfTapsRequired = 1;
+    tapRecognizer.delegate = self;
 	
-//    [self setBackgroundColor:[UIColor messagesBackgroundColor]];
 }
 
 - (UIButton *)sendButton
@@ -186,6 +188,12 @@
     [self.tableView reloadData];
     [self.tableView setNeedsLayout];
 }
+#pragma mark -
+
+- (void) handlePanFrom:(UITapGestureRecognizer*)recognizer{
+    
+    [self.inputToolBarView.textView resignFirstResponder];
+}
 
 #pragma mark - Actions
 - (void)sendPressed:(UIButton *)sender
@@ -258,22 +266,17 @@
     [self scrollToBottomAnimated:YES];
 }
 
-//- (void)setBackgroundColor:(UIColor *)color
-//{
-//    self.view.backgroundColor = color;
-//    self.tableView.backgroundColor = color;
-//    self.tableView.separatorColor = color;
-//}
-
 - (void)scrollToBottomAnimated:(BOOL)animated
 {
+    
     NSInteger rows = [self.tableView numberOfRowsInSection:0];
     
-    if(rows > 0) {
+    if(rows > 1) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rows - 1 inSection:0]
                               atScrollPosition:UITableViewScrollPositionBottom
                                       animated:animated];
     }
+    
 }
 
 
