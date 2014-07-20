@@ -326,6 +326,7 @@
     if (index != -1) {
         Conversation *con = [self.conversations objectAtIndex:index];
         [self.conversations removeObjectAtIndex:index];
+        [self.conversations insertObject:con atIndex:0];
         con.message = msg;
         if (index != 0) {
             NSIndexPath *path1 = [NSIndexPath indexPathForRow:index+1 inSection:0];
