@@ -389,6 +389,7 @@
     IMMessage *im = [[IMMessage alloc] init];
     im.sender = msg.sender;
     im.receiver = msg.receiver;
+    im.msgLocalID = msg.msgLocalID;
     im.content = msg.content.raw;
     m.body = im;
     BOOL r = [self sendMessage:m];
