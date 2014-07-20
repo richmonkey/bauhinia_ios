@@ -5,6 +5,7 @@
 #import "Config.h"
 #import "UserDB.h"
 #import "Token.h"
+#import "ContactViewController.h"
 
 @interface ContactListTableViewController()
 @property (nonatomic) NSArray *contacts;
@@ -29,6 +30,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.tabBarController.navigationItem.title = @"所有联系人";
+    
+    const int NAV_BAR_HEIGHT = 44;
+    int top = [UIApplication sharedApplication].statusBarFrame.size.height+NAV_BAR_HEIGHT;
+	
+	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, top, 320.0f, 44.0f)];
+	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	self.searchBar.keyboardType = UIKeyboardTypeDefault;
+	self.searchBar.delegate = self;
+    [self.view addSubview:self.searchBar];
+	
+    self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
+	self.searchDC.searchResultsDataSource = self;
+	self.searchDC.searchResultsDelegate = self;
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	self.tableView.delegate = self;
@@ -37,32 +53,22 @@
 	self.tableView.showsVerticalScrollIndicator = YES;
     self.tableView.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
     
-    int top = [UIApplication sharedApplication].statusBarFrame.size.height;
-    self.tableView.frame = CGRectMake(0, top, self.view.frame.size.width, self.view.frame.size.height - top);
+    self.tableView.frame = CGRectMake(0, top+44.0, self.view.frame.size.width, self.view.frame.size.height - top);
 	[self.view addSubview:self.tableView];
-  
-	
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
-	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
-	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
-	self.searchBar.keyboardType = UIKeyboardTypeDefault;
-	self.searchBar.delegate = self;
-	self.tableView.tableHeaderView = self.searchBar;
-	
-    self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
-	self.searchDC.searchResultsDataSource = self;
-	self.searchDC.searchResultsDelegate = self;
-    
+
+ 
     [ContactDB instance].observer = self;
     [self loadData];
+    
+    IMLog(@"request users.....");
+    [self requestUsers];
+    
+    
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-	[super viewWillAppear:animated];
-}
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 
-- (void)viewDidDisappear:(BOOL)animated{
-	[super viewDidDisappear:animated];
 }
 
 -(NSString*)getSectionName:(NSString*)string {
@@ -155,7 +161,7 @@
         }
         LevelDB *db = [LevelDB defaultLevelDB];
         [db setInt:time(NULL) forKey:key];
-        self.contacts = [[ContactDB instance] contactsArray];
+        [self loadData];
         [self.tableView reloadData];
     };
     
@@ -167,9 +173,7 @@
 
 -(void)loadData{
     self.contacts = [[ContactDB instance] contactsArray];
-    IMLog(@"request users.....");
-    [self requestUsers];
-    
+ 
     self.filteredArray =  [NSMutableArray array];
     self.sectionArray = [NSMutableArray arrayWithCapacity:27];
   
@@ -231,10 +235,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-	if (title == UITableViewIndexSearch) {
-		[self.tableView scrollRectToVisible:self.searchBar.frame animated:NO];
-		return -1;
-	}
+
 	return [ALPHA rangeOfString:title].location;
 }
 
@@ -300,14 +301,21 @@
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar {
-	self.searchBar.prompt = @"输入字母、汉字或电话号码搜索";
+    [UIView beginAnimations:nil context:nil];
+    int top = [UIApplication sharedApplication].statusBarFrame.size.height;
+    self.searchBar.frame = CGRectMake(0, top, self.view.frame.size.width, 44.0);
+    self.navigationController.navigationBarHidden = YES;
+    [UIView commitAnimations];
     [self.searchDisplayController setActive:YES animated:YES];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	[self.searchBar setText:@""];
-	self.searchBar.prompt = nil;
-	self.tableView.tableHeaderView = self.searchBar;
+    [UIView beginAnimations:nil context:nil];
+    int top = [UIApplication sharedApplication].statusBarFrame.size.height+self.navigationController.navigationBar.frame.size.height;
+	self.searchBar.frame = CGRectMake(0.0f, top, 320.0f, 44.0f);
+    self.navigationController.navigationBarHidden = NO;
+    [UIView commitAnimations];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -361,14 +369,11 @@
 	}else{
 		contact = [self.filteredArray objectAtIndex:indexPath.row];
     }
-
-	pvc.displayedPerson = [[ContactDB instance] recordRefWithRecordID:contact.recordID];
-	pvc.allowsEditing = YES;
-	pvc.personViewDelegate = self;
     
-	self.aBPersonNav = [[UINavigationController alloc] initWithRootViewController:pvc];
-    self.aBPersonNav.view.backgroundColor = [UIColor grayColor];
-	[self presentViewController: self.aBPersonNav animated:NO completion:nil];
+  
+    ContactViewController *ctl = [[ContactViewController alloc] init];
+    ctl.contact = contact;
+    [self.navigationController pushViewController:ctl animated:YES];
 }
 
 - (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifierForValue

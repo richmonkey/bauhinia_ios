@@ -16,10 +16,8 @@
 #import "Config.h"
 #import "Token.h"
 #import "UserDB.h"
-
-
-@interface LoginViewController ()
-@end
+#import "AppDelegate.h"
+#import "MainTabBarController.h"
 
 @implementation LoginViewController
 
@@ -218,47 +216,12 @@
     // 2.让登录界面可以跟用户交互
     self.view.userInteractionEnabled = YES;
     
-    
-    ConversationViewController* conversationController = [[ConversationViewController alloc] init];
-    conversationController.title = @"消息";
-
-    conversationController.tabBarItem.title = @"消息";
-    conversationController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChats"];
-    conversationController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
-    
-    UINavigationController *conversationNavigationController = [[UINavigationController alloc] initWithRootViewController:conversationController];
-    
-    ContactListTableViewController* contactViewController = [[ContactListTableViewController alloc] init];
-    contactViewController.title = @"通讯录";
-    
-    contactViewController.tabBarItem.title = @"通讯录";
-    contactViewController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconStatus"];
-    contactViewController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconStatusOff"];
-    
-    
-    MessageListViewController* msgController = [[MessageListViewController alloc] init];
-    msgController.title = @"对话";
-    msgController.tabBarItem.title = @"对话";
-    msgController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChats"];
-    msgController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
-    
-    
-    UINavigationController *messageListNavigationController = [[UINavigationController alloc] initWithRootViewController:msgController];
-    
-    SettingViewController* settingController = [[SettingViewController alloc] init];
-    settingController.title = @"设置";
-    settingController.tabBarItem.title = @"设置";
-    settingController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconSettingsOn"];
-    settingController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconSettingsOff"];
-    
-    UITabBarController *tabController = [[UITabBarController alloc] init] ;
-    tabController.viewControllers = [NSArray arrayWithObjects: conversationNavigationController,contactViewController,messageListNavigationController, settingController,nil];
-    
-    msgController.mainTabController = tabController;
-    
-    
-    
-    [[[UIApplication sharedApplication] delegate] window].rootViewController = tabController;
+    UITabBarController *tabController = [[MainTabBarController alloc] init];
+    UINavigationController *navCtl = [[UINavigationController alloc] initWithRootViewController:tabController];
+    navCtl.navigationBarHidden = YES;
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    delegate.tabBarController = tabController;
+    delegate.window.rootViewController = navCtl;
 }
 
 @end

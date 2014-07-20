@@ -7,10 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SettingViewController.h"
-#import "ConversationViewController.h"
-#import "MessageListViewController.h"
-#import "ContactListTableViewController.h"
+
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
 #import <QuartzCore/QuartzCore.h>
@@ -26,6 +23,6 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong,  nonatomic) UIViewController* viewController;
 @property (strong, nonatomic) UITabBarController* tabBarController;
+
 @end

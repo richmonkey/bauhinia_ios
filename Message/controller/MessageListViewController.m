@@ -57,15 +57,8 @@
 }
 
 -(void)dealloc{
-    
     [[NSNotificationCenter defaultCenter] removeObserver: self];
-    
 }
-
-- (void)viewWillAppear:(BOOL)animated{
-    self.mainTabController.tabBar.hidden = NO;
-}
-
 
 - (void)viewDidLoad{
     [super viewDidLoad];
@@ -93,7 +86,6 @@
     self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
 	self.searchDC.searchResultsDataSource = self;
 	self.searchDC.searchResultsDelegate = self;
-    
 }
 
 - (void)didReceiveMemoryWarning

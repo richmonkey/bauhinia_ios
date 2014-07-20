@@ -12,6 +12,7 @@
 #import "ConversationHeadButtonView.h"
 #import "MessageTableSectionHeaderView.h"
 #import "MessageShowThePotraitViewController.h"
+#import "AppDelegate.h"
 
 #define navBarHeadButtonSize 35
 
@@ -395,7 +396,7 @@
 
 - (void)navBarUserheadAction{
     NSLog(@"头像");
-    
+
     MessageShowThePotraitViewController *controller = [[MessageShowThePotraitViewController alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
     
@@ -526,9 +527,14 @@
     UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithCustomView: imgButton];
     self.navigationItem.rightBarButtonItem = navBarHeadButton;
     
-    //remove the leftbarButtonItem
-    self.navigationItem.leftBarButtonItem = nil;
+ 
+    
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
+                                                             style:UIBarButtonItemStyleDone
+                                                            target:self
+                                                            action:@selector(returnMainTableViewController)];
 
+    self.navigationItem.leftBarButtonItem = item;
 }
 
 -(void) setEditorNavigationButtons{
@@ -565,4 +571,9 @@
     return nil;
 }
 
+-(void)returnMainTableViewController {
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    delegate.tabBarController.selectedIndex = 2;
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
 @end

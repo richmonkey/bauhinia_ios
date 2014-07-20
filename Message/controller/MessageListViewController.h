@@ -30,6 +30,5 @@
 
 @property (nonatomic, weak) UITableViewCell *cellDisplayingMenuOptions;
 @property (nonatomic, weak) UITableViewCell *mostRecentlySelectedMoreCell;
-@property  (weak,nonatomic) UITabBarController *mainTabController;
 
 @end

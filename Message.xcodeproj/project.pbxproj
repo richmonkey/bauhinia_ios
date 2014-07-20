@@ -113,6 +113,7 @@
 		6D0D769D1967C1680058DECF /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769B1967C1680058DECF /* GroupDB.m */; };
 		6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769F1967C1850058DECF /* LevelDB.mm */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
+		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -314,6 +315,8 @@
 		6D0D769F1967C1850058DECF /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
 		6D0D76A7196910130058DECF /* IMContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMContact.h; sourceTree = "<group>"; };
 		6D0D76A8196910130058DECF /* IMContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMContact.m; sourceTree = "<group>"; };
+		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
+		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -368,6 +371,8 @@
 				217F2C2F196D62680064F478 /* MessageShowThePotraitViewController.m */,
 				2195CAF019726E40009E9888 /* CreateNewConversationViewController.h */,
 				2195CAF119726E40009E9888 /* CreateNewConversationViewController.m */,
+				6D776313197B6D6B0090D511 /* MainTabBarController.h */,
+				6D776314197B6D6B0090D511 /* MainTabBarController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -838,6 +843,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */,
+				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
 				2105651419698D9A008D3A83 /* MessageHeaderActionsView.m in Sources */,
 				6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */,
 				2173C66919738745004A88A5 /* SDWebImagePrefetcher.m in Sources */,
