@@ -87,7 +87,7 @@
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
     
     IMessage *msg = [self getImMessageById:msgLocalID];
-    msg.flags = msg.flags & MESSAGE_FLAG_ACK;
+    msg.flags = msg.flags|MESSAGE_FLAG_ACK;
     JSBubbleMessageCell* findCell = [self getMessageCellById:msgLocalID];
     [findCell setMessageState:msg];
     
@@ -96,7 +96,7 @@
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
     IMessage *msg = [self getImMessageById:msgLocalID];
-    msg.flags = msg.flags & MESSAGE_FLAG_PEER_ACK;
+    msg.flags = msg.flags|MESSAGE_FLAG_PEER_ACK;
     JSBubbleMessageCell* findCell = [self getMessageCellById:msgLocalID];
     [findCell setMessageState: msg];
 }
