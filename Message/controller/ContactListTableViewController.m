@@ -372,6 +372,7 @@
     
   
     ContactViewController *ctl = [[ContactViewController alloc] init];
+    ctl.hidesBottomBarWhenPushed = YES;
     ctl.contact = contact;
     [self.navigationController pushViewController:ctl animated:YES];
 }
