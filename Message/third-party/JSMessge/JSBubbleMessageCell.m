@@ -145,8 +145,9 @@
         }else{
             self.bubbleView.msgStateType =  MessageReceiveStateServer;
         }
+    }else{
+        self.bubbleView.msgStateType =  MessageReceiveStateNone;
     }
-    self.bubbleView.msgStateType =  MessageReceiveStateNone;
 }
 
 
