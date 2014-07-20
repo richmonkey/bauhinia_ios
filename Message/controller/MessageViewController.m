@@ -51,7 +51,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.headerArray = [NSMutableArray array];
     
     self.delegate = self;
     self.dataSource = self;
@@ -66,7 +65,6 @@
     }
     self.navigationItem.titleView = self.navigationBarButtonsView;
     
-    [self setTableViewCustomHeaderView];
     
     [self processConversationData];
     
@@ -264,8 +262,6 @@
         sectionView.sectionHeader.text = weekStr;
     }
     
-    [self.headerArray addObject: sectionView];
-    
     return sectionView;
 }
 
@@ -277,36 +273,12 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
 
-    for (UIView *header in self.headerArray) {
-        [header setHidden: NO];
-    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
-    [self updateHeaderArray];
     
 }
-
-- (void)updateHeaderArray {
-    
-    CGRect containerRect = CGRectMake(self.tableView.contentOffset.x, self.tableView.contentOffset.y,
-                                      self.tableView.frame.size.width, self.tableView.frame.size.height);
-    //hide the first sectionView
-    for (UIView *header in self.headerArray) {
-        if (CGRectIntersectsRect(header.frame, containerRect)) {
-            [header setHidden: YES];
-            break;
-        }
-    }
-    
-    if(CGRectIntersectsRect(self.tableHeaderView.frame, containerRect)){
-        for (UIView *header in self.headerArray) {
-            [header setHidden: NO];
-        }
-    }
-}
-
 
 
 #pragma mark - Messages view delegate
@@ -368,19 +340,8 @@
 
 - (JSInputBarStyle)inputBarStyle
 {
-    /*
-     JSInputBarStyleDefault,
-     JSInputBarStyleFlat
-     
-     */
     return JSInputBarStyleFlat;
 }
-
-//  Optional delegate method
-//  Required if using `JSMessagesViewTimestampPolicyCustom`
-//
-//  - (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath
-//
 
 #pragma mark - Messages view data source
 
@@ -420,10 +381,7 @@
 }
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-    //  if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
-    //    return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"];
-    //  }
-    return nil;
+   return nil;
     
 }
 
@@ -435,7 +393,6 @@
 	NSLog(@"Chose image!  Details:  %@", info);
     
     self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
-    //  [self.messageArray addObject:[NSDictionary dictionaryWithObject:self.willSendImage forKey:@"Image"]];
     [self.timestamps addObject:[NSDate date]];
     [self.tableView reloadData];
     [self scrollToBottomAnimated:YES];
@@ -513,49 +470,8 @@
         }
     }
 }
-#pragma mark - action
--(void) HeaderViewIntroductionAction{
-    
-}
--(void) HeaderViewDailingAction{
-    
-}
--(void) HeaderViewEditorAction{
-    
-    [self.tableHeaderView removeFromSuperview];
-    
-    [self.tableView setContentOffset:CGPointMake(0, self.tableHeaderView.frame.size.height) animated:YES];
-    
-    [self.tableView setEditing:YES animated:YES];
-    [self setEditorNavigationButtons];
-    
-}
-
--(void) deleteAllAction{
-    
-}
-
--(void) cancelDeleteAction{
-    [self setTableViewCustomHeaderView];
-    [self.tableView setContentOffset:CGPointMake(0, -self.tableHeaderView.frame.size.height) animated:YES];
-    [self.tableView setEditing:NO animated:YES];
-    [self setNormalNavigationButtons];
-}
 
 #pragma mark - function
-
--(void) setTableViewCustomHeaderView{
-    
-    self.tableHeaderView = [[[NSBundle mainBundle]loadNibNamed:@"MessageHeaderActionsView" owner:self options:nil] lastObject];
-    [self.tableHeaderView.editorBtn addTarget:self action:@selector(HeaderViewEditorAction) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.tableHeaderView.phoneingBtn addTarget:self action:@selector(HeaderViewDailingAction) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.tableHeaderView.introductionBtn addTarget:self action:@selector(HeaderViewIntroductionAction) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.tableView.tableHeaderView = self.tableHeaderView;
-    
-}
 
 -(void) setNormalNavigationButtons{
     
@@ -581,22 +497,6 @@
     self.navigationItem.leftBarButtonItem = item;
 }
 
--(void) setEditorNavigationButtons{
-    
-    UIBarButtonItem *editorDoneButton = [[UIBarButtonItem alloc] initWithTitle:@"全部删除"
-                                                                         style:UIBarButtonItemStyleDone
-                                                                        target:self
-                                                                        action:@selector(deleteAllAction)];
-    self.navigationItem.leftBarButtonItem = editorDoneButton;
-    UIBarButtonItem *deletAllButton = [[UIBarButtonItem alloc] initWithTitle:@"取消"
-                                                                       style:UIBarButtonItemStyleDone
-                                                                      target:self
-                                                                      action:@selector(cancelDeleteAction)];
-    
-    
-    self.navigationItem.rightBarButtonItem = deletAllButton;
-    
-}
 - (IMessage*) getImMessageById:(int)msgLocalID{
     
     for ( int sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
