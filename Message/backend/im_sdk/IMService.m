@@ -165,7 +165,7 @@
     m.timestamp = time(NULL);
     [[MessageDB instance] insertPeerMessage:m uid:im.sender];
     
-    NSLog(@"sender:%lld receiver:%lld content:%s", im.sender, im.receiver, [im.content UTF8String]);
+    NSLog(@"sender:%lld receiver:%lld content:%s localid:%d", im.sender, im.receiver, [im.content UTF8String], im.msgLocalID);
     Message *ack = [[Message alloc] init];
     ack.cmd = MSG_ACK;
     ack.body = [NSNumber numberWithInt:msg.seq];
@@ -373,6 +373,7 @@
     IMMessage *im = [[IMMessage alloc] init];
     im.sender = msg.sender;
     im.receiver = msg.receiver;
+    im.msgLocalID = msg.msgLocalID;
     im.content = msg.content.raw;
     m.body = im;
     BOOL r = [self sendMessage:m];

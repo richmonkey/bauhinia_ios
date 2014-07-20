@@ -114,6 +114,7 @@
         return nil;
     }
     IMessage *msg = [[IMessage alloc] init];
+    msg.msgLocalID = self.file.pos;
     char *p = buf + 8;
     msg.flags = readInt32(p);
     p += 4;

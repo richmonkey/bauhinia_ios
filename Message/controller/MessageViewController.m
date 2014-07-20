@@ -83,32 +83,25 @@
     [self.tableView reloadData];
     [self scrollToBottomAnimated:YES];
 }
+
 //服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
-    
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_ACK;
-    JSBubbleMessageCell* findCell = [self getMessageCellById:msgLocalID];
-    [findCell setMessageState:msg];
-    
+    [self reloadMessage:msgLocalID];
 }
 
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_PEER_ACK;
-    JSBubbleMessageCell* findCell = [self getMessageCellById:msgLocalID];
-    [findCell setMessageState: msg];
+    [self reloadMessage:msgLocalID];
 }
 
 -(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid{
-    
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags & MESSAGE_FLAG_FAILURE;
-    JSBubbleMessageCell* findCell = [self getMessageCellById:msgLocalID];
-    [findCell setMessageState:msg];
-
-
+    [self reloadMessage:msgLocalID];
 }
 
 -(void)onGroupMessage:(IMessage*)msg{
@@ -289,7 +282,7 @@
     content.raw = text;
     msg.content = content;
     msg.timestamp = time(NULL);
-    
+
     [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     [self insertMsgToMessageBlokArray: msg];
     BOOL r = [[IMService instance] sendPeerMessage:msg];
@@ -441,27 +434,13 @@
     IMessage *msg = [iterator next];
     while (msg) {
         curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
-        
-        if (lastDate == nil) {
-            //first
-            msgBlockArray  = [[NSMutableArray alloc] init];
-            [self.messageArray addObject: msgBlockArray];
-            [msgBlockArray addObject:msg];
-            
-            [self.timestamps addObject: curtDate];
-            lastDate = curtDate;
-            
-        }
         if ([PublicFunc isTheDay:lastDate sameToThatDay:curtDate]) {
-            //同一天
-            [msgBlockArray addObject:msg];
-        }else{
-            //新一天
-            msgBlockArray  = [[NSMutableArray alloc] init];
-            [self.messageArray addObject: msgBlockArray];
-            [msgBlockArray addObject:msg];
+            [msgBlockArray insertObject:msg atIndex:0];
+        } else {
+            msgBlockArray  = [NSMutableArray arrayWithObject:msg];
             
-            [self.timestamps addObject: curtDate];
+            [self.messageArray insertObject:msgBlockArray atIndex:0];
+            [self.timestamps insertObject:curtDate atIndex:0];
             lastDate = curtDate;
         }
         msg = [iterator next];
@@ -469,6 +448,7 @@
 }
 
 -(void) insertMsgToMessageBlokArray:(IMessage*)msg{
+    NSAssert(msg.msgLocalID, @"");
     NSDate *curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
     NSMutableArray *msgBlockArray = nil;
     //收到第一个消息
@@ -587,35 +567,32 @@
             
             IMessage *tmpMsg = (IMessage*) [rowArrays objectAtIndex:rowindex];
             if (tmpMsg.msgLocalID == msgLocalID) {
-                    return tmpMsg;
+                return tmpMsg;
             }
         }
     }
     return nil;
 }
 
-- (JSBubbleMessageCell*) getMessageCellById:(int)msgLocalID{
+
+- (void) reloadMessage:(int)msgLocalID{
     
     for ( int sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
         
         NSMutableArray *rowArrays = [self.messageArray objectAtIndex:sectionIndex];
         for (int rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
-        
+            
             IMMessage *tmpMsg = [rowArrays objectAtIndex:rowindex];
             if (tmpMsg.msgLocalID == msgLocalID) {
                 
-               NSIndexPath *findpath = [NSIndexPath indexPathForRow:sectionIndex inSection: rowindex];
-                UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:findpath];
-                if (cell) {
-                    if ([cell isKindOfClass:[JSBubbleMessageCell class]]) {
-                        return (JSBubbleMessageCell*)cell;
-                    }
-                }
+                NSIndexPath *findpath = [NSIndexPath indexPathForRow:rowindex inSection: sectionIndex];
+                NSArray *array = [NSArray arrayWithObject:findpath];
+                [self.tableView reloadRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
             }
         }
     }
-    return nil;
 }
+
 
 -(void)returnMainTableViewController {
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];

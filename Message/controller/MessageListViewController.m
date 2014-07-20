@@ -368,6 +368,10 @@
     
 }
 
+-(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid {
+    
+}
+
 -(void)onGroupMessage:(IMessage*)msg {
     
 }
