@@ -55,12 +55,6 @@
     
     self.delegate = self;
     self.dataSource = self;
-//    if (!self.currentConversation.name) {
-//        
-//        self.title = @"消息";
-//    }else{
-//        self.title = self.currentConversation.name;
-//    }
     [self setNormalNavigationButtons];
     
     self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
@@ -144,7 +138,7 @@
   
     [self.navigationBarButtonsView.conectInformationLabel setText:@"对方正在输入"];
   
-    self.inputStatusTimer = [NSTimer scheduledTimerWithTimeInterval:3
+    self.inputStatusTimer = [NSTimer scheduledTimerWithTimeInterval: 10
                                            target:self
                                          selector:@selector(changeStatusBack)
                                          userInfo:nil
@@ -187,6 +181,7 @@
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView{
+    [super textViewDidChange:textView];
     if((time(NULL) -  self.inputTimestamp) > 10){
         self.inputTimestamp = time(NULL);
         
