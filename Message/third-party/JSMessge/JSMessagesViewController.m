@@ -269,13 +269,13 @@
 - (void)scrollToBottomAnimated:(BOOL)animated
 {
     
-    NSInteger rows = [self.tableView numberOfRowsInSection:0];
-    
-    if(rows > 1) {
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rows - 1 inSection:0]
-                              atScrollPosition:UITableViewScrollPositionBottom
-                                      animated:animated];
-    }
+//    NSInteger rows = [self.tableView numberOfRowsInSection:0];
+//    
+//    if(rows > 1) {
+//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rows - 1 inSection:0]
+//                              atScrollPosition:UITableViewScrollPositionBottom
+//                                      animated:animated];
+//    }
     
 }
 
