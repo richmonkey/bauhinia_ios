@@ -46,6 +46,7 @@ typedef enum {
 @property (assign, nonatomic) BOOL selectedToShowCopyMenu;
 @property (nonatomic) MessageReceiveStateType msgStateType;
 @property (nonatomic,strong) UIImageView *receiveStateImgSign;
+@property (nonatomic) CGRect contentFrame;
 
 #pragma mark - Initialization
 - (id)initWithFrame:(CGRect)rect

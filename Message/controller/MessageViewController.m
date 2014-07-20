@@ -63,7 +63,7 @@
     self.navigationBarButtonsView.center = self.navigationController.navigationBar.center;
     [self setTableViewCustomHeaderView];
     
-    [self setBackgroundColor: [UIColor grayColor]];
+//    [self setBackgroundColor: [UIColor grayColor]];
     
     [self processConversationData];
     

@@ -36,6 +36,7 @@
 #pragma mark - Initialization
 - (void)setup
 {
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     if([self.view isKindOfClass:[UIScrollView class]]) {
         // fix for ipad modal form presentations
         ((UIScrollView *)self.view).scrollEnabled = NO;
@@ -49,6 +50,12 @@
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    
+    UIColor *bgColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"bakground"]];
+    [self.view setBackgroundColor:bgColor];
+    
 	[self.view addSubview:self.tableView]; 
 	
 	UIButton* mediaButton = nil;
@@ -72,7 +79,7 @@
     self.inputToolBarView = [[JSMessageInputView alloc] initWithFrame:inputFrame delegate:self];
     
     // TODO: refactor
-    self.inputToolBarView.textView.dismissivePanGestureRecognizer = self.tableView.panGestureRecognizer;
+ //   self.inputToolBarView.textView.dismissivePanGestureRecognizer = self.tableView.panGestureRecognizer;
     self.inputToolBarView.textView.keyboardDelegate = self;
     
     self.inputToolBarView.textView.placeHolder = @"说点什么呢？";
@@ -105,7 +112,7 @@
 		self.inputToolBarView.textView.frame = frame;
 	}
 	
-    [self setBackgroundColor:[UIColor messagesBackgroundColor]];
+//    [self setBackgroundColor:[UIColor messagesBackgroundColor]];
 }
 
 - (UIButton *)sendButton
@@ -229,7 +236,7 @@
 		[cell setMedia:[self.dataSource dataForRowAtIndexPath:indexPath]];
     
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
-    [cell setBackgroundColor:tableView.backgroundColor];
+    [cell setBackgroundColor:[UIColor clearColor]];
     return cell;
 }
 
@@ -251,12 +258,12 @@
     [self scrollToBottomAnimated:YES];
 }
 
-- (void)setBackgroundColor:(UIColor *)color
-{
-    self.view.backgroundColor = color;
-    self.tableView.backgroundColor = color;
-    self.tableView.separatorColor = color;
-}
+//- (void)setBackgroundColor:(UIColor *)color
+//{
+//    self.view.backgroundColor = color;
+//    self.tableView.backgroundColor = color;
+//    self.tableView.separatorColor = color;
+//}
 
 - (void)scrollToBottomAnimated:(BOOL)animated
 {

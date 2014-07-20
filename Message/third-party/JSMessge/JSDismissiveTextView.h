@@ -63,6 +63,6 @@
 /**
  *  The pan gesture recognizer for the text view.
  */
-@property (strong, nonatomic) UIPanGestureRecognizer *dismissivePanGestureRecognizer;
+//@property (strong, nonatomic) UIPanGestureRecognizer *dismissivePanGestureRecognizer;
 
 @end

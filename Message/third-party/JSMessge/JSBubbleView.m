@@ -220,7 +220,11 @@ CGFloat const kJSAvatarSize = 50.0f;
             break;
     }
     
-    CGFloat imgX = frame.size.width - msgSignImg.size.width - 15;
+    CGRect bubbleFrame = [self bubbleFrame];
+    
+    CGFloat imgX = bubbleFrame.origin.x + bubbleFrame.size.width - msgSignImg.size.width;
+    imgX = self.type == JSBubbleMessageTypeOutgoing ?(imgX - 15):(imgX - 5);
+   
     CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
     
     [msgSignImg drawInRect:msgStateSignRect];
