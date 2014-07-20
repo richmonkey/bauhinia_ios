@@ -123,12 +123,14 @@
 -(void)handleClose {
     MessageDB *db = [MessageDB instance];
     
-    for (IMessage *msg in self.peerMessages) {
+    for (NSNumber *seq in self.peerMessages) {
+        IMessage *msg = [self.peerMessages objectForKey:seq];
         [db markPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
         [self publishPeerMessageFailure:msg];
     }
     
-    for (IMessage *msg in self.groupMessages) {
+    for (NSNumber *seq in self.groupMessages) {
+        IMessage *msg = [self.peerMessages objectForKey:seq];
         [db markGroupMessageFailure:msg.msgLocalID gid:msg.receiver];
         [self publishGroupMessageFailure:msg];
     }
