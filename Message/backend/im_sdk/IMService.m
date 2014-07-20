@@ -215,7 +215,7 @@
 
     [db acknowledgePeerMessageFromRemote:ack.msgLocalID uid:ack.sender];
     for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerMessageACK:ack.msgLocalID uid:ack.sender];
+        [ob onPeerMessageRemoteACK:ack.msgLocalID uid:ack.sender];
     }
 }
 
