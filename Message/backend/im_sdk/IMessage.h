@@ -33,6 +33,7 @@
 @property(nonatomic) int timestamp;
 @property(nonatomic, readonly) BOOL isACK;
 @property(nonatomic, readonly) BOOL isPeerACK;
+@property(nonatomic, readonly) BOOL isFailure;
 @end
 
 

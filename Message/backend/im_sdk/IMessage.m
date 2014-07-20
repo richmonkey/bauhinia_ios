@@ -28,6 +28,10 @@
     return self.flags&MESSAGE_FLAG_PEER_ACK;
 }
 
+-(BOOL)isFailure {
+    return self.flags&MESSAGE_FLAG_FAILURE;
+}
+
 @end
 
 @implementation Conversation
