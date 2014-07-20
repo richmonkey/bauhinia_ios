@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "IMContact.h"
 
 @interface ContactViewController : UIViewController
-
+@property(nonatomic)IMContact *contact;
 @end
