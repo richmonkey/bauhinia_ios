@@ -14,7 +14,7 @@
 #import "MessageShowThePotraitViewController.h"
 #import "AppDelegate.h"
 #import "UserDB.h"
-
+#import "NSString+JSMessagesView.h"
 
 
 #define navBarHeadButtonSize 35
@@ -71,6 +71,8 @@
     
     
     [[IMService instance] addMessageObserver:self];
+    
+    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -149,6 +151,9 @@
     
 }
 
+
+
+
 -(void)changeStatusBack{
     
     [self.inputStatusTimer invalidate];
@@ -166,18 +171,13 @@
 -(void)onConnectState:(int)state{
     
     if (state == STATE_CONNECTING) {
-        UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        aiView.hidesWhenStopped = NO;
-        self.navigationItem.titleView = aiView;
+        self.inputToolBarView.sendButton.enabled = NO;
     }else if(state == STATE_CONNECTED){
-       self.navigationItem.titleView = self.navigationBarButtonsView;
-        [[self sendButton] setUserInteractionEnabled:YES];
+       self.inputToolBarView.sendButton.enabled = YES;
     }else if(state == STATE_CONNECTFAIL){
-        
-        
-    }else{
-        
-        
+        self.inputToolBarView.sendButton.enabled = NO;
+    }else if(state == STATE_UNCONNECTED){
+        self.inputToolBarView.sendButton.enabled = NO;
     }
 }
 
@@ -185,9 +185,12 @@
 
 - (void)textViewDidChange:(UITextView *)textView{
     [super textViewDidChange:textView];
+    
+    self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0) && ([[IMService instance] connectState] == STATE_CONNECTED);
+    
     if((time(NULL) -  self.inputTimestamp) > 10){
-        self.inputTimestamp = time(NULL);
         
+        self.inputTimestamp = time(NULL);
         MessageInputing *inputing = [[MessageInputing alloc ] init];
         inputing.sender = [UserPresent instance].uid;
         inputing.receiver =self.currentConversation.cid;
@@ -287,7 +290,8 @@
 
 
 #pragma mark - Messages view delegate
-- (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
+
+- (void) sendPressed:(UIButton *)sender withText:(NSString *)text {
     
     IMessage *msg = [[IMessage alloc] init];
     

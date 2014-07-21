@@ -360,8 +360,7 @@
         
         self.previousTextViewContentHeight = MIN(textViewContentHeight, maxHeight);
     }
-    
-    self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0);
+
 }
 
 #pragma mark - Keyboard notifications
