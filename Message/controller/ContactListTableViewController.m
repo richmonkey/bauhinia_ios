@@ -32,11 +32,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tabBarController.navigationItem.title = @"所有联系人";
-    
-    const int NAV_BAR_HEIGHT = 44;
-    int top = [UIApplication sharedApplication].statusBarFrame.size.height+NAV_BAR_HEIGHT;
 	
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, top, 320.0f, 44.0f)];
+	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,64, 320.0f, 44.0f)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
@@ -54,7 +51,7 @@
 	self.tableView.showsVerticalScrollIndicator = YES;
     self.tableView.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
     
-    self.tableView.frame = CGRectMake(0, top+44.0, self.view.frame.size.width, self.view.frame.size.height - top);
+    self.tableView.frame = CGRectMake(0, 108, self.view.frame.size.width, self.view.frame.size.height - 108);
 	[self.view addSubview:self.tableView];
 
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -307,21 +304,43 @@
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar {
-    [UIView beginAnimations:nil context:nil];
-    int top = [UIApplication sharedApplication].statusBarFrame.size.height;
-    self.searchBar.frame = CGRectMake(0, top, self.view.frame.size.width, 44.0);
-    self.navigationController.navigationBarHidden = YES;
-    [UIView commitAnimations];
+    //move the search bar up to the correct location eg
+    [UIView animateWithDuration:.1
+                     animations:^{
+                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
+                                                           64,
+                                                           self.tableView.frame.size.width,self.tableView.frame.size.height + 44);
+                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
+                                                      20,
+                                                      self.searchBar.frame.size.width,
+                                                      self.searchBar.frame.size.height);
+
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
     [self.searchDisplayController setActive:YES animated:YES];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    //move the search bar down to the correct location eg
+    [UIView animateWithDuration:.1
+                     animations:^{
+                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
+                                                           108,
+                                                           self.tableView.frame.size.width,self.tableView.frame.size.height - 44);
+                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
+                                                      64,
+                                                      self.searchBar.frame.size.width,
+                                                      self.searchBar.frame.size.height);
+
+                     }
+                     completion:^(BOOL finished){
+                     }];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	[self.searchBar setText:@""];
-    [UIView beginAnimations:nil context:nil];
-    int top = [UIApplication sharedApplication].statusBarFrame.size.height+self.navigationController.navigationBar.frame.size.height;
-	self.searchBar.frame = CGRectMake(0.0f, top, 320.0f, 44.0f);
-    self.navigationController.navigationBarHidden = NO;
-    [UIView commitAnimations];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

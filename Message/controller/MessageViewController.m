@@ -100,9 +100,14 @@
     content.raw = im.content;
     m.content = content;
     m.timestamp = time(NULL);
-    [self insertMsgToMessageBlokArray: m];
     
-    [self.tableView reloadData];
+    NSIndexPath *indexPath = [self insertMsgToMessageBlokArray: m];
+    
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    [indexPaths addObject: indexPath];
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
     [self scrollToBottomAnimated:YES];
 }
 
@@ -188,6 +193,21 @@
     }else if(state == STATE_UNCONNECTED){
         self.inputToolBarView.sendButton.enabled = NO;
     }
+}
+#pragma mark - UItableView cell process
+
+- (void)scrollToBottomAnimated:(BOOL)animated
+{
+    if([self.messageArray count] == 0){
+        return;
+    }
+    
+    int lastSection = [self.messageArray count] - 1;
+    NSMutableArray *array = [self.messageArray objectAtIndex: lastSection];
+    int lastRow = [array count] - 1;
+    
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:lastRow inSection:lastSection] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+    
 }
 
 #pragma mark - UITextViewDelegate
@@ -327,7 +347,13 @@
     msg.timestamp = time(NULL);
 
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    [self insertMsgToMessageBlokArray: msg];
+    NSIndexPath *indexPath = [self insertMsgToMessageBlokArray: msg];
+    
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    [indexPaths addObject: indexPath];
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
     
     [self sendMessage:msg];
     
@@ -475,8 +501,11 @@
     }
 }
 
--(void) insertMsgToMessageBlokArray:(IMessage*)msg{
+-(NSIndexPath *) insertMsgToMessageBlokArray:(IMessage*)msg{
     NSAssert(msg.msgLocalID, @"");
+    
+    
+    
     NSDate *curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
     NSMutableArray *msgBlockArray = nil;
     //收到第一个消息
@@ -487,18 +516,26 @@
         [msgBlockArray addObject:msg];
         
         [self.timestamps addObject: curtDate];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        return indexPath;
     }else{
         NSDate *lastDate = [self.timestamps lastObject];
         if ([PublicFunc isTheDay: lastDate sameToThatDay: curtDate]) {
             //same day
             msgBlockArray = [self.messageArray lastObject];
             [msgBlockArray addObject:msg];
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[msgBlockArray count] - 1 inSection: [self.messageArray count] - 1];
+            return indexPath;
         }else{
             //next day
             msgBlockArray = [[NSMutableArray alloc] init];
             [msgBlockArray addObject: msg];
             [self.messageArray addObject: msgBlockArray];
             [self.timestamps addObject:curtDate];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[msgBlockArray count] - 1 inSection: [self.messageArray count] - 1];
+            return indexPath;
         }
     }
 }
