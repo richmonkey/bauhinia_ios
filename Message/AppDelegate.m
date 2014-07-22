@@ -16,6 +16,8 @@
 #import "UserPresent.h"
 #import "Config.h"
 #import "MainTabBarController.h"
+#import "PeerMessageHandler.h"
+#import "GroupMessageHandler.h"
 
 @implementation AppDelegate
 
@@ -24,6 +26,8 @@
     //配置im server地址
     [IMService instance].host = [Config instance].host;
     [IMService instance].port = [Config instance].port;
+    [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
+    [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     application.statusBarHidden = NO;

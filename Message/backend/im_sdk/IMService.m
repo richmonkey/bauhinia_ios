@@ -9,8 +9,6 @@
 #import "IMService.h"
 #import "AsyncTCP.h"
 #import "Message.h"
-#import "IMessage.h"
-#import "MessageDB.h"
 #import "util.h"
 
 #define HEARTBEAT (10ull*NSEC_PER_SEC)
@@ -122,18 +120,16 @@
 -(void)handleClose {
     self.connectState = STATE_UNCONNECTED;
     [self publishConnectState:STATE_UNCONNECTED];
-
-    MessageDB *db = [MessageDB instance];
     
     for (NSNumber *seq in self.peerMessages) {
-        IMessage *msg = [self.peerMessages objectForKey:seq];
-        [db markPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
+        IMMessage *msg = [self.peerMessages objectForKey:seq];
+        [self.peerMessageHandler handleMessageFailure:msg.msgLocalID uid:msg.receiver];
         [self publishPeerMessageFailure:msg];
     }
     
     for (NSNumber *seq in self.groupMessages) {
-        IMessage *msg = [self.peerMessages objectForKey:seq];
-        [db markGroupMessageFailure:msg.msgLocalID gid:msg.receiver];
+        IMMessage *msg = [self.peerMessages objectForKey:seq];
+        [self.groupMessageHandler handleMessageFailure:msg.msgLocalID uid:msg.receiver];
         [self publishGroupMessageFailure:msg];
     }
     [self.peerMessages removeAllObjects];
@@ -143,17 +139,17 @@
 
 -(void)handleACK:(Message*)msg {
     NSNumber *seq = (NSNumber*)msg.body;
-    IMessage *m = (IMessage*)[self.peerMessages objectForKey:seq];
-    IMessage *m2 = (IMessage*)[self.groupMessages objectForKey:seq];
+    IMMessage *m = (IMMessage*)[self.peerMessages objectForKey:seq];
+    IMMessage *m2 = (IMMessage*)[self.groupMessages objectForKey:seq];
     if (!m && !m2) {
         return;
     }
     if (m) {
-        [[MessageDB instance] acknowledgePeerMessage:m.msgLocalID uid:m.receiver];
+        [self.peerMessageHandler handleMessageACK:m.msgLocalID uid:m.receiver];
         [self.peerMessages removeObjectForKey:seq];
         [self publishPeerMessageACK:m.msgLocalID uid:m.receiver];
     } else if (m2) {
-        [[MessageDB instance] acknowledgeGroupMessage:m2.msgLocalID gid:m2.receiver];
+        [self.groupMessageHandler handleMessageACK:m2.msgLocalID uid:m2.receiver];
         [self.groupMessages removeObjectForKey:seq];
         [self publishGroupMessageACK:m2.msgLocalID gid:m2.receiver];
     }
@@ -161,40 +157,25 @@
 
 -(void)handleIMMessage:(Message*)msg {
     IMMessage *im = (IMMessage*)msg.body;
-    IMessage *m = [[IMessage alloc] init];
-    m.sender = im.sender;
-    m.receiver = im.receiver;
-    MessageContent *content = [[MessageContent alloc] init];
-    content.raw = im.content;
-    m.content = content;
-    m.timestamp = time(NULL);
-    [[MessageDB instance] insertPeerMessage:m uid:im.sender];
+    [self.peerMessageHandler handleMessage:im];
+    NSLog(@"sender:%lld receiver:%lld content:%s", im.sender, im.receiver, [im.content UTF8String]);
     
-    NSLog(@"sender:%lld receiver:%lld content:%s localid:%d", im.sender, im.receiver, [im.content UTF8String], im.msgLocalID);
     Message *ack = [[Message alloc] init];
     ack.cmd = MSG_ACK;
     ack.body = [NSNumber numberWithInt:msg.seq];
     [self sendMessage:ack];
-    [self publishPeerMessage:m];
+    [self publishPeerMessage:im];
 }
 
 -(void)handleGroupIMMessage:(Message*)msg {
     IMMessage *im = (IMMessage*)msg.body;
-    IMessage *m = [[IMessage alloc] init];
-    m.sender = im.sender;
-    m.receiver = im.receiver;
-    MessageContent *content = [[MessageContent alloc] init];
-    content.raw = im.content;
-    m.content = content;
-    m.timestamp = time(NULL);
-    [[MessageDB instance] insertGroupMessage:m];
-    
+    [self.groupMessageHandler handleMessage:im];
     NSLog(@"sender:%lld receiver:%lld content:%s", im.sender, im.receiver, [im.content UTF8String]);
     Message *ack = [[Message alloc] init];
     ack.cmd = MSG_ACK;
     ack.body = [NSNumber numberWithInt:msg.seq];
     [self sendMessage:ack];
-    [self publishGroupMessage:m];
+    [self publishGroupMessage:im];
 }
 
 -(void)handleAuthStatus:(Message*)msg {
@@ -216,9 +197,8 @@
 
 -(void)handlePeerACK:(Message*)msg {
     MessagePeerACK *ack = (MessagePeerACK*)msg.body;
-    MessageDB *db = [MessageDB instance];
-
-    [db acknowledgePeerMessageFromRemote:ack.msgLocalID uid:ack.sender];
+    [self.peerMessageHandler handleMessageRemoteACK:ack.msgLocalID uid:ack.sender];
+    
     for (id<MessageObserver> ob in self.observers) {
         [ob onPeerMessageRemoteACK:ack.msgLocalID uid:ack.sender];
     }
@@ -231,19 +211,7 @@
     }
 }
 
--(void)publishPeerMessageFailure:(IMessage*)msg {
-    for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
-    }
-}
-
--(void)publishGroupMessageFailure:(IMessage*)msg {
-    for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
-    }
-}
-
--(void)publishPeerMessage:(IMessage*)msg {
+-(void)publishPeerMessage:(IMMessage*)msg {
     for (id<MessageObserver> ob in self.observers) {
         [ob onPeerMessage:msg];
     }
@@ -255,7 +223,13 @@
     }
 }
 
--(void)publishGroupMessage:(IMessage*)msg {
+-(void)publishPeerMessageFailure:(IMMessage*)msg {
+    for (id<MessageObserver> ob in self.observers) {
+        [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
+    }
+}
+
+-(void)publishGroupMessage:(IMMessage*)msg {
     for (id<MessageObserver> ob in self.observers) {
         [ob onGroupMessage:msg];
     }
@@ -264,6 +238,12 @@
 -(void)publishGroupMessageACK:(int)msgLocalID gid:(int64_t)gid {
     for (id<MessageObserver> ob in self.observers) {
         [ob onGroupMessageACK:msgLocalID gid:gid];
+    }
+}
+
+-(void)publishGroupMessageFailure:(IMMessage*)msg {
+    for (id<MessageObserver> ob in self.observers) {
+        [ob onGroupMessageFailure:msg.msgLocalID gid:msg.receiver];
     }
 }
 
@@ -375,35 +355,25 @@
     [self.observers removeObject:ob];
 }
 
--(BOOL)sendPeerMessage:(IMessage *)msg {
+-(BOOL)sendPeerMessage:(IMMessage *)im {
     Message *m = [[Message alloc] init];
     m.cmd = MSG_IM;
-    IMMessage *im = [[IMMessage alloc] init];
-    im.sender = msg.sender;
-    im.receiver = msg.receiver;
-    im.msgLocalID = msg.msgLocalID;
-    im.content = msg.content.raw;
     m.body = im;
     BOOL r = [self sendMessage:m];
 
     if (!r) return r;
-    [self.peerMessages setObject:msg forKey:[NSNumber numberWithInt:m.seq]];
+    [self.peerMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
     return r;
 }
 
--(BOOL)sendGroupMessage:(IMessage *)msg {
+-(BOOL)sendGroupMessage:(IMMessage *)im {
     Message *m = [[Message alloc] init];
     m.cmd = MSG_GROUP_IM;
-    IMMessage *im = [[IMMessage alloc] init];
-    im.sender = msg.sender;
-    im.receiver = msg.receiver;
-    im.msgLocalID = msg.msgLocalID;
-    im.content = msg.content.raw;
     m.body = im;
     BOOL r = [self sendMessage:m];
     
     if (!r) return r;
-    [self.groupMessages setObject:msg forKey:[NSNumber numberWithInt:m.seq]];
+    [self.groupMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
     return r;
 }
 

@@ -366,12 +366,21 @@
 
     
 }
--(void)onPeerMessage:(IMessage*)msg {
-    MessageContent *c = msg.content;
+-(void)onPeerMessage:(IMMessage*)im {
+    IMessage *m = [[IMessage alloc] init];
+    m.sender = im.sender;
+    m.receiver = im.receiver;
+    m.msgLocalID = im.msgLocalID;
+    MessageContent *content = [[MessageContent alloc] init];
+    content.raw = im.content;
+    m.content = content;
+    m.timestamp = time(NULL);
+    
+    MessageContent *c = m.content;
     if (c.type == MESSAGE_TEXT) {
         IMLog(@"message:%@", c.text);
     }
-    [self onNewMessage:msg cid:msg.sender];
+    [self onNewMessage:m cid:m.sender];
 }
 
 //服务器ack
@@ -387,7 +396,7 @@
     
 }
 
--(void)onGroupMessage:(IMessage*)msg {
+-(void)onGroupMessage:(IMMessage*)msg {
     
 }
 
