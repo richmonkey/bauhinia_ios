@@ -10,7 +10,6 @@
 
 #import "IMService.h"
 #import "IMessage.h"
-#import "MessageDB.h"
 #import "LoginViewController.h"
 #import "Token.h"
 #import "UserPresent.h"

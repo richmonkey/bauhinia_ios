@@ -15,7 +15,7 @@
 #import "AppDelegate.h"
 #import "UserDB.h"
 #import "NSString+JSMessagesView.h"
-
+#import "PeerMessageDB.h"
 
 #define navBarHeadButtonSize 35
 
@@ -326,7 +326,7 @@
     msg.content = content;
     msg.timestamp = time(NULL);
 
-    [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     [self insertMsgToMessageBlokArray: msg];
     
     [self sendMessage:msg];
@@ -458,7 +458,7 @@
     NSDate *lastDate = nil;
     NSDate *curtDate = nil;
     NSMutableArray *msgBlockArray = nil;
-    IMessageIterator* iterator =  [[MessageDB instance] newPeerMessageIterator: self.currentConversation.cid];
+    id<IMessageIterator> iterator =  [[PeerMessageDB instance] newPeerMessageIterator: self.currentConversation.cid];
     IMessage *msg = [iterator next];
     while (msg) {
         curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];

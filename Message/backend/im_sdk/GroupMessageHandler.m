@@ -9,7 +9,7 @@
 #import "GroupMessageHandler.h"
 #import "IMessage.h"
 #import "Message.h"
-#import "MessageDB.h"
+#import "GroupMessageDB.h"
 
 @implementation GroupMessageHandler
 +(GroupMessageHandler*)instance {
@@ -31,7 +31,7 @@
     content.raw = im.content;
     m.content = content;
     m.timestamp = time(NULL);
-    BOOL r = [[MessageDB instance] insertGroupMessage:m];
+    BOOL r = [[GroupMessageDB instance] insertGroupMessage:m];
     if (r) {
         im.msgLocalID = m.msgLocalID;
     }
@@ -39,9 +39,9 @@
 }
 
 -(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid {
-    return [[MessageDB instance] acknowledgeGroupMessage:msgLocalID gid:uid];
+    return [[GroupMessageDB instance] acknowledgeGroupMessage:msgLocalID gid:uid];
 }
 -(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid {
-    return [[MessageDB instance] markGroupMessageFailure:msgLocalID gid:uid];
+    return [[GroupMessageDB instance] markGroupMessageFailure:msgLocalID gid:uid];
 }
 @end

@@ -9,6 +9,7 @@
 #import "PeerMessageHandler.h"
 #import "MessageDB.h"
 #import "Message.h"
+#import "PeerMessageDB.h"
 
 @implementation PeerMessageHandler
 +(PeerMessageHandler*)instance {
@@ -31,7 +32,7 @@
     content.raw = im.content;
     m.content = content;
     m.timestamp = time(NULL);
-    BOOL r = [[MessageDB instance] insertPeerMessage:m uid:im.sender];
+    BOOL r = [[PeerMessageDB instance] insertPeerMessage:m uid:im.sender];
     if (r) {
         msg.msgLocalID = m.msgLocalID;
     }
@@ -39,16 +40,16 @@
 }
 
 -(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid {
-    return [[MessageDB instance] acknowledgePeerMessage:msgLocalID uid:uid];
+    return [[PeerMessageDB instance] acknowledgePeerMessage:msgLocalID uid:uid];
 }
 
 -(BOOL)handleMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid {
-    MessageDB *db = [MessageDB instance];
+    PeerMessageDB *db = [PeerMessageDB instance];
     return [db acknowledgePeerMessageFromRemote:msgLocalID uid:uid];
 }
 
 -(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid {
-    MessageDB *db = [MessageDB instance];
+    PeerMessageDB *db = [PeerMessageDB instance];
     return [db markPeerMessageFailure:msgLocalID uid:uid];
 }
 

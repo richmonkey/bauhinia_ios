@@ -1,3 +1,4 @@
+
 //
 //  Model.h
 //  im
@@ -10,32 +11,22 @@
 #import "IMessage.h"
 
 //由近到远遍历消息
-@interface IMessageIterator : NSObject
+@protocol IMessageIterator
 -(IMessage*)next;
 @end
 
-@interface ConversationIterator : NSObject
+@protocol ConversationIterator
 -(Conversation*)next;
 @end
 
+@class ReverseFile;
 
 @interface MessageDB : NSObject
-+(MessageDB*)instance;
-
--(IMessageIterator*)newPeerMessageIterator:(int64_t)uid;
--(ConversationIterator*)newConversationIterator;
-
--(BOOL)insertPeerMessage:(IMessage*)msg uid:(int64_t)uid;
--(BOOL)removePeerMessage:(int)msgLocalID uid:(int64_t)uid;
--(BOOL)clearConversation:(int64_t)uid;
--(BOOL)acknowledgePeerMessage:(int)msgLocalID uid:(int64_t)uid;
--(BOOL)acknowledgePeerMessageFromRemote:(int)msgLocalID uid:(int64_t)uid;
--(BOOL)markPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
-
--(BOOL)insertGroupMessage:(IMessage*)msg;
--(BOOL)removeGroupMessage:(int)msgLocalID gid:(int64_t)gid;
--(BOOL)clearGroupConversation:(int64_t)gid;
--(BOOL)acknowledgeGroupMessage:(int)msgLocalID gid:(int64_t)gid;
--(BOOL)markGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid;
-
++(NSString*)getDocumentPath;
++(BOOL)writeHeader:(int)fd;
++(BOOL)checkHeader:(int)fd;
++(BOOL)writeMessage:(IMessage*)msg fd:(int)fd;
++(BOOL)insertIMessage:(IMessage*)msg path:(NSString*)path;
++(BOOL)addFlag:(int)msgLocalID path:(NSString*)path flag:(int)flag;
++(IMessage*)readMessage:(ReverseFile*)file;
 @end

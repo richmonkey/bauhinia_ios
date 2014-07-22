@@ -8,7 +8,7 @@
 
 #import "MessageListViewController.h"
 #import "MessageViewController.h"
-#import "MessageDB.h"
+#import "PeerMessageDB.h"
 #import "IMessage.h"
 
 #import "MessageGroupConversationCell.h"
@@ -36,7 +36,7 @@
     if (self) {
         self.conversations = [[NSMutableArray alloc] init];
         UserDB *db = [UserDB instance];
-        ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
+        id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
         
         Conversation * conversation = [iterator next];
         while (conversation) {
