@@ -101,11 +101,6 @@
 
 -(void)onClose {
     NSLog(@"im service on close");
-    [self handleClose];
-    
-    self.connectState = STATE_UNCONNECTED;
-    [self publishConnectState:STATE_UNCONNECTED];
-
     self.tcp = nil;
     if (self.stopped) return;
     
@@ -125,6 +120,9 @@
 }
 
 -(void)handleClose {
+    self.connectState = STATE_UNCONNECTED;
+    [self publishConnectState:STATE_UNCONNECTED];
+
     MessageDB *db = [MessageDB instance];
     
     for (NSNumber *seq in self.peerMessages) {
@@ -138,6 +136,9 @@
         [db markGroupMessageFailure:msg.msgLocalID gid:msg.receiver];
         [self publishGroupMessageFailure:msg];
     }
+    [self.peerMessages removeAllObjects];
+    [self.groupMessages removeAllObjects];
+    [self close];
 }
 
 -(void)handleACK:(Message*)msg {
@@ -318,16 +319,16 @@
 -(void)onRead:(NSData*)data error:(int)err {
     if (err) {
         NSLog(@"tcp read err");
-        [self close];
+        [self handleClose];
         return;
     } else if (!data) {
         NSLog(@"tcp closed");
-        [self close];
+        [self handleClose];
         return;
     } else {
         BOOL r = [self handleData:data];
         if (!r) {
-            [self close];
+            [self handleClose];
         }
     }
 }
@@ -407,7 +408,7 @@
 }
 
 -(BOOL)sendMessage:(Message *)msg {
-    if (!self.tcp) return NO;
+    if (!self.tcp || self.connectState != STATE_CONNECTED) return NO;
     self.seq = self.seq + 1;
     msg.seq = self.seq;
 
