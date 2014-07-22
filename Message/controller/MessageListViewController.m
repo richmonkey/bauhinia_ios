@@ -12,7 +12,6 @@
 #import "IMessage.h"
 
 #import "MessageGroupConversationCell.h"
-#import "MessageConversationActionTableViewCell.h"
 #import "UserDB.h"
 #import "CreateNewConversationViewController.h"
 
@@ -20,7 +19,6 @@
 
 #define kPeerConversationCellHeight         50
 #define kGroupConversationCellHeight        44
-#define kConversationActionCellHeight       44
 
 @interface MessageListViewController ()
 
@@ -51,6 +49,11 @@
         
         [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:SEND_FIRST_MESSAGE_OK object:nil];
     }
+    
+    if ([[IMService instance] connectState] == STATE_CONNECTING) {
+        [self showConectingState];
+    }
+    
     return self;
 }
 
@@ -104,7 +107,7 @@
 {
     if (tableView == self._table) {
         
-        return [self.conversations count] + 1;
+        return [self.conversations count];
     }else{
         return 1;
     }
@@ -112,80 +115,51 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == 0) {
-        return kConversationActionCellHeight;
-    }else{
-        return kPeerConversationCellHeight;
-    }
+    return kPeerConversationCellHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
-        MessageConversationActionTableViewCell *actionCell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationActionTableViewCell"];
-        if (actionCell == nil) {
-            actionCell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationActionTableViewCell" owner:self options:nil] lastObject];
-        }
-        
-        [actionCell.broadCastListBtn addTarget:self action:@selector(broadcastAction) forControlEvents:UIControlEventTouchUpInside];
-        
-        [actionCell.creatGroupBtn addTarget:self action:@selector(createGroupAction) forControlEvents:UIControlEventTouchUpInside];
-        
-        [actionCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        
-        return actionCell;
-        
-    }else{
-        Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row - 1)];
+    Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
 
-        //if (covn.type == CONVERSATION_PEER) {
-        //peer
-        MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
-        
-        if (cell == nil) {
-            cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil] lastObject];
-        }
-        
-        
-        IMUser *currentUser =  [[UserDB instance] loadUser:covn.cid];
-        
-        if(!currentUser.avatarURL && ![currentUser.avatarURL isEqualToString:@""]){
-            [cell.headView setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
-        }else{
-            [cell.headView setImage:[UIImage imageNamed:@"head1"]];
-        }
-        
-        if ([currentUser.contact.nickname isEqualToString:@""]) {
-            cell.namelabel.text =  currentUser.phoneNumber.number;
-        }else{
-            cell.namelabel.text = currentUser.contact.nickname;
-        }
-        
-        cell.messageContent.text = covn.message.content.raw;
-        
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
-        
-        cell.timelabel.text = [PublicFunc getTimeString:date format:@"yy-mm-dd"];
-        cell.namelabel.text = covn.name;
-        
-        
-        
-        cell.delegate = self;
-        
-        return cell;
-        
-        
+    //peer
+    MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
+    
+    if (cell == nil) {
+        cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil] lastObject];
     }
+    
+    
+    IMUser *currentUser =  [[UserDB instance] loadUser:covn.cid];
+    
+    if(!currentUser.avatarURL && ![currentUser.avatarURL isEqualToString:@""]){
+        [cell.headView setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+    }else{
+        [cell.headView setImage:[UIImage imageNamed:@"head1"]];
+    }
+    
+    if ([currentUser.contact.nickname isEqualToString:@""]) {
+        cell.namelabel.text =  currentUser.phoneNumber.number;
+    }else{
+        cell.namelabel.text = currentUser.contact.nickname;
+    }
+    
+    cell.messageContent.text = covn.message.content.raw;
+    
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
+    
+    cell.timelabel.text = [PublicFunc getTimeString:date format:@"yy-mm-dd"];
+    cell.namelabel.text = covn.name;
+    
+    cell.delegate = self;
+    
+    return cell;
     
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView == self._table) {
-        if (indexPath.section == 0 &&  indexPath.row == 0) {
-            return NO;
-        }else{
-            return YES;
-        }
+        return YES;
     }
     return NO;
 }
@@ -229,7 +203,7 @@
 -(void)orignalCellDidSelected:(MessageConversationCell *)cell{
     if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
         NSIndexPath  *path = [self._table indexPathForCell:cell];
-        Conversation *con = [self.conversations objectAtIndex:path.row - 1];
+        Conversation *con = [self.conversations objectAtIndex:path.row];
         
         MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
         msgController.hidesBottomBarWhenPushed = YES;
@@ -304,14 +278,6 @@
     
 }
 
-- (void) broadcastAction{
-    NSLog(@"broadcastAction");
-}
-
--(void) createGroupAction{
-    NSLog(@"createGroupAction");
-}
-
 -(void)onNewMessage:(IMessage*)msg cid:(int64_t)cid{
     int index = -1;
     for (int i = 0; i < [self.conversations count]; i++) {
@@ -329,8 +295,8 @@
         [self.conversations insertObject:con atIndex:0];
         con.message = msg;
         if (index != 0) {
-            NSIndexPath *path1 = [NSIndexPath indexPathForRow:index+1 inSection:0];
-            NSIndexPath *path2 = [NSIndexPath indexPathForRow:1 inSection:0];
+            NSIndexPath *path1 = [NSIndexPath indexPathForRow:index inSection:0];
+            NSIndexPath *path2 = [NSIndexPath indexPathForRow:0 inSection:0];
             [self._table moveRowAtIndexPath:path1 toIndexPath:path2];
         }
     } else {
@@ -344,7 +310,7 @@
         con.name = user.contact.contactName;
         
         [self.conversations insertObject:con atIndex:0];
-        NSIndexPath *path = [NSIndexPath indexPathForRow:1 inSection:0];
+        NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
         NSArray *array = [NSArray arrayWithObject:path];
         [self._table insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
     }
@@ -392,9 +358,37 @@
 
 //同IM服务器连接的状态变更通知
 -(void)onConnectState:(int)state {
-    
+    if (state == STATE_CONNECTING) {
+        [self showConectingState];
+    }else if(state == STATE_CONNECTED){
+        self.navigationItem.title = @"对话";
+        self.navigationItem.titleView = nil;
+    }else if(state == STATE_CONNECTFAIL){
+    }else if(state == STATE_UNCONNECTED){
+    }
 }
 #pragma mark - function
+
+-(void) showConectingState{
+    UIView *titleview = [[UIView alloc] init];
+    [titleview setFrame:CGRectMake(0, 0, 100, 44)];
+    UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    aiView.hidesWhenStopped = NO;
+    CGRect rect = aiView.frame;
+    rect.origin.y = (titleview.frame.size.height - rect.size.height)/2;
+    [aiView setFrame: rect];
+    [aiView startAnimating];
+    [titleview addSubview: aiView];
+    
+    UILabel *lable = [[UILabel alloc] initWithFrame:CGRectMake(aiView.frame.size.width + 2, aiView.frame.origin.y, 100, aiView.frame.size.height)];
+    [lable setText:@"连接中.."];
+    [lable setFont:[UIFont systemFontOfSize:14]];
+    [lable setTextAlignment: NSTextAlignmentLeft];
+    [titleview addSubview: lable];
+    
+    titleview.center = CGPointMake(self.view.frame.size.width/2 , 22);
+    self.navigationItem.titleView = titleview;
+}
 
 -(void) setNormalNavigationButtons{
     

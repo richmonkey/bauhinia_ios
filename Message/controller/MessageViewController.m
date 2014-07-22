@@ -14,7 +14,7 @@
 #import "MessageShowThePotraitViewController.h"
 #import "AppDelegate.h"
 #import "UserDB.h"
-
+#import "NSString+JSMessagesView.h"
 
 
 #define navBarHeadButtonSize 35
@@ -65,11 +65,14 @@
     }
     self.navigationItem.titleView = self.navigationBarButtonsView;
     
+    [[self sendButton] setUserInteractionEnabled: NO];
     
     [self processConversationData];
     
     
     [[IMService instance] addMessageObserver:self];
+    
+    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -124,11 +127,15 @@
 //用户连线状态
 -(void)onOnlineState:(int64_t)uid state:(BOOL)on{
     if (on) {
+        
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
+        self.curUser.onlineState = UserOnlineStateOnline;
     }else{
+        
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
+        self.curUser.onlineState = UserOnlineStateOffline;
     }
-    self.curUser.online = on;
+    
 }
 
 //对方正在输入
@@ -144,13 +151,16 @@
     
 }
 
+
+
+
 -(void)changeStatusBack{
     
     [self.inputStatusTimer invalidate];
     self.inputStatusTimer = nil;
-    if (self.curUser.online) {
+    if (self.curUser.onlineState == UserOnlineStateOnline) {
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-    }else{
+    }else if(self.curUser.onlineState == UserOnlineStateOffline){
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
     }
  
@@ -161,18 +171,13 @@
 -(void)onConnectState:(int)state{
     
     if (state == STATE_CONNECTING) {
-        UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        aiView.hidesWhenStopped = NO; //I added this just so I could see it
-        self.navigationItem.titleView = aiView;
+        self.inputToolBarView.sendButton.enabled = NO;
     }else if(state == STATE_CONNECTED){
-        
-        
+       self.inputToolBarView.sendButton.enabled = YES;
     }else if(state == STATE_CONNECTFAIL){
-        
-        
-    }else{
-        
-        
+        self.inputToolBarView.sendButton.enabled = NO;
+    }else if(state == STATE_UNCONNECTED){
+        self.inputToolBarView.sendButton.enabled = NO;
     }
 }
 
@@ -180,9 +185,12 @@
 
 - (void)textViewDidChange:(UITextView *)textView{
     [super textViewDidChange:textView];
+    
+    self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0) && ([[IMService instance] connectState] == STATE_CONNECTED);
+    
     if((time(NULL) -  self.inputTimestamp) > 10){
-        self.inputTimestamp = time(NULL);
         
+        self.inputTimestamp = time(NULL);
         MessageInputing *inputing = [[MessageInputing alloc ] init];
         inputing.sender = [UserPresent instance].uid;
         inputing.receiver =self.currentConversation.cid;
@@ -282,7 +290,8 @@
 
 
 #pragma mark - Messages view delegate
-- (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
+
+- (void) sendPressed:(UIButton *)sender withText:(NSString *)text {
     
     IMessage *msg = [[IMessage alloc] init];
     

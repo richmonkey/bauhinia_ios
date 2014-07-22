@@ -98,8 +98,6 @@
 		21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF2371968E6A500DFA0E5 /* MessageConversationCell.xib */; };
 		21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */; };
 		21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */; };
-		21FCF2421968E84600DFA0E5 /* MessageConversationActionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF2401968E84600DFA0E5 /* MessageConversationActionTableViewCell.m */; };
-		21FCF2431968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF2411968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib */; };
 		6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76771967B8AC0058DECF /* AsyncTCP.m */; };
 		6D0D76831967B8AC0058DECF /* IMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76791967B8AC0058DECF /* IMessage.m */; };
 		6D0D76841967B8AC0058DECF /* IMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767B1967B8AC0058DECF /* IMService.m */; };
@@ -273,9 +271,6 @@
 		21FCF23A1968E6E600DFA0E5 /* MessageGroupConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageGroupConversationCell.h; sourceTree = "<group>"; };
 		21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageGroupConversationCell.m; sourceTree = "<group>"; };
 		21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageGroupConversationCell.xib; sourceTree = "<group>"; };
-		21FCF23F1968E84600DFA0E5 /* MessageConversationActionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageConversationActionTableViewCell.h; sourceTree = "<group>"; };
-		21FCF2401968E84600DFA0E5 /* MessageConversationActionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageConversationActionTableViewCell.m; sourceTree = "<group>"; };
-		21FCF2411968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageConversationActionTableViewCell.xib; sourceTree = "<group>"; };
 		6D0D76761967B8AC0058DECF /* AsyncTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTCP.h; sourceTree = "<group>"; };
 		6D0D76771967B8AC0058DECF /* AsyncTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncTCP.m; sourceTree = "<group>"; };
 		6D0D76781967B8AC0058DECF /* IMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMessage.h; sourceTree = "<group>"; };
@@ -659,9 +654,6 @@
 				21FCF23A1968E6E600DFA0E5 /* MessageGroupConversationCell.h */,
 				21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */,
 				21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */,
-				21FCF23F1968E84600DFA0E5 /* MessageConversationActionTableViewCell.h */,
-				21FCF2401968E84600DFA0E5 /* MessageConversationActionTableViewCell.m */,
-				21FCF2411968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib */,
 			);
 			path = cell;
 			sourceTree = "<group>";
@@ -812,7 +804,6 @@
 				210564CB19695FC1008D3A83 /* LoginViewController.xib in Resources */,
 				210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */,
 				210564C919695FC1008D3A83 /* ConversationViewController.xib in Resources */,
-				21FCF2431968E84600DFA0E5 /* MessageConversationActionTableViewCell.xib in Resources */,
 				21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */,
 				21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */,
 			);
@@ -843,7 +834,6 @@
 				6D0D76831967B8AC0058DECF /* IMessage.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
-				21FCF2421968E84600DFA0E5 /* MessageConversationActionTableViewCell.m in Sources */,
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
 				2105650619695FC1008D3A83 /* UIButton+JSMessagesView.m in Sources */,
 				2105650819695FC1008D3A83 /* UIImage+JSMessagesView.m in Sources */,
