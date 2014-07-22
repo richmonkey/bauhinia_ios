@@ -16,8 +16,23 @@
 
 @class IMessage;
 
+@protocol IMPeerMessageHandler <NSObject>
+-(BOOL)handleMessage:(IMMessage*)msg;
+-(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid;
+-(BOOL)handleMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid;
+-(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid;
+@end
+
+@protocol IMGroupMessageHandler <NSObject>
+
+-(BOOL)handleMessage:(IMMessage*)msg;
+-(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid;
+-(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid;
+
+@end
+
 @protocol MessageObserver <NSObject>
--(void)onPeerMessage:(IMessage*)msg;
+-(void)onPeerMessage:(IMMessage*)msg;
 
 //服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid;
@@ -26,9 +41,9 @@
 
 -(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
 
--(void)onGroupMessage:(IMessage*)msg;
+-(void)onGroupMessage:(IMMessage*)msg;
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid;
-
+-(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid;
 //用户连线状态
 -(void)onOnlineState:(int64_t)uid state:(BOOL)on;
 
@@ -44,14 +59,14 @@
 @property(nonatomic)NSString *host;
 @property(nonatomic)int port;
 @property(nonatomic, assign)int connectState;
-
+@property(nonatomic, weak)id<IMPeerMessageHandler> peerMessageHandler;
+@property(nonatomic, weak)id<IMGroupMessageHandler> groupMessageHandler;
 +(IMService*)instance;
 
 -(void)start:(int64_t)uid;
 -(void)stop;
 
--(BOOL)sendPeerMessage:(IMessage*)msg;
--(BOOL)sendGroupMessage:(IMessage*)msg;
+-(BOOL)sendPeerMessage:(IMMessage*)msg;
 
 //正在输入
 -(void)sendInputing:(MessageInputing*)inputing;

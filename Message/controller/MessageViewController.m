@@ -88,10 +88,19 @@
 
 #pragma mark - MessageObserver
 
--(void)onPeerMessage:(IMessage*)msg{
+-(void)onPeerMessage:(IMMessage*)im{
     [JSMessageSoundEffect playMessageReceivedSound];
-    NSLog(@"receive msg:%@",msg);
-    [self insertMsgToMessageBlokArray: msg];
+    NSLog(@"receive msg:%@",im);
+    
+    IMessage *m = [[IMessage alloc] init];
+    m.sender = im.sender;
+    m.receiver = im.receiver;
+    m.msgLocalID = im.msgLocalID;
+    MessageContent *content = [[MessageContent alloc] init];
+    content.raw = im.content;
+    m.content = content;
+    m.timestamp = time(NULL);
+    [self insertMsgToMessageBlokArray: m];
     
     [self.tableView reloadData];
     [self scrollToBottomAnimated:YES];
@@ -117,7 +126,7 @@
     [self reloadMessage:msgLocalID];
 }
 
--(void)onGroupMessage:(IMessage*)msg{
+-(void)onGroupMessage:(IMMessage*)msg{
     
 }
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid{
@@ -291,6 +300,20 @@
 
 #pragma mark - Messages view delegate
 
+- (BOOL)sendMessage:(IMessage*)msg {
+    Message *m = [[Message alloc] init];
+    m.cmd = MSG_IM;
+    IMMessage *im = [[IMMessage alloc] init];
+    im.sender = msg.sender;
+    im.receiver = msg.receiver;
+    im.msgLocalID = msg.msgLocalID;
+    im.content = msg.content.raw;
+    m.body = im;
+    BOOL r = [[IMService instance] sendPeerMessage:im];
+    NSLog(@"send result:%d", r);
+    return r;
+}
+
 - (void) sendPressed:(UIButton *)sender withText:(NSString *)text {
     
     IMessage *msg = [[IMessage alloc] init];
@@ -305,8 +328,8 @@
 
     [[MessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     [self insertMsgToMessageBlokArray: msg];
-    BOOL r = [[IMService instance] sendPeerMessage:msg];
-    NSLog(@"send result:%d", r);
+    
+    [self sendMessage:msg];
     
     [JSMessageSoundEffect playMessageSentSound];
     

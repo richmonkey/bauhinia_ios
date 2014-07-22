@@ -110,6 +110,8 @@
 		6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D769F1967C1850058DECF /* LevelDB.mm */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
+		6DA7CAA7197EA57B003032CB /* PeerMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA7CAA6197EA57B003032CB /* PeerMessageHandler.m */; };
+		6DA7CAAA197EA9AE003032CB /* GroupMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA7CAA9197EA9AE003032CB /* GroupMessageHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -307,6 +309,10 @@
 		6D0D76A8196910130058DECF /* IMContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMContact.m; sourceTree = "<group>"; };
 		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
+		6DA7CAA5197EA57B003032CB /* PeerMessageHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerMessageHandler.h; sourceTree = "<group>"; };
+		6DA7CAA6197EA57B003032CB /* PeerMessageHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeerMessageHandler.m; sourceTree = "<group>"; };
+		6DA7CAA8197EA9AE003032CB /* GroupMessageHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMessageHandler.h; sourceTree = "<group>"; };
+		6DA7CAA9197EA9AE003032CB /* GroupMessageHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMessageHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -661,6 +667,10 @@
 		6D0D76751967B8AC0058DECF /* im_sdk */ = {
 			isa = PBXGroup;
 			children = (
+				6DA7CAA8197EA9AE003032CB /* GroupMessageHandler.h */,
+				6DA7CAA9197EA9AE003032CB /* GroupMessageHandler.m */,
+				6DA7CAA5197EA57B003032CB /* PeerMessageHandler.h */,
+				6DA7CAA6197EA57B003032CB /* PeerMessageHandler.m */,
 				6D0D769E1967C1850058DECF /* LevelDB.h */,
 				6D0D769F1967C1850058DECF /* LevelDB.mm */,
 				6D0D76981967C1680058DECF /* Group.h */,
@@ -828,6 +838,7 @@
 				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
 				6D0D76A01967C1850058DECF /* LevelDB.mm in Sources */,
 				2173C66919738745004A88A5 /* SDWebImagePrefetcher.m in Sources */,
+				6DA7CAAA197EA9AE003032CB /* GroupMessageHandler.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
 				210564CD19695FC1008D3A83 /* MessageViewController.m in Sources */,
@@ -886,6 +897,7 @@
 				210564C819695FC1008D3A83 /* ConversationViewController.m in Sources */,
 				212F28FC197BF6420066A166 /* MessageTableSectionHeaderView.m in Sources */,
 				210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */,
+				6DA7CAA7197EA57B003032CB /* PeerMessageHandler.m in Sources */,
 				2173C66419738745004A88A5 /* SDWebImageCompat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
