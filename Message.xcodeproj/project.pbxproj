@@ -49,6 +49,7 @@
 		2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 210564C419695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m */; };
 		2105650E1969839F008D3A83 /* ConversationHeadButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105650C1969839F008D3A83 /* ConversationHeadButtonView.m */; };
 		2105650F1969839F008D3A83 /* ConversationHeadButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105650D1969839F008D3A83 /* ConversationHeadButtonView.xib */; };
+		2111642F197D71CE00A8D7CF /* MySearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2111642E197D71CE00A8D7CF /* MySearchDisplayController.m */; };
 		21150CA0196F78A5009DE9DE /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9B196F78A5009DE9DE /* User.m */; };
 		21150CA1196F78A5009DE9DE /* UserDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9D196F78A5009DE9DE /* UserDB.m */; };
 		21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9F196F78A5009DE9DE /* UserPresent.m */; };
@@ -186,6 +187,8 @@
 		2105650B1969839F008D3A83 /* ConversationHeadButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationHeadButtonView.h; sourceTree = "<group>"; };
 		2105650C1969839F008D3A83 /* ConversationHeadButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationHeadButtonView.m; sourceTree = "<group>"; };
 		2105650D1969839F008D3A83 /* ConversationHeadButtonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationHeadButtonView.xib; sourceTree = "<group>"; };
+		2111642D197D71CE00A8D7CF /* MySearchDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MySearchDisplayController.h; sourceTree = "<group>"; };
+		2111642E197D71CE00A8D7CF /* MySearchDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MySearchDisplayController.m; sourceTree = "<group>"; };
 		21150C9A196F78A5009DE9DE /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		21150C9B196F78A5009DE9DE /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		21150C9C196F78A5009DE9DE /* UserDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDB.h; sourceTree = "<group>"; };
@@ -392,6 +395,8 @@
 				210564C219695FC1008D3A83 /* UIImage+JSMessagesView.m */,
 				210564C319695FC1008D3A83 /* UIView+AnimationOptionsForCurve.h */,
 				210564C419695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m */,
+				2111642D197D71CE00A8D7CF /* MySearchDisplayController.h */,
+				2111642E197D71CE00A8D7CF /* MySearchDisplayController.m */,
 			);
 			path = "third-party";
 			sourceTree = "<group>";
@@ -836,6 +841,7 @@
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
 				2105650619695FC1008D3A83 /* UIButton+JSMessagesView.m in Sources */,
+				2111642F197D71CE00A8D7CF /* MySearchDisplayController.m in Sources */,
 				2105650819695FC1008D3A83 /* UIImage+JSMessagesView.m in Sources */,
 				2173C66619738745004A88A5 /* SDWebImageDownloader.m in Sources */,
 				2173C66819738745004A88A5 /* SDWebImageManager.m in Sources */,

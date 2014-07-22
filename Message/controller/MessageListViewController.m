@@ -10,7 +10,7 @@
 #import "MessageViewController.h"
 #import "MessageDB.h"
 #import "IMessage.h"
-
+#import "pinyin.h"
 #import "MessageGroupConversationCell.h"
 #import "UserDB.h"
 #import "CreateNewConversationViewController.h"
@@ -34,6 +34,7 @@
 -(id)init{
     self = [super init];
     if (self) {
+        self.filteredArray =  [NSMutableArray array];
         self.conversations = [[NSMutableArray alloc] init];
         UserDB *db = [UserDB instance];
         ConversationIterator * iterator =  [[MessageDB instance] newConversationIterator];
@@ -62,8 +63,8 @@
 }
 
 - (void)viewDidLoad{
-    [super viewDidLoad];
     
+    [super viewDidLoad];
     [self setNormalNavigationButtons];
     
     self._table = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -82,11 +83,12 @@
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
 	self.searchBar.delegate = self;
-	self._table.tableHeaderView = self.searchBar;
+    [self._table setTableHeaderView:self.searchBar];
 	
     self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
 	self.searchDC.searchResultsDataSource = self;
 	self.searchDC.searchResultsDelegate = self;
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -99,17 +101,15 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView == self._table) {
         
         return [self.conversations count];
     }else{
-        return 1;
+        return self.filteredArray.count;
     }
     
 }
@@ -118,17 +118,23 @@
     return kPeerConversationCellHeight;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    Conversation * covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
-
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     //peer
     MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
     
     if (cell == nil) {
         cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil] lastObject];
     }
+    Conversation * covn = nil;
+    if (tableView == self._table) {
+        
+         covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
     
+    }else{
+        
+        covn =   (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
+    }
     
     IMUser *currentUser =  [[UserDB instance] loadUser:covn.cid];
     
@@ -197,11 +203,69 @@
     
     [self.navigationController pushViewController:msgController animated:NO];
 }
+#pragma mark - UISearchBarDelegate
+
+//获取每一个字符的拼音的首字符
+-(NSString*)getPinYin:(NSString*)string {
+    NSString *name = @"";
+    for (int i = 0; i < [string length]; i++)
+    {
+        if([name length] < 1)
+            name = [NSString stringWithFormat:@"%c",pinyinFirstLetter([string characterAtIndex:i])];
+        else
+            name = [NSString stringWithFormat:@"%@%c",name,pinyinFirstLetter([string characterAtIndex:i])];
+    }
+    return name;
+}
+
+-(BOOL)searchResult:(NSString *)conversationName searchText:(NSString *)searchT{
+	NSComparisonResult result = [conversationName compare:searchT options:NSCaseInsensitiveSearch
+                                               range:NSMakeRange(0, searchT.length)];
+	if (result == NSOrderedSame)
+		return YES;
+	else
+		return NO;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self.filteredArray removeAllObjects];
+    
+    for(Conversation *conv in self.conversations) {
+        NSString *string = conv.name;
+        if (string.length == 0) {
+            continue;
+        }
+        
+        NSString *name = [self getPinYin:string];
+        
+        if ([self searchResult:name searchText:self.searchBar.text]) {
+            [self.filteredArray addObject:conv];
+        } else if ([self searchResult:string searchText:self.searchBar.text]) {
+            [self.filteredArray addObject:conv];
+        }
+    }
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar {
+
+    [self.searchDisplayController setActive:YES animated:YES];
+    
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+	[self.searchBar setText:@""];
+}
+
 
 #pragma mark - TLSwipeForOptionsCellDelegate Methods
 
 -(void)orignalCellDidSelected:(MessageConversationCell *)cell{
     if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
+
+        if ([self.searchDisplayController isActive]) {
+            [self.searchBar resignFirstResponder];
+        }
+        
         NSIndexPath  *path = [self._table indexPathForCell:cell];
         Conversation *con = [self.conversations objectAtIndex:path.row];
         
@@ -237,21 +301,6 @@
         [self._table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     
-}
-
-#pragma mark - UISearchBarDelegate
-
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar{
-	self.searchBar.prompt = @"搜索";
-}
-
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-	[self.searchBar setText:@""];
-	self.searchBar.prompt = nil;
-	[self.searchBar setFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
-	self._table.tableHeaderView = self.searchBar;
 }
 
 #pragma mark - Action
