@@ -101,13 +101,8 @@
     m.content = content;
     m.timestamp = time(NULL);
     
-    NSIndexPath *indexPath = [self insertMsgToMessageBlokArray: m];
+    [self addMessageToTheTableView: m];
     
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    [indexPaths addObject: indexPath];
-    [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
     [self scrollToBottomAnimated:YES];
 }
 
@@ -347,13 +342,8 @@
     msg.timestamp = time(NULL);
 
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    NSIndexPath *indexPath = [self insertMsgToMessageBlokArray: msg];
     
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    [indexPaths addObject: indexPath];
-    [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
+    [self addMessageToTheTableView:msg];
     
     [self sendMessage:msg];
     
@@ -601,6 +591,27 @@
     }
 }
 
+-(void) addMessageToTheTableView:(IMessage*) msg{
+    
+    NSIndexPath *indexPath = [self insertMsgToMessageBlokArray: msg];
+    
+    if (indexPath.row == 0 ) {
+        
+        NSUInteger sectionCount = indexPath.section;
+        NSIndexSet *indices = [NSIndexSet indexSetWithIndex: sectionCount];
+        [self.tableView beginUpdates];
+        [self.tableView insertSections:indices withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView endUpdates];
+        
+    }else{
+        NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+        [indexPaths addObject: indexPath];
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    }
+    
+}
 
 -(void)returnMainTableViewController {
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
