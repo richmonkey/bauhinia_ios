@@ -36,25 +36,7 @@
     if (self) {
         self.filteredArray =  [NSMutableArray array];
         self.conversations = [[NSMutableArray alloc] init];
-        UserDB *db = [UserDB instance];
-        id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
-        
-        Conversation * conversation = [iterator next];
-        while (conversation) {
-            IMUser *user = [db loadUser:conversation.cid];
-            conversation.name = user.contact.contactName;
-            [self.conversations addObject:conversation];
-            conversation = [iterator next];
-        }
-        [[IMService instance] addMessageObserver:self];
-        
-        [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:SEND_FIRST_MESSAGE_OK object:nil];
     }
-    
-    if ([[IMService instance] connectState] == STATE_CONNECTING) {
-        [self showConectingState];
-    }
-    
     return self;
 }
 
@@ -89,12 +71,42 @@
 	self.searchDC.searchResultsDataSource = self;
 	self.searchDC.searchResultsDelegate = self;
 
+    [[ContactDB instance] addObserver:self];
+    
+    [[IMService instance] addMessageObserver:self];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:SEND_FIRST_MESSAGE_OK object:nil];
+    
+    UserDB *db = [UserDB instance];
+    id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
+    
+    Conversation * conversation = [iterator next];
+    while (conversation) {
+        IMUser *user = [db loadUser:conversation.cid];
+        conversation.name = user.contact.contactName;
+        [self.conversations addObject:conversation];
+        conversation = [iterator next];
+    }
+    
+    if ([[IMService instance] connectState] == STATE_CONNECTING) {
+        [self showConectingState];
+    }
 }
+
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     
+}
+
+-(void)onExternalChange {
+    UserDB *db = [UserDB instance];
+    for (Conversation *conv in self.conversations) {
+        IMUser *user = [db loadUser:conv.cid];
+        conv.name = user.contact.contactName;
+    }
+    [self._table reloadData];
 }
 
 #pragma mark - Table view data source

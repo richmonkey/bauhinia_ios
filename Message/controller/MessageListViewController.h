@@ -12,8 +12,9 @@
 #import "IMService.h"
 #import "PublicFunc.h"
 #import "CreateNewConversationViewController.h"
+#import "ContactDB.h"
 
-@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver>
+@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver, ContactDBObserver>
 {
   
 	UITableView *_table;

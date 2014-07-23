@@ -60,7 +60,7 @@
     [head setText:s];
     self.tableView.tableHeaderView = head;
  
-    [ContactDB instance].observer = self;
+    [[ContactDB instance] addObserver:self];
     [self loadData];
     
     IMLog(@"request users.....");

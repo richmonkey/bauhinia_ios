@@ -70,7 +70,7 @@
 	self.searchDC.searchResultsDataSource = self;
 	self.searchDC.searchResultsDelegate = self;
     
-    [ContactDB instance].observer = self;
+
     [self loadData];
 }
 
@@ -139,11 +139,6 @@
             [[self.sectionArray objectAtIndex:firstLetter] addObject:contact];
         }
 	}
-}
-
--(void)onExternalChange {
-    [self loadData];
-    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource

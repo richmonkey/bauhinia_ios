@@ -15,12 +15,16 @@
 @interface ContactDB()
 @property(nonatomic, assign)ABAddressBookRef addressBook;
 @property()NSArray *contacts;
+@property(nonatomic)NSMutableArray *observers;
 -(void)loadContacts;
 @end
 
 static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info, void *context) {
+    ABAddressBookRevert([ContactDB instance].addressBook);
     [[ContactDB instance] loadContacts];
-    [[ContactDB instance].observer onExternalChange];
+    for (id<ContactDBObserver> ob in [ContactDB instance].observers) {
+        [ob onExternalChange];
+    }
 }
 
 @implementation ContactDB
@@ -39,6 +43,7 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
 -(id)init {
     self = [super init];
     if (self) {
+        self.observers = [NSMutableArray array];
         CFErrorRef err = nil;
         self.addressBook = ABAddressBookCreateWithOptions(NULL, &err);
         if (err) {
@@ -72,6 +77,17 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
         
     }
     return self;
+}
+
+-(void)addObserver:(id<ContactDBObserver>)ob {
+    if ([self.observers containsObject:ob]) {
+        return;
+    }
+    [self.observers addObject:ob];
+}
+
+-(void)removeObserver:(id<ContactDBObserver>)ob {
+    [self.observers removeObject:ob];
 }
 
 -(void)loadContacts {

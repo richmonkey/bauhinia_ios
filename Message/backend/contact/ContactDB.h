@@ -20,9 +20,10 @@
     
 }
 
-@property(nonatomic, weak)id<ContactDBObserver> observer;
-
 +(ContactDB*)instance;
+
+-(void)addObserver:(id<ContactDBObserver>)ob;
+-(void)removeObserver:(id<ContactDBObserver>)ob;
 
 -(NSArray *)contactsArray;
 
