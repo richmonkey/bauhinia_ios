@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 #import "LevelDB.h"
 #import "GroupDB.h"
+#import "PeerMessageDB.h"
+
 @interface MessageTests : XCTestCase
 
 @end
@@ -91,4 +93,15 @@
   [[GroupDB instance] removeGroup:1];
 }
 
+-(void)testMessageDB
+{
+    PeerMessageDB *db = [PeerMessageDB instance];
+    IMessage *m = [[IMessage alloc] init];
+    m.sender = 1;
+    m.receiver = 2;
+    m.content = [[MessageContent alloc] init];
+    m.content.raw = @"11";
+    [db insertPeerMessage:m uid:m.receiver];
+    [db clear];
+}
 @end

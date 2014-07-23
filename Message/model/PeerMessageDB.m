@@ -114,6 +114,31 @@
     return YES;
 }
 
+-(BOOL)clear {
+    NSString *path = [[PeerMessageDB instance] getMessagePath];
+    DIR *dirp = opendir([path UTF8String]);
+    if (dirp == NULL) {
+        NSLog(@"readdir error:%d", errno);
+        return NO;
+    }
+
+    struct dirent *dp;
+    while ((dp = readdir(dirp)) != NULL) {
+        NSString *name = [[NSString alloc] initWithBytes:dp->d_name length:dp->d_namlen encoding:NSUTF8StringEncoding];
+        NSLog(@"type:%d name:%@", dp->d_type, name);
+        if (dp->d_type == DT_REG) {
+            if ([name hasPrefix:@"p_"]) {
+                int64_t uid = [[name substringFromIndex:2] longLongValue];
+                NSString *path = [self getPeerPath:uid];
+                unlink([path UTF8String]);
+            } else {
+                NSLog(@"skip file:%@", name);
+            }
+        }
+    }
+    return YES;
+}
+
 -(BOOL)acknowledgePeerMessage:(int)msgLocalID uid:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];
     return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_ACK];

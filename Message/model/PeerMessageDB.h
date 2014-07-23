@@ -28,6 +28,7 @@
 -(BOOL)insertPeerMessage:(IMessage*)msg uid:(int64_t)uid;
 -(BOOL)removePeerMessage:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)clearConversation:(int64_t)uid;
+-(BOOL)clear;
 -(BOOL)acknowledgePeerMessage:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)acknowledgePeerMessageFromRemote:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)markPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
