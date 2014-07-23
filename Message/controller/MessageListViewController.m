@@ -359,6 +359,9 @@
             NSIndexPath *path1 = [NSIndexPath indexPathForRow:index inSection:0];
             NSIndexPath *path2 = [NSIndexPath indexPathForRow:0 inSection:0];
             [self._table moveRowAtIndexPath:path1 toIndexPath:path2];
+        } else {
+            NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+            [self._table reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
         }
     } else {
         Conversation *con = [[Conversation alloc] init];
@@ -375,9 +378,8 @@
         NSArray *array = [NSArray arrayWithObject:path];
         [self._table insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
     }
-
-    
 }
+
 -(void)onPeerMessage:(IMMessage*)im {
     IMessage *m = [[IMessage alloc] init];
     m.sender = im.sender;
