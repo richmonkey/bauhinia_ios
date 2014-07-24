@@ -17,11 +17,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+    
     [self.navigationItem setTitle: @"小张"];
     // Do any additional setup after loading the view.
     UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAction target:self action:@selector(onSaveAction)];
-    
     UIImageView *imageView = [[UIImageView alloc] init];
     
     UIImage *img = [UIImage imageNamed:@"potrait"];
@@ -29,7 +30,6 @@
     imageView.frame = CGRectMake(0, 0, 320, 320);
     [self.view addSubview: imageView];
     imageView.center = self.view.center;
-    
     
     self.navigationItem.rightBarButtonItem = navBarHeadButton;
 }

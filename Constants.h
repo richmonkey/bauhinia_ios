@@ -18,7 +18,10 @@
 #define KPHONENUMBERDICDEFINE	@"KPhoneNumberDicDefine"
 #define KPHONENAMEDICDEFINE	@"KPhoneNameDicDefine"
 
-
+#define KTabBarHeight  49
+#define KNavigationBarHeight 44
+#define kStatusBarHeight 20
+#define kSearchBarHeight 44
 
 //NSNotificaiton
 

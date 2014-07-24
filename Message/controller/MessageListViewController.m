@@ -60,7 +60,7 @@
     self._table.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:self._table];
     
-    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, kSearchBarHeight)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
@@ -156,7 +156,7 @@
         [cell.headView setImage:[UIImage imageNamed:@"head1"]];
     }
     
-    if ([currentUser.contact.nickname isEqualToString:@""]) {
+    if ([currentUser.contact.contactName isEqualToString:@""]) {
         cell.namelabel.text =  currentUser.phoneNumber.number;
     }else{
         cell.namelabel.text = currentUser.contact.nickname;
