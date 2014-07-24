@@ -33,7 +33,7 @@
     [super viewDidLoad];
     self.tabBarController.navigationItem.title = @"所有联系人";
 	
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,64, 320.0f, 44.0f)];
+	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,kStatusBarHeight + KNavigationBarHeight, 320.0f, KNavigationBarHeight)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
@@ -51,7 +51,7 @@
 	self.tableView.showsVerticalScrollIndicator = YES;
     self.tableView.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
     
-    self.tableView.frame = CGRectMake(0, 108, self.view.frame.size.width, self.view.frame.size.height - 108);
+    self.tableView.frame = CGRectMake(0, KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight, self.view.frame.size.width, self.view.frame.size.height - (KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight));
 	[self.view addSubview:self.tableView];
 
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -308,10 +308,10 @@
     [UIView animateWithDuration:.1
                      animations:^{
                          self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                                           64,
-                                                           self.tableView.frame.size.width,self.tableView.frame.size.height + 44);
+                                                           kStatusBarHeight+KNavigationBarHeight,
+                                                           self.tableView.frame.size.width,self.tableView.frame.size.height + kStatusBarHeight+KNavigationBarHeight);
                          self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                      20,
+                                                      kStatusBarHeight,
                                                       self.searchBar.frame.size.width,
                                                       self.searchBar.frame.size.height);
 
@@ -327,10 +327,10 @@
     [UIView animateWithDuration:.1
                      animations:^{
                          self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                                           108,
-                                                           self.tableView.frame.size.width,self.tableView.frame.size.height - 44);
+                                                           KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight,
+                                                           self.tableView.frame.size.width,self.tableView.frame.size.height - KNavigationBarHeight);
                          self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                      64,
+                                                      KNavigationBarHeight + kStatusBarHeight,
                                                       self.searchBar.frame.size.width,
                                                       self.searchBar.frame.size.height);
 

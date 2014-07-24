@@ -7,7 +7,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <Foundation/NSJSONSerialization.h>
 #import "SettingViewController.h"
-#import "ConversationViewController.h"
+#import "CustomStatusViewController.h"
 #import "MessageListViewController.h"
 #import "ContactListTableViewController.h"
 #import "IMService.h"

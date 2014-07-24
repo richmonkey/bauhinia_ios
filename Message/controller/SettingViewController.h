@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingViewController : UIViewController
+@interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+
+@property (strong,nonatomic) UITableView *tableView;
+@property (strong,nonatomic) NSArray *cellTitleArray;
+@property (weak,nonatomic) UITableViewCell *statusCell;
 
 @end

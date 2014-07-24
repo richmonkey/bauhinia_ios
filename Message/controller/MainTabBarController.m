@@ -8,7 +8,7 @@
 
 #import "MainTabBarController.h"
 #import "SettingViewController.h"
-#import "ConversationViewController.h"
+#import "CustomStatusViewController.h"
 #import "MessageListViewController.h"
 #import "ContactListTableViewController.h"
 
@@ -39,12 +39,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    ConversationViewController* conversationController = [[ConversationViewController alloc] init];
-    conversationController.title = @"消息";
+    CustomStatusViewController* conversationController = [[CustomStatusViewController alloc] init];
+    conversationController.title = @"状态";
     
-    conversationController.tabBarItem.title = @"消息";
-    conversationController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChats"];
-    conversationController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
+    conversationController.tabBarItem.title = @"状态";
+    conversationController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconStatusOn"];
+    conversationController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconStatusOff"];
     UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:conversationController];
     
     ContactListTableViewController* contactViewController = [[ContactListTableViewController alloc] init];
