@@ -102,7 +102,6 @@
 		6D0D76841967B8AC0058DECF /* IMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767B1967B8AC0058DECF /* IMService.m */; };
 		6D0D76851967B8AC0058DECF /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767D1967B8AC0058DECF /* Message.m */; };
 		6D0D76871967B8AC0058DECF /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76801967B8AC0058DECF /* util.c */; };
-		6D0D76971967C1430058DECF /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D0D76901967C1430058DECF /* libleveldb.a */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
 		6D762156197ECA9300B690D7 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762145197ECA9300B690D7 /* Group.m */; };
 		6D762157197ECA9300B690D7 /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762147197ECA9300B690D7 /* GroupDB.m */; };
@@ -114,6 +113,7 @@
 		6D76215D197ECA9300B690D7 /* PeerMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762153197ECA9300B690D7 /* PeerMessageHandler.m */; };
 		6D76215E197ECA9300B690D7 /* ReverseFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762155197ECA9300B690D7 /* ReverseFile.m */; };
 		6D762161197ECAE800B690D7 /* MessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762160197ECAE800B690D7 /* MessageDB.m */; };
+		6D7621651981626900B690D7 /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7621641981626900B690D7 /* libleveldb.a */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
 /* End PBXBuildFile section */
 
@@ -291,7 +291,6 @@
 		6D0D768D1967C1430058DECF /* env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = env.h; sourceTree = "<group>"; };
 		6D0D768E1967C1430058DECF /* filter_policy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filter_policy.h; sourceTree = "<group>"; };
 		6D0D768F1967C1430058DECF /* iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iterator.h; sourceTree = "<group>"; };
-		6D0D76901967C1430058DECF /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleveldb.a; sourceTree = "<group>"; };
 		6D0D76911967C1430058DECF /* options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
 		6D0D76921967C1430058DECF /* slice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = slice.h; sourceTree = "<group>"; };
 		6D0D76931967C1430058DECF /* status.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = status.h; sourceTree = "<group>"; };
@@ -320,6 +319,7 @@
 		6D762155197ECA9300B690D7 /* ReverseFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReverseFile.m; sourceTree = "<group>"; };
 		6D76215F197ECAE800B690D7 /* MessageDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageDB.h; sourceTree = "<group>"; };
 		6D762160197ECAE800B690D7 /* MessageDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageDB.m; sourceTree = "<group>"; };
+		6D7621641981626900B690D7 /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = Message/backend/leveldb/libleveldb.a; sourceTree = "<group>"; };
 		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -329,9 +329,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D0D76971967C1430058DECF /* libleveldb.a in Frameworks */,
 				2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
+				6D7621651981626900B690D7 /* libleveldb.a in Frameworks */,
 				2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */,
 				217261981954155000F09E33 /* AddressBook.framework in Frameworks */,
 				21798F99194E9C4600B67C1F /* CoreGraphics.framework in Frameworks */,
@@ -613,6 +613,7 @@
 		21798F95194E9C4600B67C1F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6D7621641981626900B690D7 /* libleveldb.a */,
 				2173C09F19668B8800BC3BDF /* libxml2.2.dylib */,
 				2173C0A019668B8900BC3BDF /* libxml2.dylib */,
 				2119FE721962AD7700E23B4F /* libsqlite3.0.dylib */,
@@ -718,7 +719,6 @@
 				6D0D768D1967C1430058DECF /* env.h */,
 				6D0D768E1967C1430058DECF /* filter_policy.h */,
 				6D0D768F1967C1430058DECF /* iterator.h */,
-				6D0D76901967C1430058DECF /* libleveldb.a */,
 				6D0D76911967C1430058DECF /* options.h */,
 				6D0D76921967C1430058DECF /* slice.h */,
 				6D0D76931967C1430058DECF /* status.h */,
@@ -982,7 +982,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1000,6 +1001,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -1021,7 +1023,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1032,6 +1035,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PROVISIONING_PROFILE = "B2FFFC65-AF06-4CDA-B6A2-80327E5EFAB5";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -1043,7 +1047,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: 朋亮 杨 (LQPR37NKSJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
@@ -1053,6 +1057,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
@@ -1064,6 +1069,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
@@ -1073,6 +1079,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "B2FFFC65-AF06-4CDA-B6A2-80327E5EFAB5";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;

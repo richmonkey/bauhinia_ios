@@ -176,7 +176,7 @@
 
 -(void)loadData{
     self.contacts = [[ContactDB instance] contactsArray];
- 
+
     self.filteredArray =  [NSMutableArray array];
     self.sectionArray = [NSMutableArray arrayWithCapacity:27];
   
@@ -190,6 +190,10 @@
     
 	for (IMContact *contact in self.contacts) {
         NSString *string = contact.contactName;
+        if ([contact.users count] > 0) {
+            User *user = [contact.users objectAtIndex:0];
+            NSLog(@"name:%@ state:%@", string, user.state);
+        }
         
         NSString *sectionName;
         if ([string length] > 0) {
@@ -224,6 +228,7 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)aTableView {
 	if (aTableView == self.tableView) {
+        return nil;
 		NSMutableArray *indices = [NSMutableArray arrayWithObject:UITableViewIndexSearch];
 		for (int i = 0; i < 27; i++){
 			if ([[self.sectionArray objectAtIndex:i] count]){
@@ -238,7 +243,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-
 	return [ALPHA rangeOfString:title].location;
 }
 
@@ -364,7 +368,10 @@
             } else {
                 User *u = [contact.users objectAtIndex:0];
                 [cell.detailTextLabel setText:u.state];
+                NSLog(@"name:%@ state:%@", contact.contactName, u.state);
             }
+        } else {
+            [cell.detailTextLabel setText:@""];
         }
         return cell;
     } else {
