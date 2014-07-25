@@ -166,13 +166,17 @@
     [dict setObject:code forKey:@"code"];
     [dict setObject:zone forKey:@"zone"];
     [dict setObject:number forKey:@"number"];
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    if (delegate.deviceToken) {
+        [dict setObject:delegate.deviceToken forKey:@"apns_device_token"];
+    }
     NSDictionary *headers = [NSDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
     request.headers = headers;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     request.postBody = data;
     request.method = @"POST";
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        int statusCode = [(NSHTTPURLResponse*)response statusCode];
+        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
         if (statusCode != 200) {
             [self loginFail];
             return;

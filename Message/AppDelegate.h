@@ -24,5 +24,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController* tabBarController;
+@property (nonatomic, copy) NSString *deviceToken;
 
 @end
