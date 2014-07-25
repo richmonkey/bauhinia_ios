@@ -21,10 +21,11 @@
 
 
 @property (nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
-@property (nonatomic) Conversation* currentConversation;
 @property (nonatomic) int  inputTimestamp;
 @property (nonatomic) IMUser *curUser;
+@property (nonatomic) IMUser *remoteUser;
 @property (nonatomic) NSTimer  *inputStatusTimer;
-- (id) initWithConversation:(Conversation *) con;
+
+-(id) initWithRemoteUser:(IMUser*) rmtUser;
 
 @end

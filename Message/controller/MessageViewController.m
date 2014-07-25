@@ -16,6 +16,8 @@
 #import "UserDB.h"
 #import "NSString+JSMessagesView.h"
 #import "PeerMessageDB.h"
+#import "UserPresent.h"
+
 
 #define navBarHeadButtonSize 35
 
@@ -32,15 +34,15 @@
 @implementation MessageViewController
 
 
--(id) initWithConversation:(Conversation *) con{
-    if (self = [super init]) {
-        
-        self.currentConversation = con;
-        self.curUser = [[UserDB instance] loadUser:con.cid];
+-(id) initWithRemoteUser:(IMUser*) rmtUser{
     
+    if (self = [super init]) {
+        self.remoteUser = rmtUser;
+        self.curUser  =  [[UserDB instance] loadUser: [UserPresent instance].uid];
     }
     return self;
 }
+
 
 - (void)loadView{
     [super loadView];
@@ -77,13 +79,13 @@
 
 -(void) viewDidAppear:(BOOL)animated{
 
-    [[IMService instance] subscribeState:self.currentConversation.cid];
+    [[IMService instance] subscribeState:self.remoteUser.uid];
  
 }
 
 -(void) viewDidDisappear:(BOOL)animated{
     
-   [[IMService instance] unsubscribeState:self.currentConversation.cid];
+   [[IMService instance] unsubscribeState:self.remoteUser.uid];
 }
 
 #pragma mark - MessageObserver
@@ -129,7 +131,12 @@
 -(void)onGroupMessage:(IMMessage*)msg{
     
 }
+
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid{
+    
+}
+
+-(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid{
     
 }
 
@@ -217,7 +224,7 @@
         self.inputTimestamp = time(NULL);
         MessageInputing *inputing = [[MessageInputing alloc ] init];
         inputing.sender = [UserPresent instance].uid;
-        inputing.receiver =self.currentConversation.cid;
+        inputing.receiver =self.remoteUser.uid;
         
         [[IMService instance] sendInputing: inputing];
  
@@ -334,7 +341,7 @@
     IMessage *msg = [[IMessage alloc] init];
     
     msg.sender = [UserPresent instance].uid;
-    msg.receiver = self.currentConversation.cid;
+    msg.receiver = self.remoteUser.uid;
     
     MessageContent *content = [[MessageContent alloc] init];
     content.raw = text;
@@ -474,7 +481,7 @@
     NSDate *lastDate = nil;
     NSDate *curtDate = nil;
     NSMutableArray *msgBlockArray = nil;
-    id<IMessageIterator> iterator =  [[PeerMessageDB instance] newPeerMessageIterator: self.currentConversation.cid];
+    id<IMessageIterator> iterator =  [[PeerMessageDB instance] newPeerMessageIterator: self.remoteUser.uid];
     IMessage *msg = [iterator next];
     while (msg) {
         curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];

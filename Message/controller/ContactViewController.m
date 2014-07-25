@@ -56,19 +56,15 @@
 }
 
 
--(void)presentMessageViewController:(int64_t)uid {
-    Conversation *con = [[Conversation alloc] init];
-    con.cid = uid;
-    con.type = CONVERSATION_PEER;
-    con.name = @"消息";
-    MessageViewController* msgController = [[MessageViewController alloc] initWithConversation:con];
+-(void)presentMessageViewController:(IMUser*)user {
+    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: user];
     [self.navigationController pushViewController:msgController animated:YES];
 }
 -(void)onSendMessage {
     if ([self.contact.users count] == 1) {
         NSLog(@"send message");
         IMUser *u = [self.contact.users objectAtIndex:0];
-        [self presentMessageViewController:u.uid];
+        [self presentMessageViewController: u];
     } else if ([self.contact.users count] > 1) {
         //选择用户
     }
