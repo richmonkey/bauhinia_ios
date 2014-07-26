@@ -7,11 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ABContact.h"
-#import "ContactDB.h"
 
-@interface CreateNewConversationViewController : UIViewController< UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,
-ContactDBObserver> {
+@interface CreateNewConversationViewController : UIViewController< UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate> {
     
 }
 @end

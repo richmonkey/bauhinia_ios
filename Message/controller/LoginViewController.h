@@ -14,5 +14,4 @@
 - (IBAction) onTap:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *mobile;
 @property (weak, nonatomic) IBOutlet UITextField *pwd;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 @end

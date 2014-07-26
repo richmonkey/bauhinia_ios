@@ -19,6 +19,7 @@
 #import "AppDelegate.h"
 #import "MainTabBarController.h"
 #import "APIRequest.h"
+#import "MBProgressHUD.h"
 
 @implementation LoginViewController
 
@@ -26,7 +27,6 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor grayColor];
-    self.mobile.text = @"13635273143";
 }
 
 
@@ -117,20 +117,12 @@
         return;
     }
     
-    
     if (self.pwd.text.length == 0) {
         [self alertError:@"请输入密码"];
         return;
     }
     
-    
-    // 3.登录成功
-    // 3.1.开始动画
-    [_indicator startAnimating];
-    
-    // 3.2.让整个登录界面停止跟用户交互
-    self.view.userInteractionEnabled = NO;
-    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     [APIRequest requestAuthToken:self.pwd.text zone:@"86" number:self.mobile.text deviceToken:delegate.deviceToken
                          success:^(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp){
@@ -144,13 +136,13 @@
                              [UserPresent instance].uid = uid;
                              [UserPresent instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.mobile.text];
                              [[UserDB instance] addUser:[UserPresent instance]];
+                             [hud hide:NO];
                              [self loginSuccess];
                              IMLog(@"auth token success");
                          }
                             fail:^{
                                 IMLog(@"auth token fail");
-                                [self.indicator stopAnimating];
-                                self.view.userInteractionEnabled = YES;
+                                [hud hide:NO];
                                 [self alertError:@"验证码错误，请重新输入"];
                             }];
 }
@@ -158,12 +150,15 @@
 - (IBAction)onVerifyCode:(id)sender {
     NSString *number = _mobile.text;
     if (number.length != 11) return;
-
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [APIRequest requestVerifyCode:@"86" number:number success:^(NSString *code){
         self.pwd.text = code;
         IMLog(@"code:%@", code);
+        [hud hide:YES];
     } fail:^{
         IMLog(@"获取验证码失败");
+        [hud hide:NO];
         [self alertError:@"获取验证码失败"];
     }];
 }
@@ -173,11 +168,6 @@
 {
     [[Token instance] startRefreshTimer];
     [[IMService instance] start:[UserPresent instance].uid];
-    // 1.停止动画
-    [self.indicator stopAnimating];
-    
-    // 2.让登录界面可以跟用户交互
-    self.view.userInteractionEnabled = YES;
     
     UITabBarController *tabController = [[MainTabBarController alloc] init];
     UINavigationController *navCtl = [[UINavigationController alloc] initWithRootViewController:tabController];
