@@ -13,8 +13,6 @@
 		210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646B19695FC0008D3A83 /* ContactViewController.xib */; };
 		210564C819695FC1008D3A83 /* CustomStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646D19695FC0008D3A83 /* CustomStatusViewController.m */; };
 		210564C919695FC1008D3A83 /* CustomStatusViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646E19695FC0008D3A83 /* CustomStatusViewController.xib */; };
-		210564CA19695FC1008D3A83 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105647119695FC0008D3A83 /* LoginViewController.m */; };
-		210564CB19695FC1008D3A83 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105647219695FC0008D3A83 /* LoginViewController.xib */; };
 		210564CC19695FC1008D3A83 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105647419695FC0008D3A83 /* MessageListViewController.m */; };
 		210564CD19695FC1008D3A83 /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105647619695FC0008D3A83 /* MessageViewController.m */; };
 		210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105647819695FC0008D3A83 /* SettingViewController.m */; };
@@ -114,6 +112,10 @@
 		6D76215E197ECA9300B690D7 /* ReverseFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762155197ECA9300B690D7 /* ReverseFile.m */; };
 		6D762161197ECAE800B690D7 /* MessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762160197ECAE800B690D7 /* MessageDB.m */; };
 		6D7621651981626900B690D7 /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7621641981626900B690D7 /* libleveldb.a */; };
+		6D76216819834DA100B690D7 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76216719834DA100B690D7 /* MBProgressHUD.m */; };
+		6D76216B19835F1000B690D7 /* APIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76216A19835F1000B690D7 /* APIRequest.m */; };
+		6D76216F198362DE00B690D7 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76216D198362DE00B690D7 /* LoginViewController.m */; };
+		6D762170198362DE00B690D7 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D76216E198362DE00B690D7 /* LoginViewController.xib */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
 /* End PBXBuildFile section */
 
@@ -138,9 +140,6 @@
 		2105646C19695FC0008D3A83 /* CustomStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomStatusViewController.h; sourceTree = "<group>"; };
 		2105646D19695FC0008D3A83 /* CustomStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomStatusViewController.m; sourceTree = "<group>"; };
 		2105646E19695FC0008D3A83 /* CustomStatusViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomStatusViewController.xib; sourceTree = "<group>"; };
-		2105647019695FC0008D3A83 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		2105647119695FC0008D3A83 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		2105647219695FC0008D3A83 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		2105647319695FC0008D3A83 /* MessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListViewController.h; sourceTree = "<group>"; };
 		2105647419695FC0008D3A83 /* MessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListViewController.m; sourceTree = "<group>"; };
 		2105647519695FC0008D3A83 /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
@@ -319,6 +318,13 @@
 		6D76215F197ECAE800B690D7 /* MessageDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageDB.h; sourceTree = "<group>"; };
 		6D762160197ECAE800B690D7 /* MessageDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageDB.m; sourceTree = "<group>"; };
 		6D7621641981626900B690D7 /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = Message/backend/leveldb/libleveldb.a; sourceTree = "<group>"; };
+		6D76216619834DA100B690D7 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		6D76216719834DA100B690D7 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		6D76216919835F1000B690D7 /* APIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIRequest.h; sourceTree = "<group>"; };
+		6D76216A19835F1000B690D7 /* APIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIRequest.m; sourceTree = "<group>"; };
+		6D76216C198362DE00B690D7 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		6D76216D198362DE00B690D7 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		6D76216E198362DE00B690D7 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -355,6 +361,9 @@
 		2105646619695FC0008D3A83 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				6D76216C198362DE00B690D7 /* LoginViewController.h */,
+				6D76216D198362DE00B690D7 /* LoginViewController.m */,
+				6D76216E198362DE00B690D7 /* LoginViewController.xib */,
 				2105646719695FC0008D3A83 /* ContactListTableViewController.h */,
 				2105646819695FC0008D3A83 /* ContactListTableViewController.m */,
 				2105646919695FC0008D3A83 /* ContactViewController.h */,
@@ -363,7 +372,6 @@
 				2105646C19695FC0008D3A83 /* CustomStatusViewController.h */,
 				2105646D19695FC0008D3A83 /* CustomStatusViewController.m */,
 				2105646E19695FC0008D3A83 /* CustomStatusViewController.xib */,
-				2105646F19695FC0008D3A83 /* login */,
 				2105647319695FC0008D3A83 /* MessageListViewController.h */,
 				2105647419695FC0008D3A83 /* MessageListViewController.m */,
 				2105647519695FC0008D3A83 /* MessageViewController.h */,
@@ -381,23 +389,15 @@
 			path = controller;
 			sourceTree = "<group>";
 		};
-		2105646F19695FC0008D3A83 /* login */ = {
-			isa = PBXGroup;
-			children = (
-				2105647019695FC0008D3A83 /* LoginViewController.h */,
-				2105647119695FC0008D3A83 /* LoginViewController.m */,
-				2105647219695FC0008D3A83 /* LoginViewController.xib */,
-			);
-			path = login;
-			sourceTree = "<group>";
-		};
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
 				2173C5D8197385C8004A88A5 /* SDWebImage */,
+				2105647B19695FC0008D3A83 /* JSMessge */,
+				6D76216619834DA100B690D7 /* MBProgressHUD.h */,
+				6D76216719834DA100B690D7 /* MBProgressHUD.m */,
 				21150CAC196F79AA009DE9DE /* TAHttpOperation.h */,
 				21150CAD196F79AA009DE9DE /* TAHttpOperation.m */,
-				2105647B19695FC0008D3A83 /* JSMessge */,
 				210564BD19695FC1008D3A83 /* UIButton+JSMessagesView.h */,
 				210564BE19695FC1008D3A83 /* UIButton+JSMessagesView.m */,
 				210564BF19695FC1008D3A83 /* UIColor+JSMessagesView.h */,
@@ -644,6 +644,8 @@
 				21798F9D194E9C4600B67C1F /* Supporting Files */,
 				21050A3619741B1900F26E43 /* PublicFunc.h */,
 				21050A3719741B1900F26E43 /* PublicFunc.m */,
+				6D76216919835F1000B690D7 /* APIRequest.h */,
+				6D76216A19835F1000B690D7 /* APIRequest.m */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -814,6 +816,7 @@
 				210564F819695FC1008D3A83 /* input-bar-flat.png in Resources */,
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
+				6D762170198362DE00B690D7 /* LoginViewController.xib in Resources */,
 				210564FF19695FC1008D3A83 /* PhotoIcon@2x.png in Resources */,
 				212F28FD197BF6420066A166 /* MessageTableSectionHeaderView.xib in Resources */,
 				210564FE19695FC1008D3A83 /* PhotoIcon.png in Resources */,
@@ -825,7 +828,6 @@
 				21798FA9194E9C4600B67C1F /* Images.xcassets in Resources */,
 				2105650319695FC1008D3A83 /* send@2x.png in Resources */,
 				2105650419695FC1008D3A83 /* messageReceived.aiff in Resources */,
-				210564CB19695FC1008D3A83 /* LoginViewController.xib in Resources */,
 				210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */,
 				210564C919695FC1008D3A83 /* CustomStatusViewController.xib in Resources */,
 				21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */,
@@ -852,6 +854,7 @@
 				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
 				2173C66919738745004A88A5 /* SDWebImagePrefetcher.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
+				6D76216F198362DE00B690D7 /* LoginViewController.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
 				210564CD19695FC1008D3A83 /* MessageViewController.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
@@ -873,6 +876,7 @@
 				2173C66A19738745004A88A5 /* UIButton+WebCache.m in Sources */,
 				2173C66719738745004A88A5 /* SDWebImageDownloaderOperation.m in Sources */,
 				2105650719695FC1008D3A83 /* UIColor+JSMessagesView.m in Sources */,
+				6D76216819834DA100B690D7 /* MBProgressHUD.m in Sources */,
 				6D76215E197ECA9300B690D7 /* ReverseFile.m in Sources */,
 				210564D019695FC1008D3A83 /* JSBubbleMessageCell.m in Sources */,
 				6D0D76841967B8AC0058DECF /* IMService.m in Sources */,
@@ -883,7 +887,6 @@
 				2173C66E19738745004A88A5 /* UIImageView+WebCache.m in Sources */,
 				210564CC19695FC1008D3A83 /* MessageListViewController.m in Sources */,
 				21150CAB196F7910009DE9DE /* Token.m in Sources */,
-				210564CA19695FC1008D3A83 /* LoginViewController.m in Sources */,
 				217F2C30196D62680064F478 /* MessageShowThePotraitViewController.m in Sources */,
 				6D76215C197ECA9300B690D7 /* PeerMessageDB.m in Sources */,
 				6D0D76871967B8AC0058DECF /* util.c in Sources */,
@@ -904,6 +907,7 @@
 				21150CA1196F78A5009DE9DE /* UserDB.m in Sources */,
 				210564D319695FC1008D3A83 /* JSMessageInputView.m in Sources */,
 				210564D619695FC1008D3A83 /* JSMessageTextView.m in Sources */,
+				6D76216B19835F1000B690D7 /* APIRequest.m in Sources */,
 				2173C66C19738745004A88A5 /* UIImage+MultiFormat.m in Sources */,
 				210564D419695FC1008D3A83 /* JSMessageSoundEffect.m in Sources */,
 				210564D119695FC1008D3A83 /* JSBubbleView.m in Sources */,

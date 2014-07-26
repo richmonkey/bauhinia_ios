@@ -10,7 +10,8 @@
 #import "Config.h"
 #import "Token.h"
 #import "UserPresent.h"
-
+#import "UserDB.h"
+#import "APIRequest.h"
 
 #define kDefineStatusCellSection 0
 #define kDefineStatusCellRow     0
@@ -41,7 +42,9 @@
 }
 
 -(void)setCurrentStatus:(NSString *)currentStatus {
-    [UserPresent instance].state = currentStatus;
+    User *u = [UserPresent instance];
+    u.state = currentStatus;
+    [[UserDB instance] setUserState:u.uid state:currentStatus];
 }
 
 - (void)viewDidLoad
@@ -133,7 +136,20 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == kStatusListCellsSection) {
-                [self updateState:[self.statusArray objectAtIndex:indexPath.row]];
+        MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hub.removeFromSuperViewOnHide = YES;
+        NSString *s = [self.statusArray objectAtIndex:indexPath.row];
+        [APIRequest updateState:s
+                        success:^{
+                            self.currentStatus = s;
+                            [hub hide:YES];
+                            [self.tableView reloadData];
+                        }
+                           fail:^{
+                               hub.labelText = @"请求失败";
+                               [hub hide:YES afterDelay:0.1];
+                           }];
+
     }
 }
 
@@ -164,38 +180,6 @@
 
 
 }
-
-//todo 添加请求状态显示
--(void)updateState:(NSString*)state {
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
-    request.targetURL = [[Config instance].URL stringByAppendingString:@"/users/me"];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:state forKey:@"state"];
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
-    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
-    [headers setObject:auth forKey:@"Authorization"];
-    request.headers = headers;
-    request.postBody = data;
-    request.method = @"PATCH";
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
-        if (statusCode != 200) {
-            IMLog(@"update state fail");
-            return;
-        }
-        IMLog(@"update state success");
-        self.currentStatus = state;
-        [self.tableView reloadData];
-
-    };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
-        IMLog(@"update state fail");
-    };
-    [[NSOperationQueue mainQueue] addOperation:request];
-}
-
 
 - (void)didReceiveMemoryWarning
 {

@@ -49,6 +49,14 @@
     return YES;
 }
 
+-(BOOL)setUserState:(int64_t)uid state:(NSString*)state {
+    LevelDB *db = [LevelDB defaultLevelDB];
+    NSString *key = [self userKey:uid];
+    NSString *k = [key stringByAppendingString:@"_state"];
+    [db setString:state forKey:k];
+    return YES;
+}
+
 -(IMUser*)loadUser:(int64_t)uid {
     LevelDB *db = [LevelDB defaultLevelDB];
     NSString *key = [self userKey:uid];
