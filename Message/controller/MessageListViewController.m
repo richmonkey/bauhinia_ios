@@ -208,9 +208,9 @@
 }
 
 -(void) newConversation:(NSNotification*) notification{
-    
+#pragma mark - TODO
     Conversation *con = [notification object];
-    MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
+    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:nil];
     msgController.hidesBottomBarWhenPushed = YES;
     
     [self.navigationController pushViewController:msgController animated:NO];
@@ -280,8 +280,10 @@
         
         NSIndexPath  *path = [self._table indexPathForCell:cell];
         Conversation *con = [self.conversations objectAtIndex:path.row];
+        IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
         
-        MessageViewController* msgController = [[MessageViewController alloc] initWithConversation: con];
+        MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: rmtUser];
+        
         msgController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:msgController animated: YES];
     }
@@ -415,6 +417,10 @@
 }
 
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid {
+    
+}
+
+-(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid{
     
 }
 
