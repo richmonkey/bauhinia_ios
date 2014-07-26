@@ -14,6 +14,7 @@
 +(UserDB*)instance;
 
 -(BOOL)addUser:(User*)user;
+-(BOOL)setUserState:(int64_t)uid state:(NSString*)state;
 -(IMUser*)loadUser:(int64_t)uid;
 -(User*)loadUserWithNumber:(PhoneNumber*)number;
 @end
