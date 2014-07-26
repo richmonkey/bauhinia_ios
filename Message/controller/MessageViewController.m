@@ -18,18 +18,14 @@
 #import "PeerMessageDB.h"
 #import "UserPresent.h"
 
+#import "NSString+JSMessagesView.h"
+#import "UIView+AnimationOptionsForCurve.h"
+#import "UIColor+JSMessagesView.h"
 
 #define navBarHeadButtonSize 35
 
 
 
-@interface MessageViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
-
-
-@property (strong, nonatomic) NSMutableArray *messageArray;
-@property (nonatomic,strong) UIImage *willSendImage;
-@property (strong, nonatomic) NSMutableArray *timestamps;
-@end
 
 @implementation MessageViewController
 
@@ -53,9 +49,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.delegate = self;
-    self.dataSource = self;
+    [self setup];
     [self setNormalNavigationButtons];
     
     self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
@@ -86,6 +80,308 @@
 -(void) viewDidDisappear:(BOOL)animated{
     
    [[IMService instance] unsubscribeState:self.remoteUser.uid];
+}
+- (void)setup
+{
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+    
+    CGSize size = self.view.frame.size;
+	
+    CGRect tableFrame = CGRectMake(0.0f, 0.0f, size.width, size.height - INPUT_HEIGHT);
+	self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
+	self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    
+    UIColor *bgColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"bakground"]];
+    [self.view setBackgroundColor:bgColor];
+    
+	[self.view addSubview:self.tableView];
+	
+	UIButton* mediaButton = nil;
+	if (kAllowsMedia)
+	{
+		// set up the image and button frame
+		UIImage* image = [UIImage imageNamed:@"PhotoIcon"];
+		CGRect frame = CGRectMake(4, 0, image.size.width, image.size.height);
+		CGFloat yHeight = (INPUT_HEIGHT - frame.size.height) / 2.0f;
+		frame.origin.y = yHeight;
+		
+		// make the button
+		mediaButton = [[UIButton alloc] initWithFrame:frame];
+		[mediaButton setBackgroundImage:image forState:UIControlStateNormal];
+		
+		// button action
+		[mediaButton addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
+	}
+	
+    CGRect inputFrame = CGRectMake(0.0f, size.height - INPUT_HEIGHT, size.width, INPUT_HEIGHT);
+    self.inputToolBarView = [[JSMessageInputView alloc] initWithFrame:inputFrame delegate:self];
+    
+    self.inputToolBarView.textView.keyboardDelegate = self;
+    
+    self.inputToolBarView.textView.placeHolder = @"说点什么呢？";
+    
+    UIButton *sendButton = [self sendButton];
+    sendButton.enabled = NO;
+    sendButton.frame = CGRectMake(self.inputToolBarView.frame.size.width - 65.0f, 8.0f, 59.0f, 26.0f);
+    [sendButton addTarget:self
+                   action:@selector(sendPressed:)
+         forControlEvents:UIControlEventTouchUpInside];
+    [self.inputToolBarView setSendButton:sendButton];
+    [self.view addSubview:self.inputToolBarView];
+    
+	if (kAllowsMedia)
+	{
+		// adjust the size of the send button to balance out more with the camera button on the other side.
+		CGRect frame = self.inputToolBarView.sendButton.frame;
+		frame.size.width -= 16;
+		frame.origin.x += 16;
+		self.inputToolBarView.sendButton.frame = frame;
+		
+		// add the camera button
+		[self.inputToolBarView addSubview:mediaButton];
+        
+		// move the tet view over
+		frame = self.inputToolBarView.textView.frame;
+		frame.origin.x += mediaButton.frame.size.width + mediaButton.frame.origin.x;
+		frame.size.width -= mediaButton.frame.size.width + mediaButton.frame.origin.x;
+		frame.size.width += 16;		// from the send button adjustment above
+		self.inputToolBarView.textView.frame = frame;
+	}
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
+    [self.tableView addGestureRecognizer:tapRecognizer];//关键语句，给self.view添加一个手势监测；
+    tapRecognizer.numberOfTapsRequired = 1;
+    tapRecognizer.delegate  = self;
+	
+}
+
+- (UIButton *)sendButton
+{
+    return [UIButton defaultSendButton];
+}
+
+#pragma mark - View lifecycle
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+    [self scrollToBottomAnimated:NO];
+    
+    _originalTableViewContentInset = self.tableView.contentInset;
+    
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(handleWillShowKeyboard:)
+												 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(handleWillHideKeyboard:)
+												 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.inputToolBarView resignFirstResponder];
+    [self setEditing:NO animated:YES];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"*** %@: didReceiveMemoryWarning ***", self.class);
+}
+
+- (void)dealloc
+{
+    self.tableView = nil;
+    self.inputToolBarView = nil;
+}
+
+#pragma mark - View rotation
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self.tableView reloadData];
+    [self.tableView setNeedsLayout];
+}
+#pragma mark -
+
+- (void) handlePanFrom:(UITapGestureRecognizer*)recognizer{
+    
+    [self.inputToolBarView.textView resignFirstResponder];
+}
+
+#pragma mark - Actions
+- (void)sendPressed:(UIButton *)sender
+{
+    [self  sendPressed:sender
+                      withText:[self.inputToolBarView.textView.text trimWhitespace]];
+}
+
+
+- (void)cameraAction:(id)sender
+{
+    [self cameraPressed:sender];
+}
+
+#pragma mark - Table view data source
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSBubbleMessageType type = [self messageTypeForRowAtIndexPath:indexPath];
+    JSBubbleMediaType mediaType = [self messageMediaTypeForRowAtIndexPath:indexPath];
+    
+    
+    
+    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d", type];
+    JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
+    
+    if(!cell)
+        cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
+                                                  messageState:MessageReceiveStateNone
+                                                     mediaType:mediaType
+                                               reuseIdentifier:CellID];
+    
+    
+    
+    
+	if (kAllowsMedia)
+		[cell setMedia:[self dataForRowAtIndexPath:indexPath]];
+    [cell setMessageState:[self messageForRowAtIndexPath:indexPath]];
+    [cell setMessage:[self textForRowAtIndexPath:indexPath]];
+    [cell setBackgroundColor:[UIColor clearColor]];
+    return cell;
+}
+
+#pragma mark - Table view delegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(![self  messageMediaTypeForRowAtIndexPath:indexPath]){
+        return [JSBubbleMessageCell neededHeightForText:[self   textForRowAtIndexPath:indexPath]];
+    }else{
+        return [JSBubbleMessageCell neededHeightForImage:[self   dataForRowAtIndexPath:indexPath]];
+    }
+}
+
+- (void)finishSend
+{
+    [self.inputToolBarView.textView setText:nil];
+    [self.inputToolBarView.textView resignFirstResponder];
+    [self textViewDidChange:self.inputToolBarView.textView];
+    [self scrollToBottomAnimated:YES];
+}
+
+
+- (void)scrollToRowAtIndexPath:(NSIndexPath *)indexPath
+			  atScrollPosition:(UITableViewScrollPosition)position
+					  animated:(BOOL)animated
+{
+	[self.tableView scrollToRowAtIndexPath:indexPath
+						  atScrollPosition:position
+								  animated:animated];
+}
+
+
+#pragma mark - Text view delegate
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    [textView becomeFirstResponder];
+	
+    if(!self.previousTextViewContentHeight)
+		self.previousTextViewContentHeight = textView.contentSize.height;
+    
+    [self scrollToBottomAnimated:YES];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    [textView resignFirstResponder];
+}
+
+#pragma mark - Keyboard notifications
+- (void)handleWillShowKeyboard:(NSNotification *)notification{
+    [self keyboardWillShow:notification];
+}
+
+- (void)handleWillHideKeyboard:(NSNotification *)notification{
+    [self keyboardWillHide:notification];
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification{
+    CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         CGFloat keyboardY = [self.view convertRect:keyboardRect fromView:nil].origin.y;
+                         
+                         CGRect inputViewFrame = self.inputToolBarView.frame;
+                         CGFloat inputViewFrameY = keyboardY - inputViewFrame.size.height;
+                         
+                         self.inputToolBarView.frame = CGRectMake(inputViewFrame.origin.x,
+                                                                  inputViewFrameY,
+                                                                  inputViewFrame.size.width,
+                                                                  inputViewFrame.size.height);
+                         
+                         [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.tableView.frame.size.height - keyboardRect.size.height)];
+                     }
+                     completion:^(BOOL finished) {
+                     }];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification{
+    CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         CGFloat keyboardY = [self.view convertRect:keyboardRect fromView:nil].origin.y;
+                         
+                         CGRect inputViewFrame = self.inputToolBarView.frame;
+                         CGFloat inputViewFrameY = keyboardY - inputViewFrame.size.height;
+                         
+                         self.inputToolBarView.frame = CGRectMake(inputViewFrame.origin.x,
+                                                                  inputViewFrameY,
+                                                                  inputViewFrame.size.width,
+                                                                  inputViewFrame.size.height);
+                         
+                         [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.tableView.frame.size.height + keyboardRect.size.height)];
+                     }
+                     completion:^(BOOL finished) {
+                     }];
+}
+
+#pragma mark - Dismissive text view delegate
+- (void)keyboardDidScrollToPoint:(CGPoint)pt{
+    CGRect inputViewFrame = self.inputToolBarView.frame;
+    CGPoint keyboardOrigin = [self.view convertPoint:pt fromView:nil];
+    inputViewFrame.origin.y = keyboardOrigin.y - inputViewFrame.size.height;
+    self.inputToolBarView.frame = inputViewFrame;
+}
+
+- (void)keyboardWillBeDismissed{
+    CGRect inputViewFrame = self.inputToolBarView.frame;
+    inputViewFrame.origin.y = self.view.bounds.size.height - inputViewFrame.size.height;
+    self.inputToolBarView.frame = inputViewFrame;
 }
 
 #pragma mark - MessageObserver
@@ -215,7 +511,59 @@
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView{
-    [super textViewDidChange:textView];
+    CGFloat maxHeight = [JSMessageInputView maxHeight];
+    CGSize size = [textView sizeThatFits:CGSizeMake(textView.frame.size.width, maxHeight)];
+    CGFloat textViewContentHeight = size.height;
+    
+    // End of textView.contentSize replacement code
+    
+    BOOL isShrinking = textViewContentHeight < self.previousTextViewContentHeight;
+    CGFloat changeInHeight = textViewContentHeight - self.previousTextViewContentHeight;
+    
+    if(!isShrinking && self.previousTextViewContentHeight == maxHeight) {
+        changeInHeight = 0;
+    }
+    else {
+        changeInHeight = MIN(changeInHeight, maxHeight - self.previousTextViewContentHeight);
+    }
+    
+    if(changeInHeight != 0.0f) {
+        //        if(!isShrinking)
+        //            [self.inputToolBarView adjustTextViewHeightBy:changeInHeight];
+        
+        [UIView animateWithDuration:0.25f
+                         animations:^{
+                             UIEdgeInsets insets = UIEdgeInsetsMake(0.0f,
+                                                                    0.0f,
+                                                                    self.tableView.contentInset.bottom + changeInHeight,
+                                                                    0.0f);
+                             
+                             self.tableView.contentInset = insets;
+                             self.tableView.scrollIndicatorInsets = insets;
+                             [self scrollToBottomAnimated:NO];
+                             
+                             if(isShrinking) {
+                                 // if shrinking the view, animate text view frame BEFORE input view frame
+                                 [self.inputToolBarView adjustTextViewHeightBy:changeInHeight];
+                             }
+                             
+                             CGRect inputViewFrame = self.inputToolBarView.frame;
+                             self.inputToolBarView.frame = CGRectMake(0.0f,
+                                                                      inputViewFrame.origin.y - changeInHeight,
+                                                                      inputViewFrame.size.width,
+                                                                      inputViewFrame.size.height + changeInHeight);
+                             
+                             if(!isShrinking) {
+                                 [self.inputToolBarView adjustTextViewHeightBy:changeInHeight];
+                             }
+                         }
+                         completion:^(BOOL finished) {
+                         }];
+        
+        
+        self.previousTextViewContentHeight = MIN(textViewContentHeight, maxHeight);
+    }
+
     
     self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0) && ([[IMService instance] connectState] == STATE_CONNECTED);
     
@@ -232,12 +580,6 @@
     
 }
 
--(void)textViewDidBeginEditing:(UITextView *)textView{
-    [super textViewDidBeginEditing:textView];
-    
-
-    
-}
 
 #pragma mark - Table view data source
 
@@ -366,7 +708,7 @@
 
 - (void)cameraPressed:(id)sender{
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
+    picker.delegate  = self;
     picker.allowsEditing = YES;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     [self presentViewController:picker animated:YES completion:NULL];
@@ -388,10 +730,6 @@
     return JSBubbleMediaTypeText;
 }
 
-- (UIButton *)sendButton
-{
-    return [UIButton defaultSendButton];
-}
 
 - (JSInputBarStyle)inputBarStyle
 {

@@ -24,7 +24,6 @@
 		210564D219695FC1008D3A83 /* JSDismissiveTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105648119695FC0008D3A83 /* JSDismissiveTextView.m */; };
 		210564D319695FC1008D3A83 /* JSMessageInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105648319695FC0008D3A83 /* JSMessageInputView.m */; };
 		210564D419695FC1008D3A83 /* JSMessageSoundEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105648519695FC0008D3A83 /* JSMessageSoundEffect.m */; };
-		210564D519695FC1008D3A83 /* JSMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105648719695FC0008D3A83 /* JSMessagesViewController.m */; };
 		210564D619695FC1008D3A83 /* JSMessageTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105648919695FC0008D3A83 /* JSMessageTextView.m */; };
 		210564D719695FC1008D3A83 /* NSString+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105648B19695FC0008D3A83 /* NSString+JSMessagesView.m */; };
 		210564F619695FC1008D3A83 /* bubble-typing.png in Resources */ = {isa = PBXBuildFile; fileRef = 210564AC19695FC1008D3A83 /* bubble-typing.png */; };
@@ -159,8 +158,6 @@
 		2105648319695FC0008D3A83 /* JSMessageInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSMessageInputView.m; sourceTree = "<group>"; };
 		2105648419695FC0008D3A83 /* JSMessageSoundEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSMessageSoundEffect.h; sourceTree = "<group>"; };
 		2105648519695FC0008D3A83 /* JSMessageSoundEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSMessageSoundEffect.m; sourceTree = "<group>"; };
-		2105648619695FC0008D3A83 /* JSMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSMessagesViewController.h; sourceTree = "<group>"; };
-		2105648719695FC0008D3A83 /* JSMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSMessagesViewController.m; sourceTree = "<group>"; };
 		2105648819695FC0008D3A83 /* JSMessageTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSMessageTextView.h; sourceTree = "<group>"; };
 		2105648919695FC0008D3A83 /* JSMessageTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSMessageTextView.m; sourceTree = "<group>"; };
 		2105648A19695FC0008D3A83 /* NSString+JSMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JSMessagesView.h"; sourceTree = "<group>"; };
@@ -426,8 +423,6 @@
 				2105648319695FC0008D3A83 /* JSMessageInputView.m */,
 				2105648419695FC0008D3A83 /* JSMessageSoundEffect.h */,
 				2105648519695FC0008D3A83 /* JSMessageSoundEffect.m */,
-				2105648619695FC0008D3A83 /* JSMessagesViewController.h */,
-				2105648719695FC0008D3A83 /* JSMessagesViewController.m */,
 				2105648819695FC0008D3A83 /* JSMessageTextView.h */,
 				2105648919695FC0008D3A83 /* JSMessageTextView.m */,
 				2105648A19695FC0008D3A83 /* NSString+JSMessagesView.h */,
@@ -880,7 +875,6 @@
 				2105650719695FC1008D3A83 /* UIColor+JSMessagesView.m in Sources */,
 				6D76215E197ECA9300B690D7 /* ReverseFile.m in Sources */,
 				210564D019695FC1008D3A83 /* JSBubbleMessageCell.m in Sources */,
-				210564D519695FC1008D3A83 /* JSMessagesViewController.m in Sources */,
 				6D0D76841967B8AC0058DECF /* IMService.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
 				2173C66319738745004A88A5 /* SDImageCache.m in Sources */,
