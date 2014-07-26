@@ -11,7 +11,7 @@
 @interface CustomStatusViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 
-@property (strong,nonatomic) NSMutableArray *statusArray;
-@property (strong,nonatomic) UITableView *tableView;
-@property (strong,nonatomic) NSString *currentStatus;
+@property (nonatomic) NSMutableArray *statusArray;
+@property (nonatomic) UITableView *tableView;
+@property (nonatomic, copy) NSString *currentStatus;
 @end

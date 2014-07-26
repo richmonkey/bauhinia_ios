@@ -5,6 +5,12 @@
 //  Created by daozhu on 14-6-16.
 //  Copyright (c) 2014年 daozhu. All rights reserved.
 //
+#import "CustomStatusViewController.h"
+#import "TAHttpOperation.h"
+#import "Config.h"
+#import "Token.h"
+#import "UserPresent.h"
+
 
 #define kDefineStatusCellSection 0
 #define kDefineStatusCellRow     0
@@ -13,9 +19,6 @@
 
 #define kClearStatusCellSection 2
 #define kClearSelfDefineStatusCellRow  0
-
-
-#import "CustomStatusViewController.h"
 
 @interface CustomStatusViewController ()
 
@@ -31,6 +34,14 @@
     }
     
     return self;
+}
+
+-(NSString*)currentStatus {
+    return [UserPresent instance].state;
+}
+
+-(void)setCurrentStatus:(NSString *)currentStatus {
+    [UserPresent instance].state = currentStatus;
 }
 
 - (void)viewDidLoad
@@ -122,8 +133,7 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == kStatusListCellsSection) {
-        self.currentStatus = [self.statusArray objectAtIndex:indexPath.row];
-        [tableView reloadData];
+                [self updateState:[self.statusArray objectAtIndex:indexPath.row]];
     }
 }
 
@@ -153,6 +163,37 @@
 -(void)addNewStatus{
 
 
+}
+
+//todo 添加请求状态显示
+-(void)updateState:(NSString*)state {
+    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+    request.targetURL = [[Config instance].URL stringByAppendingString:@"/users/me"];
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:state forKey:@"state"];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
+    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
+    [headers setObject:auth forKey:@"Authorization"];
+    request.headers = headers;
+    request.postBody = data;
+    request.method = @"PATCH";
+    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
+        if (statusCode != 200) {
+            IMLog(@"update state fail");
+            return;
+        }
+        IMLog(@"update state success");
+        self.currentStatus = state;
+        [self.tableView reloadData];
+
+    };
+    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+        IMLog(@"update state fail");
+    };
+    [[NSOperationQueue mainQueue] addOperation:request];
 }
 
 
