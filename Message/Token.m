@@ -10,9 +10,11 @@
 #import "LevelDB.h"
 #import "TAHttpOperation.h"
 #import "Config.h"
+#import "APIRequest.h"
 
 @interface Token()
 @property(nonatomic)dispatch_source_t refreshTimer;
+@property(nonatomic)int refreshFailCount;
 @end
 
 @implementation Token
@@ -42,38 +44,29 @@
 }
 
 -(void)refreshAccessToken {
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
-    request.targetURL = [[Config instance].URL stringByAppendingString:@"/auth/refresh_token"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:self.refreshToken forKey:@"refresh_token"];
-    NSDictionary *headers = [NSDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
-    request.headers = headers;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-    request.postBody = data;
-    request.method = @"POST";
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        int statusCode = [(NSHTTPURLResponse*)response statusCode];
-        if (statusCode != 200) {
-            IMLog(@"refresh token fail");
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self prepareTimer];
-            });
-            return;
-        }
-        NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        self.accessToken = [resp objectForKey:@"access_token"];
-        self.refreshToken = [resp objectForKey:@"refresh_token"];
-        self.expireTimestamp = time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
-        [self save];
-        [self prepareTimer];
-    };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
-        IMLog(@"refresh token fail");
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self prepareTimer];
-        });
-    };
-    [[NSOperationQueue mainQueue] addOperation:request];
+    [APIRequest refreshAccessToken:self.refreshToken
+                           success:^(NSString *accessToken, NSString *refreshToken, int expireTimestamp) {
+                               self.accessToken = accessToken;
+                               self.refreshToken = refreshToken;
+                               self.expireTimestamp = expireTimestamp;
+                               [self save];
+                               [self prepareTimer];
+                               
+                           }
+                              fail:^{
+                                  self.refreshFailCount = self.refreshFailCount + 1;
+                                  int64_t timeout;
+                                  if (self.refreshFailCount > 60) {
+                                      timeout = 60*NSEC_PER_SEC;
+                                  } else {
+                                      timeout = (int64_t)self.refreshFailCount*NSEC_PER_SEC;
+                                  }
+                                  
+                                  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeout), dispatch_get_main_queue(), ^{
+                                      [self prepareTimer];
+                                  });
+                                  
+                              }];
 }
 
 -(void)prepareTimer {

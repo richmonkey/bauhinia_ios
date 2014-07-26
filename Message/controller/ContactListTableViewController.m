@@ -7,6 +7,7 @@
 #import "Token.h"
 #import "ContactViewController.h"
 #import "UserPresent.h"
+#import "APIRequest.h"
 
 @interface ContactListTableViewController()
 @property (nonatomic) NSArray *contacts;
@@ -106,72 +107,30 @@
     if (time(NULL) - t < 24*3600) {
       //  return;
     }
-    
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
-    request.targetURL = [[Config instance].URL stringByAppendingString:@"/users"];
-    
-    
-    NSMutableArray *array = [NSMutableArray array];
-    NSMutableSet *set = [NSMutableSet set];
-    for (IMContact *contact in self.contacts) {
-        for (NSDictionary *dict in contact.phoneDictionaries) {
-            NSString *n = [dict objectForKey:@"value"];
-            PhoneNumber *number = [[PhoneNumber alloc] initWithPhoneNumber:n];
-            if (![number isValid]) {
-                continue;
-            }
-            NSString *k = number.zoneNumber;
-            if ([set containsObject:k]) {
-                continue;
-            }
-            [set addObject:k];
-            NSMutableDictionary *obj = [NSMutableDictionary dictionary];
-            [obj setObject:number.zone forKey:@"zone"];
-            [obj setObject:number.number forKey:@"number"];
-            [array addObject:obj];
-        }
-    }
-    if ([array count] == 0) return;
-    
-    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
-    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
-    [headers setObject:auth forKey:@"Authorization"];
-
-    NSData *data = [NSJSONSerialization dataWithJSONObject:array options:0 error:nil];
-    request.postBody = data;
-    request.method = @"POST";
-    request.headers = headers;
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        int statusCode = [(NSHTTPURLResponse*)response statusCode];
-        if (statusCode != 200) {
-            NSDictionary *d = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-            IMLog(@"request users fail:%@", d);
-            return;
-        }
-        NSArray *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        for (NSDictionary *dict in resp) {
-            User *user = [[User alloc] init];
-            PhoneNumber *number = [[PhoneNumber alloc] init];
-            number.zone = [dict objectForKey:@"zone"];
-            number.number = [dict objectForKey:@"number"];
-            user.uid = [[dict objectForKey:@"uid"] longLongValue];
-            user.avatarURL = [dict objectForKey:@"avatar"];
-            user.state = [dict objectForKey:@"state"];
-            user.phoneNumber = number;
-            if (user.uid > 0) {
-                [[UserDB instance] addUser:user];
-            }
-        }
-        LevelDB *db = [LevelDB defaultLevelDB];
-        [db setInt:time(NULL) forKey:key];
-        [self loadData];
-        [self.tableView reloadData];
-    };
-    
-    request.failCB = ^(TAHttpOperation *commObj, TAHttpOperationError error) {
-        IMLog(@"request users fail");
-    };
-    [[NSOperationQueue mainQueue] addOperation:request];
+    [APIRequest requestUsers:self.contacts
+                     success:^(NSArray *resp) {
+                         for (NSDictionary *dict in resp) {
+                             User *user = [[User alloc] init];
+                             PhoneNumber *number = [[PhoneNumber alloc] init];
+                             number.zone = [dict objectForKey:@"zone"];
+                             number.number = [dict objectForKey:@"number"];
+                             user.uid = [[dict objectForKey:@"uid"] longLongValue];
+                             user.avatarURL = [dict objectForKey:@"avatar"];
+                             user.state = [dict objectForKey:@"state"];
+                             user.phoneNumber = number;
+                             if (user.uid > 0) {
+                                 [[UserDB instance] addUser:user];
+                             }
+                         }
+                         LevelDB *db = [LevelDB defaultLevelDB];
+                         [db setInt:time(NULL) forKey:key];
+                         [self loadData];
+                         [self.tableView reloadData];
+                         
+                     }
+                        fail:^{
+                            IMLog(@"request users fail");
+                        }];
 }
 
 -(void)loadData{

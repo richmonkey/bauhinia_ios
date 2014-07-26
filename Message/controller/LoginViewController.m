@@ -18,6 +18,7 @@
 #import "UserDB.h"
 #import "AppDelegate.h"
 #import "MainTabBarController.h"
+#import "APIRequest.h"
 
 @implementation LoginViewController
 
@@ -130,83 +131,41 @@
     // 3.2.让整个登录界面停止跟用户交互
     self.view.userInteractionEnabled = NO;
     
-    [self requestAuthToken:self.pwd.text zone:@"86" number:self.mobile.text];
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    [APIRequest requestAuthToken:self.pwd.text zone:@"86" number:self.mobile.text deviceToken:delegate.deviceToken
+                         success:^(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp){
+                             Token *token = [Token instance];
+                             token.accessToken = accessToken;
+                             token.refreshToken = refreshToken;
+                             token.expireTimestamp = expireTimestamp;
+                             token.uid = uid;
+                             [token save];
+                             
+                             [UserPresent instance].uid = uid;
+                             [UserPresent instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.mobile.text];
+                             [[UserDB instance] addUser:[UserPresent instance]];
+                             [self loginSuccess];
+                             IMLog(@"auth token success");
+                         }
+                            fail:^{
+                                IMLog(@"auth token fail");
+                                [self.indicator stopAnimating];
+                                self.view.userInteractionEnabled = YES;
+                                [self alertError:@"验证码错误，请重新输入"];
+                            }];
 }
 
 - (IBAction)onVerifyCode:(id)sender {
     NSString *number = _mobile.text;
     if (number.length != 11) return;
-    [self requestVerifyCode:@"86" number:number];
-}
 
-
-- (void)requestVerifyCode:(NSString*)zone number:(NSString*)number {
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
-    request.targetURL = [[Config instance].URL stringByAppendingFormat:@"/verify_code?zone=%@&number=%@", zone, number];
-    request.method = @"POST";
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        NSString *code = [resp objectForKey:@"code"];
+    [APIRequest requestVerifyCode:@"86" number:number success:^(NSString *code){
         self.pwd.text = code;
         IMLog(@"code:%@", code);
-    };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+    } fail:^{
         IMLog(@"获取验证码失败");
         [self alertError:@"获取验证码失败"];
-    };
-    IMLog(@"target URL:%@", request.targetURL);
-    [[NSOperationQueue mainQueue] addOperation:request];
-}
-
-- (void)requestAuthToken:(NSString*)code zone:(NSString*)zone number:(NSString*)number {
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
-    request.targetURL = [[Config instance].URL stringByAppendingString:@"/auth/token"];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:code forKey:@"code"];
-    [dict setObject:zone forKey:@"zone"];
-    [dict setObject:number forKey:@"number"];
-    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
-    if (delegate.deviceToken) {
-        [dict setObject:delegate.deviceToken forKey:@"apns_device_token"];
-    }
-    NSDictionary *headers = [NSDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
-    request.headers = headers;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-    request.postBody = data;
-    request.method = @"POST";
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
-        if (statusCode != 200) {
-            [self loginFail];
-            return;
-        }
-        NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        Token *token = [Token instance];
-        token.accessToken = [resp objectForKey:@"access_token"];
-        token.refreshToken = [resp objectForKey:@"refresh_token"];
-        token.expireTimestamp = time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
-        token.uid = [[resp objectForKey:@"uid"] longLongValue];
-        [token save];
-        
-        [UserPresent instance].uid = [[resp objectForKey:@"uid"] longLongValue];
-        [UserPresent instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.mobile.text];
-        [[UserDB instance] addUser:[UserPresent instance]];
-        
-        [self loginSuccess];
-        IMLog(@"auth token success");
-    };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
-        IMLog(@"auth token fail");
-        [self loginFail];
-    };
-    [[NSOperationQueue mainQueue] addOperation:request];
-}
-
--(void)loginFail {
-    [self.indicator stopAnimating];
-    self.view.userInteractionEnabled = YES;
-    [self alertError:@"验证码错误，请重新输入"];
+    }];
 }
 
 #pragma mark 登录成功
