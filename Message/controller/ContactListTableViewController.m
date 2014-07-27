@@ -62,7 +62,11 @@
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
     PhoneNumber *phoneNumber = [UserPresent instance].phoneNumber;
     NSString *s = [NSString stringWithFormat:@"   我的电话号码:+%@ %@", phoneNumber.zone, phoneNumber.number];
-    [head setText:s];
+    NSMutableAttributedString *attrTitle = [[NSMutableAttributedString alloc] initWithString: s];
+    [attrTitle addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x35bc6e) range:NSMakeRange(10, [s length]-10)];
+ 
+    [head setAttributedText:attrTitle];
+    
     self.tableView.tableHeaderView = head;
     
     [[ContactDB instance] addObserver:self];
