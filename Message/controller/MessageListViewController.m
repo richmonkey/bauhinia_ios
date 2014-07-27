@@ -13,8 +13,6 @@
 #import "pinyin.h"
 #import "MessageGroupConversationCell.h"
 #import "UserDB.h"
-#import "CreateNewConversationViewController.h"
-
 #import "UIImageView+WebCache.h"
 
 #define kPeerConversationCellHeight         50
@@ -39,19 +37,19 @@
     if (self) {
         self.filteredArray =  [NSMutableArray array];
         self.conversations = [[NSMutableArray alloc] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newConversation:) name:CREATE_NEW_CONVERSATION object:nil];
     }
     return self;
 }
 
 -(void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
+
 }
 
 - (void)viewDidLoad{
     
     [super viewDidLoad];
-    [self setNormalNavigationButtons];
+
+    self.title = @"对话";
     
     self.tableview = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	self.tableview.delegate = self;
@@ -211,20 +209,7 @@
     [self onNewMessage:m cid:m.receiver];
 }
 
--(void) newConversation:(NSNotification*) notification{
 
-    IMContact *imcontact = notification.object;
-    
-    if ([imcontact.users count] == 1) {
-        IMUser *rmtUser = [imcontact.users firstObject];
-        MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:rmtUser];
-        msgController.hidesBottomBarWhenPushed = YES;
-        
-        [self.navigationController pushViewController:msgController animated:NO];
-    }
-    
-
-}
 #pragma mark - UISearchBarDelegate
 
 //获取每一个字符的拼音的首字符
@@ -363,27 +348,8 @@
 
 #pragma mark - Action
 
-- (void) editorAction{
-    NSLog(@"editorAction");
-    [self setEditorNavigationButtons];
-    [self.tableview setEditing: YES animated:YES];
-}
 
-- (void) newAction{
-    NSLog(@"newAction");
-    CreateNewConversationViewController *newcontroller = [[CreateNewConversationViewController alloc] init];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController: newcontroller];
-    [self presentViewController: navigationController animated:YES completion:nil ];
-    
-}
--(void) editorDoneAction{
-    [self.tableview setEditing:NO animated:YES];
-    [self setNormalNavigationButtons];
-}
 
--(void) deleteAllAction{
-    
-}
 
 -(void)onNewMessage:(IMessage*)msg cid:(int64_t)cid{
     int index = -1;
@@ -511,42 +477,4 @@
     titleview.center = CGPointMake(self.view.frame.size.width/2 , 22);
     self.navigationItem.titleView = titleview;
 }
-
--(void) setNormalNavigationButtons{
-    
-    self.title = @"对话";
-   /*
-    UIBarButtonItem *editorButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
-                                                                     style:UIBarButtonItemStyleDone
-                                                                    target:self
-                                                                    action:@selector(editorAction)];
-    self.navigationItem.leftBarButtonItem = editorButton;
-    */
-    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(newAction)];
-    
-    self.navigationItem.rightBarButtonItem = newButton;
-
-
-}
-
--(void) setEditorNavigationButtons{
-    
-    self.title = [NSString stringWithFormat:@"对话(%d)",[self.conversations count]];
-    UIBarButtonItem *editorDoneButton = [[UIBarButtonItem alloc] initWithTitle:@"完成"
-                                                                     style:UIBarButtonItemStyleDone
-                                                                    target:self
-                                                                    action:@selector(editorDoneAction)];
-    self.navigationItem.leftBarButtonItem = editorDoneButton;
-    UIBarButtonItem *deletAllButton = [[UIBarButtonItem alloc] initWithTitle:@"全部删除"
-                                                                         style:UIBarButtonItemStyleDone
-                                                                        target:self
-                                                                        action:@selector(deleteAllAction)];
- 
-    
-    self.navigationItem.rightBarButtonItem = deletAllButton;
-
-}
-
-
-
 @end

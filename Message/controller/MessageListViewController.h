@@ -11,8 +11,8 @@
 #import "MessageConversationCell.h"
 #import "IMService.h"
 #import "PublicFunc.h"
-#import "CreateNewConversationViewController.h"
 #import "ContactDB.h"
+
 
 @interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver, ContactDBObserver>
 {
