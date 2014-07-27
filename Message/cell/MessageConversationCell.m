@@ -9,7 +9,9 @@
 #import "MessageConversationCell.h"
 
 
-#define kCatchWidth 148.0f
+//#define kCatchWidth 148.0f
+#define kCatchWidth 74.0f
+
 
 @interface MessageConversationCell () <UIScrollViewDelegate>
 
@@ -46,7 +48,7 @@
 	UIView *scrollViewButtonView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - kCatchWidth, 0.0f, kCatchWidth, CGRectGetHeight(self.bounds))];
 	self.scrollViewButtonView = scrollViewButtonView;
 	[scrollView addSubview:scrollViewButtonView];
-	
+/*
 	// Set up our two buttons
 	UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	moreButton.backgroundColor = [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f];
@@ -56,10 +58,11 @@
 	[moreButton addTarget:self action:@selector(userPressedMoreButton:) forControlEvents:UIControlEventTouchUpInside];
 	[self.scrollViewButtonView addSubview:moreButton];
     
-	
+*/
 	UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	deleteButton.backgroundColor = [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0f];
-	deleteButton.frame = CGRectMake(kCatchWidth / 2.0f, 0.0f, kCatchWidth / 2.0f, CGRectGetHeight(self.bounds));
+//	deleteButton.frame = CGRectMake(kCatchWidth / 2.0f, 0.0f, kCatchWidth / 2.0f, CGRectGetHeight(self.bounds));
+    	deleteButton.frame = CGRectMake(0.0f, 0.0f, kCatchWidth, CGRectGetHeight(self.bounds));
 	[deleteButton setTitle:@"删除" forState:UIControlStateNormal];
 	[deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 	[deleteButton addTarget:self action:@selector(userPressedDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
