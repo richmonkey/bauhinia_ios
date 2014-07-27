@@ -25,7 +25,9 @@
 #define navBarHeadButtonSize 35
 
 
-
+@interface MessageViewController()
+@property(nonatomic, assign)CGRect tableFrame;
+@end
 
 @implementation MessageViewController
 
@@ -34,7 +36,7 @@
     
     if (self = [super init]) {
         self.remoteUser = rmtUser;
-        self.curUser  =  [[UserDB instance] loadUser: [UserPresent instance].uid];
+        self.tableFrame = CGRectMake(0.0f, KNavigationBarHeight + kStatusBarHeight, 320, 480 - INPUT_HEIGHT - KNavigationBarHeight - kStatusBarHeight);
     }
     return self;
 }
@@ -54,10 +56,10 @@
     
     self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
     self.navigationBarButtonsView.center = self.navigationController.navigationBar.center;
-    if ([self.curUser.contact.contactName length] == 0) {
+    if ([self.remoteUser.contact.contactName length] == 0) {
         [self.navigationBarButtonsView.nameLabel setText:@"消息"];
     }else{
-        [self.navigationBarButtonsView.nameLabel setText:self.curUser.contact.contactName];
+        [self.navigationBarButtonsView.nameLabel setText:self.remoteUser.contact.contactName];
     }
     self.navigationItem.titleView = self.navigationBarButtonsView;
     
@@ -87,7 +89,7 @@
     
     CGSize size = self.view.frame.size;
 	
-    CGRect tableFrame = CGRectMake(0.0f, 0.0f, size.width, size.height - INPUT_HEIGHT);
+    CGRect tableFrame = self.tableFrame;
 	self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -235,8 +237,31 @@
 #pragma mark - Actions
 - (void)sendPressed:(UIButton *)sender
 {
-    [self  sendPressed:sender
-                      withText:[self.inputToolBarView.textView.text trimWhitespace]];
+    NSString *text = [self.inputToolBarView.textView.text trimWhitespace];
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = [UserPresent instance].uid;
+    msg.receiver = self.remoteUser.uid;
+    
+    MessageContent *content = [[MessageContent alloc] init];
+    content.raw = text;
+    msg.content = content;
+    msg.timestamp = time(NULL);
+    
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
+    
+    [self insertMsgToMessageBlokArray:msg];
+    
+    [self sendMessage:msg];
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    [self finishSend];
+
 }
 
 
@@ -289,6 +314,7 @@
 
 - (void)finishSend
 {
+    [self.tableView reloadData];
     [self.inputToolBarView.textView setText:nil];
     [self.inputToolBarView.textView resignFirstResponder];
     [self textViewDidChange:self.inputToolBarView.textView];
@@ -346,8 +372,9 @@
                                                                   inputViewFrameY,
                                                                   inputViewFrame.size.width,
                                                                   inputViewFrame.size.height);
-                         
-                         [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.tableView.frame.size.height - keyboardRect.size.height)];
+                         CGRect frame = self.tableFrame;
+                         frame.size.height = frame.size.height - keyboardRect.size.height;
+                         self.tableView.frame = frame;
                      }
                      completion:^(BOOL finished) {
                      }];
@@ -368,8 +395,7 @@
                                                                   inputViewFrameY,
                                                                   inputViewFrame.size.width,
                                                                   inputViewFrame.size.height);
-                         
-                         [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.tableView.frame.size.height + keyboardRect.size.height)];
+                         self.tableView.frame = self.tableFrame;
                      }
                      completion:^(BOOL finished) {
                      }];
@@ -403,9 +429,9 @@
     content.raw = im.content;
     m.content = content;
     m.timestamp = time(NULL);
-    
-    [self addMessageToTheTableView: m];
-    
+
+    [self insertMsgToMessageBlokArray:m];
+    [self.tableView reloadData];
     [self scrollToBottomAnimated:YES];
 }
 
@@ -446,11 +472,11 @@
     if (on) {
         
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-        self.curUser.onlineState = UserOnlineStateOnline;
+        self.remoteUser.onlineState = UserOnlineStateOnline;
     }else{
         
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
-        self.curUser.onlineState = UserOnlineStateOffline;
+        self.remoteUser.onlineState = UserOnlineStateOffline;
     }
     
 }
@@ -475,9 +501,9 @@
     
     [self.inputStatusTimer invalidate];
     self.inputStatusTimer = nil;
-    if (self.curUser.onlineState == UserOnlineStateOnline) {
+    if (self.remoteUser.onlineState == UserOnlineStateOnline) {
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-    }else if(self.curUser.onlineState == UserOnlineStateOffline){
+    }else if(self.remoteUser.onlineState == UserOnlineStateOffline){
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
     }
  
@@ -683,34 +709,6 @@
     return r;
 }
 
-- (void) sendPressed:(UIButton *)sender withText:(NSString *)text {
-    
-    IMessage *msg = [[IMessage alloc] init];
-    
-    msg.sender = [UserPresent instance].uid;
-    msg.receiver = self.remoteUser.uid;
-    
-    MessageContent *content = [[MessageContent alloc] init];
-    content.raw = text;
-    msg.content = content;
-    msg.timestamp = time(NULL);
-
-    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    
-    [self addMessageToTheTableView:msg];
-    
-    [self sendMessage:msg];
-    
-    [JSMessageSoundEffect playMessageSentSound];
-    
-    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
-
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    [self finishSend];
-    
-}
-
 - (void)cameraPressed:(id)sender{
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate  = self;
@@ -883,20 +881,6 @@
 #pragma mark - function
 
 -(void) setNormalNavigationButtons{
-   /*
-    UIButton *imgButton = [[UIButton alloc] initWithFrame: CGRectMake(0,0,navBarHeadButtonSize,navBarHeadButtonSize)];
-    
-    [imgButton setImage: [UIImage  imageNamed:@"head1.png"] forState: UIControlStateNormal];
-    [imgButton addTarget:self action:@selector(navBarUserheadAction) forControlEvents:UIControlEventTouchUpInside];
-    
-    CALayer *imageLayer = [imgButton layer];   //获取ImageView的层
-    [imageLayer setMasksToBounds:YES];
-    [imageLayer setCornerRadius:imgButton.frame.size.width/2];
-    
-    UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithCustomView: imgButton];
-    self.navigationItem.rightBarButtonItem = navBarHeadButton;
-    */
- 
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
                                                              style:UIBarButtonItemStyleDone
@@ -939,27 +923,6 @@
             }
         }
     }
-}
-
--(void) addMessageToTheTableView:(IMessage*) msg{
-    
-    NSIndexPath *indexPath = [self insertMsgToMessageBlokArray: msg];
-    if (indexPath.row == 0 ) {
-        
-        NSUInteger sectionCount = indexPath.section;
-        NSIndexSet *indices = [NSIndexSet indexSetWithIndex: sectionCount];
-        [self.tableView beginUpdates];
-        [self.tableView insertSections:indices withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-        
-    }else{
-        NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-        [indexPaths addObject: indexPath];
-        [self.tableView beginUpdates];
-        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-    }
-    
 }
 
 -(void)returnMainTableViewController {

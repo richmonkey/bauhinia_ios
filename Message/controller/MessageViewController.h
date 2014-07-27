@@ -33,7 +33,6 @@
 
 @property (nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
 @property (nonatomic) int  inputTimestamp;
-@property (nonatomic) IMUser *curUser;
 @property (nonatomic) IMUser *remoteUser;
 @property (nonatomic) NSTimer  *inputStatusTimer;
 

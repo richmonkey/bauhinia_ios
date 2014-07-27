@@ -10,6 +10,7 @@
 #import "MessageListViewController.h"
 #import "AppDelegate.h"
 #import "User.h"
+#import "UserDB.h"
 #import "IMessage.h"
 #import "MessageViewController.h"
 
@@ -55,16 +56,13 @@
     [self.view addSubview:label];
 }
 
-
--(void)presentMessageViewController:(IMUser*)user {
-    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: user];
-    [self.navigationController pushViewController:msgController animated:YES];
-}
 -(void)onSendMessage {
     if ([self.contact.users count] == 1) {
         NSLog(@"send message");
-        IMUser *u = [self.contact.users objectAtIndex:0];
-        [self presentMessageViewController: u];
+        User *u = [self.contact.users objectAtIndex:0];
+        IMUser *mu = [[UserDB instance] loadUser:u.uid];
+        MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:mu];
+        [self.navigationController pushViewController:msgController animated:YES];
     } else if ([self.contact.users count] > 1) {
         //选择用户
     }
