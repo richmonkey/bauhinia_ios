@@ -136,6 +136,22 @@
     return YES;
 }
 
++(BOOL)clearMessages:(NSString*)path {
+    int fd = open([path UTF8String], O_WRONLY);
+    if (fd == -1) {
+        NSLog(@"open file fail:%@", path);
+        return NO;
+    }
+    if (![MessageDB checkHeader:fd]) {
+        close(fd);
+        unlink([path UTF8String]);
+        return YES;
+    }
+    ftruncate(fd, HEADER_SIZE);
+    close(fd);
+    return YES;
+}
+
 +(IMessage*)readMessage:(ReverseFile*)file {
     char buf[64*1024];
 

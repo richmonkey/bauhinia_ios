@@ -28,5 +28,6 @@
 +(BOOL)writeMessage:(IMessage*)msg fd:(int)fd;
 +(BOOL)insertIMessage:(IMessage*)msg path:(NSString*)path;
 +(BOOL)addFlag:(int)msgLocalID path:(NSString*)path flag:(int)flag;
++(BOOL)clearMessages:(NSString*)path;
 +(IMessage*)readMessage:(ReverseFile*)file;
 @end
