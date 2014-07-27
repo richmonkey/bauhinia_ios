@@ -17,7 +17,7 @@
 @interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver, ContactDBObserver>
 {
   
-	UITableView *_table;
+	UITableView *tableview;
 	UISearchDisplayController *searchDC;
 	UISearchBar *searchBar;
 	NSMutableArray *filteredArray;
@@ -27,9 +27,9 @@
 @property (strong , nonatomic) UISearchDisplayController *searchDC;
 @property (strong , nonatomic) UISearchBar *searchBar;
 @property (strong , nonatomic) NSMutableArray *filteredArray;
-@property (strong , nonatomic) UITableView *_table;
+@property (strong , nonatomic) UITableView *tableview;
 
 @property (nonatomic, weak) UITableViewCell *cellDisplayingMenuOptions;
-@property (nonatomic, weak) UITableViewCell *mostRecentlySelectedMoreCell;
+@property (nonatomic, weak) MessageConversationCell *mostRecentlySelectedMoreCell;
 
 @end
