@@ -84,23 +84,8 @@
        [headerView.nameLabel setText:@" "];
     }
     
-    [headerView.pinyinLabel setText:@""];
-    [headerView.jobLabel setText:@"工作未知"];
-    [headerView.companyLabel setText:@"单位未知"];
-    
-    
-    if ([self getUserCount] == 0) {
-       
-        rect = CGRectMake(0, 0, self.view.frame.size.width, 50);
-        self.inviteBtn = [UIButton  buttonWithType:UIButtonTypeCustom];
-        [self.inviteBtn setFrame:rect];
-        [self.inviteBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
-        [self.inviteBtn setTitle:@"邀请使用" forState:UIControlStateNormal];
-        [self.inviteBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        
-        [self.inviteBtn addTarget:self action:@selector(invite) forControlEvents:UIControlEventTouchUpInside];
-        [self.tableview setTableFooterView: self.inviteBtn];
-    }else{
+    if ([self getUserCount] > 0) {
+  
         rect = CGRectMake(0, 0, self.view.frame.size.width, 50);
         self.sendIMBtn = [UIButton  buttonWithType:UIButtonTypeCustom];
         [self.sendIMBtn setFrame:rect];
@@ -110,35 +95,36 @@
         
         [self.sendIMBtn addTarget:self action:@selector(onSendMessage) forControlEvents:UIControlEventTouchUpInside];
         [self.tableview setTableFooterView: self.sendIMBtn];
-    
     }
-    
  }
 
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return [self getPhoneCount] + [self getUserCount];
-    
+    if ([self getUserCount] > 0) {
+        return [self getUserCount];
+    } else {
+        return [self.contact.phoneDictionaries count];
+    }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (indexPath.row > ([self getPhoneCount] - 1)) {
+    if ([self getUserCount] > 0) {
+
         ContactIMUserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactIMUserTableViewCell"];
         
         if (cell == nil) {
             cell = [[[NSBundle mainBundle]loadNibNamed:@"ContactIMUserTableViewCell" owner:self options:nil] lastObject];
         }
- 
-        IMUser *u = [self.contact.users objectAtIndex:indexPath.row - [self getPhoneCount]];
+        
+        IMUser *u = [self.contact.users objectAtIndex:indexPath.row];
         [cell.phoneNumberLabel setText:u.phoneNumber.number];
         [cell.personnalStatusLabel setText:u.state];
-        
+
         return cell;
-    }else{
+    } else {
         ContactPhoneTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactPhoneTableViewCell"];
         
         if (cell == nil) {
@@ -148,38 +134,19 @@
         [cell.phoneNumLabel setText:[phoneDic objectForKey:@"value"]];
         [cell.phoneTypeLabel setText:[phoneDic objectForKey:@"label"]];
         
-        
         return cell;
         
     }
-    
-    return nil;
-    
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row >([self getPhoneCount] - 1) ) {
-        return 108;
-    }else{
-        return 67;
-    }
-}
-
--(NSInteger) getPhoneCount{
-    
-    if(self.contact.phoneDictionaries && [self.contact.phoneDictionaries count] != 0){
-        return [self.contact.phoneDictionaries count];
-    }
-    return 0;
+    return 108;
 }
 
 -(NSInteger)getUserCount{
-    if (self.contact.users && [self.contact.users count] != 0) {
-        return [self.contact.users count];
-    }
-    return 0;
+    return [self.contact.users count];
 }
 
 -(void)presentMessageViewController:(IMUser*)user {
@@ -187,10 +154,6 @@
     [self.navigationController pushViewController:msgController animated:YES];
 }
 
--(void)invite{
-    
-
-}
 
 -(void)onSendMessage {
     if ([self.contact.users count] == 1) {
@@ -200,7 +163,7 @@
         MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:mu];
         [self.navigationController pushViewController:msgController animated:YES];
     } else if ([self.contact.users count] > 1) {
-        //选择用户
+    
     }
 }
 
