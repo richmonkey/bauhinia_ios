@@ -22,10 +22,7 @@
     else
     {
         sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        
-//        UIEdgeInsets insets = UIEdgeInsetsMake(0.0f, 13.0f, 0.0f, 13.0f);
-//        UIImage *sendBack = [[UIImage imageNamed:@"send"] resizableImageWithCapInsets:insets];
-//        UIImage *sendBackHighLighted = [[UIImage imageNamed:@"send"] resizableImageWithCapInsets:insets];
+
         
         UIImage *sendBack = [UIImage imageNamed:@"send.png"];
         UIImage *sendBackHighLighted = [UIImage imageNamed:@"send.png"];

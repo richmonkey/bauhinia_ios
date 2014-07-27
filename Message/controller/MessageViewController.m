@@ -51,7 +51,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+ 
     [self setup];
+
     [self setNormalNavigationButtons];
     
     self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
@@ -62,9 +64,7 @@
         [self.navigationBarButtonsView.nameLabel setText:self.remoteUser.contact.contactName];
     }
     self.navigationItem.titleView = self.navigationBarButtonsView;
-    
-    [[self sendButton] setUserInteractionEnabled: NO];
-    
+
     [self processConversationData];
     
     
@@ -172,10 +172,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    
     [self scrollToBottomAnimated:NO];
-    
-    _originalTableViewContentInset = self.tableView.contentInset;
     
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(handleWillShowKeyboard:)
@@ -925,6 +922,8 @@
 }
 
 -(void)returnMainTableViewController {
+
+    [[IMService instance] removeMessageObserver:self];
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     delegate.tabBarController.selectedIndex = 2;
     [self.navigationController popToRootViewControllerAnimated:YES];

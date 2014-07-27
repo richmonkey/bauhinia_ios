@@ -37,6 +37,8 @@ typedef enum
 @property (strong, nonatomic) JSMessageTextView *textView;
 @property (strong, nonatomic) UIButton *sendButton;
 
+@property (weak, nonatomic) id<UITextViewDelegate, JSMessageInputViewDelegate> delegate;
+
 #pragma mark - Initialization
 - (id)initWithFrame:(CGRect)frame delegate:(id<UITextViewDelegate, JSMessageInputViewDelegate>)delegate;
 

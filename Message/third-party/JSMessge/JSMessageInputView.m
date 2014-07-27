@@ -24,7 +24,7 @@
 
 #define SEND_BUTTON_WIDTH 78.0f
 
-static id<JSMessageInputViewDelegate> __delegate;
+
 
 @interface JSMessageInputView ()
 
@@ -44,7 +44,7 @@ static id<JSMessageInputViewDelegate> __delegate;
 {
     self = [super initWithFrame:frame];
     if(self) {
-        __delegate = delegate;
+        self.delegate = delegate;
         [self setup];
         self.textView.delegate = delegate;
     }
@@ -53,10 +53,7 @@ static id<JSMessageInputViewDelegate> __delegate;
 
 + (JSInputBarStyle)inputBarStyle
 {
-    if ([__delegate respondsToSelector:@selector(inputBarStyle)])
-        return [__delegate inputBarStyle];
-    
-    return JSInputBarStyleDefault;
+    return JSInputBarStyleFlat;
 }
 
 - (void)dealloc
