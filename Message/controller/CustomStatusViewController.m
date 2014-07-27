@@ -92,7 +92,11 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"definestatuscell"];
             }
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-            [cell.textLabel setText: self.currentStatus];
+            if ([self.currentStatus isEqualToString:@""]) {
+                [cell.textLabel setText:@"~没有状态~"];
+            }else{
+                [cell.textLabel setText: self.currentStatus];
+            }
             
         }else{
             cell  = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
@@ -150,13 +154,28 @@
                                [hub hide:YES afterDelay:0.1];
                            }];
 
+    }else if(indexPath.section == kClearStatusCellSection){
+        MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hub.removeFromSuperViewOnHide = YES;
+        NSString *s = @"~没有状态~";
+        [APIRequest updateState:s
+                        success:^{
+                            self.currentStatus = @"~没有状态~";
+                            [hub hide:YES];
+                            [self.tableView reloadData];
+                        }
+                           fail:^{
+                               hub.labelText = @"请求失败";
+                               [hub hide:YES afterDelay:0.1];
+                           }];
+       
     }
 }
 
 -(void) setNavigationButtons{
     
     self.title = @"自定义状态";
-    
+   /*
     UIBarButtonItem *editorDoneButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
                                                                          style:UIBarButtonItemStyleDone
                                                                         target:self
@@ -166,7 +185,7 @@
     
     
     self.navigationItem.rightBarButtonItem = addButton;
-    
+    */
 }
 
 #pragma mark - Action
