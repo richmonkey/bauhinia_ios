@@ -329,7 +329,7 @@
 
 -(void)cellDidSelectMore:(MessageConversationCell *)cell {
     self.mostRecentlySelectedMoreCell = cell;
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle: nil otherButtonTitles:@"联系资讯", @"发送对话记录", @"清除对话", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle: nil otherButtonTitles:@"联系资讯", @"清除对话", nil];
     actionSheet.destructiveButtonIndex= 2 ;
     
     [actionSheet showInView:self.view];
@@ -342,9 +342,21 @@
     else if (buttonIndex == actionSheet.destructiveButtonIndex) {
         [self cellDidSelectDelete:self.mostRecentlySelectedMoreCell];
     }else if(buttonIndex == kActionSheetContact){
-    //todo
-    }else if(buttonIndex == kActionSheetSendHistory){
-    
+       //TODO
+        if ([self.searchDC isActive]) {
+            NSIndexPath * findPath =  [self.searchDC.searchResultsTableView indexPathForCell:self.mostRecentlySelectedMoreCell];
+            Conversation *con = [self.filteredArray objectAtIndex:findPath.row];
+            IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
+            
+            [self.searchDC setActive:NO];
+            
+        }else{
+            NSIndexPath * findPath =  [self.tableview indexPathForCell:self.mostRecentlySelectedMoreCell];
+            Conversation *con = [self.conversations objectAtIndex:findPath.row];
+            [[PeerMessageDB instance] clearConversation:con.cid];
+            [self.conversations removeObject:con];
+            [self.tableview reloadData];
+        }
     }
     
 }

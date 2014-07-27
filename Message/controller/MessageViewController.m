@@ -664,8 +664,7 @@
         //当天
         int hour = [PublicFunc getHourComponentOfDate:curtDate];
         int minute = [PublicFunc getMinuteComponentOfDate:curtDate];
-        int second = [PublicFunc getSecondeComponentOfDate:curtDate];
-        timeStr = [NSString stringWithFormat:@"%d:%d:%D",hour,minute,second];
+        timeStr = [NSString stringWithFormat:@"%d:%d",hour,minute];
         sectionView.sectionHeader.text = timeStr;
         
     }else{
@@ -673,7 +672,7 @@
         NSString *weekStr = [PublicFunc getWeekDayString: week];
         sectionView.sectionHeader.text = weekStr;
     }
-    
+    sectionView.alpha = 0.9;
     return sectionView;
 }
 
