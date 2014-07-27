@@ -26,6 +26,10 @@
   return self;
 }
 
+-(void)dealloc {
+    delete self.iter;
+}
+
 -(void)seek:(NSString*)target {
   leveldb::Slice t([target UTF8String]);
   self.iter->Seek(t);
@@ -97,6 +101,10 @@
     self.db = db;
   }
   return self;
+}
+
+-(void)dealloc {
+    delete self.db;
 }
 
 -(NSString*)stringForKey:(NSString*)key {

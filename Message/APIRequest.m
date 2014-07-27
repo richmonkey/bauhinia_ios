@@ -66,7 +66,7 @@
 
 
 +(TAHttpOperation*)requestAuthToken:(NSString*)code zone:(NSString*)zone number:(NSString*)number deviceToken:(NSString*)deviceToken
-                            success:(void (^)(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp))success
+                            success:(void (^)(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp, NSString *state))success
                                fail:(void (^)())fail {
     TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
     request.targetURL = [[Config instance].URL stringByAppendingString:@"/auth/token"];
@@ -96,7 +96,8 @@
         NSString *refreshToken = [resp objectForKey:@"refresh_token"];
         int expireTimestamp = time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
         int64_t uid = [[resp objectForKey:@"uid"] longLongValue];
-        success(uid, accessToken, refreshToken, expireTimestamp);
+        NSString *state = [resp objectForKey:@"state"];
+        success(uid, accessToken, refreshToken, expireTimestamp, state);
     };
     request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
         fail();

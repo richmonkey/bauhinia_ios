@@ -125,7 +125,7 @@
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     [APIRequest requestAuthToken:self.pwd.text zone:@"86" number:self.mobile.text deviceToken:delegate.deviceToken
-                         success:^(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp){
+                         success:^(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp, NSString *state){
                              Token *token = [Token instance];
                              token.accessToken = accessToken;
                              token.refreshToken = refreshToken;
@@ -135,6 +135,7 @@
                              
                              [UserPresent instance].uid = uid;
                              [UserPresent instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.mobile.text];
+                             [UserPresent instance].state = state;
                              [[UserDB instance] addUser:[UserPresent instance]];
                              [hud hide:NO];
                              [self loginSuccess];

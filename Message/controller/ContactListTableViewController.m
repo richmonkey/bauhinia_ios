@@ -19,6 +19,9 @@
 @property (nonatomic) UISearchBar *searchBar;
 @property (nonatomic) UINavigationController *aBPersonNav;
 
+@property (nonatomic) NSIndexPath *selectedIndexPath;
+@property (nonatomic) UITableView *selectedTableView;
+
 @end
 
 @implementation ContactListTableViewController
@@ -34,7 +37,7 @@
     [super viewDidLoad];
     self.tabBarController.navigationItem.title = @"所有联系人";
 	
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,kStatusBarHeight + KNavigationBarHeight, 320.0f, KNavigationBarHeight)];
+	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,kStatusBarHeight + KNavigationBarHeight, 320.0f, kSearchBarHeight)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
@@ -52,7 +55,8 @@
 	self.tableView.showsVerticalScrollIndicator = YES;
     self.tableView.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
     
-    self.tableView.frame = CGRectMake(0, KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight, self.view.frame.size.width, self.view.frame.size.height - (KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight));
+    self.tableView.frame = CGRectMake(0, KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight, self.view.frame.size.width, self.view.frame.size.height - (KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight + kTabBarHeight));
+    NSLog(@"height:%f", self.view.frame.size.height);
 	[self.view addSubview:self.tableView];
 
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -60,19 +64,17 @@
     NSString *s = [NSString stringWithFormat:@"   我的电话号码:+%@ %@", phoneNumber.zone, phoneNumber.number];
     [head setText:s];
     self.tableView.tableHeaderView = head;
- 
+    
     [[ContactDB instance] addObserver:self];
     [self loadData];
-    
-    IMLog(@"request users.....");
     [self requestUsers];
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
+    [self.selectedTableView deselectRowAtIndexPath:self.selectedIndexPath animated:YES];
+    self.selectedIndexPath = nil;
+    self.selectedTableView = nil;
 }
 
 -(NSString*)getSectionName:(NSString*)string {
@@ -107,6 +109,7 @@
     if (time(NULL) - t < 24*3600) {
       //  return;
     }
+    IMLog(@"request users.....");
     [APIRequest requestUsers:self.contacts
                      success:^(NSArray *resp) {
                          for (NSDictionary *dict in resp) {
@@ -348,30 +351,19 @@
 
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	ABPersonViewController *pvc = [[ABPersonViewController alloc] init] ;
-    pvc.navigationItem.backBarButtonItem =[[UIBarButtonItem alloc] initWithTitle:@"取消"
-                                                                           style:UIBarButtonItemStyleBordered
-                                                                          target:self
-                                                                          action:@selector(cancelBtnAction:)] ;
-    pvc.title = @"联系人详细";
 	IMContact *contact;
 	if (aTableView == self.tableView){
 		contact = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 	}else{
 		contact = [self.filteredArray objectAtIndex:indexPath.row];
     }
-    
   
     ContactViewController *ctl = [[ContactViewController alloc] init];
     ctl.hidesBottomBarWhenPushed = YES;
     ctl.contact = contact;
     [self.navigationController pushViewController:ctl animated:YES];
-}
-
-- (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifierForValue
-{
-	[self dismissViewControllerAnimated:YES completion:nil];
-	return NO;
+    self.selectedTableView = aTableView;
+    self.selectedIndexPath = indexPath;
 }
 
 #pragma mark - Action

@@ -106,12 +106,7 @@
 
 -(BOOL)clearConversation:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];
-    int r = unlink([path UTF8String]);
-    if (r == -1) {
-        NSLog(@"unlink error:%d", errno);
-        return (errno == ENOENT);
-    }
-    return YES;
+    return [MessageDB clearMessages:path];
 }
 
 -(BOOL)clear {
@@ -130,7 +125,7 @@
             if ([name hasPrefix:@"p_"]) {
                 int64_t uid = [[name substringFromIndex:2] longLongValue];
                 NSString *path = [self getPeerPath:uid];
-                unlink([path UTF8String]);
+                [MessageDB clearMessages:path];
             } else {
                 NSLog(@"skip file:%@", name);
             }
@@ -216,7 +211,7 @@
                 c.cid = uid;
                 c.type = CONVERSATION_PEER;
                 c.message = [self getLastPeerMessage:uid];
-                if (c.message) return c;
+                return c;
             } else if ([name hasPrefix:@"g_"]) {
                 
             } else {
