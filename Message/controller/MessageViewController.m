@@ -96,8 +96,8 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView setBackgroundColor:[UIColor clearColor]];
     
-    UIColor *bgColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"bakground"]];
-    [self.view setBackgroundColor:bgColor];
+    UIImageView *bgColor = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bakground"]];
+    [self.view addSubview: bgColor];
     
 	[self.view addSubview:self.tableView];
 	
@@ -271,6 +271,9 @@
     [cell setMessageState:[self messageForRowAtIndexPath:indexPath]];
     [cell setMessage:[self textForRowAtIndexPath:indexPath]];
     [cell setBackgroundColor:[UIColor clearColor]];
+    
+
+    
     return cell;
 }
 
@@ -880,7 +883,7 @@
 #pragma mark - function
 
 -(void) setNormalNavigationButtons{
-    
+   /*
     UIButton *imgButton = [[UIButton alloc] initWithFrame: CGRectMake(0,0,navBarHeadButtonSize,navBarHeadButtonSize)];
     
     [imgButton setImage: [UIImage  imageNamed:@"head1.png"] forState: UIControlStateNormal];
@@ -892,7 +895,7 @@
     
     UIBarButtonItem *navBarHeadButton = [[UIBarButtonItem alloc] initWithCustomView: imgButton];
     self.navigationItem.rightBarButtonItem = navBarHeadButton;
-    
+    */
  
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
@@ -932,7 +935,7 @@
                 
                 NSIndexPath *findpath = [NSIndexPath indexPathForRow:rowindex inSection: sectionIndex];
                 NSArray *array = [NSArray arrayWithObject:findpath];
-                [self.tableView reloadRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
+                [self.tableView reloadRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationNone];
             }
         }
     }
@@ -941,13 +944,12 @@
 -(void) addMessageToTheTableView:(IMessage*) msg{
     
     NSIndexPath *indexPath = [self insertMsgToMessageBlokArray: msg];
-    
     if (indexPath.row == 0 ) {
         
         NSUInteger sectionCount = indexPath.section;
         NSIndexSet *indices = [NSIndexSet indexSetWithIndex: sectionCount];
         [self.tableView beginUpdates];
-        [self.tableView insertSections:indices withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView insertSections:indices withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView endUpdates];
         
     }else{

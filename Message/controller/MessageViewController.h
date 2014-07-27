@@ -18,7 +18,7 @@
 #import "UIButton+JSMessagesView.h"
 #import "JSDismissiveTextView.h"
 
-#define kAllowsMedia		YES
+#define kAllowsMedia	NO	
 #define INPUT_HEIGHT 46.0f
 
 
