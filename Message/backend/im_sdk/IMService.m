@@ -25,7 +25,7 @@
 @property(nonatomic)int64_t uid;
 @property(nonatomic)NSMutableDictionary *peerMessages;
 @property(nonatomic)NSMutableDictionary *groupMessages;
-@property(nonatomic)NSMutableSet *subs;
+@property(nonatomic)NSMutableDictionary *subs;
 @end
 
 @implementation IMService
@@ -54,7 +54,7 @@
             [self sendHeartbeat];
         });
         self.observers = [NSMutableArray array];
-        self.subs = [NSMutableSet set];
+        self.subs = [NSMutableDictionary dictionary];
         self.data = [NSMutableData data];
         self.peerMessages = [NSMutableDictionary dictionary];
         self.groupMessages = [NSMutableDictionary dictionary];
@@ -183,7 +183,7 @@
     NSLog(@"auth status:%d", status);
     if (status == 0 && [self.subs count]) {
         MessageSubsribe *sub = [[MessageSubsribe alloc] init];
-        sub.uids = [self.subs allObjects];
+        sub.uids = [self.subs allKeys];
         [self sendSubscribe:sub];
     }
 }
@@ -206,6 +206,11 @@
 
 -(void)handleOnlineState:(Message*)msg {
     MessageOnlineState *state = (MessageOnlineState*)msg.body;
+    NSNumber *key = [NSNumber numberWithLongLong:state.sender];
+    if ([self.subs objectForKey:key]) {
+        NSNumber *on = [NSNumber numberWithBool:state.online];
+        [self.subs setObject:on forKey:key];
+    }
     for (id<MessageObserver> ob in self.observers) {
         [ob onOnlineState:state.sender state:state.online];
     }
@@ -429,17 +434,24 @@
 //订阅用户在线状态通知消息
 -(void)subscribeState:(int64_t)uid {
     NSNumber *n = [NSNumber numberWithLongLong:uid];
-    if (![self.subs containsObject:n]) {
-        [self.subs addObject:n];
+    if (![self.subs objectForKey:n]) {
+        [self.subs setObject:[NSNumber numberWithBool:NO] forKey:n];
         MessageSubsribe *sub = [[MessageSubsribe alloc] init];
         sub.uids = [NSArray arrayWithObject:n];
         [self sendSubscribe:sub];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            BOOL online = [[self.subs objectForKey:n] boolValue];
+            for (id<MessageObserver> ob in self.observers) {
+                [ob onOnlineState:uid state:online];
+            }
+        });
     }
 }
 
 -(void)unsubscribeState:(int64_t)uid {
     NSNumber *n = [NSNumber numberWithLongLong:uid];
-    [self.subs removeObject:n];
+    [self.subs removeObjectForKey:n];
 }
 
 @end
