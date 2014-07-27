@@ -77,6 +77,7 @@
    
     [self.contentView addSubview: scrollView];
 	self.myScrollView = scrollView;
+    
 }
 
 
@@ -120,7 +121,6 @@
 	[super setEditing:editing animated:animated];
 	self.myScrollView.scrollEnabled = !self.editing;
     self.scrollViewButtonView.hidden = editing;
-    
 }
 
 #pragma mark - UIScrollViewDelegate Methods

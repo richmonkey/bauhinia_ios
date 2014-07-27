@@ -20,13 +20,16 @@
 #define kPeerConversationCellHeight         50
 #define kGroupConversationCellHeight        44
 
+#define kActionSheetContact           0
+#define kActionSheetSendHistory       1
+
 @interface MessageListViewController ()
 
 @end
 
 @implementation MessageListViewController
 
-@synthesize _table;
+@synthesize tableview;
 @synthesize filteredArray;
 @synthesize searchBar;
 @synthesize searchDC;
@@ -36,6 +39,7 @@
     if (self) {
         self.filteredArray =  [NSMutableArray array];
         self.conversations = [[NSMutableArray alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newConversation:) name:CREATE_NEW_CONVERSATION object:nil];
     }
     return self;
 }
@@ -49,23 +53,23 @@
     [super viewDidLoad];
     [self setNormalNavigationButtons];
     
-    self._table = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
-	self._table.delegate = self;
-	self._table.dataSource = self;
-	self._table.scrollEnabled = YES;
-	self._table.showsVerticalScrollIndicator = NO;
-	self._table.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableview = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
+	self.tableview.delegate = self;
+	self.tableview.dataSource = self;
+	self.tableview.scrollEnabled = YES;
+	self.tableview.showsVerticalScrollIndicator = NO;
+	self.tableview.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
-    self._table.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
-    self._table.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-	[self.view addSubview:self._table];
+    self.tableview.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
+    self.tableview.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+	[self.view addSubview:self.tableview];
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, kSearchBarHeight)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
 	self.searchBar.delegate = self;
-    [self._table setTableHeaderView:self.searchBar];
+    [self.tableview setTableHeaderView:self.searchBar];
 	
     self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
 	self.searchDC.searchResultsDataSource = self;
@@ -106,7 +110,7 @@
         IMUser *user = [db loadUser:conv.cid];
         conv.name = user.contact.contactName;
     }
-    [self._table reloadData];
+    [self.tableview reloadData];
 }
 
 #pragma mark - Table view data source
@@ -117,7 +121,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (tableView == self._table) {
+    if (tableView == self.tableview) {
         
         return [self.conversations count];
     }else{
@@ -139,7 +143,7 @@
         cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil] lastObject];
     }
     Conversation * covn = nil;
-    if (tableView == self._table) {
+    if (tableView == self.tableview) {
         
          covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
     
@@ -176,7 +180,7 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView == self._table) {
+    if (tableView == self.tableview) {
         return YES;
     }
     return NO;
@@ -208,12 +212,18 @@
 }
 
 -(void) newConversation:(NSNotification*) notification{
-#pragma mark - TODO
-    Conversation *con = [notification object];
-    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:nil];
-    msgController.hidesBottomBarWhenPushed = YES;
+
+    IMContact *imcontact = notification.object;
     
-    [self.navigationController pushViewController:msgController animated:NO];
+    if ([imcontact.users count] == 1) {
+        IMUser *rmtUser = [imcontact.users firstObject];
+        MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:rmtUser];
+        msgController.hidesBottomBarWhenPushed = YES;
+        
+        [self.navigationController pushViewController:msgController animated:NO];
+    }
+    
+
 }
 #pragma mark - UISearchBarDelegate
 
@@ -278,7 +288,7 @@
             [self.searchBar resignFirstResponder];
         }
         
-        NSIndexPath  *path = [self._table indexPathForCell:cell];
+        NSIndexPath  *path = [self.tableview indexPathForCell:cell];
         Conversation *con = [self.conversations objectAtIndex:path.row];
         IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
         
@@ -292,8 +302,29 @@
 
 -(void)cellDidSelectDelete:(MessageConversationCell *)cell {
     
-    NSLog(@"删除！！！");
-    
+    if ([self.searchDC isActive]) {
+        NSIndexPath * findPath =  [self.searchDC.searchResultsTableView indexPathForCell:cell];
+        Conversation *con = [self.filteredArray objectAtIndex:findPath.row];
+        
+        [[PeerMessageDB instance] clearConversation:con.cid];
+        
+        [self.filteredArray removeObject:con];
+        [self.conversations removeObject:con];
+        
+        [self.tableview reloadData];
+        [self.searchDC.searchResultsTableView reloadData];
+        
+        if([self.filteredArray count] == 0){
+            [self.searchDC setActive:NO];
+        }
+        
+    }else{
+        NSIndexPath * findPath =  [self.tableview indexPathForCell:cell];
+        Conversation *con = [self.conversations objectAtIndex:findPath.row];
+        [[PeerMessageDB instance] clearConversation:con.cid];
+        [self.conversations removeObject:con];
+        [self.tableview reloadData];
+    }
 }
 
 -(void)cellDidSelectMore:(MessageConversationCell *)cell {
@@ -309,10 +340,11 @@
         
     }
     else if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        NSIndexPath *indexPath = [self._table indexPathForCell:self.mostRecentlySelectedMoreCell];
-        
-        
-        [self._table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self cellDidSelectDelete:self.mostRecentlySelectedMoreCell];
+    }else if(buttonIndex == kActionSheetContact){
+    //todo
+    }else if(buttonIndex == kActionSheetSendHistory){
+    
     }
     
 }
@@ -322,7 +354,7 @@
 - (void) editorAction{
     NSLog(@"editorAction");
     [self setEditorNavigationButtons];
-    [self._table setEditing: YES animated:YES];
+    [self.tableview setEditing: YES animated:YES];
 }
 
 - (void) newAction{
@@ -333,7 +365,7 @@
     
 }
 -(void) editorDoneAction{
-    [self._table setEditing:NO animated:YES];
+    [self.tableview setEditing:NO animated:YES];
     [self setNormalNavigationButtons];
 }
 
@@ -360,10 +392,10 @@
         if (index != 0) {
             NSIndexPath *path1 = [NSIndexPath indexPathForRow:index inSection:0];
             NSIndexPath *path2 = [NSIndexPath indexPathForRow:0 inSection:0];
-            [self._table moveRowAtIndexPath:path1 toIndexPath:path2];
+            [self.tableview moveRowAtIndexPath:path1 toIndexPath:path2];
         } else {
             NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-            [self._table reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
         }
     } else {
         Conversation *con = [[Conversation alloc] init];
@@ -378,7 +410,7 @@
         [self.conversations insertObject:con atIndex:0];
         NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
         NSArray *array = [NSArray arrayWithObject:path];
-        [self._table insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
+        [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
     }
 }
 
@@ -471,13 +503,13 @@
 -(void) setNormalNavigationButtons{
     
     self.title = @"对话";
-    
+   /*
     UIBarButtonItem *editorButton = [[UIBarButtonItem alloc] initWithTitle:@"编辑"
                                                                      style:UIBarButtonItemStyleDone
                                                                     target:self
                                                                     action:@selector(editorAction)];
     self.navigationItem.leftBarButtonItem = editorButton;
-    
+    */
     UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(newAction)];
     
     self.navigationItem.rightBarButtonItem = newButton;
