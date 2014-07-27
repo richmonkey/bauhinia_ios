@@ -22,7 +22,7 @@
 #define KNavigationBarHeight 44
 #define kStatusBarHeight 20
 #define kSearchBarHeight 44
-
+#define kTabBarHeight 49
 //NSNotificaiton
 
 #define CREATE_NEW_CONVERSATION @"creat_new_conversation"
