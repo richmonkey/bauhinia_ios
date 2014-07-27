@@ -364,7 +364,7 @@
   
     ContactViewController *ctl = [[ContactViewController alloc] init];
     ctl.hidesBottomBarWhenPushed = YES;
-    ctl.contact = contact;
+    ctl.contact = [[ContactDB instance] loadIMContact:contact.recordID];
     [self.navigationController pushViewController:ctl animated:YES];
     self.selectedTableView = aTableView;
     self.selectedIndexPath = indexPath;

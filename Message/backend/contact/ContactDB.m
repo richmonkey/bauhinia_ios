@@ -173,7 +173,7 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
         PhoneNumber *number = [[PhoneNumber alloc] initWithPhoneNumber:phone];
         UserDB *db = [UserDB instance];
         User *u = [db loadUserWithNumber:number];
-        if (!u) {
+        if (u) {
             [users addObject:u];
         }
     }
@@ -220,8 +220,24 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
 	for (int i = 0; i < num; i++)
 	{
 		NSMutableDictionary *md = [NSMutableDictionary dictionary];
-		[md setObject:[valueArray objectAtIndex:i] forKey:@"value"];
-		[md setObject:[labelArray objectAtIndex:i] forKey:@"label"];
+        [md setObject:[valueArray objectAtIndex:i] forKey:@"value"];
+        NSDictionary *dictChn = @{
+                                  @"_$!<Home>!$_" : @"住宅",
+                                  @"_$!<Mobile>!$_" : @"移动",
+                                  @"_$!<Work>!$_" : @"工作",
+                                  @"_$!<WorkFAX>!$_" : @"工作传真",
+                                  @"_$!<Main>!$_" : @"主要",
+                                  @"_$!<HomeFAX>!$_" : @"住宅传真",
+                                  @"_$!<Pager>!$_" : @"传呼",
+                                  @"_$!<Other>!$_" : @"其他",
+                               };
+        
+        NSString *originLabel = [labelArray objectAtIndex:i];
+        NSString *label = [dictChn objectForKey:originLabel];
+        if (!label) {
+            label = @"其他";
+        }
+		[md setObject:label forKey:@"label"];
 		[items addObject:md];
 	}
 	return items;
