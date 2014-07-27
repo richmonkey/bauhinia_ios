@@ -51,8 +51,8 @@
     contactViewController.title = @"通讯录";
     
     contactViewController.tabBarItem.title = @"通讯录";
-    contactViewController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconStatus"];
-    contactViewController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconStatusOff"];
+    contactViewController.tabBarItem.selectedImage = [UIImage imageNamed:@"IconContactTemplate"];
+    contactViewController.tabBarItem.image = [UIImage imageNamed:@"IconContactTemplate"];
 
     UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:contactViewController];
     

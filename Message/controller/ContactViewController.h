@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "IMContact.h"
 
-@interface ContactViewController : UIViewController
-@property(nonatomic)IMContact *contact;
+@interface ContactViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+
+@property (nonatomic)IMContact *contact;
+@property (nonatomic)UITableView *tableview;
+@property (nonatomic)UIButton  *sendIMBtn;
+@property (nonatomic)UIButton *inviteBtn;
 @end

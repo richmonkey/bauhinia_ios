@@ -58,6 +58,12 @@
 		212F28FD197BF6420066A166 /* MessageTableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 212F28FB197BF6420066A166 /* MessageTableSectionHeaderView.xib */; };
 		2142CB62196268860002E4A9 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB54196268860002E4A9 /* ABContact.m */; };
 		2142CB69196268860002E4A9 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2142CB60196268860002E4A9 /* pinyin.c */; };
+		2157372919850AEE0071C2EF /* ContactHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2157372819850AEE0071C2EF /* ContactHeaderView.m */; };
+		2157372B19850B100071C2EF /* ContactHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2157372A19850B100071C2EF /* ContactHeaderView.xib */; };
+		2157372F19850D550071C2EF /* ContactIMUserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2157372D19850D550071C2EF /* ContactIMUserTableViewCell.m */; };
+		2157373019850D550071C2EF /* ContactIMUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2157372E19850D550071C2EF /* ContactIMUserTableViewCell.xib */; };
+		21573734198531A40071C2EF /* ContactPhoneTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21573732198531A40071C2EF /* ContactPhoneTableViewCell.m */; };
+		21573735198531A40071C2EF /* ContactPhoneTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21573733198531A40071C2EF /* ContactPhoneTableViewCell.xib */; };
 		217261981954155000F09E33 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217261971954155000F09E33 /* AddressBook.framework */; };
 		2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217261991954155500F09E33 /* AddressBookUI.framework */; };
 		217261AD1954173200F09E33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 217261AB1954173200F09E33 /* InfoPlist.strings */; };
@@ -210,6 +216,15 @@
 		2142CB54196268860002E4A9 /* ABContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABContact.m; sourceTree = "<group>"; };
 		2142CB60196268860002E4A9 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
 		2142CB61196268860002E4A9 /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pinyin.h; sourceTree = "<group>"; };
+		2157372719850AEE0071C2EF /* ContactHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactHeaderView.h; sourceTree = "<group>"; };
+		2157372819850AEE0071C2EF /* ContactHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactHeaderView.m; sourceTree = "<group>"; };
+		2157372A19850B100071C2EF /* ContactHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactHeaderView.xib; sourceTree = "<group>"; };
+		2157372C19850D550071C2EF /* ContactIMUserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactIMUserTableViewCell.h; sourceTree = "<group>"; };
+		2157372D19850D550071C2EF /* ContactIMUserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactIMUserTableViewCell.m; sourceTree = "<group>"; };
+		2157372E19850D550071C2EF /* ContactIMUserTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactIMUserTableViewCell.xib; sourceTree = "<group>"; };
+		21573731198531A40071C2EF /* ContactPhoneTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactPhoneTableViewCell.h; sourceTree = "<group>"; };
+		21573732198531A40071C2EF /* ContactPhoneTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactPhoneTableViewCell.m; sourceTree = "<group>"; };
+		21573733198531A40071C2EF /* ContactPhoneTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactPhoneTableViewCell.xib; sourceTree = "<group>"; };
 		217261971954155000F09E33 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		217261991954155500F09E33 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		217261AC1954173200F09E33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
@@ -690,6 +705,15 @@
 				21FCF23A1968E6E600DFA0E5 /* MessageGroupConversationCell.h */,
 				21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */,
 				21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */,
+				2157372719850AEE0071C2EF /* ContactHeaderView.h */,
+				2157372819850AEE0071C2EF /* ContactHeaderView.m */,
+				2157372A19850B100071C2EF /* ContactHeaderView.xib */,
+				2157372C19850D550071C2EF /* ContactIMUserTableViewCell.h */,
+				2157372D19850D550071C2EF /* ContactIMUserTableViewCell.m */,
+				2157372E19850D550071C2EF /* ContactIMUserTableViewCell.xib */,
+				21573731198531A40071C2EF /* ContactPhoneTableViewCell.h */,
+				21573732198531A40071C2EF /* ContactPhoneTableViewCell.m */,
+				21573733198531A40071C2EF /* ContactPhoneTableViewCell.xib */,
 			);
 			path = cell;
 			sourceTree = "<group>";
@@ -814,9 +838,11 @@
 				2105650F1969839F008D3A83 /* ConversationHeadButtonView.xib in Resources */,
 				2105650219695FC1008D3A83 /* send.png in Resources */,
 				210564F819695FC1008D3A83 /* input-bar-flat.png in Resources */,
+				21573735198531A40071C2EF /* ContactPhoneTableViewCell.xib in Resources */,
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
 				6D762170198362DE00B690D7 /* LoginViewController.xib in Resources */,
+				2157372B19850B100071C2EF /* ContactHeaderView.xib in Resources */,
 				210564FF19695FC1008D3A83 /* PhotoIcon@2x.png in Resources */,
 				212F28FD197BF6420066A166 /* MessageTableSectionHeaderView.xib in Resources */,
 				210564FE19695FC1008D3A83 /* PhotoIcon.png in Resources */,
@@ -826,6 +852,7 @@
 				210564F919695FC1008D3A83 /* input-bar-flat@2x.png in Resources */,
 				210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */,
 				21798FA9194E9C4600B67C1F /* Images.xcassets in Resources */,
+				2157373019850D550071C2EF /* ContactIMUserTableViewCell.xib in Resources */,
 				2105650319695FC1008D3A83 /* send@2x.png in Resources */,
 				2105650419695FC1008D3A83 /* messageReceived.aiff in Resources */,
 				210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */,
@@ -850,6 +877,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2157372F19850D550071C2EF /* ContactIMUserTableViewCell.m in Sources */,
 				21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */,
 				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
 				2173C66919738745004A88A5 /* SDWebImagePrefetcher.m in Sources */,
@@ -864,6 +892,7 @@
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
 				2105650619695FC1008D3A83 /* UIButton+JSMessagesView.m in Sources */,
 				2105650819695FC1008D3A83 /* UIImage+JSMessagesView.m in Sources */,
+				21573734198531A40071C2EF /* ContactPhoneTableViewCell.m in Sources */,
 				2173C66619738745004A88A5 /* SDWebImageDownloader.m in Sources */,
 				2173C66819738745004A88A5 /* SDWebImageManager.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
@@ -904,6 +933,7 @@
 				6D762156197ECA9300B690D7 /* Group.m in Sources */,
 				6D762159197ECA9300B690D7 /* GroupMessageHandler.m in Sources */,
 				21798FA3194E9C4600B67C1F /* main.m in Sources */,
+				2157372919850AEE0071C2EF /* ContactHeaderView.m in Sources */,
 				21150CA1196F78A5009DE9DE /* UserDB.m in Sources */,
 				210564D319695FC1008D3A83 /* JSMessageInputView.m in Sources */,
 				210564D619695FC1008D3A83 /* JSMessageTextView.m in Sources */,
