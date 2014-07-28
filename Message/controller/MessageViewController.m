@@ -37,8 +37,11 @@
     
     if (self = [super init]) {
         self.remoteUser = rmtUser;
-        self.tableFrame = CGRectMake(0.0f, KNavigationBarHeight + kStatusBarHeight, 320, 480 - INPUT_HEIGHT - KNavigationBarHeight - kStatusBarHeight);
-        self.inputFrame = CGRectMake(0.0f, 480 - INPUT_HEIGHT, 320, INPUT_HEIGHT);
+        CGRect screenBounds = [[UIScreen mainScreen] bounds];
+        int w = CGRectGetWidth(screenBounds);
+        int h = CGRectGetHeight(screenBounds);
+        self.tableFrame = CGRectMake(0.0f, KNavigationBarHeight + kStatusBarHeight, w,  h - INPUT_HEIGHT - KNavigationBarHeight - kStatusBarHeight);
+        self.inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
     }
     return self;
 }
@@ -88,8 +91,6 @@
 - (void)setup
 {
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    
-    CGSize size = self.view.frame.size;
 	
     CGRect tableFrame = self.tableFrame;
 	self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
