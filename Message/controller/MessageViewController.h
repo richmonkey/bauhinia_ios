@@ -40,7 +40,6 @@
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) JSMessageInputView *inputToolBarView;
-@property (assign, nonatomic) CGFloat previousTextViewContentHeight;
 @property (assign, nonatomic, readonly) UIEdgeInsets originalTableViewContentInset;
 
 - (void)setup;
@@ -49,7 +48,6 @@
 - (void)sendPressed:(UIButton *)sender;
 
 #pragma mark - Messages view controller
-- (void)finishSend;
 - (void)scrollToBottomAnimated:(BOOL)animated;
 
 #pragma mark - Keyboard notifications

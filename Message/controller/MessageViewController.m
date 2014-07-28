@@ -72,10 +72,7 @@
 
     [self processConversationData];
     
-    
     [[IMService instance] addMessageObserver:self];
-    
-    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -245,8 +242,6 @@
     
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     
-    [self insertMsgToMessageBlokArray:msg];
-    
     [self sendMessage:msg];
     
     [JSMessageSoundEffect playMessageSentSound];
@@ -254,9 +249,13 @@
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
     
     [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    [self finishSend];
 
+    [self.inputToolBarView.textView setText:nil];
+    [self.inputToolBarView.textView resignFirstResponder];
+    self.inputToolBarView.sendButton.enabled = NO;
+ 
+
+    [self insertMessage:msg];
 }
 
 
@@ -292,8 +291,6 @@
     [cell setMessage:[self textForRowAtIndexPath:indexPath]];
     [cell setBackgroundColor:[UIColor clearColor]];
     
-
-    
     return cell;
 }
 
@@ -307,53 +304,17 @@
     }
 }
 
-- (void)finishSend
-{
-    [self.inputToolBarView.textView setText:nil];
-    [self.inputToolBarView.textView resignFirstResponder];
-    self.inputToolBarView.sendButton.enabled = NO;
-    [self.tableView reloadData];
-    [self scrollToBottomAnimated:YES];
-}
-
-
-- (void)scrollToRowAtIndexPath:(NSIndexPath *)indexPath
-			  atScrollPosition:(UITableViewScrollPosition)position
-					  animated:(BOOL)animated
-{
-	[self.tableView scrollToRowAtIndexPath:indexPath
-						  atScrollPosition:position
-								  animated:animated];
-}
-
-
 #pragma mark - Text view delegate
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-    [textView becomeFirstResponder];
-	
-    if(!self.previousTextViewContentHeight)
-		self.previousTextViewContentHeight = textView.contentSize.height;
-    
-    [self scrollToBottomAnimated:YES];
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
-    [textView resignFirstResponder];
+- (void)textViewDidEndEditing:(UITextView *)textView {
+
 }
 
 #pragma mark - Keyboard notifications
 - (void)handleWillShowKeyboard:(NSNotification *)notification{
-    [self keyboardWillShow:notification];
-}
-
-- (void)handleWillHideKeyboard:(NSNotification *)notification{
-    [self keyboardWillHide:notification];
-}
-
-- (void)keyboardWillShow:(NSNotification *)notification{
-
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
@@ -369,12 +330,11 @@
                          [self scrollToBottomAnimated:NO];
                      }
                      completion:^(BOOL finished) {
-                        
+                         
                      }];
 }
 
-- (void)keyboardWillHide:(NSNotification *)notification{
-    
+- (void)handleWillHideKeyboard:(NSNotification *)notification{
     UIViewAnimationOptions curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
 	double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
@@ -384,10 +344,12 @@
                          self.tableView.frame = self.tableFrame;
                      }
                      completion:^(BOOL finished) {
-
+                         
                          
                      }];
 }
+
+
 
 #pragma mark - MessageObserver
 
@@ -404,9 +366,7 @@
     m.content = content;
     m.timestamp = time(NULL);
 
-    [self insertMsgToMessageBlokArray:m];
-    [self.tableView reloadData];
-    [self scrollToBottomAnimated:YES];
+    [self insertMessage:m];
 }
 
 //服务器ack
@@ -465,11 +425,7 @@
                                          selector:@selector(changeStatusBack)
                                          userInfo:nil
                                         repeats:NO];
-    
 }
-
-
-
 
 -(void)changeStatusBack{
     
@@ -480,7 +436,6 @@
     }else if(self.remoteUser.onlineState == UserOnlineStateOffline){
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
     }
- 
 }
 
 
@@ -509,8 +464,9 @@
     NSMutableArray *array = [self.messageArray objectAtIndex: lastSection];
     int lastRow = [array count] - 1;
     
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:lastRow inSection:lastSection] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
-    
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:lastRow inSection:lastSection]
+						  atScrollPosition:UITableViewScrollPositionBottom
+								  animated:animated];
 }
 
 #pragma mark - UITextViewDelegate
@@ -634,8 +590,7 @@
     [self presentViewController:picker animated:YES completion:NULL];
 }
 
-- (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
     IMessage * msg =  [array objectAtIndex:indexPath.row];
     if(msg.sender == [UserPresent instance].uid){
@@ -643,7 +598,6 @@
     }else{
         return JSBubbleMessageTypeIncoming;
     }
-    
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -748,10 +702,11 @@
     }
 }
 
--(NSIndexPath *) insertMsgToMessageBlokArray:(IMessage*)msg{
+-(void) insertMessage:(IMessage*)msg{
     NSAssert(msg.msgLocalID, @"");
     NSDate *curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
     NSMutableArray *msgBlockArray = nil;
+    NSIndexPath *indexPath = nil;
     //收到第一个消息
     if ([self.messageArray count] == 0 ) {
         
@@ -761,8 +716,8 @@
         
         [self.timestamps addObject: curtDate];
         
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        return indexPath;
+        indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+
     }else{
         NSDate *lastDate = [self.timestamps lastObject];
         if ([PublicFunc isTheDay: lastDate sameToThatDay: curtDate]) {
@@ -770,18 +725,41 @@
             msgBlockArray = [self.messageArray lastObject];
             [msgBlockArray addObject:msg];
             
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[msgBlockArray count] - 1 inSection: [self.messageArray count] - 1];
-            return indexPath;
+            indexPath = [NSIndexPath indexPathForRow:[msgBlockArray count] - 1 inSection: [self.messageArray count] - 1];
         }else{
             //next day
             msgBlockArray = [[NSMutableArray alloc] init];
             [msgBlockArray addObject: msg];
             [self.messageArray addObject: msgBlockArray];
             [self.timestamps addObject:curtDate];
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[msgBlockArray count] - 1 inSection: [self.messageArray count] - 1];
-            return indexPath;
+            indexPath = [NSIndexPath indexPathForRow:[msgBlockArray count] - 1 inSection: [self.messageArray count] - 1];
+      
         }
     }
+    
+    [UIView beginAnimations:nil context:NULL];
+    if (indexPath.row == 0 ) {
+        
+        NSUInteger sectionCount = indexPath.section;
+        NSIndexSet *indices = [NSIndexSet indexSetWithIndex: sectionCount];
+        [self.tableView beginUpdates];
+        [self.tableView insertSections:indices withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+        
+    }else{
+        NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+        [indexPaths addObject:indexPath];
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    }
+    
+    
+    [self scrollToBottomAnimated:NO];
+    
+    [UIView commitAnimations];
+
+    
 }
 
 #pragma mark - function

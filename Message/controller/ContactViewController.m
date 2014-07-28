@@ -156,6 +156,7 @@
 
 
 -(void)onSendMessage {
+    
     if ([self.contact.users count] == 1) {
         NSLog(@"send message");
         User *u = [self.contact.users objectAtIndex:0];
@@ -163,8 +164,57 @@
         MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:mu];
         [self.navigationController pushViewController:msgController animated:YES];
     } else if ([self.contact.users count] > 1) {
-    
+        if (self.contact.users.count == 2) {
+            User *u0 = [self.contact.users objectAtIndex:0];
+            User *u1 = [self.contact.users objectAtIndex:1];
+            UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                          initWithTitle:nil
+                                          delegate:self
+                                          cancelButtonTitle:@"取消"
+                                          destructiveButtonTitle:nil
+                                          otherButtonTitles:u0.phoneNumber.number, u1.phoneNumber.number, nil];
+            actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+            [actionSheet showInView:self.view];
+        } else if (self.contact.users.count == 3) {
+            User *u0 = [self.contact.users objectAtIndex:0];
+            User *u1 = [self.contact.users objectAtIndex:1];
+            User *u2 = [self.contact.users objectAtIndex:2];
+            UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                          initWithTitle:nil
+                                          delegate:self
+                                          cancelButtonTitle:@"取消"
+                                          destructiveButtonTitle:nil
+                                          otherButtonTitles:u0.phoneNumber.number, u1.phoneNumber.number, u2.phoneNumber.number, nil];
+            actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+            [actionSheet showInView:self.view];
+        } else {
+            User *u0 = [self.contact.users objectAtIndex:0];
+            User *u1 = [self.contact.users objectAtIndex:1];
+            User *u2 = [self.contact.users objectAtIndex:2];
+            User *u3 = [self.contact.users objectAtIndex:3];
+            UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                          initWithTitle:nil
+                                          delegate:self
+                                          cancelButtonTitle:@"取消"
+                                          destructiveButtonTitle:nil
+                                          otherButtonTitles:u0.phoneNumber.number, u1.phoneNumber.number, u2.phoneNumber.number, u3.phoneNumber.number, nil];
+            actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+            [actionSheet showInView:self.view];
+        }
     }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        return;
+    }
+    
+    NSAssert(buttonIndex < self.contact.users.count, @"");
+        
+    User *u = [self.contact.users objectAtIndex:buttonIndex];
+    IMUser *mu = [[UserDB instance] loadUser:u.uid];
+    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:mu];
+    [self.navigationController pushViewController:msgController animated:YES];
 }
 
 - (void)didReceiveMemoryWarning

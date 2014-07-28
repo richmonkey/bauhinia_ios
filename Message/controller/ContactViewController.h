@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "IMContact.h"
 
-@interface ContactViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface ContactViewController : UIViewController <UITableViewDataSource,UITableViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic)IMContact *contact;
 @property (nonatomic)UITableView *tableview;

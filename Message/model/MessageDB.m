@@ -106,7 +106,7 @@
     msg.msgLocalID = (int)seq;
     [self writeMessage:msg fd:fd];
     close(fd);
-    return NO;
+    return YES;
 }
 
 +(BOOL)addFlag:(int)msgLocalID path:(NSString*)path flag:(int)flag {
