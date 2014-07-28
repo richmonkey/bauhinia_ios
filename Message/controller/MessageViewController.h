@@ -45,9 +45,6 @@
 
 - (void)setup;
 
-#pragma mark - Initialization
-- (UIButton *)sendButton;
-
 #pragma mark - Actions
 - (void)sendPressed:(UIButton *)sender;
 

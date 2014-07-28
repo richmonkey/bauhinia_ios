@@ -42,7 +42,7 @@
         [sendButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:0.5f] forState:UIControlStateDisabled];
     }
     
-    NSString *title = NSLocalizedString(@"Send", @"发送");
+    NSString *title = @"发送";
     [sendButton setTitle:title forState:UIControlStateNormal];
     [sendButton setTitle:title forState:UIControlStateHighlighted];
     [sendButton setTitle:title forState:UIControlStateDisabled];
