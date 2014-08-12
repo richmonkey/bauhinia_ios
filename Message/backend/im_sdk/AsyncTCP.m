@@ -42,11 +42,10 @@
     self.close_cb = nil;
 }
 
--(void)connect:(NSString*)host port:(int)port cb:(ConnectCB)cb {
+-(BOOL)connect:(NSString*)host port:(int)port cb:(ConnectCB)cb {
     struct sockaddr_in addr;
     //todo nonblock
     lookupAddr([host UTF8String], port, &addr);
-    
     
     int sockfd;
     int r;
@@ -57,9 +56,8 @@
     } while (r == -1 && errno == EINTR);
     if (r == -1) {
         if (errno != EINPROGRESS) {
-            cb(self, errno);
             close(sockfd);
-            return;
+            return FALSE;
         }
     }
     
@@ -76,6 +74,7 @@
     self.connecting = YES;
     self.connect_cb = cb;
     self.sock = sockfd;
+    return TRUE;
 }
 
 -(void)onWrite {

@@ -332,7 +332,7 @@
     
     self.tcp = [[AsyncTCP alloc] init];
     __weak IMService *wself = self;
-    [self.tcp connect:self.host port:self.port cb:^(AsyncTCP *tcp, int err) {
+    BOOL r = [self.tcp connect:self.host port:self.port cb:^(AsyncTCP *tcp, int err) {
         if (err) {
             NSLog(@"tcp connect err");
             wself.connectFailCount = wself.connectFailCount + 1;
@@ -351,6 +351,14 @@
             }];
         }
     }];
+    if (!r) {
+        NSLog(@"tcp connect err");
+        wself.connectFailCount = wself.connectFailCount + 1;
+        self.connectState = STATE_CONNECTFAIL;
+        [self publishConnectState:STATE_CONNECTFAIL];
+        
+        [self onClose];
+    }
 }
 
 -(void)addMessageObserver:(id<MessageObserver>)ob {
