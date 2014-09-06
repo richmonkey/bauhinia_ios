@@ -7,15 +7,72 @@
 //
 
 #import "IMessage.h"
+#import <CoreLocation/CLLocation.h>
 
+@interface MessageContent()
+@property(nonatomic)NSDictionary *dict;
+@property(nonatomic, copy)NSString *_raw;
+@end
+
+/*
+ raw format
+ {
+    "text":"文本",
+    "image":"image url",
+    "audio":"audio url",
+    "location":{
+        "latitude":"纬度(浮点数)",
+        "latitude":"经度(浮点数)"
+    }
+}*/
 
 @implementation MessageContent
--(int)type {
-    return MESSAGE_TEXT;
-}
+
 -(NSString*)text {
-    return self.raw;
+    return [self.dict objectForKey:@"text"];
 }
+
+-(NSString*)imageURL {
+    return [self.dict objectForKey:@"image"];
+}
+
+-(NSString*)audioURL {
+    return [self.dict objectForKey:@"audio"];
+}
+
+-(CLLocationCoordinate2D)location {
+    CLLocationCoordinate2D lt;
+    NSDictionary *location = [self.dict objectForKey:@"location"];
+    lt.latitude = [[location objectForKey:@"latitude"] doubleValue];
+    lt.longitude = [[location objectForKey:@"longitude"] doubleValue];
+    return lt;
+}
+
+
+-(void)setRaw:(NSString *)raw {
+    self._raw = raw;
+    const char *utf8 = [raw UTF8String];
+    if (utf8 == nil) return;
+    NSData *data = [NSData dataWithBytes:utf8 length:strlen(utf8)];
+    self.dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+    
+    if ([self.dict objectForKey:@"text"] != nil) {
+        self.type = MESSAGE_TEXT;
+    } else if ([self.dict objectForKey:@"image"] != nil) {
+        self.type = MESSAGE_IMAGE;
+    } else if ([self.dict objectForKey:@"audio"] != nil) {
+        self.type = MESSAGE_AUDIO;
+    } else if ([self.dict objectForKey:@"location"] != nil) {
+        self.type = MESSAGE_LOCATION;
+    } else {
+        self.type = MESSAGE_UNKNOWN;
+    }
+}
+
+-(NSString*)raw {
+    return self._raw;
+}
+
 @end
 
 @implementation IMessage
