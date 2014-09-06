@@ -22,6 +22,8 @@
 #import "UIView+AnimationOptionsForCurve.h"
 #import "UIColor+JSMessagesView.h"
 
+#import "APIRequest.h"
+
 #define navBarHeadButtonSize 35
 
 
@@ -660,9 +662,27 @@
 	NSLog(@"Chose image!  Details:  %@", info);
     
     self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
-    [self.timestamps addObject:[NSDate date]];
-    [self.tableView reloadData];
-    [self scrollToBottomAnimated:YES];
+//    [self.timestamps addObject:[NSDate date]];
+//    [self.tableView reloadData];
+//    [self scrollToBottomAnimated:YES];
+ 
+    
+    MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hub.removeFromSuperViewOnHide = YES;
+    
+    __block NSString *avatarURL = nil;
+    [APIRequest uploadImage:self.willSendImage
+                    success:^(NSString *url) {
+                        NSLog(@"image url:%@", url);
+                        [hub hide:YES];
+                        avatarURL = url;
+                        CFRunLoopStop(CFRunLoopGetCurrent());
+                    }
+                       fail:^() {
+                           [hub hide:YES];
+                           NSLog(@"upload image fail");
+                           CFRunLoopStop(CFRunLoopGetCurrent());
+                       }];
     
 	
     [self dismissViewControllerAnimated:YES completion:NULL];

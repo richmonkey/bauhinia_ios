@@ -17,8 +17,9 @@
 #import "JSMessageSoundEffect.h"
 #import "UIButton+JSMessagesView.h"
 #import "JSDismissiveTextView.h"
+#import "MBProgressHUD.h"
 
-#define kAllowsMedia	NO	
+#define kAllowsMedia	YES	
 #define INPUT_HEIGHT 46.0f
 
 
