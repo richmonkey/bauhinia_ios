@@ -274,15 +274,13 @@
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar {
-    
-    
-    
     //move the search bar up to the correct location eg
     [UIView animateWithDuration:.1
                      animations:^{
                          self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
                                                            kStatusBarHeight+KNavigationBarHeight,
-                                                           self.tableView.frame.size.width,self.tableView.frame.size.height + kStatusBarHeight+KNavigationBarHeight);
+                                                           self.tableView.frame.size.width,
+                                                           self.tableView.frame.size.height + kStatusBarHeight+KNavigationBarHeight);
                          self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
                                                       kStatusBarHeight,
                                                       self.searchBar.frame.size.width,
@@ -293,6 +291,23 @@
                          
                      }];
     [self.searchDisplayController setActive:YES animated:YES];
+}
+
+- (void) resetSearchBarPosition{
+    [UIView animateWithDuration:.1
+                     animations:^{
+                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
+                                                           KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight,
+                                                           self.tableView.frame.size.width,
+                                                           self.tableView.frame.size.height - kStatusBarHeight - KNavigationBarHeight);
+                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
+                                                           KNavigationBarHeight + kStatusBarHeight,
+                                                           self.searchBar.frame.size.width,
+                                                           self.searchBar.frame.size.height);
+                         
+                     }
+                     completion:^(BOOL finished){
+                     }];
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
@@ -376,21 +391,7 @@
     self.selectedIndexPath = indexPath;
 }
 
-- (void) resetSearchBarPosition{
-    [UIView animateWithDuration:.1
-                     animations:^{
-                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                                           KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight,
-                                                           self.tableView.frame.size.width,self.tableView.frame.size.height - KNavigationBarHeight);
-                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                           KNavigationBarHeight + kStatusBarHeight,
-                                                           self.searchBar.frame.size.width,
-                                                           self.searchBar.frame.size.height);
-                         
-                     }
-                     completion:^(BOOL finished){
-                     }];
-}
+
 
 #pragma mark - Action
 
