@@ -8,7 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#define MESSAGE_UNKNOWN 0
 #define MESSAGE_TEXT 1
+#define MESSAGE_IMAGE 2
+#define MESSAGE_AUDIO 3
+#define MESSAGE_LOCATION 4
+
 
 #define MESSAGE_FLAG_DELETE 1
 #define MESSAGE_FLAG_ACK 2
