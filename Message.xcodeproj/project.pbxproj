@@ -106,6 +106,7 @@
 		6D0D76851967B8AC0058DECF /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767D1967B8AC0058DECF /* Message.m */; };
 		6D0D76871967B8AC0058DECF /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76801967B8AC0058DECF /* util.c */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
+		6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D11C72E19BB3D3F00E67389 /* APITests.m */; };
 		6D762156197ECA9300B690D7 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762145197ECA9300B690D7 /* Group.m */; };
 		6D762157197ECA9300B690D7 /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762147197ECA9300B690D7 /* GroupDB.m */; };
 		6D762158197ECA9300B690D7 /* GroupMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762149197ECA9300B690D7 /* GroupMessageDB.m */; };
@@ -312,6 +313,7 @@
 		6D0D76961967C1430058DECF /* write_batch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = write_batch.h; sourceTree = "<group>"; };
 		6D0D76A7196910130058DECF /* IMContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMContact.h; sourceTree = "<group>"; };
 		6D0D76A8196910130058DECF /* IMContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMContact.m; sourceTree = "<group>"; };
+		6D11C72E19BB3D3F00E67389 /* APITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APITests.m; sourceTree = "<group>"; };
 		6D762144197ECA9300B690D7 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		6D762145197ECA9300B690D7 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		6D762146197ECA9300B690D7 /* GroupDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDB.h; sourceTree = "<group>"; };
@@ -680,6 +682,7 @@
 			isa = PBXGroup;
 			children = (
 				21798FBB194E9C4600B67C1F /* MessageTests.m */,
+				6D11C72E19BB3D3F00E67389 /* APITests.m */,
 				21798FB6194E9C4600B67C1F /* Supporting Files */,
 			);
 			path = MessageTests;
@@ -954,6 +957,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */,
 				21798FBC194E9C4600B67C1F /* MessageTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -46,6 +46,60 @@
     return request;
 }
 
++(TAHttpOperation*)updateAvatar:(NSString*)avatar success:(void (^)())success fail:(void (^)())fail {
+    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+    request.targetURL = [[Config instance].URL stringByAppendingString:@"/users/me"];
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:avatar forKey:@"avatar"];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
+    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
+    [headers setObject:auth forKey:@"Authorization"];
+    request.headers = headers;
+    request.postBody = data;
+    request.method = @"PATCH";
+    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
+        if (statusCode != 200) {
+            IMLog(@"update avatar fail");
+            fail();
+            return;
+        }
+        IMLog(@"update avatar success");
+        success();
+    };
+    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+        IMLog(@"update state fail");
+        fail();
+    };
+    [[NSOperationQueue mainQueue] addOperation:request];
+    return request;
+}
+
+
++(TAHttpOperation*)uploadImage:(UIImage*)image success:(void (^)(NSString *url))success fail:(void (^)())fail {
+    NSData *data = UIImagePNGRepresentation(image);
+    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+    request.targetURL = [[Config instance].URL stringByAppendingString:@"/images"];
+    request.method = @"POST";
+    request.postBody = data;
+    
+    NSDictionary *headers = [NSDictionary dictionaryWithObject:@"image/png" forKey:@"Content-Type"];
+    request.headers = headers;
+    
+    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+        NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        NSString *src_url = [resp objectForKey:@"src_url"];
+        success(src_url);
+    };
+    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+        fail();
+    };
+    [[NSOperationQueue mainQueue] addOperation:request];
+    return request;
+
+}
 
 +(TAHttpOperation*)requestVerifyCode:(NSString*)zone number:(NSString*)number
                               success:(void (^)(NSString* code))success fail:(void (^)())fail{

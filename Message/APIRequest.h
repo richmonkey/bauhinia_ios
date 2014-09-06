@@ -12,6 +12,10 @@
 @interface APIRequest : NSObject
 +(TAHttpOperation*)updateState:(NSString*)state success:(void (^)())success fail:(void (^)())fail;
 
++(TAHttpOperation*)updateAvatar:(NSString*)avatar success:(void (^)())success fail:(void (^)())fail;
+
++(TAHttpOperation*)uploadImage:(UIImage*)image success:(void (^)(NSString *url))success fail:(void (^)())fail;
+
 +(TAHttpOperation*)requestVerifyCode:(NSString*)zone number:(NSString*)number
                              success:(void (^)(NSString* code))success fail:(void (^)())fail;
 
