@@ -35,4 +35,6 @@ typedef enum {
 
 @property(nonatomic)ABContact *contact;
 
+-(NSString*) displayName;
+
 @end

@@ -10,8 +10,17 @@
 
 @implementation User
 
+
 @end
 
 @implementation IMUser
+
+-(NSString*) displayName{
+    if (self.contact.contactName.length == 0){
+        return  self.phoneNumber.number;
+    }
+    return self.contact.contactName;
+    
+}
 
 @end

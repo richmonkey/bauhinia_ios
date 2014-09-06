@@ -71,11 +71,19 @@
     PhoneNumber *number = [[PhoneNumber alloc] initWithZoneNumber:zoneNumber];
     
     u.phoneNumber = number;
-    if (u.avatarURL == nil &&
-        u.state == nil &&
-        !u.phoneNumber.isValid) {
-        return nil;
+    
+    if (!u.phoneNumber.isValid) {
+        NSString *s = [NSString stringWithFormat:@"%lld", u.uid];
+        NSArray *array = [s componentsSeparatedByString:@"0"];
+        if ([array count] != 2) {
+            return nil;
+        }
+        number = [[PhoneNumber alloc] init];
+        number.zone = array[0];
+        number.number = array[1];
+        u.phoneNumber = number;
     }
+
     ContactDB *cdb = [ContactDB instance];
     if (u.phoneNumber.isValid) {
         u.contact = [cdb loadContactWithNumber:u.phoneNumber];

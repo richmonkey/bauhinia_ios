@@ -85,7 +85,7 @@
     Conversation * conversation = [iterator next];
     while (conversation) {
         IMUser *user = [db loadUser:conversation.cid];
-        conversation.name = user.contact.contactName;
+        conversation.name = [user displayName];
         [self.conversations addObject:conversation];
         conversation = [iterator next];
     }
@@ -158,18 +158,14 @@
         [cell.headView setImage:[UIImage imageNamed:@"head1"]];
     }
     
-    if ([currentUser.contact.contactName isEqualToString:@""]) {
-        cell.namelabel.text =  currentUser.phoneNumber.number;
-    }else{
-        cell.namelabel.text = currentUser.contact.nickname;
-    }
+    cell.namelabel.text = [currentUser displayName];
     
     cell.messageContent.text = covn.message.content.raw;
     
     NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
     
     cell.timelabel.text = [PublicFunc getTimeString:date format:@"yy-mm-dd"];
-    cell.namelabel.text = covn.name;
+    cell.namelabel.text = covn.name; 
     
     cell.delegate = self;
     
