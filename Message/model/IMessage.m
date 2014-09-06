@@ -7,7 +7,7 @@
 //
 
 #import "IMessage.h"
-#import <CoreLocation/CLLocation.h>
+
 
 @interface MessageContent()
 @property(nonatomic)NSDictionary *dict;
@@ -19,12 +19,19 @@
  {
     "text":"文本",
     "image":"image url",
-    "audio":"audio url",
+    "audio": {
+        "url":"audio url",
+        "duration":"时长(整形)"
+    }
     "location":{
         "latitude":"纬度(浮点数)",
         "latitude":"经度(浮点数)"
     }
 }*/
+
+@implementation Audio
+
+@end
 
 @implementation MessageContent
 
@@ -33,21 +40,24 @@
 }
 
 -(NSString*)imageURL {
-    return [self.dict objectForKey:@"image"];
+    return[self.dict objectForKey:@"image"];
 }
 
--(NSString*)audioURL {
-    return [self.dict objectForKey:@"audio"];
+-(Audio*)audio {
+    NSDictionary *obj = [self.dict objectForKey:@"audio"];
+    Audio *audio = [[Audio alloc] init];
+    audio.url = [obj objectForKey:@"url"];
+    audio.duration = [[obj objectForKey:@"duration"] integerValue];
+    return audio;
 }
 
 -(CLLocationCoordinate2D)location {
-    CLLocationCoordinate2D lt;
+    CLLocationCoordinate2D lc;
     NSDictionary *location = [self.dict objectForKey:@"location"];
-    lt.latitude = [[location objectForKey:@"latitude"] doubleValue];
-    lt.longitude = [[location objectForKey:@"longitude"] doubleValue];
-    return lt;
+    lc.latitude = [[location objectForKey:@"latitude"] doubleValue];
+    lc.longitude = [[location objectForKey:@"longitude"] doubleValue];
+    return lc;
 }
-
 
 -(void)setRaw:(NSString *)raw {
     self._raw = raw;
