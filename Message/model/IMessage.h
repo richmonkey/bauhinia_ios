@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CLLocation.h>
 
 #define MESSAGE_UNKNOWN 0
 #define MESSAGE_TEXT 1
@@ -20,9 +21,19 @@
 #define MESSAGE_FLAG_PEER_ACK 4
 #define MESSAGE_FLAG_FAILURE 8
 
+@interface Audio : NSObject
+@property(nonatomic, copy) NSString *url;
+@property(nonatomic) int duration;
+@end
+
 @interface MessageContent : NSObject
 @property(nonatomic)int type;
 @property(nonatomic)NSString *raw;
+
+@property(nonatomic, readonly)NSString *text;
+@property(nonatomic, readonly)NSString *imageURL;
+@property(nonatomic, readonly)Audio *audio;
+@property(nonatomic, readonly)CLLocationCoordinate2D location;
 @end
 
 @interface MessageContent(Text)
