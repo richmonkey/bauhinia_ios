@@ -274,6 +274,9 @@
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar {
+    
+    
+    
     //move the search bar up to the correct location eg
     [UIView animateWithDuration:.1
                      animations:^{
@@ -294,23 +297,22 @@
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
     //move the search bar down to the correct location eg
-    [UIView animateWithDuration:.1
-                     animations:^{
-                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                                           KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight,
-                                                           self.tableView.frame.size.width,self.tableView.frame.size.height - KNavigationBarHeight);
-                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                      KNavigationBarHeight + kStatusBarHeight,
-                                                      self.searchBar.frame.size.width,
-                                                      self.searchBar.frame.size.height);
-
-                     }
-                     completion:^(BOOL finished){
-                     }];
+    if (searchBar.text.length > 0) {
+        return;
+    }
+    
+    [self resetSearchBarPosition];
+    
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    
 	[self.searchBar setText:@""];
+    
+    if (![searchBar isFirstResponder]) {
+        [self resetSearchBarPosition];
+    }
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -372,6 +374,22 @@
     [self.navigationController pushViewController:ctl animated:YES];
     self.selectedTableView = aTableView;
     self.selectedIndexPath = indexPath;
+}
+
+- (void) resetSearchBarPosition{
+    [UIView animateWithDuration:.1
+                     animations:^{
+                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
+                                                           KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight,
+                                                           self.tableView.frame.size.width,self.tableView.frame.size.height - KNavigationBarHeight);
+                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
+                                                           KNavigationBarHeight + kStatusBarHeight,
+                                                           self.searchBar.frame.size.width,
+                                                           self.searchBar.frame.size.height);
+                         
+                     }
+                     completion:^(BOOL finished){
+                     }];
 }
 
 #pragma mark - Action
