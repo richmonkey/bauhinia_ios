@@ -121,8 +121,11 @@
         
         IMUser *u = [self.contact.users objectAtIndex:indexPath.row];
         [cell.phoneNumberLabel setText:u.phoneNumber.number];
-        [cell.personnalStatusLabel setText:u.state];
-
+        if (u.state.length > 0) {
+            [cell.personnalStatusLabel setText:u.state];
+        }else{
+            [cell.personnalStatusLabel setText:@"~没有状态~"];
+        }
         return cell;
     } else {
         ContactPhoneTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactPhoneTableViewCell"];

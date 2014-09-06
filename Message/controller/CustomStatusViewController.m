@@ -38,7 +38,11 @@
 }
 
 -(NSString*)currentStatus {
-    return [UserPresent instance].state;
+    if ([UserPresent instance].state.length > 0) {
+        return [UserPresent instance].state;
+    }else{
+        return @"~没有状态~";
+    }
 }
 
 -(void)setCurrentStatus:(NSString *)currentStatus {
@@ -92,11 +96,7 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"definestatuscell"];
             }
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-            if ([self.currentStatus isEqualToString:@""]) {
-                [cell.textLabel setText:@"~没有状态~"];
-            }else{
-                [cell.textLabel setText: self.currentStatus];
-            }
+            [cell.textLabel setText: self.currentStatus];
             
         }else{
             cell  = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
@@ -118,7 +118,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"clearcell"];
             [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
             [cell.textLabel setTextColor:[UIColor redColor]];
-            [cell.textLabel setText:@"重置自定义状态"];
+            [cell.textLabel setText:@"清除自定义状态"];
         }
     }
     return cell;

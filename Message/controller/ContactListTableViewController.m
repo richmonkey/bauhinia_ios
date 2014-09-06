@@ -333,7 +333,11 @@
                 [cell.detailTextLabel setText:@"多重自定义状态"];
             } else {
                 User *u = [contact.users objectAtIndex:0];
-                [cell.detailTextLabel setText:u.state];
+                if (u.state.length > 0) {
+                    [cell.detailTextLabel setText:u.state];
+                }else{
+                    [cell.detailTextLabel setText:@"~没有状态~"];
+                }
                 NSLog(@"name:%@ state:%@", contact.contactName, u.state);
             }
         } else {
