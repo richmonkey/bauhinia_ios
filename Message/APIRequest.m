@@ -101,6 +101,28 @@
 
 }
 
+
++(TAHttpOperation*)uploadAudio:(NSData*)data success:(void (^)(NSString *url))success fail:(void (^)())fail {
+    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+    request.targetURL = [[Config instance].URL stringByAppendingString:@"/audios"];
+    request.method = @"POST";
+    request.postBody = data;
+    
+    NSDictionary *headers = [NSDictionary dictionaryWithObject:@"application/plain" forKey:@"Content-Type"];
+    request.headers = headers;
+    
+    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+        NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        NSString *src_url = [resp objectForKey:@"src_url"];
+        success(src_url);
+    };
+    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+        fail();
+    };
+    [[NSOperationQueue mainQueue] addOperation:request];
+    return request;
+}
+
 +(TAHttpOperation*)requestVerifyCode:(NSString*)zone number:(NSString*)number
                               success:(void (^)(NSString* code))success fail:(void (^)())fail{
     TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];

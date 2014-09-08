@@ -21,8 +21,10 @@
 #import "NSString+JSMessagesView.h"
 #import "UIView+AnimationOptionsForCurve.h"
 #import "UIColor+JSMessagesView.h"
-
+#import "FileCache.h"
 #import "APIRequest.h"
+
+#define INPUT_HEIGHT 46.0f
 
 #define navBarHeadButtonSize 35
 
@@ -30,6 +32,12 @@
 @interface MessageViewController()
 @property(nonatomic, assign)CGRect tableFrame;
 @property(nonatomic, assign)CGRect inputFrame;
+
+@property(nonatomic) AVAudioRecorder *recorder;
+@property(nonatomic) AVAudioPlayer *player;
+@property(nonatomic) NSTimer *recordingTimer;
+@property(nonatomic, assign) int seconds;
+@property(nonatomic) BOOL recordCanceled;
 @end
 
 @implementation MessageViewController
@@ -66,7 +74,7 @@
     self.navigationBarButtonsView = [[[NSBundle mainBundle]loadNibNamed:@"ConversationHeadButtonView" owner:self options:nil] lastObject];
     self.navigationBarButtonsView.center = self.navigationController.navigationBar.center;
     if ([self.remoteUser.contact.contactName length] == 0) {
-        [self.navigationBarButtonsView.nameLabel setText:@"消息"];
+        [self.navigationBarButtonsView.nameLabel setText:self.remoteUser.displayName];
     }else{
         [self.navigationBarButtonsView.nameLabel setText:self.remoteUser.contact.contactName];
     }
@@ -74,7 +82,14 @@
 
     [self processConversationData];
     
+  
+    
+    // Setup audio session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    
     [[IMService instance] addMessageObserver:self];
+    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -87,6 +102,7 @@
     
    [[IMService instance] unsubscribeState:self.remoteUser.uid];
 }
+
 - (void)setup
 {
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -105,63 +121,38 @@
     
 	[self.view addSubview:self.tableView];
 	
-	UIButton* mediaButton = nil;
-	if (kAllowsMedia)
-	{
-		// set up the image and button frame
-		UIImage* image = [UIImage imageNamed:@"PhotoIcon"];
-		CGRect frame = CGRectMake(4, 0, image.size.width, image.size.height);
-		CGFloat yHeight = (INPUT_HEIGHT - frame.size.height) / 2.0f;
-		frame.origin.y = yHeight;
-		
-		// make the button
-		mediaButton = [[UIButton alloc] initWithFrame:frame];
-		[mediaButton setBackgroundImage:image forState:UIControlStateNormal];
-		
-		// button action
-		[mediaButton addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
-	}
-	
-    CGRect inputFrame = self.inputFrame;
-    self.inputToolBarView = [[JSMessageInputView alloc] initWithFrame:inputFrame delegate:self];
+    self.inputToolBarView = [[MessageInputView alloc] initWithFrame:self.inputFrame];
     
-    self.inputToolBarView.textView.keyboardDelegate = self;
+    self.inputToolBarView.textView.delegate = self;
+
+    [self.inputToolBarView.sendButton addTarget:self action:@selector(sendPressed:)
+                               forControlEvents:UIControlEventTouchUpInside];
+
+    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchDown:)
+                               forControlEvents:UIControlEventTouchDown];
     
-    self.inputToolBarView.textView.placeHolder = @"说点什么呢？";
+    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchUp:)
+                               forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *sendButton = [UIButton defaultSendButton];
-    sendButton.enabled = NO;
-    sendButton.frame = CGRectMake(self.inputToolBarView.frame.size.width - 65.0f, 8.0f, 59.0f, 26.0f);
-    [sendButton addTarget:self
-                   action:@selector(sendPressed:)
-         forControlEvents:UIControlEventTouchUpInside];
-    [self.inputToolBarView setSendButton:sendButton];
+    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchUp:)
+                                  forControlEvents:UIControlEventTouchUpOutside];
+    
+    [self.inputToolBarView.mediaButton addTarget:self action:@selector(cameraAction:)
+                                forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:self.inputToolBarView];
     
-	if (kAllowsMedia)
-	{
-		// adjust the size of the send button to balance out more with the camera button on the other side.
-		CGRect frame = self.inputToolBarView.sendButton.frame;
-		frame.size.width -= 16;
-		frame.origin.x += 16;
-		self.inputToolBarView.sendButton.frame = frame;
-		
-		// add the camera button
-		[self.inputToolBarView addSubview:mediaButton];
-        
-		// move the tet view over
-		frame = self.inputToolBarView.textView.frame;
-		frame.origin.x += mediaButton.frame.size.width + mediaButton.frame.origin.x;
-		frame.size.width -= mediaButton.frame.size.width + mediaButton.frame.origin.x;
-		frame.size.width += 16;		// from the send button adjustment above
-		self.inputToolBarView.textView.frame = frame;
-	}
+    if ([[IMService instance] connectState] == STATE_CONNECTED) {
+        self.inputToolBarView.recordButton.enabled = YES;
+    }
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
-    [self.tableView addGestureRecognizer:tapRecognizer];//关键语句，给self.view添加一个手势监测；
+    [self.tableView addGestureRecognizer:tapRecognizer];
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate  = self;
-	
+
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleInputToolBarPan:)];
+    [self.inputToolBarView addGestureRecognizer:panRecognizer];
 }
 
 #pragma mark - View lifecycle
@@ -232,34 +223,111 @@
 - (void)sendPressed:(UIButton *)sender
 {
     NSString *text = [self.inputToolBarView.textView.text trimWhitespace];
-    IMessage *msg = [[IMessage alloc] init];
     
-    msg.sender = [UserPresent instance].uid;
-    msg.receiver = self.remoteUser.uid;
+    [self sendTextMessage:text];
     
-    MessageContent *content = [[MessageContent alloc] init];
-    NSDictionary *dic = @{@"text":text};
-    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
-    content.raw =  newStr;
-    msg.content = content;
-    msg.timestamp = time(NULL);
-    
-    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    
-    [self sendMessage:msg];
-    
-    [JSMessageSoundEffect playMessageSentSound];
-    
-    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-
     [self.inputToolBarView.textView setText:nil];
     [self.inputToolBarView.textView resignFirstResponder];
     self.inputToolBarView.sendButton.enabled = NO;
- 
+    self.inputToolBarView.sendButton.hidden = YES;
+    self.inputToolBarView.recordButton.hidden = NO;
+    self.inputToolBarView.recordButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
+}
 
-    [self insertMessage:msg];
+- (void)timerFired:(NSTimer*)timer {
+    self.seconds = self.seconds + 1;
+    int minute = self.seconds/60;
+    int s = self.seconds%60;
+    NSString *str = [NSString stringWithFormat:@"%02d:%02d", minute, s];
+    NSLog(@"timer:%@", str);
+    self.inputToolBarView.timerLabel.text = str;
+}
+
+- (void)recordTouchDown:(UIButton *)sender
+{
+    if (!self.recorder.recording) {
+
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        BOOL r = [session setActive:YES error:nil];
+        if (!r) {
+            NSLog(@"activate audio session fail");
+            return;
+        }
+        NSLog(@"start record...");
+        
+        NSArray *pathComponents = [NSArray arrayWithObjects:
+                                   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+                                   @"MyAudioMemo.m4a",
+                                   nil];
+        NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
+        
+        // Define the recorder setting
+        NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
+        
+        [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatMPEG4AAC] forKey:AVFormatIDKey];
+        [recordSetting setValue:[NSNumber numberWithFloat:44100.0] forKey:AVSampleRateKey];
+        [recordSetting setValue:[NSNumber numberWithInt: 2] forKey:AVNumberOfChannelsKey];
+
+        self.recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:NULL];
+        self.recorder.delegate = self;
+        self.recorder.meteringEnabled = YES;
+        if (![self.recorder prepareToRecord]) {
+            NSLog(@"prepare record fail");
+            return;
+        }
+        if (![self.recorder record]) {
+            NSLog(@"start record fail");
+            return;
+        }
+        
+        self.inputToolBarView.textView.hidden = YES;
+        self.inputToolBarView.mediaButton.hidden = YES;
+        self.inputToolBarView.recordingView.hidden = NO;
+        [self.inputToolBarView resetLabelFrame];
+        self.inputToolBarView.timerLabel.text = @"00:00";
+        self.recordCanceled = NO;
+        self.seconds = 0;
+        self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)recordTouchUp:(UIButton *)sender
+{
+    if (self.recorder.recording) {
+        NSLog(@"stop record...");
+        [self.recorder stop];
+        [self.recordingTimer invalidate];
+        self.inputToolBarView.textView.hidden = NO;
+        self.inputToolBarView.mediaButton.hidden = NO;
+        self.inputToolBarView.recordingView.hidden = YES;
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        BOOL r = [audioSession setActive:NO error:nil];
+        if (!r) {
+            NSLog(@"deactivate audio session fail");
+        }
+    }
+}
+
+-(void)handleInputToolBarPan:(UIPanGestureRecognizer*)recognizer {
+    CGPoint translation = [recognizer translationInView:self.inputToolBarView];
+    NSLog(@"translation x:%f y:%f", translation.x, translation.y);
+    if (translation.x < 0) {
+        [self.inputToolBarView slipLabelFrame:translation.x];
+    }
+    if (translation.x < -100 && self.recorder.recording) {
+        NSLog(@"cancel record...");
+        [self.recorder stop];
+        self.recordCanceled = YES;
+        [self.recordingTimer invalidate];
+        self.inputToolBarView.textView.hidden = NO;
+        self.inputToolBarView.mediaButton.hidden = NO;
+        self.inputToolBarView.recordingView.hidden = YES;
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        BOOL r = [audioSession setActive:NO error:nil];
+        if (!r) {
+            NSLog(@"deactivate audio session fail");
+        }
+    }
 }
 
 
@@ -268,51 +336,19 @@
     [self cameraPressed:sender];
 }
 
-#pragma mark - Table view data source
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    JSBubbleMessageType type = [self messageTypeForRowAtIndexPath:indexPath];
-    JSBubbleMediaType mediaType = [self messageMediaTypeForRowAtIndexPath:indexPath];
-    
-    
-    
-    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d", type];
-    JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
-    
-    if(!cell)
-        cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
-                                                  messageState:MessageReceiveStateNone
-                                                     mediaType:mediaType
-                                               reuseIdentifier:CellID];
-    
-    switch (mediaType) {
-        case  JSBubbleMediaTypeText:
-            [cell setMessage:[self textForRowAtIndexPath:indexPath]];
-            break;
-         case JSBubbleMediaTypeImage:
-           	if (kAllowsMedia)
-                [cell setMedia:[self dataForRowAtIndexPath:indexPath]];
-            break;
-        default:
-            break;
+    if ([touch.view isDescendantOfView:self.tableView]) {
+        
+        // Don't let selections of auto-complete entries fire the
+        // gesture recognizer
+        return NO;
     }
-
-    [cell setMessageState:[self messageForRowAtIndexPath:indexPath]];
-    [cell setBackgroundColor:[UIColor clearColor]];
     
-    return cell;
-}
-
-#pragma mark - Table view delegate
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if(![self  messageMediaTypeForRowAtIndexPath:indexPath]){
-        return [JSBubbleMessageCell neededHeightForText:[self   textForRowAtIndexPath:indexPath]];
-    }else{
-        //TODO
-        return 140;
-    }
+    return YES;
 }
 
 #pragma mark - Text view delegate
@@ -358,11 +394,49 @@
     
     self.inputToolBarView.frame = self.inputFrame;
     self.tableView.frame = self.tableFrame;
-    
+    [self scrollToBottomAnimated:NO];
     [UIView commitAnimations];
 }
 
+#pragma mark - AVAudioPlayerDelegate
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+    NSLog(@"player finished");
+}
 
+- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error {
+    NSLog(@"player decode error");
+}
+
+#pragma mark - AVAudioRecorderDelegate
+- (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag {
+    NSLog(@"record finish:%d", flag);
+    if (!flag) {
+        return;
+    }
+    if (self.recordCanceled) {
+        return;
+    }
+    if (self.seconds < 1) {
+        NSLog(@"record time too short");
+        return;
+    }
+    
+
+    NSData *data = [NSData dataWithContentsOfFile:[recorder.url path]];
+    int duration = self.seconds;
+    
+    //todo 上传文件的过程中，消息也能够显示在界面上
+    __weak id wself = self;
+    [APIRequest uploadAudio:data
+                    success:^(NSString *url) {
+                        FileCache *fileCache = [FileCache instance];
+                        NSLog(@"upload audio success url:%@", url);
+                        [fileCache storeFile:data forKey:url];
+                        [wself sendAudioMessage:url duration:duration];
+                    }fail:^{
+                        NSLog(@"upload audio fail");
+                    }];
+}
 
 #pragma mark - MessageObserver
 
@@ -403,18 +477,6 @@
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags & MESSAGE_FLAG_FAILURE;
     [self reloadMessage:msgLocalID];
-}
-
--(void)onGroupMessage:(IMMessage*)msg{
-    
-}
-
--(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid{
-    
-}
-
--(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid{
-    
 }
 
 //用户连线状态
@@ -460,12 +522,17 @@
     
     if (state == STATE_CONNECTING) {
         self.inputToolBarView.sendButton.enabled = NO;
-    }else if(state == STATE_CONNECTED){
-       self.inputToolBarView.sendButton.enabled = YES;
-    }else if(state == STATE_CONNECTFAIL){
+        self.inputToolBarView.recordButton.enabled = NO;
+    } else if(state == STATE_CONNECTED){
+        UITextView *textView = self.inputToolBarView.textView;
+        self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0);
+        self.inputToolBarView.recordButton.enabled = YES;
+    } else if(state == STATE_CONNECTFAIL){
         self.inputToolBarView.sendButton.enabled = NO;
-    }else if(state == STATE_UNCONNECTED){
+        self.inputToolBarView.recordButton.enabled = NO;
+    } else if(state == STATE_UNCONNECTED){
         self.inputToolBarView.sendButton.enabled = NO;
+        self.inputToolBarView.recordButton.enabled = NO;
     }
 }
 #pragma mark - UItableView cell process
@@ -485,10 +552,22 @@
 								  animated:animated];
 }
 
+
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView{
-    self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0) && ([[IMService instance] connectState] == STATE_CONNECTED);
+    
+    if ([textView.text trimWhitespace].length > 0) {
+        self.inputToolBarView.sendButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
+        self.inputToolBarView.sendButton.hidden = NO;
+        
+        self.inputToolBarView.recordButton.hidden = YES;
+    } else {
+        self.inputToolBarView.sendButton.hidden = YES;
+        
+        self.inputToolBarView.recordButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
+        self.inputToolBarView.recordButton.hidden = NO;
+    }
     
     if((time(NULL) -  self.inputTimestamp) > 10){
         
@@ -502,7 +581,42 @@
 }
 
 
+
 #pragma mark - Table view data source
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSBubbleMessageType type = [self messageTypeForRowAtIndexPath:indexPath];
+    JSBubbleMediaType mediaType = [self messageMediaTypeForRowAtIndexPath:indexPath];
+    
+    
+    
+    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d", type];
+    JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
+    
+    if(!cell)
+        cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
+                                                  messageState:MessageReceiveStateNone
+                                                     mediaType:mediaType
+                                               reuseIdentifier:CellID];
+    
+    
+    switch (mediaType) {
+        case  JSBubbleMediaTypeText:
+            [cell setMessage:[self textForRowAtIndexPath:indexPath]];
+            break;
+        case JSBubbleMediaTypeImage:
+            [cell setMedia:[self dataForRowAtIndexPath:indexPath]];
+            break;
+        default:
+            break;
+    }
+    
+    [cell setMessageState:[self messageForRowAtIndexPath:indexPath]];
+    [cell setBackgroundColor:[UIColor clearColor]];
+    
+    return cell;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -524,6 +638,16 @@
 }
 
 #pragma mark -  UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(![self  messageMediaTypeForRowAtIndexPath:indexPath]){
+        return [JSBubbleMessageCell neededHeightForText:[self   textForRowAtIndexPath:indexPath]];
+    }else{
+        //TODO
+        return 140;
+    }
+}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView == self.tableView) {
@@ -570,6 +694,46 @@
     return 44;
 }
 
++ (BOOL)isHeadphone
+{
+    UInt32 propertySize = sizeof(CFStringRef);
+    CFStringRef route = nil;
+    OSStatus error = AudioSessionGetProperty(kAudioSessionProperty_AudioRoute
+                                             ,&propertySize,&route);
+    //return @"Headphone" or @"Speaker" and so on.
+    //根据状态判断是否为耳机状态
+    if (!error && (route != NULL) && [(__bridge NSString*)route rangeOfString:@"Head"].location != NSNotFound) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+//此函数暂时和tableview的tapRecognizer冲突
+//需要响应cell上的播放按钮来播放音频消息
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message.content.type == MESSAGE_AUDIO) {
+        FileCache *fileCache = [FileCache instance];
+        NSString *url = message.content.audio.url;
+        NSString *path = [fileCache queryCacheForKey:url];
+        if (path != nil) {
+            if (![[self class] isHeadphone]) {
+                //打开外放
+                UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
+                AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
+                UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
+                AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,sizeof (audioRouteOverride),&audioRouteOverride);
+            }
+            NSURL *u = [NSURL fileURLWithPath:path];
+            self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:u error:nil];
+            [self.player setDelegate:self];
+            [self.player play];
+        }
+    }
+}
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -583,21 +747,6 @@
 
 
 #pragma mark - Messages view delegate
-
-- (BOOL)sendMessage:(IMessage*)msg {
-    Message *m = [[Message alloc] init];
-    m.cmd = MSG_IM;
-    IMMessage *im = [[IMMessage alloc] init];
-    im.sender = msg.sender;
-    im.receiver = msg.receiver;
-    im.msgLocalID = msg.msgLocalID;
-    im.content = msg.content.raw;
-    m.body = im;
-    BOOL r = [[IMService instance] sendPeerMessage:im];
-    NSLog(@"send result:%d", r);
-    return r;
-}
-
 
 
 - (void)cameraPressed:(id)sender{
@@ -629,6 +778,7 @@
             return JSBubbleMediaTypeImage;
             break;
         case MESSAGE_AUDIO:
+            return JSBubbleMediaTypeText;
             break;
         case MESSAGE_LOCATION:
             break;
@@ -638,11 +788,6 @@
     return JSBubbleMediaTypeText;
 }
 
-
-- (JSInputBarStyle)inputBarStyle
-{
-    return JSInputBarStyleFlat;
-}
 
 #pragma mark - Messages view data source
 
@@ -661,7 +806,14 @@
     NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
     
     if([array objectAtIndex:indexPath.row]){
-        return ((IMessage*)[array objectAtIndex:indexPath.row]).content.text;
+        MessageContent *content = ((IMessage*)[array objectAtIndex:indexPath.row]).content;
+        if (content.type == MESSAGE_TEXT) {
+            return content.text;
+        } else if (content.type == MESSAGE_AUDIO) {
+            return @"这是一段语音";
+        } else {
+            return @"";
+        }
     }
     return nil;
 }
@@ -715,18 +867,7 @@
                     success:^(NSString *url) {
                         NSLog(@"image url:%@", url);
                         [hub hide:YES];
-                        
                         [self sendImgMsg:url];
-//                        Message *m = [[Message alloc] init];
-//                        m.cmd = MSG_IM;
-//                        IMMessage *im = [[IMMessage alloc] init];
-//                        im.sender = msg.sender;
-//                        im.receiver = msg.receiver;
-//                        im.msgLocalID = msg.msgLocalID;
-//                        im.content = msg.content.raw;
-//                        m.body = im;
-//                        BOOL r = [[IMService instance] sendPeerMessage:im];
-                        
                     }
                        fail:^() {
                            [hub hide:YES];
@@ -743,6 +884,47 @@
 {
     [self dismissViewControllerAnimated:YES completion:NULL];
     
+}
+
+
+- (BOOL)sendMessage:(IMessage*)msg {
+    Message *m = [[Message alloc] init];
+    m.cmd = MSG_IM;
+    IMMessage *im = [[IMMessage alloc] init];
+    im.sender = msg.sender;
+    im.receiver = msg.receiver;
+    im.msgLocalID = msg.msgLocalID;
+    im.content = msg.content.raw;
+    m.body = im;
+    BOOL r = [[IMService instance] sendPeerMessage:im];
+    NSLog(@"send result:%d", r);
+    return r;
+}
+
+-(void) sendTextMessage:(NSString*)text {
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = [UserPresent instance].uid;
+    msg.receiver = self.remoteUser.uid;
+    
+    MessageContent *content = [[MessageContent alloc] init];
+    NSDictionary *dic = @{@"text":text};
+    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+    content.raw =  newStr;
+    msg.content = content;
+    msg.timestamp = time(NULL);
+    
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
+    
+    [self sendMessage:msg];
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    [self insertMessage:msg];
 }
 
 -(void) sendImgMsg:(NSString*) imgUrl{
@@ -770,6 +952,33 @@
     
     [self insertMessage:msg];
 
+}
+
+-(void)sendAudioMessage:(NSString*)url duration:(int)duration {
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = [UserPresent instance].uid;
+    msg.receiver = self.remoteUser.uid;
+    
+    MessageContent *content = [[MessageContent alloc] init];
+    NSNumber *d = [NSNumber numberWithInt:duration];
+    NSDictionary *dic = @{@"audio":@{@"url":url, @"duration":d}};
+    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+    content.raw =  newStr;
+    msg.content = content;
+    msg.timestamp = time(NULL);
+    
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
+    
+    [self sendMessage:msg];
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    [self insertMessage:msg];
 }
 
 - (void) processConversationData{

@@ -16,6 +16,8 @@
 
 +(TAHttpOperation*)uploadImage:(UIImage*)image success:(void (^)(NSString *url))success fail:(void (^)())fail;
 
++(TAHttpOperation*)uploadAudio:(NSData*)data success:(void (^)(NSString *url))success fail:(void (^)())fail;
+
 +(TAHttpOperation*)requestVerifyCode:(NSString*)zone number:(NSString*)number
                              success:(void (^)(NSString* code))success fail:(void (^)())fail;
 

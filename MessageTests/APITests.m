@@ -46,4 +46,22 @@
     CFRunLoopRun();
 }
 
+-(void)testUploadAudio
+{
+    char p[10] = {0};
+    NSData *data = [NSData dataWithBytes:p length:10];
+    [APIRequest uploadAudio:data
+                    success:^(NSString *url) {
+                        NSLog(@"audio url:%@", url);
+                        CFRunLoopStop(CFRunLoopGetCurrent());
+                    }
+                       fail:^() {
+                           NSLog(@"upload audio fail");
+                           CFRunLoopStop(CFRunLoopGetCurrent());
+                       }];
+    
+    CFRunLoopRun();
+
+}
+
 @end

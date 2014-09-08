@@ -20,6 +20,8 @@
 #define MESSAGE_FLAG_ACK 2
 #define MESSAGE_FLAG_PEER_ACK 4
 #define MESSAGE_FLAG_FAILURE 8
+#define MESSAGE_FLAG_UPLOADING 16
+#define MESSAGE_FLAG_SENDING 32
 
 @interface Audio : NSObject
 @property(nonatomic, copy) NSString *url;

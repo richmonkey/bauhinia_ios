@@ -7,26 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 #import "IMService.h"
 #import "IMessage.h"
 #import "MessageListViewController.h"
 #import "user.h"
 
 #import "JSBubbleMessageCell.h"
-#import "JSMessageInputView.h"
 #import "JSMessageSoundEffect.h"
 #import "UIButton+JSMessagesView.h"
-#import "JSDismissiveTextView.h"
 #import "MBProgressHUD.h"
 
-#define kAllowsMedia	YES	
 #define INPUT_HEIGHT 46.0f
 
+#import "MessageInputView.h"
 
 @class ConversationHeadButtonView;
 
 
-@interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,MessageObserver,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate,JSMessageInputViewDelegate,JSDismissiveTextViewDelegate>
+@interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,MessageObserver,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic,strong) UIImage *willSendImage;
@@ -40,7 +39,7 @@
 -(id) initWithRemoteUser:(IMUser*) rmtUser;
 
 @property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) JSMessageInputView *inputToolBarView;
+@property (strong, nonatomic) MessageInputView *inputToolBarView;
 @property (assign, nonatomic, readonly) UIEdgeInsets originalTableViewContentInset;
 
 - (void)setup;

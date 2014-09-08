@@ -107,6 +107,9 @@
 		6D0D76871967B8AC0058DECF /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76801967B8AC0058DECF /* util.c */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
 		6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D11C72E19BB3D3F00E67389 /* APITests.m */; };
+		6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D32393919BD6482005A00B2 /* MessageInputView.m */; };
+		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
+		6D32394019BD962C005A00B2 /* FileCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D32393F19BD962C005A00B2 /* FileCache.m */; };
 		6D762156197ECA9300B690D7 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762145197ECA9300B690D7 /* Group.m */; };
 		6D762157197ECA9300B690D7 /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762147197ECA9300B690D7 /* GroupDB.m */; };
 		6D762158197ECA9300B690D7 /* GroupMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762149197ECA9300B690D7 /* GroupMessageDB.m */; };
@@ -314,6 +317,11 @@
 		6D0D76A7196910130058DECF /* IMContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMContact.h; sourceTree = "<group>"; };
 		6D0D76A8196910130058DECF /* IMContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMContact.m; sourceTree = "<group>"; };
 		6D11C72E19BB3D3F00E67389 /* APITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APITests.m; sourceTree = "<group>"; };
+		6D32393819BD6482005A00B2 /* MessageInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageInputView.h; sourceTree = "<group>"; };
+		6D32393919BD6482005A00B2 /* MessageInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageInputView.m; sourceTree = "<group>"; };
+		6D32393B19BD79C7005A00B2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		6D32393E19BD962C005A00B2 /* FileCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileCache.h; sourceTree = "<group>"; };
+		6D32393F19BD962C005A00B2 /* FileCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileCache.m; sourceTree = "<group>"; };
 		6D762144197ECA9300B690D7 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		6D762145197ECA9300B690D7 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		6D762146197ECA9300B690D7 /* GroupDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDB.h; sourceTree = "<group>"; };
@@ -351,6 +359,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */,
 				2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
 				6D7621651981626900B690D7 /* libleveldb.a in Frameworks */,
@@ -489,6 +498,8 @@
 		2105650A1969839F008D3A83 /* control */ = {
 			isa = PBXGroup;
 			children = (
+				6D32393819BD6482005A00B2 /* MessageInputView.h */,
+				6D32393919BD6482005A00B2 /* MessageInputView.m */,
 				212F28F9197BF6420066A166 /* MessageTableSectionHeaderView.h */,
 				212F28FA197BF6420066A166 /* MessageTableSectionHeaderView.m */,
 				212F28FB197BF6420066A166 /* MessageTableSectionHeaderView.xib */,
@@ -528,6 +539,8 @@
 				21150C9D196F78A5009DE9DE /* UserDB.m */,
 				21150C9E196F78A5009DE9DE /* UserPresent.h */,
 				21150C9F196F78A5009DE9DE /* UserPresent.m */,
+				6D32393E19BD962C005A00B2 /* FileCache.h */,
+				6D32393F19BD962C005A00B2 /* FileCache.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -625,6 +638,7 @@
 		21798F95194E9C4600B67C1F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6D32393B19BD79C7005A00B2 /* AVFoundation.framework */,
 				6D7621641981626900B690D7 /* libleveldb.a */,
 				2173C09F19668B8800BC3BDF /* libxml2.2.dylib */,
 				2173C0A019668B8900BC3BDF /* libxml2.dylib */,
@@ -927,6 +941,8 @@
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				2173C66519738745004A88A5 /* SDWebImageDecoder.m in Sources */,
 				6D76215A197ECA9300B690D7 /* IMessage.m in Sources */,
+				6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */,
+				6D32394019BD962C005A00B2 /* FileCache.m in Sources */,
 				210564C619695FC1008D3A83 /* ContactViewController.m in Sources */,
 				6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */,
 				6D0D76851967B8AC0058DECF /* Message.m in Sources */,
@@ -1087,8 +1103,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
@@ -1098,7 +1114,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
@@ -1121,7 +1137,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
