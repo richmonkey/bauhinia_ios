@@ -125,7 +125,7 @@
 
 - (void)setMedia:(id)data
 {
-	if ([data isKindOfClass:[UIImage class]])
+	if ([data isKindOfClass:[NSString class]])
 	{
 		// image
 		NSLog(@"show the image here");
@@ -157,9 +157,9 @@
     return [JSBubbleView cellHeightForText:bubbleViewText];
 }
 
-+ (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage{
-    return [JSBubbleView cellHeightForImage:bubbleViewImage];
-}
+//+ (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage{
+//    return [JSBubbleView cellHeightForImage:bubbleViewImage];
+//}
 
 #pragma mark - Copying
 - (BOOL)canBecomeFirstResponder

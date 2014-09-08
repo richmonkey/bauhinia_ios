@@ -40,7 +40,7 @@
 
 + (CGFloat)neededHeightForText:(NSString *)bubbleViewText;
 
-+ (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage;
+//+ (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage;
 
 
 @end

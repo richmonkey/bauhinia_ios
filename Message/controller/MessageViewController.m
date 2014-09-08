@@ -238,7 +238,9 @@
     msg.receiver = self.remoteUser.uid;
     
     MessageContent *content = [[MessageContent alloc] init];
-    content.raw = text;
+    NSDictionary *dic = @{@"text":text};
+    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+    content.raw =  newStr;
     msg.content = content;
     msg.timestamp = time(NULL);
     
@@ -284,13 +286,19 @@
                                                      mediaType:mediaType
                                                reuseIdentifier:CellID];
     
-    
-    
-    
-	if (kAllowsMedia)
-		[cell setMedia:[self dataForRowAtIndexPath:indexPath]];
+    switch (mediaType) {
+        case  JSBubbleMediaTypeText:
+            [cell setMessage:[self textForRowAtIndexPath:indexPath]];
+            break;
+         case JSBubbleMediaTypeImage:
+           	if (kAllowsMedia)
+                [cell setMedia:[self dataForRowAtIndexPath:indexPath]];
+            break;
+        default:
+            break;
+    }
+
     [cell setMessageState:[self messageForRowAtIndexPath:indexPath]];
-    [cell setMessage:[self textForRowAtIndexPath:indexPath]];
     [cell setBackgroundColor:[UIColor clearColor]];
     
     return cell;
@@ -302,7 +310,8 @@
     if(![self  messageMediaTypeForRowAtIndexPath:indexPath]){
         return [JSBubbleMessageCell neededHeightForText:[self   textForRowAtIndexPath:indexPath]];
     }else{
-        return [JSBubbleMessageCell neededHeightForImage:[self   dataForRowAtIndexPath:indexPath]];
+        //TODO
+        return 140;
     }
 }
 
@@ -584,6 +593,8 @@
     return r;
 }
 
+
+
 - (void)cameraPressed:(id)sender{
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate  = self;
@@ -603,6 +614,22 @@
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
+    IMessage * msg =  [array objectAtIndex:indexPath.row];
+    switch (msg.content.type) {
+        case MESSAGE_TEXT:
+            return JSBubbleMediaTypeText;
+            break;
+        case  MESSAGE_IMAGE:
+            return JSBubbleMediaTypeImage;
+            break;
+        case MESSAGE_AUDIO:
+            break;
+        case MESSAGE_LOCATION:
+            break;
+        default:
+            break;
+    }
     return JSBubbleMediaTypeText;
 }
 
@@ -629,7 +656,7 @@
     NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
     
     if([array objectAtIndex:indexPath.row]){
-        return ((IMessage*)[array objectAtIndex:indexPath.row]).content.raw;
+        return ((IMessage*)[array objectAtIndex:indexPath.row]).content.text;
     }
     return nil;
 }
@@ -650,7 +677,20 @@
 }
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-   return nil;
+    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
+    IMessage * msg =  [array objectAtIndex:indexPath.row];
+    switch (msg.content.type) {
+        case  MESSAGE_IMAGE:
+           return  [msg.content imageURL];
+        case MESSAGE_AUDIO:
+            break;
+        case MESSAGE_LOCATION:
+            break;
+        default:
+            break;
+    }
+    return nil;
+    
     
 }
 
@@ -662,26 +702,30 @@
 	NSLog(@"Chose image!  Details:  %@", info);
     
     self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
-//    [self.timestamps addObject:[NSDate date]];
-//    [self.tableView reloadData];
-//    [self scrollToBottomAnimated:YES];
- 
     
     MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hub.removeFromSuperViewOnHide = YES;
     
-    __block NSString *avatarURL = nil;
     [APIRequest uploadImage:self.willSendImage
                     success:^(NSString *url) {
                         NSLog(@"image url:%@", url);
                         [hub hide:YES];
-                        avatarURL = url;
-                        CFRunLoopStop(CFRunLoopGetCurrent());
+                        
+                        [self sendImgMsg:url];
+//                        Message *m = [[Message alloc] init];
+//                        m.cmd = MSG_IM;
+//                        IMMessage *im = [[IMMessage alloc] init];
+//                        im.sender = msg.sender;
+//                        im.receiver = msg.receiver;
+//                        im.msgLocalID = msg.msgLocalID;
+//                        im.content = msg.content.raw;
+//                        m.body = im;
+//                        BOOL r = [[IMService instance] sendPeerMessage:im];
+                        
                     }
                        fail:^() {
                            [hub hide:YES];
                            NSLog(@"upload image fail");
-                           CFRunLoopStop(CFRunLoopGetCurrent());
                        }];
     
 	
@@ -696,6 +740,32 @@
     
 }
 
+-(void) sendImgMsg:(NSString*) imgUrl{
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = [UserPresent instance].uid;
+    msg.receiver = self.remoteUser.uid;
+    
+    MessageContent *content = [[MessageContent alloc] init];
+    NSDictionary *dic = @{@"image":imgUrl};
+    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+    content.raw =  newStr;
+    msg.content = content;
+    msg.timestamp = time(NULL);
+    
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
+    
+    [self sendMessage:msg];
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    [self insertMessage:msg];
+
+}
 
 - (void) processConversationData{
     

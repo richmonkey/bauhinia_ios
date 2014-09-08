@@ -159,8 +159,14 @@
     }
     
     cell.namelabel.text = [currentUser displayName];
+    if (covn.message.content.type == MESSAGE_IMAGE) {
+        cell.messageContent.text = @"收到一张图片";
+    }else if(covn.message.content.type == MESSAGE_TEXT){
+       cell.messageContent.text = covn.message.content.text;
+    }else if(covn.message.content.type == MESSAGE_LOCATION){
+        cell.messageContent.text = @"收到一个地理位置";
+    }
     
-    cell.messageContent.text = covn.message.content.raw;
     
     NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
     

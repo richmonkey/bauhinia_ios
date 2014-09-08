@@ -112,7 +112,7 @@ CGFloat const kJSAvatarSize = 50.0f;
                           floorf(bubbleSize.width),
                           floorf(bubbleSize.height));
     }else if (self.mediaType == JSBubbleMediaTypeImage){
-        CGSize bubbleSize = [JSBubbleView imageSizeForImage:(UIImage *)self.data];
+        CGSize bubbleSize = [JSBubbleView imageSizeForImage];
         return CGRectMake(floorf(self.type == JSBubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 10.0f),
                           floorf(kMarginTop),
                           floorf(bubbleSize.width),
@@ -183,18 +183,23 @@ CGFloat const kJSAvatarSize = 50.0f;
         }
     }else if(self.mediaType == JSBubbleMediaTypeImage){  //media
         
-        UIImage *recivedImg = (UIImage *)self.data;
-        
-		if (recivedImg){
-            CGSize imageSize = [JSBubbleView imageSizeForImage:recivedImg];
+        if (!self.imageView) {
+            self.imageView = [[UIImageView alloc] init];
+            CGSize imageSize = CGSizeMake(125, 125);
             CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
             
             CGRect imageFrame = CGRectMake(imgX - 3.f,
                                            kPaddingTop,
                                            imageSize.width - kPaddingTop - kMarginTop,
                                            imageSize.height - kPaddingBottom + 2.f);
-            [recivedImg drawInRect:imageFrame];
-		}
+            [self.imageView setFrame:imageFrame];
+            [self addSubview:self.imageView];
+        }
+        
+        if (self.data) {
+            [self.imageView setImageWithURL:[[NSURL alloc] initWithString:self.data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"]];
+        }
+        
 	}
 }
 
@@ -277,12 +282,12 @@ CGFloat const kJSAvatarSize = 50.0f;
 }
 
 + (CGSize)bubbleSizeForImage:(UIImage *)image{
-    CGSize imageSize = [JSBubbleView imageSizeForImage:image];
+    CGSize imageSize = [JSBubbleView imageSizeForImage];
 	return CGSizeMake(imageSize.width,
                       imageSize.height);
 }
 
-+ (CGSize)imageSizeForImage:(UIImage *)image{
++ (CGSize)imageSizeForImage{
     CGFloat width = [UIScreen mainScreen].applicationFrame.size.width * 0.75f;
     CGFloat height = 130.f;
     

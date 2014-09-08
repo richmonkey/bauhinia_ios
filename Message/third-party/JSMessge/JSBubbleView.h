@@ -16,6 +16,7 @@
 
 
 #import <UIKit/UIKit.h>
+#import "UIImageView+WebCache.h"
 
 extern CGFloat const kJSAvatarSize;
 
@@ -40,7 +41,7 @@ typedef enum {
 
 @property (assign, nonatomic) JSBubbleMessageType type;
 @property (nonatomic,assign) JSBubbleMediaType mediaType;
-
+@property (nonatomic,strong) UIImageView *imageView;
 @property (strong, nonatomic) NSString *text;
 @property (strong, nonatomic) id data;
 @property (assign, nonatomic) BOOL selectedToShowCopyMenu;
@@ -67,7 +68,7 @@ typedef enum {
 + (CGSize)textSizeForText:(NSString *)txt;
 + (CGSize)bubbleSizeForText:(NSString *)txt;
 + (CGSize)bubbleSizeForImage:(UIImage *)image;
-+ (CGSize)imageSizeForImage:(UIImage *)image;
++ (CGSize)imageSizeForImage;
 + (CGFloat)cellHeightForText:(NSString *)txt;
 + (CGFloat)cellHeightForImage:(UIImage *)image;
 
