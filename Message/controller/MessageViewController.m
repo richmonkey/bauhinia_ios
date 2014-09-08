@@ -354,6 +354,9 @@
 #pragma mark - MessageObserver
 
 -(void)onPeerMessage:(IMMessage*)im{
+    if (im.receiver != self.remoteUser.uid) {
+        return;
+    }
     [JSMessageSoundEffect playMessageReceivedSound];
     NSLog(@"receive msg:%@",im);
     
