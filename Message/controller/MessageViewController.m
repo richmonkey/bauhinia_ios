@@ -316,37 +316,39 @@
 #pragma mark - Keyboard notifications
 - (void)handleWillShowKeyboard:(NSNotification *)notification{
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-	double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSTimeInterval animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    UIViewAnimationOptions curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    UIViewAnimationCurve animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
     
-    [UIView animateWithDuration:duration delay:0 options:curve
-                     animations:^{
-                         CGRect inputViewFrame = CGRectOffset(self.inputFrame, 0, -keyboardRect.size.height);
-                         CGRect tableViewFrame = self.tableFrame;
-                         tableViewFrame.size.height -= keyboardRect.size.height;
-                         self.inputToolBarView.frame = inputViewFrame;
-                         self.tableView.frame = tableViewFrame;
-                         [self scrollToBottomAnimated:NO];
-                     }
-                     completion:^(BOOL finished) {
-                         
-                     }];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    [UIView setAnimationCurve:animationCurve];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    
+    CGRect inputViewFrame = CGRectOffset(self.inputFrame, 0, -keyboardRect.size.height);
+    CGRect tableViewFrame = self.tableFrame;
+    tableViewFrame.size.height -= keyboardRect.size.height;
+    self.inputToolBarView.frame = inputViewFrame;
+    self.tableView.frame = tableViewFrame;
+    [self scrollToBottomAnimated:NO];
+    [UIView commitAnimations];
+
 }
 
 - (void)handleWillHideKeyboard:(NSNotification *)notification{
-    UIViewAnimationOptions curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
-	double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSTimeInterval animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    [UIView animateWithDuration:duration delay:0 options:curve
-                     animations:^{
-                         self.inputToolBarView.frame = self.inputFrame;
-                         self.tableView.frame = self.tableFrame;
-                     }
-                     completion:^(BOOL finished) {
-                         
-                         
-                     }];
+    UIViewAnimationCurve animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    [UIView setAnimationCurve:animationCurve];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    
+    self.inputToolBarView.frame = self.inputFrame;
+    self.tableView.frame = self.tableFrame;
+    
+    [UIView commitAnimations];
 }
 
 
