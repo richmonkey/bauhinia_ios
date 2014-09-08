@@ -229,10 +229,11 @@
     NSString *name = @"";
     for (int i = 0; i < [string length]; i++)
     {
-        if([name length] < 1)
-            name = [NSString stringWithFormat:@"%c",pinyinFirstLetter([string characterAtIndex:i])];
-        else
+        if([name length] < 1) {
+            name = [self getSectionName:string];
+        } else {
             name = [NSString stringWithFormat:@"%@%c",name,pinyinFirstLetter([string characterAtIndex:i])];
+        }
     }
     return name;
 }
