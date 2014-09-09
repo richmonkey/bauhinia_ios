@@ -37,6 +37,8 @@
 @property(nonatomic) NSTimer *recordingTimer;
 @property(nonatomic, assign) int seconds;
 @property(nonatomic) BOOL recordCanceled;
+
+@property(nonatomic) UIPanGestureRecognizer *panRecognizer;
 @end
 
 @implementation MessageViewController
@@ -81,14 +83,11 @@
 
     [self processConversationData];
     
-  
-    
     // Setup audio session
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     
     [[IMService instance] addMessageObserver:self];
-    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -136,6 +135,11 @@
     [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchUp:)
                                   forControlEvents:UIControlEventTouchUpOutside];
     
+    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchCancel:)
+                                 forControlEvents:UIControlEventTouchCancel];
+    
+    
+    
     [self.inputToolBarView.mediaButton addTarget:self action:@selector(cameraAction:)
                                 forControlEvents:UIControlEventTouchUpInside];
     
@@ -151,7 +155,10 @@
     tapRecognizer.delegate  = self;
 
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleInputToolBarPan:)];
+    panRecognizer.delegate = self;
     [self.inputToolBarView addGestureRecognizer:panRecognizer];
+    self.panRecognizer.cancelsTouchesInView = NO;
+    self.panRecognizer = panRecognizer;
 }
 
 #pragma mark - View lifecycle
@@ -290,45 +297,45 @@
     }
 }
 
-- (void)recordTouchUp:(UIButton *)sender
-{
+- (void)recordTouchUp:(UIButton *)sender {
     if (self.recorder.recording) {
         NSLog(@"stop record...");
-        [self.recorder stop];
-        [self.recordingTimer invalidate];
-        self.inputToolBarView.textView.hidden = NO;
-        self.inputToolBarView.mediaButton.hidden = NO;
-        self.inputToolBarView.recordingView.hidden = YES;
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        BOOL r = [audioSession setActive:NO error:nil];
-        if (!r) {
-            NSLog(@"deactivate audio session fail");
-        }
+        [self stopRecord];
+    }
+}
+
+- (void)recordTouchCancel:(UIButton *)sender {
+    NSLog(@"touch cancel");
+    if (self.recorder.recording) {
+        NSLog(@"stop record...");
+        [self stopRecord];
     }
 }
 
 -(void)handleInputToolBarPan:(UIPanGestureRecognizer*)recognizer {
     CGPoint translation = [recognizer translationInView:self.inputToolBarView];
-    NSLog(@"translation x:%f y:%f", translation.x, translation.y);
     if (translation.x < 0) {
         [self.inputToolBarView slipLabelFrame:translation.x];
     }
     if (translation.x < -100 && self.recorder.recording) {
         NSLog(@"cancel record...");
-        [self.recorder stop];
         self.recordCanceled = YES;
-        [self.recordingTimer invalidate];
-        self.inputToolBarView.textView.hidden = NO;
-        self.inputToolBarView.mediaButton.hidden = NO;
-        self.inputToolBarView.recordingView.hidden = YES;
-        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-        BOOL r = [audioSession setActive:NO error:nil];
-        if (!r) {
-            NSLog(@"deactivate audio session fail");
-        }
+        [self stopRecord];
     }
 }
 
+-(void)stopRecord {
+    [self.recorder stop];
+    [self.recordingTimer invalidate];
+    self.inputToolBarView.textView.hidden = NO;
+    self.inputToolBarView.mediaButton.hidden = NO;
+    self.inputToolBarView.recordingView.hidden = YES;
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    BOOL r = [audioSession setActive:NO error:nil];
+    if (!r) {
+        NSLog(@"deactivate audio session fail");
+    }
+}
 
 - (void)cameraAction:(id)sender
 {

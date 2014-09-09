@@ -73,8 +73,6 @@
 #pragma mark - Message Cell
 - (void)setMessage:(IMessage*)message
 {
-//    [self setup];
-
     BubbleMessageType msgType;
     if(message.sender == [UserPresent instance].uid){
         msgType = BubbleMessageTypeOutgoing;

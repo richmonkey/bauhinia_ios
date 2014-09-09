@@ -111,12 +111,15 @@
         self.slipLabel.text = @"滑动取消";
         [self.recordingView addSubview:self.slipLabel];
         
+        CGRect maskFrame = CGRectMake(0, 0, 70, frame.size.height);
+        UIImageView *maskView = [[UIImageView alloc] initWithImage:[UIImage inputBar]];
+        maskView.frame = maskFrame;
+        [self.recordingView addSubview:maskView];
+        
         labelFrame = CGRectMake(8, 0, 60, 26);
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
         self.timerLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [self.recordingView addSubview:self.timerLabel];
-        
- 
         
         [self addSubview:self.recordingView];
         self.recordingView.hidden = YES;

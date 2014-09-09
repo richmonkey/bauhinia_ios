@@ -4,18 +4,12 @@
 
 CGFloat const kJSAvatarSize = 50.0f;
 
-
-
 @interface BubbleView()
-
-- (void)setup;
 
 + (UIImage *)bubbleImageTypeIncoming;
 + (UIImage *)bubbleImageTypeOutgoing;
 
 @end
-
-
 
 @implementation BubbleView
 
@@ -24,7 +18,6 @@ CGFloat const kJSAvatarSize = 50.0f;
 {
     self = [super initWithFrame:rect];
     if(self) {
-        [self setup];
         self.backgroundColor = [UIColor clearColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }

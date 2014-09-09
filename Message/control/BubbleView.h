@@ -20,11 +20,6 @@ typedef enum {
     BubbleMessageTypeOutgoing
 } BubbleMessageType;
 
-typedef enum {
-    BubbleMediaTypeText = 0,
-    BubbleMediaTypeImage,
-}BubbleMediaType;
-
 
 @interface BubbleView : UIView
 
