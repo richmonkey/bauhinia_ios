@@ -20,7 +20,6 @@
 
 #import "NSString+JSMessagesView.h"
 #import "UIView+AnimationOptionsForCurve.h"
-#import "UIColor+JSMessagesView.h"
 #import "FileCache.h"
 #import "APIRequest.h"
 
@@ -454,7 +453,7 @@
     MessageContent *content = [[MessageContent alloc] init];
     content.raw = im.content;
     m.content = content;
-    m.timestamp = time(NULL);
+    m.timestamp = (int)time(NULL);
 
     [self insertMessage:m];
 }
@@ -571,7 +570,7 @@
     
     if((time(NULL) -  self.inputTimestamp) > 10){
         
-        self.inputTimestamp = time(NULL);
+        self.inputTimestamp = (int)time(NULL);
         MessageInputing *inputing = [[MessageInputing alloc ] init];
         inputing.sender = [UserPresent instance].uid;
         inputing.receiver =self.remoteUser.uid;
@@ -581,40 +580,23 @@
 }
 
 
-
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSBubbleMessageType type = [self messageTypeForRowAtIndexPath:indexPath];
-    JSBubbleMediaType mediaType = [self messageMediaTypeForRowAtIndexPath:indexPath];
-    
-    
-    
-    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d", type];
-    JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
-    
-    if(!cell)
-        cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
-                                                  messageState:MessageReceiveStateNone
-                                                     mediaType:mediaType
-                                               reuseIdentifier:CellID];
-    
-    
-    switch (mediaType) {
-        case  JSBubbleMediaTypeText:
-            [cell setMessage:[self textForRowAtIndexPath:indexPath]];
-            break;
-        case JSBubbleMediaTypeImage:
-            [cell setMedia:[self dataForRowAtIndexPath:indexPath]];
-            break;
-        default:
-            break;
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return nil;
     }
     
-    [cell setMessageState:[self messageForRowAtIndexPath:indexPath]];
-    [cell setBackgroundColor:[UIColor clearColor]];
+    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d", message.content.type];
+    MessageViewCell *cell = (MessageViewCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     
+    
+    if(!cell)
+        cell = [[MessageViewCell alloc] initWithType:message.content.type reuseIdentifier:CellID];
+    
+    [cell setMessage:message];
     return cell;
 }
 
@@ -641,12 +623,26 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(![self  messageMediaTypeForRowAtIndexPath:indexPath]){
-        return [JSBubbleMessageCell neededHeightForText:[self   textForRowAtIndexPath:indexPath]];
-    }else{
-        //TODO
-        return 140;
+    IMessage *msg = [self messageForRowAtIndexPath:indexPath];
+    if (msg == nil) {
+        NSLog(@"opps");
+        return 0;
     }
+    switch (msg.content.type) {
+        case MESSAGE_TEXT:
+            return [BubbleView cellHeightForText:msg.content.text];
+        case  MESSAGE_IMAGE:
+            return 140;
+            break;
+        case MESSAGE_AUDIO:
+            return 40;
+            break;
+        case MESSAGE_LOCATION:
+            return 40;
+        default:
+            return 0;
+    }
+
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -757,37 +753,6 @@
     [self presentViewController:picker animated:YES completion:NULL];
 }
 
-- (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
-    IMessage * msg =  [array objectAtIndex:indexPath.row];
-    if(msg.sender == [UserPresent instance].uid){
-        return JSBubbleMessageTypeOutgoing;
-    }else{
-        return JSBubbleMessageTypeIncoming;
-    }
-}
-
-- (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
-    IMessage * msg =  [array objectAtIndex:indexPath.row];
-    switch (msg.content.type) {
-        case MESSAGE_TEXT:
-            return JSBubbleMediaTypeText;
-            break;
-        case  MESSAGE_IMAGE:
-            return JSBubbleMediaTypeImage;
-            break;
-        case MESSAGE_AUDIO:
-            return JSBubbleMediaTypeText;
-            break;
-        case MESSAGE_LOCATION:
-            break;
-        default:
-            break;
-    }
-    return JSBubbleMediaTypeText;
-}
-
 
 #pragma mark - Messages view data source
 
@@ -801,22 +766,6 @@
     return nil;
 }
 
-- (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
-    
-    if([array objectAtIndex:indexPath.row]){
-        MessageContent *content = ((IMessage*)[array objectAtIndex:indexPath.row]).content;
-        if (content.type == MESSAGE_TEXT) {
-            return content.text;
-        } else if (content.type == MESSAGE_AUDIO) {
-            return @"这是一段语音";
-        } else {
-            return @"";
-        }
-    }
-    return nil;
-}
 
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -831,24 +780,6 @@
 - (UIImage *)avatarImageForOutgoingMessage
 {
     return [UIImage imageNamed:@"head2.png"];
-}
-
-- (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSMutableArray *array = [self.messageArray objectAtIndex: indexPath.section];
-    IMessage * msg =  [array objectAtIndex:indexPath.row];
-    switch (msg.content.type) {
-        case  MESSAGE_IMAGE:
-           return  [msg.content imageURL];
-        case MESSAGE_AUDIO:
-            break;
-        case MESSAGE_LOCATION:
-            break;
-        default:
-            break;
-    }
-    return nil;
-    
-    
 }
 
 #pragma UIImagePicker Delegate

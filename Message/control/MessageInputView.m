@@ -2,7 +2,6 @@
 #import "MessageInputView.h"
 #import "NSString+JSMessagesView.h"
 #import "UIImage+JSMessagesView.h"
-#import "UIColor+JSMessagesView.h"
 
 #define SEND_BUTTON_WIDTH 70.0f
 

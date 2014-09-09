@@ -1,7 +1,7 @@
 
 
 #import "UIImage+JSMessagesView.h"
-#import "JSMessageInputView.h"
+
 
 @implementation UIImage (JSMessagesView)
 
@@ -82,17 +82,11 @@
 
 #pragma mark - Input bar
 + (UIImage *)inputBar{
-  if ([JSMessageInputView inputBarStyle] == JSInputBarStyleFlat)
     return [UIImage imageNamed:@"input-bar-flat"];
-  else      // jSInputBarStyleDefault
-    return [[UIImage imageNamed:@"input-bar"] resizableImageWithCapInsets:UIEdgeInsetsMake(19.0f, 3.0f, 19.0f, 3.0f)];
 }
 
 + (UIImage *)inputField{
-  if ([JSMessageInputView inputBarStyle] == JSInputBarStyleFlat)
     return nil; // no graphic around input field.
-  else          // jSInputBarStyleDefault
-    return [[UIImage imageNamed:@"input-field"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.0f, 12.0f, 18.0f, 18.0f)];
 }
 
 #pragma mark - Bubble cap insets

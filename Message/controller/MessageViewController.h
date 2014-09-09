@@ -13,9 +13,9 @@
 #import "MessageListViewController.h"
 #import "user.h"
 
-#import "JSBubbleMessageCell.h"
+#import "MessageViewCell.h"
+
 #import "JSMessageSoundEffect.h"
-#import "UIButton+JSMessagesView.h"
 #import "MBProgressHUD.h"
 
 #define INPUT_HEIGHT 46.0f
