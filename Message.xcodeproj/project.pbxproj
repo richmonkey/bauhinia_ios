@@ -421,6 +421,7 @@
 			isa = PBXGroup;
 			children = (
 				48C20EE519BFE81C009494A1 /* Titanium */,
+				6DB0AA3419C0A5D50027A658 /* Reachability */,
 				2173C5D8197385C8004A88A5 /* SDWebImage */,
 				2105647B19695FC0008D3A83 /* JSMessge */,
 				6D76216619834DA100B690D7 /* MBProgressHUD.h */,
