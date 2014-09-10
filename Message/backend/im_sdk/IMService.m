@@ -68,6 +68,9 @@
         NSLog(@"should init im server host and port");
         exit(1);
     }
+    if (!self.stopped) {
+        return;
+    }
     NSLog(@"start im service");
 
     self.uid = uid;
@@ -82,6 +85,10 @@
 }
 
 -(void)stop {
+    if (self.stopped) {
+        return;
+    }
+    
     self.stopped = YES;
     dispatch_suspend(self.connectTimer);
     dispatch_suspend(self.heartbeatTimer);

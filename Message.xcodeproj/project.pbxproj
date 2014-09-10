@@ -126,6 +126,7 @@
 		6DB0AA2D19BF558D0027A658 /* MessageTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA2C19BF558D0027A658 /* MessageTextView.m */; };
 		6DB0AA3019BF56AC0027A658 /* MessageImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA2F19BF56AC0027A658 /* MessageImageView.m */; };
 		6DB0AA3319BF6B710027A658 /* UIImage+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3219BF6B710027A658 /* UIImage+JSMessagesView.m */; };
+		6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3619C0A5D50027A658 /* Reachability.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -353,6 +354,8 @@
 		6DB0AA2F19BF56AC0027A658 /* MessageImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageImageView.m; sourceTree = "<group>"; };
 		6DB0AA3119BF6B710027A658 /* UIImage+JSMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+JSMessagesView.h"; sourceTree = "<group>"; };
 		6DB0AA3219BF6B710027A658 /* UIImage+JSMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JSMessagesView.m"; sourceTree = "<group>"; };
+		6DB0AA3519C0A5D50027A658 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		6DB0AA3619C0A5D50027A658 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -778,6 +781,15 @@
 			path = leveldb;
 			sourceTree = "<group>";
 		};
+		6DB0AA3419C0A5D50027A658 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				6DB0AA3519C0A5D50027A658 /* Reachability.h */,
+				6DB0AA3619C0A5D50027A658 /* Reachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -957,6 +969,7 @@
 				6D32394019BD962C005A00B2 /* FileCache.m in Sources */,
 				210564C619695FC1008D3A83 /* ContactViewController.m in Sources */,
 				6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */,
+				6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */,
 				6D0D76851967B8AC0058DECF /* Message.m in Sources */,
 				2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */,
 				2173C66D19738745004A88A5 /* UIImage+WebP.m in Sources */,

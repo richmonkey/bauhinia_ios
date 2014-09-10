@@ -22,6 +22,8 @@
 @property (nonatomic) NSIndexPath *selectedIndexPath;
 @property (nonatomic) UITableView *selectedTableView;
 
+@property (nonatomic) NSTimer *updateStateTimer;
+
 @end
 
 @implementation ContactListTableViewController
@@ -72,6 +74,7 @@
     [[ContactDB instance] addObserver:self];
     [self loadData];
     [self requestUsers];
+    self.updateStateTimer = [NSTimer scheduledTimerWithTimeInterval:3600 target:self selector:@selector(updateUserState:) userInfo:nil repeats:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -104,6 +107,10 @@
         sectionName = [first uppercaseString];
     }
     return sectionName;
+}
+
+-(void)updateUserState:(NSTimer*)timer {
+    [self requestUsers];
 }
 
 -(void)requestUsers {
@@ -180,6 +187,7 @@
 
 -(void)onExternalChange {
     [self loadData];
+    [self requestUsers];
     [self.tableView reloadData];
 }
 
