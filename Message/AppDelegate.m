@@ -34,9 +34,6 @@
     
     Token *token = [Token instance];
     if (token.accessToken) {
-        [token startRefreshTimer];
-        [[IMService instance] start:[UserPresent instance].uid];
-        
         UITabBarController *tabController = [[MainTabBarController alloc] init];
         self.tabBarController = tabController;
         self.window.rootViewController = tabController;
@@ -79,6 +76,7 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    NSLog(@"will enter foreground");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

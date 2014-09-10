@@ -167,9 +167,6 @@
 #pragma mark 登录成功
 - (void)loginSuccess
 {
-    [[Token instance] startRefreshTimer];
-    [[IMService instance] start:[UserPresent instance].uid];
-    
     UITabBarController *tabController = [[MainTabBarController alloc] init];
     UINavigationController *navCtl = [[UINavigationController alloc] initWithRootViewController:tabController];
     navCtl.navigationBarHidden = YES;
