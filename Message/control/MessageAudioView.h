@@ -26,4 +26,6 @@
 
 @property(nonatomic) AVAudioPlayer *player;
 
+-(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType;
+
 @end

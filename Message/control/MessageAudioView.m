@@ -15,7 +15,7 @@
 #define kblank 5
 #define kMargin 20
 
-#define kAudioCellWidth 200
+#define kAudioCellWidth 210
 
 #define kHeadViewWidth   40
 #define kHeadViewHeight  40
@@ -93,12 +93,43 @@
     return self;
 }
 
--(void)setMsg:(IMessage *)msg{
+-(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType{
+    [super setType:type];
+    [super setMsgStateType:stateType];
     _msg = msg;
-    
+    [self updatePosition];
     [self.timeLengthLabel setText:[self getTimeLengthStr:self.msg.content.audio.duration]];
     
 }
+
+
+-(void)updatePosition{
+    CGSize bubbleSize = CGSizeMake(kAudioCellWidth, kAudioViewCellHeight);
+    
+    CGRect rect = self.playBtn.frame;
+    rect.origin.x = kMargin + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width  : 0.0f);
+     self.playBtn.frame = rect;
+    
+    rect = self.progressView.frame;
+    rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
+    rect.size.width = kAudioCellWidth - kMargin - kHeadViewWidth - kPlayBtnWidth - 2*kblank - 20;
+    self.progressView.frame = rect;
+    
+    rect = self.timeLengthLabel.frame;
+    rect.origin.x = self.progressView.frame.origin.x ;
+    self.timeLengthLabel.frame = rect;
+    
+    rect = self.microPhoneBtn.frame;
+    rect.origin.x = kAudioCellWidth - kHeadViewWidth - kmicroBtnWidth  - kblank + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
+    self.microPhoneBtn.frame = rect;
+    
+    rect = self.headView.frame;
+    rect.origin.x = kAudioCellWidth - kHeadViewWidth - kblank + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
+    self.headView.frame = rect;
+    
+}
+
+
 
 -(void)AudioAction:(UIButton*)btn{
 
@@ -106,6 +137,7 @@
         [self.player stop];
         [self.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
         [self.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+        self.progressView.progress = 0.0f;
         if (self.timer && [self.timer isValid]) {
             [self.timer invalidate];
             self.timer = nil;
@@ -146,6 +178,7 @@
     NSLog(@"player finished");
     [self.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
     [self.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+    self.progressView.progress = 0.0f;
     if (self.timer && [self.timer isValid]) {
         [self.timer invalidate];
         self.timer = nil;

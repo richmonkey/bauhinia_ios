@@ -116,9 +116,7 @@
         case MESSAGE_AUDIO:
         {
             MessageAudioView *audioView = (MessageAudioView*)self.bubbleView;
-            audioView.msg = message;
-            audioView.type = msgType;
-            audioView.msgStateType = state;
+            [audioView initializeWithMsg:message withType:msgType withMsgStateType:state];
         }
             break;
         default:
