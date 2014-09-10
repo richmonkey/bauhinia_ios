@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "BubbleView.h"
 
+#define  kMessageImagViewHeight 120
+
 @interface MessageImageView : BubbleView
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) id data;

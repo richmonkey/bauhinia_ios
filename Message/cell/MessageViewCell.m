@@ -5,6 +5,7 @@
 #import "UIImage+JSMessagesView.h"
 #import "MessageTextView.h"
 #import "MessageImageView.h"
+#import "MessageAudioView.h"
 #import "UserPresent.h"
 
 
@@ -43,8 +44,13 @@
                                   self.contentView.frame.size.height);
         
         switch (type) {
-            case MESSAGE_TEXT:
             case MESSAGE_AUDIO:
+            {
+                MessageAudioView *audioView = [[MessageAudioView alloc] initWithFrame:frame];
+                self.bubbleView = audioView;
+            }
+                break;
+            case MESSAGE_TEXT:
             {
                 MessageTextView *textView = [[MessageTextView alloc] initWithFrame:frame];
                 self.bubbleView = textView;
@@ -109,10 +115,10 @@
             break;
         case MESSAGE_AUDIO:
         {
-            MessageTextView *textView = (MessageTextView*)self.bubbleView;
-            textView.text = @"这是一段语音";
-            textView.type = msgType;
-            textView.msgStateType = state;
+            MessageAudioView *audioView = (MessageAudioView*)self.bubbleView;
+            audioView.msg = message;
+            audioView.type = msgType;
+            audioView.msgStateType = state;
         }
             break;
         default:

@@ -93,6 +93,9 @@
 		21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF2371968E6A500DFA0E5 /* MessageConversationCell.xib */; };
 		21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */; };
 		21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */; };
+		48C20EEB19BFE81C009494A1 /* ESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EE819BFE81C009494A1 /* ESImageViewController.m */; };
+		48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */; };
+		48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */; };
 		6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76771967B8AC0058DECF /* AsyncTCP.m */; };
 		6D0D76841967B8AC0058DECF /* IMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767B1967B8AC0058DECF /* IMService.m */; };
 		6D0D76851967B8AC0058DECF /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767D1967B8AC0058DECF /* Message.m */; };
@@ -274,6 +277,13 @@
 		486FF44919BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		486FF44A19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		486FF44B19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		48C20EE619BFE81C009494A1 /* ESImageViewController-Internals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ESImageViewController-Internals.h"; sourceTree = "<group>"; };
+		48C20EE719BFE81C009494A1 /* ESImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESImageViewController.h; sourceTree = "<group>"; };
+		48C20EE819BFE81C009494A1 /* ESImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageViewController.m; sourceTree = "<group>"; };
+		48C20EE919BFE81C009494A1 /* ESModalImageViewAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESModalImageViewAnimationController.h; sourceTree = "<group>"; };
+		48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESModalImageViewAnimationController.m; sourceTree = "<group>"; };
+		48C20EED19BFF6CA009494A1 /* MessageAudioView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageAudioView.h; sourceTree = "<group>"; };
+		48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageAudioView.m; sourceTree = "<group>"; };
 		6D0D76761967B8AC0058DECF /* AsyncTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTCP.h; sourceTree = "<group>"; };
 		6D0D76771967B8AC0058DECF /* AsyncTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncTCP.m; sourceTree = "<group>"; };
 		6D0D767A1967B8AC0058DECF /* IMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMService.h; sourceTree = "<group>"; };
@@ -407,6 +417,7 @@
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
+				48C20EE519BFE81C009494A1 /* Titanium */,
 				2173C5D8197385C8004A88A5 /* SDWebImage */,
 				2105647B19695FC0008D3A83 /* JSMessge */,
 				6D76216619834DA100B690D7 /* MBProgressHUD.h */,
@@ -489,6 +500,8 @@
 				6DB0AA2C19BF558D0027A658 /* MessageTextView.m */,
 				6DB0AA2E19BF56AC0027A658 /* MessageImageView.h */,
 				6DB0AA2F19BF56AC0027A658 /* MessageImageView.m */,
+				48C20EED19BFF6CA009494A1 /* MessageAudioView.h */,
+				48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */,
 			);
 			path = control;
 			sourceTree = "<group>";
@@ -718,6 +731,18 @@
 			path = cell;
 			sourceTree = "<group>";
 		};
+		48C20EE519BFE81C009494A1 /* Titanium */ = {
+			isa = PBXGroup;
+			children = (
+				48C20EE619BFE81C009494A1 /* ESImageViewController-Internals.h */,
+				48C20EE719BFE81C009494A1 /* ESImageViewController.h */,
+				48C20EE819BFE81C009494A1 /* ESImageViewController.m */,
+				48C20EE919BFE81C009494A1 /* ESModalImageViewAnimationController.h */,
+				48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */,
+			);
+			path = Titanium;
+			sourceTree = "<group>";
+		};
 		6D0D76751967B8AC0058DECF /* im_sdk */ = {
 			isa = PBXGroup;
 			children = (
@@ -906,6 +931,7 @@
 				21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */,
 				6D762158197ECA9300B690D7 /* GroupMessageDB.m in Sources */,
 				2142CB62196268860002E4A9 /* ABContact.m in Sources */,
+				48C20EEB19BFE81C009494A1 /* ESImageViewController.m in Sources */,
 				2173C66A19738745004A88A5 /* UIButton+WebCache.m in Sources */,
 				2173C66719738745004A88A5 /* SDWebImageDownloaderOperation.m in Sources */,
 				6DB0AA2D19BF558D0027A658 /* MessageTextView.m in Sources */,
@@ -919,6 +945,8 @@
 				210564CC19695FC1008D3A83 /* MessageListViewController.m in Sources */,
 				21150CAB196F7910009DE9DE /* Token.m in Sources */,
 				217F2C30196D62680064F478 /* MessageShowThePotraitViewController.m in Sources */,
+				48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */,
+				48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */,
 				6D76215C197ECA9300B690D7 /* PeerMessageDB.m in Sources */,
 				6D0D76871967B8AC0058DECF /* util.c in Sources */,
 				2173C66219738745004A88A5 /* NSData+GIF.m in Sources */,
@@ -1039,7 +1067,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
+				PROVISIONING_PROFILE = "131fab71-7647-4a8f-8a36-aa14e4fad6b1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -1073,7 +1101,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PROVISIONING_PROFILE = "B2FFFC65-AF06-4CDA-B6A2-80327E5EFAB5";
+				PROVISIONING_PROFILE = "131fab71-7647-4a8f-8a36-aa14e4fad6b1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -1085,8 +1113,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
@@ -1096,7 +1124,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
@@ -1119,7 +1147,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;

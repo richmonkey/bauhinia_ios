@@ -8,7 +8,8 @@
 
 #import "MessageImageView.h"
 
-
+#define kImageWidth  100
+#define kImageHeight 100
 
 @implementation MessageImageView
 
@@ -16,7 +17,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-
+//        [self setBackgroundColor:[UIColor grayColor]];
     }
     return self;
 }
@@ -38,11 +39,11 @@
         
     if (!self.imageView) {
         self.imageView = [[UIImageView alloc] init];
-        CGSize imageSize = CGSizeMake(125, 125);
-        CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
+        CGSize imageSize = CGSizeMake(kImageWidth, kImageHeight);
+        CGFloat imgX = image.leftCapWidth + 3.0f + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
         
-        CGRect imageFrame = CGRectMake(imgX - 3.f,
-                                       kPaddingTop,
+        CGRect imageFrame = CGRectMake(imgX,
+                                       kPaddingTop + kMarginTop,
                                        imageSize.width - kPaddingTop - kMarginTop,
                                        imageSize.height - kPaddingBottom + 2.f);
         [self.imageView setFrame:imageFrame];
@@ -57,8 +58,8 @@
 
 #pragma mark - Drawing
 - (CGRect)bubbleFrame {
-    CGSize bubbleSize = [BubbleView imageSizeForImage];
-    return CGRectMake(floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 10.0f),
+    CGSize bubbleSize = CGSizeMake(kImageWidth + 35, kImageHeight + 15);
+    return CGRectMake(floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
                       floorf(kMarginTop),
                       floorf(bubbleSize.width),
                       floorf(bubbleSize.height));

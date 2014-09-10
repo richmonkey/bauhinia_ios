@@ -91,7 +91,7 @@
 
 #pragma mark - Bubble cap insets
 - (UIImage *)makeStretchableDefaultIncoming{
-    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(25.0f, 25.0f, 10.0f, 20.0f)
+    return [self resizableImageWithCapInsets:UIEdgeInsetsMake(10.0f, 20.0f, 20.0f, 20.0f)
                                 resizingMode:UIImageResizingModeStretch];
 }
 

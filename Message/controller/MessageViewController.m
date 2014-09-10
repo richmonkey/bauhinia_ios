@@ -23,6 +23,11 @@
 #import "FileCache.h"
 #import "APIRequest.h"
 
+#import "ESImageViewController.h"
+
+#import "MessageAudioView.h"
+#import "MessageImageView.h"
+
 #define INPUT_HEIGHT 46.0f
 
 #define navBarHeadButtonSize 35
@@ -639,10 +644,10 @@
         case MESSAGE_TEXT:
             return [BubbleView cellHeightForText:msg.content.text];
         case  MESSAGE_IMAGE:
-            return 140;
+            return kMessageImagViewHeight;
             break;
         case MESSAGE_AUDIO:
-            return 40;
+            return kAudioViewCellHeight;
             break;
         case MESSAGE_LOCATION:
             return 40;
@@ -718,22 +723,30 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     IMessage *message = [self messageForRowAtIndexPath:indexPath];
     if (message.content.type == MESSAGE_AUDIO) {
-        FileCache *fileCache = [FileCache instance];
-        NSString *url = message.content.audio.url;
-        NSString *path = [fileCache queryCacheForKey:url];
-        if (path != nil) {
-            if (![[self class] isHeadphone]) {
-                //打开外放
-                UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-                AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
-                UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
-                AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,sizeof (audioRouteOverride),&audioRouteOverride);
-            }
-            NSURL *u = [NSURL fileURLWithPath:path];
-            self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:u error:nil];
-            [self.player setDelegate:self];
-            [self.player play];
-        }
+//        FileCache *fileCache = [FileCache instance];
+//        NSString *url = message.content.audio.url;
+//        NSString *path = [fileCache queryCacheForKey:url];
+//        if (path != nil) {
+//            if (![[self class] isHeadphone]) {
+//                //打开外放
+//                UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
+//                AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
+//                UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
+//                AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,sizeof (audioRouteOverride),&audioRouteOverride);
+//            }
+//            NSURL *u = [NSURL fileURLWithPath:path];
+//            self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:u error:nil];
+//            [self.player setDelegate:self];
+//            [self.player play];
+//        }
+    } else if (message.content.type == MESSAGE_IMAGE){
+        if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:message.content.imageURL]) {
+            UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:message.content.imageURL];
+            ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
+            [imgcontroller setImage:cacheImg];
+            [imgcontroller setTappedThumbnail:tableView];
+            [self presentViewController:imgcontroller animated:YES completion:nil];
+       }
     }
 }
 
@@ -805,7 +818,12 @@
                     success:^(NSString *url) {
                         NSLog(@"image url:%@", url);
                         [hub hide:YES];
-                        [self sendImgMsg:url];
+                        if(url){
+                            //图片存储到本地
+                            [[SDImageCache sharedImageCache] storeImage:self.willSendImage forKey: url];
+                        
+                            [self sendImgMsg:url];
+                        }
                     }
                        fail:^() {
                            [hub hide:YES];
