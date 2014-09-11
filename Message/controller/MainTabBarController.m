@@ -90,7 +90,6 @@
     });
     
     [self startRefreshTimer];
-    [[IMService instance] start:[UserPresent instance].uid];
     
     self.reach = [Reachability reachabilityWithHostname:@"www.message.im"];
 

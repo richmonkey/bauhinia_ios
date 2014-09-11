@@ -59,6 +59,7 @@
         self.peerMessages = [NSMutableDictionary dictionary];
         self.groupMessages = [NSMutableDictionary dictionary];
         self.connectState = STATE_UNCONNECTED;
+        self.stopped = YES;
     }
     return self;
 }
