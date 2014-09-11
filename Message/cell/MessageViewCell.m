@@ -8,7 +8,6 @@
 #import "MessageAudioView.h"
 #import "UserPresent.h"
 
-
 @implementation MessageViewCell
 
 #pragma mark - Setup
@@ -77,8 +76,11 @@
 }
 
 #pragma mark - Message Cell
-- (void)setMessage:(IMessage*)message
-{
+
+- (void) setMessage:(IMessage *)message andDelegate:(UIViewController*)del{
+    
+    self.dgtController = del;
+    
     BubbleMessageType msgType;
     if(message.sender == [UserPresent instance].uid){
         msgType = BubbleMessageTypeOutgoing;
@@ -107,10 +109,11 @@
             break;
         case MESSAGE_IMAGE:
         {
-            MessageImageView *imageView = (MessageImageView*)self.bubbleView;
-            imageView.data = message.content.imageURL;
-            imageView.type = msgType;
-            imageView.msgStateType = state;
+            MessageImageView *msgImageView = (MessageImageView*)self.bubbleView;
+            msgImageView.data = message.content.imageURL;
+            msgImageView.type = msgType;
+            msgImageView.msgStateType = state;
+            [msgImageView setDelegte:self.dgtController];
         }
             break;
         case MESSAGE_AUDIO:

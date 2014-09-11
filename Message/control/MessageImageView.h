@@ -12,6 +12,11 @@
 #define  kMessageImagViewHeight 120
 
 @interface MessageImageView : BubbleView
+
+@property (weak, nonatomic) UIViewController *dgtController;
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) id data;
+
+-(void) setDelegte:(UIViewController*)del;
+
 @end

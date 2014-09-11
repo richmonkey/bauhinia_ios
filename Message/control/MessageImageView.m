@@ -1,3 +1,4 @@
+
 //
 //  MessageImageView.m
 //  Message
@@ -7,6 +8,7 @@
 //
 
 #import "MessageImageView.h"
+#import "ESImageViewController.h"
 
 #define kImageWidth  100
 #define kImageHeight 100
@@ -18,8 +20,20 @@
     self = [super initWithFrame:frame];
     if (self) {
 //        [self setBackgroundColor:[UIColor grayColor]];
+        self.imageView = [[UIImageView alloc] init];
+        [self.imageView setUserInteractionEnabled:YES];
+        [self addSubview:self.imageView];
     }
     return self;
+}
+
+- (void) setDelegte:(UIViewController*)del{
+    
+    self.dgtController = del;
+    UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [tap setNumberOfTouchesRequired: 1];
+    [self.imageView addGestureRecognizer: tap];
+    
 }
 
 - (void)setData:(id)newData{
@@ -36,9 +50,9 @@
 	[image drawInRect:bubbleFrame];
     
     [self drawMsgStateSign: frame];
+    
+    if (self.imageView) {
         
-    if (!self.imageView) {
-        self.imageView = [[UIImageView alloc] init];
         CGSize imageSize = CGSizeMake(kImageWidth, kImageHeight);
         CGFloat imgX = image.leftCapWidth + 3.0f + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
         
@@ -47,11 +61,10 @@
                                        imageSize.width - kPaddingTop - kMarginTop,
                                        imageSize.height - kPaddingBottom + 2.f);
         [self.imageView setFrame:imageFrame];
-        [self addSubview:self.imageView];
-    }
-    
-    if (self.data) {
-        [self.imageView setImageWithURL:[[NSURL alloc] initWithString:self.data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"]];
+        
+        if (self.data) {
+            [self.imageView setImageWithURL:[[NSURL alloc] initWithString:self.data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"]];
+        }
     }
 }
 
@@ -64,6 +77,21 @@
                       floorf(bubbleSize.width),
                       floorf(bubbleSize.height));
     
+}
+
+
+- (void) handleTap:(UITapGestureRecognizer*)tap{
+    if (self.dgtController) {
+        if ([tap.view isKindOfClass:[UIImageView class]]) {
+            if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:self.data]) {
+                UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: self.data];
+                ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
+                [imgcontroller setImage:cacheImg];
+                [imgcontroller setTappedThumbnail:self];
+                [self.dgtController presentViewController:imgcontroller animated:YES completion:nil];
+            }
+        }
+    }
 }
 
 @end
