@@ -154,7 +154,7 @@
     self.textView = [[UITextView  alloc] initWithFrame:CGRectMake(x, y, width, height)];
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.textView.backgroundColor = [UIColor clearColor];
-    
+    [self.textView setFont:[UIFont systemFontOfSize:16]];
     self.textView.layer.borderColor = [[UIColor colorWithWhite:.8 alpha:1.0] CGColor];
     self.textView.layer.borderWidth = 0.65f;
     self.textView.layer.cornerRadius = 6.0f;

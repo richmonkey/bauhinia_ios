@@ -719,6 +719,10 @@
 //此函数暂时和tableview的tapRecognizer冲突
 //需要响应cell上的播放按钮来播放音频消息
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if([self.inputToolBarView.textView isFirstResponder]){
+        [self.inputToolBarView.textView resignFirstResponder];
+    }
     IMessage *message = [self messageForRowAtIndexPath:indexPath];
     if (message.content.type == MESSAGE_AUDIO) {
 
