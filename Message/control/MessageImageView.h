@@ -19,4 +19,6 @@
 
 -(void) setDelegte:(UIViewController*)del;
 
+-(void) setUploading:(BOOL)uploading;
+
 @end

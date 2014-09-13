@@ -130,6 +130,7 @@
 		6DB0AA3319BF6B710027A658 /* UIImage+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3219BF6B710027A658 /* UIImage+JSMessagesView.m */; };
 		6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3619C0A5D50027A658 /* Reachability.m */; };
 		6DB0AA3A19C439420027A658 /* Outbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3919C439420027A658 /* Outbox.m */; };
+		6DB0AA4119C4A9910027A658 /* AudioDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4019C4A9910027A658 /* AudioDownloader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -367,6 +368,8 @@
 		6DB0AA3619C0A5D50027A658 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		6DB0AA3819C439420027A658 /* Outbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Outbox.h; sourceTree = "<group>"; };
 		6DB0AA3919C439420027A658 /* Outbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Outbox.m; sourceTree = "<group>"; };
+		6DB0AA3F19C4A9910027A658 /* AudioDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDownloader.h; sourceTree = "<group>"; };
+		6DB0AA4019C4A9910027A658 /* AudioDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioDownloader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -689,6 +692,8 @@
 				6D76216A19835F1000B690D7 /* APIRequest.m */,
 				6DB0AA3819C439420027A658 /* Outbox.h */,
 				6DB0AA3919C439420027A658 /* Outbox.m */,
+				6DB0AA3F19C4A9910027A658 /* AudioDownloader.h */,
+				6DB0AA4019C4A9910027A658 /* AudioDownloader.m */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -1001,6 +1006,7 @@
 				6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */,
 				6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */,
 				6D0D76851967B8AC0058DECF /* Message.m in Sources */,
+				6DB0AA4119C4A9910027A658 /* AudioDownloader.m in Sources */,
 				2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */,
 				2173C66D19738745004A88A5 /* UIImage+WebP.m in Sources */,
 				21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */,
