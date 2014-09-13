@@ -44,6 +44,7 @@
                                  @[@"网络状态",@"系统状态"],
                                  @"清除所有对话记录"
                                 ];
+        [[IMService instance] addMessageObserver:self];
     }
     return self;
 }
@@ -58,6 +59,8 @@
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.view addSubview:self.tableView];
+    
+    
     
     
 }
@@ -100,9 +103,15 @@
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"statuscell"];
             }
+            [cell.detailTextLabel setFont:[UIFont systemFontOfSize:16.0f]];
             cell.tag = (indexPath.section + 1) * 100 + indexPath.row;
-            [cell.detailTextLabel setTextColor:[UIColor greenColor]];
-            [cell.detailTextLabel setText:@"状态"];
+            if ([[IMService instance] connectState] != STATE_CONNECTED) {
+                [self addActivityView:cell];
+            }else{
+                [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+                [cell.detailTextLabel setText:@"已链接"];
+            }
+            
         }else{
             cell  = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
             if (cell == nil) {
@@ -179,8 +188,7 @@
             break;
         case kNetStatusCellTag:
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
+
         }
             break;
         case kSystemStatusCellTag:
@@ -202,10 +210,94 @@
     
 }
 
+#pragma mark - MessageObserver
+-(void)onPeerMessage:(IMMessage*)msg{
 
+}
+
+//服务器ack
+-(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
+    
+}
+//接受方ack
+-(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
+    
+}
+
+-(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid{
+    
+}
+
+//用户连线状态
+-(void)onOnlineState:(int64_t)uid state:(BOOL)on{
+    
+}
+
+//对方正在输入
+-(void)onPeerInputing:(int64_t)uid{
+    
+}
+
+-(void) onConnectState:(int)state {
+   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:kNetStatusSection inSection:kNetStatusRow];
+    UITableViewCell *cell  = [self.tableView cellForRowAtIndexPath:indexPath];
+    switch (state) {
+        case STATE_UNCONNECTED:
+        {
+            [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+            [cell.detailTextLabel setText:@"未链接.."];
+            [self hideActivityView:cell];
+        }
+            break;
+        case STATE_CONNECTING :
+        {
+            [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+            [cell.detailTextLabel setText:@""];
+            [self addActivityView:cell];
+        }
+            break;
+        case STATE_CONNECTED :
+        {
+            [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+            [cell.detailTextLabel setText:@"已链接"];
+            [self hideActivityView:cell];
+        }
+            break;
+        case STATE_CONNECTFAIL :
+        {
+            [cell.detailTextLabel setTextColor:[UIColor redColor]];
+            [cell.detailTextLabel setText:@"未链接"];
+            [self hideActivityView:cell];
+        }
+            break;
+        default:
+            break;
+    }
+
+}
 
 #pragma mark - UITableViewDelegate
 
+
+
+-(void) addActivityView:(UITableViewCell*)cell{
+    if (cell.accessoryView&& [cell.accessoryView isKindOfClass:[UIActivityIndicatorView class]]){
+        [cell.accessoryView setHidden:NO];
+        [(UIActivityIndicatorView*)cell.accessoryView startAnimating]; // 开始旋转
+    }else{
+        UIActivityIndicatorView *testActivityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        cell.accessoryView = testActivityIndicator;
+        testActivityIndicator.color = [UIColor grayColor];
+        [testActivityIndicator startAnimating]; // 开始旋转
+        [testActivityIndicator setHidesWhenStopped:YES];
+    }
+}
+
+-(void)hideActivityView:(UITableViewCell*)cell{
+    if(cell.accessoryView&&[cell.accessoryView isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView*)cell stopAnimating];
+    }
+}
 
 - (void)didReceiveMemoryWarning
 {

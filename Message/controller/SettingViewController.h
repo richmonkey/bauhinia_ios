@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "IMService.h"
 
-@interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MessageObserver>
 
 @property (strong,nonatomic) UITableView *tableView;
 @property (strong,nonatomic) NSArray *cellTitleArray;
