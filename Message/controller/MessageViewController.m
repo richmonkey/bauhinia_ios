@@ -288,12 +288,9 @@
             NSLog(@"start record fail");
             return;
         }
-        
-        self.inputToolBarView.textView.hidden = YES;
-        self.inputToolBarView.mediaButton.hidden = YES;
-        self.inputToolBarView.recordingView.hidden = NO;
-        [self.inputToolBarView resetLabelFrame];
-        self.inputToolBarView.timerLabel.text = @"00:00";
+       
+        [self.inputToolBarView setRecordShowing];
+
         self.recordCanceled = NO;
         self.seconds = 0;
         self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
@@ -716,15 +713,9 @@
     }
 }
 
-//此函数暂时和tableview的tapRecognizer冲突
-//需要响应cell上的播放按钮来播放音频消息
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    IMessage *message = [self messageForRowAtIndexPath:indexPath];
-    if (message.content.type == MESSAGE_AUDIO) {
-
-    } else if (message.content.type == MESSAGE_IMAGE){
-
-    }
+    
 }
 
 #pragma mark - UIScrollViewDelegate

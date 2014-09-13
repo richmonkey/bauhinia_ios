@@ -24,6 +24,7 @@
 
 @property (nonatomic) UIView *recordingView;
 @property (nonatomic) UILabel *timerLabel;
+@property (nonatomic) UIImageView *recordAnimationView;
 @property (nonatomic) UILabel *slipLabel;
 
 - (id)initWithFrame:(CGRect)frame;
@@ -31,6 +32,7 @@
 - (void)slipLabelFrame:(double)x;
 - (void)resetLabelFrame;
 
+- (void) setRecordShowing;
 
 + (CGFloat)textViewLineHeight;
 + (CGFloat)maxLines;

@@ -3,6 +3,8 @@
 #import "NSString+JSMessagesView.h"
 #import "UIImage+JSMessagesView.h"
 
+#import "FBShimmeringView.h"
+
 #define SEND_BUTTON_WIDTH 70.0f
 
 #define INPUT_HEIGHT 46.0f
@@ -103,27 +105,44 @@
         CGRect viewFrame = self.frame;
         viewFrame = CGRectMake(0, 0, frame.size.width-60, frame.size.height);
         self.recordingView = [[UIView alloc] initWithFrame:viewFrame];
-
         
         CGRect labelFrame = CGRectMake(100, 0, 160, 26);
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
         self.slipLabel = [[UILabel alloc] initWithFrame:labelFrame];
-        [self.slipLabel setFont:[UIFont systemFontOfSize:15.0f]];
+        [self.slipLabel setFont:[UIFont systemFontOfSize:17.0f]];
         self.slipLabel.text = @"滑动取消 <";
-        [self.recordingView addSubview:self.slipLabel];
+        [self.recordingView addSubview: self.slipLabel];
+        
+        FBShimmeringView *shimmeringView = [[FBShimmeringView alloc] initWithFrame:self.slipLabel.bounds];
+        shimmeringView.contentView = self.slipLabel;
+        shimmeringView.shimmering = YES;
+       
+        [self.recordingView addSubview:shimmeringView];
         
         CGRect maskFrame = CGRectMake(0, 0, 70, frame.size.height);
         UIImageView *maskView = [[UIImageView alloc] initWithImage:[UIImage inputBar]];
         maskView.frame = maskFrame;
         [self.recordingView addSubview:maskView];
         
-        labelFrame = CGRectMake(8, 0, 60, 26);
+        labelFrame = CGRectMake(36, 0, 60, 26);
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
         self.timerLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [self.recordingView addSubview:self.timerLabel];
+
         
+        NSArray *ary = @[[UIImage imageNamed:@"MicRecRed"],[UIImage imageNamed:@"MicRecGray"]];
+        CGRect recordAFrame = CGRectMake(8, 0, 18, 29);
+        recordAFrame.origin.y = (frame.size.height - recordAFrame.size.height)/2;
+        
+        self.recordAnimationView = [[UIImageView alloc] initWithFrame: recordAFrame];
+        self.recordAnimationView.animationImages = ary;
+        self.recordAnimationView.animationDuration = 0.5;
+        [self.recordAnimationView startAnimating];
+        [self.recordingView addSubview:self.recordAnimationView];
+       
         [self addSubview:self.recordingView];
         self.recordingView.hidden = YES;
+
     }
 }
 
@@ -164,6 +183,16 @@
     [self addSubview:self.textView];
 }
 
+- (void) setRecordShowing{
+    
+    self.textView.hidden = YES;
+    self.mediaButton.hidden = YES;
+    self.recordingView.hidden = NO;
+    [self resetLabelFrame];
+    self.timerLabel.text = @"00:00";
+    [self.recordAnimationView startAnimating];
+
+}
 
 #pragma mark - Message input view
 + (CGFloat)textViewLineHeight

@@ -93,6 +93,8 @@
 		21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF2371968E6A500DFA0E5 /* MessageConversationCell.xib */; };
 		21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */; };
 		21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */; };
+		489933C819C436ED00C56F2D /* FBShimmeringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933C519C436ED00C56F2D /* FBShimmeringLayer.m */; };
+		489933C919C436ED00C56F2D /* FBShimmeringView.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933C719C436ED00C56F2D /* FBShimmeringView.m */; };
 		48C20EEB19BFE81C009494A1 /* ESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EE819BFE81C009494A1 /* ESImageViewController.m */; };
 		48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */; };
 		48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */; };
@@ -278,6 +280,12 @@
 		486FF44919BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		486FF44A19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		486FF44B19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		489933C219C436ED00C56F2D /* FBShimmering-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBShimmering-Prefix.pch"; sourceTree = "<group>"; };
+		489933C319C436ED00C56F2D /* FBShimmering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmering.h; sourceTree = "<group>"; };
+		489933C419C436ED00C56F2D /* FBShimmeringLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringLayer.h; sourceTree = "<group>"; };
+		489933C519C436ED00C56F2D /* FBShimmeringLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringLayer.m; sourceTree = "<group>"; };
+		489933C619C436ED00C56F2D /* FBShimmeringView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringView.h; sourceTree = "<group>"; };
+		489933C719C436ED00C56F2D /* FBShimmeringView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringView.m; sourceTree = "<group>"; };
 		48C20EE619BFE81C009494A1 /* ESImageViewController-Internals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ESImageViewController-Internals.h"; sourceTree = "<group>"; };
 		48C20EE719BFE81C009494A1 /* ESImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESImageViewController.h; sourceTree = "<group>"; };
 		48C20EE819BFE81C009494A1 /* ESImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageViewController.m; sourceTree = "<group>"; };
@@ -420,6 +428,7 @@
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
+				489933C119C436ED00C56F2D /* FBShimmering */,
 				48C20EE519BFE81C009494A1 /* Titanium */,
 				6DB0AA3419C0A5D50027A658 /* Reachability */,
 				2173C5D8197385C8004A88A5 /* SDWebImage */,
@@ -735,6 +744,19 @@
 			path = cell;
 			sourceTree = "<group>";
 		};
+		489933C119C436ED00C56F2D /* FBShimmering */ = {
+			isa = PBXGroup;
+			children = (
+				489933C219C436ED00C56F2D /* FBShimmering-Prefix.pch */,
+				489933C319C436ED00C56F2D /* FBShimmering.h */,
+				489933C419C436ED00C56F2D /* FBShimmeringLayer.h */,
+				489933C519C436ED00C56F2D /* FBShimmeringLayer.m */,
+				489933C619C436ED00C56F2D /* FBShimmeringView.h */,
+				489933C719C436ED00C56F2D /* FBShimmeringView.m */,
+			);
+			path = FBShimmering;
+			sourceTree = "<group>";
+		};
 		48C20EE519BFE81C009494A1 /* Titanium */ = {
 			isa = PBXGroup;
 			children = (
@@ -961,6 +983,7 @@
 				48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */,
 				48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */,
 				6D76215C197ECA9300B690D7 /* PeerMessageDB.m in Sources */,
+				489933C819C436ED00C56F2D /* FBShimmeringLayer.m in Sources */,
 				6D0D76871967B8AC0058DECF /* util.c in Sources */,
 				2173C66219738745004A88A5 /* NSData+GIF.m in Sources */,
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
@@ -985,6 +1008,7 @@
 				2173C66C19738745004A88A5 /* UIImage+MultiFormat.m in Sources */,
 				210564D419695FC1008D3A83 /* JSMessageSoundEffect.m in Sources */,
 				2105650E1969839F008D3A83 /* ConversationHeadButtonView.m in Sources */,
+				489933C919C436ED00C56F2D /* FBShimmeringView.m in Sources */,
 				6DB0AA2A19BF54F00027A658 /* BubbleView.m in Sources */,
 				21150CAA196F7910009DE9DE /* Config.m in Sources */,
 				6D762157197ECA9300B690D7 /* GroupDB.m in Sources */,
