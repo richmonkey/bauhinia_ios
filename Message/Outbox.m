@@ -103,6 +103,7 @@
     NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
     MessageContent *content = [[MessageContent alloc] init];
     content.raw =  newStr;
+    msg.content = content;
     [self sendMessage:msg];
     msg.content = old;
 }
