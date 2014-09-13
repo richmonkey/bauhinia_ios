@@ -680,6 +680,29 @@
     audioView.progressView.progress = self.player.currentTime/self.player.duration;
 }
 
+-(BOOL)isM4A:(NSString*)path {
+    FILE *file = fopen([path UTF8String], "rb");
+    if (!file) {
+        return NO;
+    }
+    int r = fseek(file, 4, SEEK_SET);
+    if (r == -1) {
+        fclose(file);
+        return NO;
+    }
+    char buf[8] = {0};
+    int n = fread(buf, 1, 7, file);
+    if (n != 7) {
+        fclose(file);
+        return NO;
+    }
+    fclose(file);
+    if (strcmp(buf, "ftypM4A") == 0) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
 -(void)AudioAction:(UIButton*)btn{
     int row = btn.tag & 0xffff;
     int section = (int)(btn.tag >> 16);
@@ -730,7 +753,7 @@
         FileCache *fileCache = [FileCache instance];
         NSString *url = message.content.audio.url;
         NSString *path = [fileCache queryCacheForKey:url];
-        if (path != nil) {
+        if (path != nil && [self isM4A:path]) {
             // Setup audio session
             AVAudioSession *session = [AVAudioSession sharedInstance];
             [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
