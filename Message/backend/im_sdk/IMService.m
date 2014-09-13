@@ -376,15 +376,20 @@
     [self.observers removeObject:ob];
 }
 
--(BOOL)sendPeerMessage:(IMMessage *)im {
+-(void)sendPeerMessage:(IMMessage *)im {
     Message *m = [[Message alloc] init];
     m.cmd = MSG_IM;
     m.body = im;
     BOOL r = [self sendMessage:m];
 
-    if (!r) return r;
-    [self.peerMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
-    return r;
+    if (!r) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.peerMessageHandler handleMessageFailure:im.msgLocalID uid:im.receiver];
+            [self publishPeerMessageFailure:im];
+        });
+    } else {
+        [self.peerMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
+    }
 }
 
 -(BOOL)sendGroupMessage:(IMMessage *)im {

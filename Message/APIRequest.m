@@ -85,7 +85,9 @@
     request.method = @"POST";
     request.postBody = data;
     
-    NSDictionary *headers = [NSDictionary dictionaryWithObject:@"image/png" forKey:@"Content-Type"];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"image/png" forKey:@"Content-Type"];
+    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
+    [headers setObject:auth forKey:@"Authorization"];
     request.headers = headers;
     
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
@@ -108,9 +110,11 @@
     request.method = @"POST";
     request.postBody = data;
     
-    NSDictionary *headers = [NSDictionary dictionaryWithObject:@"application/plain" forKey:@"Content-Type"];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"application/plain" forKey:@"Content-Type"];
+    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
+    [headers setObject:auth forKey:@"Authorization"];
     request.headers = headers;
-    
+
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
         NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
         NSString *src_url = [resp objectForKey:@"src_url"];

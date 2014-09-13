@@ -25,6 +25,8 @@
 
 #import "MessageAudioView.h"
 #import "MessageImageView.h"
+#import "Outbox.h"
+#import "LevelDB.h"
 
 #define INPUT_HEIGHT 46.0f
 
@@ -422,22 +424,37 @@
         NSLog(@"record time too short");
         return;
     }
-    
 
-    NSData *data = [NSData dataWithContentsOfFile:[recorder.url path]];
-    int duration = self.seconds;
+    IMessage *msg = [[IMessage alloc] init];
     
-    //todo 上传文件的过程中，消息也能够显示在界面上
-    __weak id wself = self;
-    [APIRequest uploadAudio:data
-                    success:^(NSString *url) {
-                        FileCache *fileCache = [FileCache instance];
-                        NSLog(@"upload audio success url:%@", url);
-                        [fileCache storeFile:data forKey:url];
-                        [wself sendAudioMessage:url duration:duration];
-                    }fail:^{
-                        NSLog(@"upload audio fail");
-                    }];
+    msg.sender = [UserPresent instance].uid;
+    msg.receiver = self.remoteUser.uid;
+    
+    MessageContent *content = [[MessageContent alloc] init];
+    NSNumber *d = [NSNumber numberWithInt:self.seconds];
+    NSString *url = [self localAudioURL];
+    NSDictionary *dic = @{@"audio":@{@"url":url, @"duration":d}};
+    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+    content.raw =  newStr;
+    msg.content = content;
+    msg.timestamp = time(NULL);
+
+    //todo 优化读文件次数
+    NSData *data = [NSData dataWithContentsOfFile:[recorder.url path]];
+    FileCache *fileCache = [FileCache instance];
+    [fileCache storeFile:data forKey:url];
+
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    [self insertMessage:msg];
+    
+    [[Outbox instance] uploadAudio:msg];
 }
 
 #pragma mark - MessageObserver
@@ -766,37 +783,55 @@
     return [UIImage imageNamed:@"head2.png"];
 }
 
+-(NSString*)guid {
+    CFUUIDRef    uuidObj = CFUUIDCreate(nil);
+    NSString    *uuidString = (__bridge NSString *)CFUUIDCreateString(nil, uuidObj);
+    CFRelease(uuidObj);
+    return uuidString;
+}
+-(NSString*)localImageURL {
+    return [NSString stringWithFormat:@"http://localhost/images/%@.png", [self guid]];
+}
+
+-(NSString*)localAudioURL {
+    return [NSString stringWithFormat:@"http://localhost/audios/%@.m4a", [self guid]];
+}
+
 #pragma UIImagePicker Delegate
 
 #pragma mark - Image picker delegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	NSLog(@"Chose image!  Details:  %@", info);
+    IMessage *msg = [[IMessage alloc] init];
     
-    self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
+    msg.sender = [UserPresent instance].uid;
+    msg.receiver = self.remoteUser.uid;
     
-    MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hub.removeFromSuperViewOnHide = YES;
+    MessageContent *content = [[MessageContent alloc] init];
+    NSDictionary *dic = @{@"image":[self localImageURL]};
+    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+    content.raw =  newStr;
+    msg.content = content;
+    msg.timestamp = time(NULL);
+
+    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+
+    [[SDImageCache sharedImageCache] storeImage:image forKey:msg.content.imageURL];
     
-    [APIRequest uploadImage:self.willSendImage
-                    success:^(NSString *url) {
-                        NSLog(@"image url:%@", url);
-                        [hub hide:YES];
-                        if(url){
-                            //图片存储到本地
-                            [[SDImageCache sharedImageCache] storeImage:self.willSendImage forKey: url];
-                        
-                            [self sendImgMsg:url];
-                        }
-                    }
-                       fail:^() {
-                           [hub hide:YES];
-                           NSLog(@"upload image fail");
-                       }];
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    [self insertMessage:msg];
+    
+    [[Outbox instance] uploadImage:msg];
 	
     [self dismissViewControllerAnimated:YES completion:NULL];
-    
 }
 
 
@@ -807,7 +842,9 @@
 }
 
 
-- (BOOL)sendMessage:(IMessage*)msg {
+- (void)sendMessage:(IMessage*)msg {
+    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
+    
     Message *m = [[Message alloc] init];
     m.cmd = MSG_IM;
     IMMessage *im = [[IMMessage alloc] init];
@@ -816,9 +853,15 @@
     im.msgLocalID = msg.msgLocalID;
     im.content = msg.content.raw;
     m.body = im;
-    BOOL r = [[IMService instance] sendPeerMessage:im];
-    NSLog(@"send result:%d", r);
-    return r;
+    [[IMService instance] sendPeerMessage:im];
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    [self insertMessage:msg];
 }
 
 -(void) sendTextMessage:(NSString*)text {
@@ -834,71 +877,7 @@
     msg.content = content;
     msg.timestamp = time(NULL);
     
-    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    
     [self sendMessage:msg];
-    
-    [JSMessageSoundEffect playMessageSentSound];
-    
-    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    [self insertMessage:msg];
-}
-
--(void) sendImgMsg:(NSString*) imgUrl{
-    IMessage *msg = [[IMessage alloc] init];
-    
-    msg.sender = [UserPresent instance].uid;
-    msg.receiver = self.remoteUser.uid;
-    
-    MessageContent *content = [[MessageContent alloc] init];
-    NSDictionary *dic = @{@"image":imgUrl};
-    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
-    content.raw =  newStr;
-    msg.content = content;
-    msg.timestamp = time(NULL);
-    
-    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    
-    [self sendMessage:msg];
-    
-    [JSMessageSoundEffect playMessageSentSound];
-    
-    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    [self insertMessage:msg];
-
-}
-
--(void)sendAudioMessage:(NSString*)url duration:(int)duration {
-    IMessage *msg = [[IMessage alloc] init];
-    
-    msg.sender = [UserPresent instance].uid;
-    msg.receiver = self.remoteUser.uid;
-    
-    MessageContent *content = [[MessageContent alloc] init];
-    NSNumber *d = [NSNumber numberWithInt:duration];
-    NSDictionary *dic = @{@"audio":@{@"url":url, @"duration":d}};
-    NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
-    content.raw =  newStr;
-    msg.content = content;
-    msg.timestamp = time(NULL);
-    
-    [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
-    
-    [self sendMessage:msg];
-    
-    [JSMessageSoundEffect playMessageSentSound];
-    
-    NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    [self insertMessage:msg];
 }
 
 - (void) processConversationData{
@@ -978,12 +957,9 @@
         [self.tableView endUpdates];
     }
     
-    
     [self scrollToBottomAnimated:NO];
     
     [UIView commitAnimations];
-
-    
 }
 
 #pragma mark - function
@@ -1040,4 +1016,22 @@
     delegate.tabBarController.selectedIndex = 2;
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
+
+#pragma mark - Outbox Observer
+-(void)onAudioUploadSuccess:(IMessage*)msg URL:(NSString*)url {
+
+}
+
+-(void)onAudioUploadFail:(IMessage*)msg {
+  
+}
+
+-(void)onImageUploadSuccess:(IMessage*)msg URL:(NSString*)url {
+
+}
+
+-(void)onImageUploadFail:(IMessage*)msg {
+
+}
+
 @end

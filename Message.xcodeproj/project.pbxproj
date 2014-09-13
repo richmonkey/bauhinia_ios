@@ -135,6 +135,7 @@
 		6DB0AA3019BF56AC0027A658 /* MessageImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA2F19BF56AC0027A658 /* MessageImageView.m */; };
 		6DB0AA3319BF6B710027A658 /* UIImage+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3219BF6B710027A658 /* UIImage+JSMessagesView.m */; };
 		6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3619C0A5D50027A658 /* Reachability.m */; };
+		6DB0AA3A19C439420027A658 /* Outbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3919C439420027A658 /* Outbox.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -379,6 +380,8 @@
 		6DB0AA3219BF6B710027A658 /* UIImage+JSMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JSMessagesView.m"; sourceTree = "<group>"; };
 		6DB0AA3519C0A5D50027A658 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		6DB0AA3619C0A5D50027A658 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		6DB0AA3819C439420027A658 /* Outbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Outbox.h; sourceTree = "<group>"; };
+		6DB0AA3919C439420027A658 /* Outbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Outbox.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -700,6 +703,8 @@
 				21050A3719741B1900F26E43 /* PublicFunc.m */,
 				6D76216919835F1000B690D7 /* APIRequest.h */,
 				6D76216A19835F1000B690D7 /* APIRequest.m */,
+				6DB0AA3819C439420027A658 /* Outbox.h */,
+				6DB0AA3919C439420027A658 /* Outbox.m */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -1026,6 +1031,7 @@
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				2173C66519738745004A88A5 /* SDWebImageDecoder.m in Sources */,
 				6D76215A197ECA9300B690D7 /* IMessage.m in Sources */,
+				6DB0AA3A19C439420027A658 /* Outbox.m in Sources */,
 				6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */,
 				6D32394019BD962C005A00B2 /* FileCache.m in Sources */,
 				210564C619695FC1008D3A83 /* ContactViewController.m in Sources */,
@@ -1189,7 +1195,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
@@ -1200,7 +1206,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
@@ -1212,7 +1218,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
@@ -1223,7 +1229,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
