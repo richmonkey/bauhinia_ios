@@ -33,6 +33,7 @@
 - (void)resetLabelFrame;
 
 - (void) setRecordShowing;
+- (void) setNomarlShowing;
 
 + (CGFloat)textViewLineHeight;
 + (CGFloat)maxLines;

@@ -4,6 +4,7 @@
 #import "UIImage+JSMessagesView.h"
 
 #import "FBShimmeringView.h"
+#import "IMService.h"
 
 #define SEND_BUTTON_WIDTH 70.0f
 
@@ -107,6 +108,7 @@
         self.recordingView = [[UIView alloc] initWithFrame:viewFrame];
         
         CGRect labelFrame = CGRectMake(100, 0, 160, 26);
+        labelFrame.origin.x = (frame.size.width - labelFrame.size.width)/2;
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
         self.slipLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [self.slipLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -124,14 +126,15 @@
         maskView.frame = maskFrame;
         [self.recordingView addSubview:maskView];
         
-        labelFrame = CGRectMake(36, 0, 60, 26);
+        labelFrame = CGRectMake(40, 0, 60, 26);
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
+        [self.timerLabel setBackgroundColor:[UIColor grayColor]];
         self.timerLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [self.recordingView addSubview:self.timerLabel];
 
         
         NSArray *ary = @[[UIImage imageNamed:@"MicRecRed"],[UIImage imageNamed:@"MicRecGray"]];
-        CGRect recordAFrame = CGRectMake(8, 0, 18, 29);
+        CGRect recordAFrame = CGRectMake(13, 0, 18, 29);
         recordAFrame.origin.y = (frame.size.height - recordAFrame.size.height)/2;
         
         self.recordAnimationView = [[UIImageView alloc] initWithFrame: recordAFrame];
@@ -184,14 +187,21 @@
 }
 
 - (void) setRecordShowing{
-    
     self.textView.hidden = YES;
     self.mediaButton.hidden = YES;
     self.recordingView.hidden = NO;
     [self resetLabelFrame];
     self.timerLabel.text = @"00:00";
     [self.recordAnimationView startAnimating];
+}
 
+- (void) setNomarlShowing{
+    [self.textView setText:nil];
+    [self.textView resignFirstResponder];
+    self.sendButton.enabled = NO;
+    self.sendButton.hidden = YES;
+    self.recordButton.hidden = NO;
+    self.recordButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
 }
 
 #pragma mark - Message input view

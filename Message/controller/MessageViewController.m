@@ -235,12 +235,8 @@
     
     [self sendTextMessage:text];
     
-    [self.inputToolBarView.textView setText:nil];
-    [self.inputToolBarView.textView resignFirstResponder];
-    self.inputToolBarView.sendButton.enabled = NO;
-    self.inputToolBarView.sendButton.hidden = YES;
-    self.inputToolBarView.recordButton.hidden = NO;
-    self.inputToolBarView.recordButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
+    [self.inputToolBarView setNomarlShowing];
+    
 }
 
 - (void)timerFired:(NSTimer*)timer {
