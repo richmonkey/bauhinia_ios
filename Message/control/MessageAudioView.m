@@ -17,8 +17,6 @@
 
 #define kAudioCellWidth 210
 
-#define kHeadViewWidth   40
-#define kHeadViewHeight  40
 #define kPlayBtnWidth    26
 #define kPlayBtnHeight   27
 #define kmicroBtnWidth   14
@@ -51,7 +49,7 @@
         [self addSubview:self.playBtn];
         rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
         rect.origin.y = (kAudioViewCellHeight - kProgressViewHeight  + kblank)/2;
-        rect.size.width = kAudioCellWidth - kMargin - kHeadViewWidth - kPlayBtnWidth - 2*kblank;
+        rect.size.width = kAudioCellWidth - kMargin - kPlayBtnWidth - 2*kblank;
         rect.size.height = kProgressViewHeight;
         self.progressView = [[UIProgressView alloc] initWithFrame:rect];
         [self.progressView setProgressViewStyle:UIProgressViewStyleDefault];
@@ -70,7 +68,7 @@
         [self addSubview:self.timeLengthLabel];
         [self.timeLengthLabel setText:@"111"];
         
-        rect.origin.x = kAudioCellWidth - kHeadViewWidth - kmicroBtnWidth  - kblank;
+        rect.origin.x = kAudioCellWidth - kmicroBtnWidth  - kblank;
         rect.origin.y = kAudioViewCellHeight - kmicroBtnHeight - kblank;
         rect.size.width = kmicroBtnWidth;
         rect.size.height = kmicroBtnHeight;
@@ -78,16 +76,6 @@
         [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicBlueIncoming"] forState:UIControlStateNormal];
         [self.microPhoneBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.microPhoneBtn];
-       
-        rect.origin.x = kAudioCellWidth - kHeadViewWidth - kblank;
-        rect.origin.y = (kAudioViewCellHeight - kHeadViewHeight + kblank)/2;
-        rect.size.width = kHeadViewWidth;
-        rect.size.height = kHeadViewHeight;
-        self.headView = [[UIImageView alloc] initWithFrame:rect];
-        self.headView.layer.cornerRadius = 4;
-        self.headView.layer.masksToBounds = YES;
-        [self.headView setImage:[UIImage imageNamed:@"head1"]];
-        [self addSubview:self.headView];
         
     }
     return self;
@@ -112,7 +100,7 @@
     
     rect = self.progressView.frame;
     rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
-    rect.size.width = kAudioCellWidth - kMargin - kHeadViewWidth - kPlayBtnWidth - 2*kblank - 20;
+    rect.size.width = kAudioCellWidth - kMargin - kPlayBtnWidth - 2*kblank - 20;
     self.progressView.frame = rect;
     
     rect = self.timeLengthLabel.frame;
@@ -120,12 +108,8 @@
     self.timeLengthLabel.frame = rect;
     
     rect = self.microPhoneBtn.frame;
-    rect.origin.x = kAudioCellWidth - kHeadViewWidth - kmicroBtnWidth  - kblank + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
+    rect.origin.x = kAudioCellWidth - kmicroBtnWidth  - kblank + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
     self.microPhoneBtn.frame = rect;
-    
-    rect = self.headView.frame;
-    rect.origin.x = kAudioCellWidth - kHeadViewWidth - kblank + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
-    self.headView.frame = rect;
     
 }
 

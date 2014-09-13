@@ -111,7 +111,9 @@
         labelFrame.origin.x = (frame.size.width - labelFrame.size.width)/2;
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
         self.slipLabel = [[UILabel alloc] initWithFrame:labelFrame];
-        [self.slipLabel setFont:[UIFont systemFontOfSize:17.0f]];
+        [self.slipLabel setTextAlignment: NSTextAlignmentCenter];
+//        [self.slipLabel setBackgroundColor: [UIColor grayColor]];
+        [self.slipLabel setFont: [UIFont systemFontOfSize:19.0f]];
         self.slipLabel.text = @"滑动取消 <";
         [self.recordingView addSubview: self.slipLabel];
         

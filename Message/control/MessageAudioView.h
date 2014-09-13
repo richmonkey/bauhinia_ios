@@ -16,7 +16,6 @@
 
 @property (nonatomic, strong) UIButton *playBtn;
 @property (nonatomic, strong) UIButton *microPhoneBtn;
-@property (nonatomic, strong) UIImageView *headView;
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UILabel *timeLengthLabel;
 @property (nonatomic, strong) UILabel *createTimeLabel;
