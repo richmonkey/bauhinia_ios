@@ -20,11 +20,8 @@
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UILabel *timeLengthLabel;
 @property (nonatomic, strong) UILabel *createTimeLabel;
-@property (nonatomic, strong) NSTimer *timer;//监控音频播放进度
 
 @property (nonatomic ,strong) IMessage *msg;
-
-@property(nonatomic) AVAudioPlayer *player;
 
 -(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType;
 

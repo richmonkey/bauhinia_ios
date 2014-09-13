@@ -37,11 +37,15 @@
 @property(nonatomic, assign)CGRect tableFrame;
 @property(nonatomic, assign)CGRect inputFrame;
 
-@property(nonatomic) AVAudioRecorder *recorder;
 @property(nonatomic) AVAudioPlayer *player;
+@property(nonatomic) NSIndexPath *playingIndexPath;
+@property(nonatomic) NSTimer *playTimer;
+
+@property(nonatomic) AVAudioRecorder *recorder;
 @property(nonatomic) NSTimer *recordingTimer;
 @property(nonatomic, assign) int seconds;
 @property(nonatomic) BOOL recordCanceled;
+
 
 @property(nonatomic) UIPanGestureRecognizer *panRecognizer;
 @end
@@ -87,11 +91,6 @@
     self.navigationItem.titleView = self.navigationBarButtonsView;
 
     [self processConversationData];
-    
-    // Setup audio session
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-    
     [[IMService instance] addMessageObserver:self];
 }
 
@@ -253,8 +252,8 @@
 - (void)recordTouchDown:(UIButton *)sender
 {
     if (!self.recorder.recording) {
-
         AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryRecord error:nil];
         BOOL r = [session setActive:YES error:nil];
         if (!r) {
             NSLog(@"activate audio session fail");
@@ -325,6 +324,7 @@
 -(void)stopRecord {
     [self.recorder stop];
     [self.recordingTimer invalidate];
+    self.recordingTimer = nil;
     self.inputToolBarView.textView.hidden = NO;
     self.inputToolBarView.mediaButton.hidden = NO;
     self.inputToolBarView.recordingView.hidden = YES;
@@ -405,10 +405,49 @@
 #pragma mark - AVAudioPlayerDelegate
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
     NSLog(@"player finished");
+    MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:self.playingIndexPath];
+    if (cell == nil) {
+        return;
+    }
+    
+    self.playingIndexPath = nil;
+    if ([self.playTimer isValid]) {
+        [self.playTimer invalidate];
+        self.playTimer = nil;
+    }
+
+    MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+
+    audioView.progressView.progress = 1.0f;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+        [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+        audioView.progressView.progress = 0.0f;
+        
+    });
 }
 
 - (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error {
     NSLog(@"player decode error");
+    MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:self.playingIndexPath];
+    if (cell == nil) {
+        return;
+    }
+    
+    self.playingIndexPath = nil;
+    if ([self.playTimer isValid]) {
+        [self.playTimer invalidate];
+        self.playTimer = nil;
+    }
+    
+    MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+    audioView.progressView.progress = 1.0f;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+        [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+        audioView.progressView.progress = 0.0f;
+        
+    });
 }
 
 #pragma mark - AVAudioRecorderDelegate
@@ -599,6 +638,111 @@
     }
 }
 
+- (void)updateSlider {
+    IMessage *message = [self messageForRowAtIndexPath:self.playingIndexPath];
+    if (message == nil) {
+        return;
+    }
+
+    MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:self.playingIndexPath];
+    if (cell == nil) {
+        return;
+    }
+    MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+    audioView.progressView.progress = self.player.currentTime/self.player.duration;
+    NSLog(@"%f",self.player.currentTime);
+    
+    int minute = message.content.audio.duration/60;
+    int second = message.content.audio.duration%60;
+
+    NSString *str = [NSString stringWithFormat:@"%02d:%02d",minute,second];
+
+    [audioView.timeLengthLabel setText:str];
+}
+
+-(void)AudioAction:(UIButton*)btn{
+    int row = btn.tag & 0xffff;
+    int section = (int)(btn.tag >> 16);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return;
+    }
+
+    if (indexPath.section == self.playingIndexPath.section &&
+        indexPath.row == self.playingIndexPath.row) {
+
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        if (cell == nil) {
+            return;
+        }
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        if (self.player && [self.player isPlaying]) {
+            [self.player stop];
+            if ([self.playTimer isValid]) {
+                [self.playTimer invalidate];
+                self.playTimer = nil;
+            }
+            self.playingIndexPath = nil;
+            [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+            [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+            audioView.progressView.progress = 0.0f;
+        }
+    } else {
+        if (self.player && [self.player isPlaying]) {
+            [self.player stop];
+            if ([self.playTimer isValid]) {
+                [self.playTimer invalidate];
+                self.playTimer = nil;
+            }
+
+            MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:self.playingIndexPath];
+            if (cell != nil) {
+                MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+                [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+                [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+                audioView.progressView.progress = 0.0f;
+            }
+            self.playingIndexPath = nil;
+        }
+        
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        if (cell == nil) {
+            return;
+        }
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        FileCache *fileCache = [FileCache instance];
+        NSString *url = message.content.audio.url;
+        NSString *path = [fileCache queryCacheForKey:url];
+        if (path != nil) {
+            // Setup audio session
+            AVAudioSession *session = [AVAudioSession sharedInstance];
+            [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+            
+            [audioView.playBtn setImage:[UIImage imageNamed:@"PauseOS7"] forState:UIControlStateNormal];
+            [audioView.playBtn setImage:[UIImage imageNamed:@"PausePressed"] forState:UIControlStateSelected];
+            
+            if (![[self class] isHeadphone]) {
+                //打开外放
+                UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
+                AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
+                UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
+                AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,sizeof (audioRouteOverride),&audioRouteOverride);
+            }
+            NSURL *u = [NSURL fileURLWithPath:path];
+            self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:u error:nil];
+            [self.player setDelegate:self];
+            
+            //设置为与当前音频播放同步的Timer
+            self.playTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateSlider) userInfo:nil repeats:YES];
+            self.playingIndexPath = indexPath;
+            audioView.progressView.progress = 0;
+            [self.player play];
+
+        }
+    }
+}
+
 
 #pragma mark - Table view data source
 
@@ -612,9 +756,20 @@
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d", message.content.type];
     MessageViewCell *cell = (MessageViewCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     
-    
-    if(!cell)
+    if(!cell) {
         cell = [[MessageViewCell alloc] initWithType:message.content.type reuseIdentifier:CellID];
+        if (message.content.type == MESSAGE_AUDIO) {
+            MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+            [audioView.microPhoneBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
+            [audioView.playBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+
+    if (message.content.type == MESSAGE_AUDIO) {
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
+        audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
+    }
     
     [cell setMessage:message andDelegate:self];
     return cell;
