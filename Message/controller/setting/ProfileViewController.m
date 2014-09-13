@@ -7,7 +7,16 @@
 //
 
 #import "ProfileViewController.h"
-#import "UIImageView+WebCache.h"
+
+#import "UserPresent.h"
+#import "APIRequest.h"
+#import "UserDB.h"
+
+#import "MBProgressHUD.h"
+
+#import "UIImage+Resize.h"
+
+#import "CustomStatusViewController.h"
 
 
 @interface ProfileViewController ()
@@ -32,6 +41,35 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setTitle:@"个人资讯"];
+    
+    [self.headView setUserInteractionEnabled: YES];
+    
+    if ([UserPresent instance].avatarURL) {
+        
+        NSURL *headUrl = [[NSURL alloc] initWithString:[UserPresent instance].avatarURL];
+        [self.headView setImageWithURL:headUrl];
+    
+    }else{
+        [self.headView setImage:[UIImage imageNamed:@"BrdtAttachContact"]];
+    }
+    
+    if ([UserPresent instance].state.length > 0) {
+        
+        [self.statusBtn setTitle:[UserPresent instance].state forState:UIControlStateNormal];
+    }else{
+        [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
+    }
+
+}
+
+- (void) viewWillAppear:(BOOL)animated{
+    if ([UserPresent instance].state.length > 0) {
+        
+        [self.statusBtn setTitle:[UserPresent instance].state forState:UIControlStateNormal];
+    }else{
+        [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,8 +78,13 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) editorHeadAction{
-
+- (IBAction) editorHeadAction:(id)sender{
+    
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.delegate  = self;
+    picker.allowsEditing = YES;
+    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    [self presentViewController:picker animated:YES completion:NULL];
     
 }
 
@@ -51,6 +94,98 @@
 }
 
 -(IBAction)editorStatus:(id)sender{
+   
+    CustomStatusViewController * ctr = [[CustomStatusViewController alloc] init];
+   [self.navigationController pushViewController:ctr animated: YES];
+}
+
+
+- (IBAction)onTap:(id)sender
+{
+    [self.nameTextField   resignFirstResponder];
+}
+
+#pragma mark- UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    [self animateTextField:YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [self animateTextField:NO];
+}
+
+
+- (void)animateTextField:(BOOL)up
+{
+    const int movementDistance = 50;
+    const float movementDuration = 0.3f;
+    
+    int movement = (up ? -movementDistance : movementDistance);
+    
+    [UIView beginAnimations: @"anim" context: nil];
+    
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    
+    [UIView setAnimationDuration: movementDuration];
+    
+    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+    
+    [UIView commitAnimations];
+    
+}
+-(void) updateAvatar:(UIImage*)img theURL:(NSString*) url theMBHud:(MBProgressHUD*)hud{
+    [APIRequest  updateAvatar:url
+                      success:^{
+                          NSLog(@"updateAvatar success url:%@", url);
+                          [[SDImageCache sharedImageCache] storeImage:img forKey: url];
+                          [self.headView setImage: img];
+                          
+                          [UserPresent instance].avatarURL =  url;
+                          [[UserDB instance] addUser: [UserPresent instance]];
+                          [hud hide:NO];
+                        }
+                         fail:^{
+                            NSLog(@"updateAvatar success url:%@", url);
+                            [hud hide:NO];
+                         }];
+    
+    
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo{
+    NSLog(@"Chose image!  Details:  %@", image);
+    CGSize size = CGSizeMake(120, 120);
+    UIImage *sizeImg = [image resizedImage:size interpolationQuality: kCGInterpolationDefault];
+    
+   MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    [APIRequest uploadImage:sizeImg
+                    success:^(NSString *url) {
+                        if([url length] > 0){
+                            NSLog(@"upload image success url:%@", url);
+                            [self updateAvatar:image theURL:url theMBHud:hud];
+                        } else {
+                            NSLog(@"upload image fail");
+                            [hud hide:NO];
+                        }
+                    }
+                       fail:^() {
+                           NSLog(@"upload image fail");
+                           [hud hide:NO];
+                       }];
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
+
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
     
 }
 

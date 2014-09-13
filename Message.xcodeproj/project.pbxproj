@@ -101,6 +101,8 @@
 		489933D419C44C4D00C56F2D /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489933D219C44C4D00C56F2D /* ProfileViewController.xib */; };
 		489933D819C44E3300C56F2D /* CotactMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933D619C44E3300C56F2D /* CotactMeViewController.m */; };
 		489933D919C44E3300C56F2D /* CotactMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489933D719C44E3300C56F2D /* CotactMeViewController.xib */; };
+		489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DB19C47F5200C56F2D /* UIImage+Resize.m */; };
+		489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DD19C47F5200C56F2D /* UIImage+UKImage.m */; };
 		48C20EEB19BFE81C009494A1 /* ESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EE819BFE81C009494A1 /* ESImageViewController.m */; };
 		48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */; };
 		48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */; };
@@ -302,6 +304,10 @@
 		489933D519C44E3300C56F2D /* CotactMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CotactMeViewController.h; sourceTree = "<group>"; };
 		489933D619C44E3300C56F2D /* CotactMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CotactMeViewController.m; sourceTree = "<group>"; };
 		489933D719C44E3300C56F2D /* CotactMeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CotactMeViewController.xib; sourceTree = "<group>"; };
+		489933DA19C47F5200C56F2D /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
+		489933DB19C47F5200C56F2D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
+		489933DC19C47F5200C56F2D /* UIImage+UKImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+UKImage.h"; sourceTree = "<group>"; };
+		489933DD19C47F5200C56F2D /* UIImage+UKImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UKImage.m"; sourceTree = "<group>"; };
 		48C20EE619BFE81C009494A1 /* ESImageViewController-Internals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ESImageViewController-Internals.h"; sourceTree = "<group>"; };
 		48C20EE719BFE81C009494A1 /* ESImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESImageViewController.h; sourceTree = "<group>"; };
 		48C20EE819BFE81C009494A1 /* ESImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageViewController.m; sourceTree = "<group>"; };
@@ -447,6 +453,10 @@
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
+				489933DA19C47F5200C56F2D /* UIImage+Resize.h */,
+				489933DB19C47F5200C56F2D /* UIImage+Resize.m */,
+				489933DC19C47F5200C56F2D /* UIImage+UKImage.h */,
+				489933DD19C47F5200C56F2D /* UIImage+UKImage.m */,
 				489933C119C436ED00C56F2D /* FBShimmering */,
 				48C20EE519BFE81C009494A1 /* Titanium */,
 				6DB0AA3419C0A5D50027A658 /* Reachability */,
@@ -986,6 +996,8 @@
 				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
 				2173C66919738745004A88A5 /* SDWebImagePrefetcher.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
+				489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */,
+				489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */,
 				6D76216F198362DE00B690D7 /* LoginViewController.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
 				210564CD19695FC1008D3A83 /* MessageViewController.m in Sources */,
@@ -1195,7 +1207,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
@@ -1206,7 +1218,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
@@ -1218,7 +1230,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
@@ -1229,7 +1241,7 @@
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;

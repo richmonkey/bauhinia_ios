@@ -29,6 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setTitle:@"关于"];
     // Do any additional setup after loading the view from its nib.
 }
 

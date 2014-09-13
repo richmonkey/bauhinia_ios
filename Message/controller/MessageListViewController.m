@@ -15,7 +15,7 @@
 #import "UserDB.h"
 #import "UIImageView+WebCache.h"
 
-#define kPeerConversationCellHeight         50
+#define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
 
 #define kActionSheetContact           0
@@ -152,19 +152,18 @@
     
     IMUser *currentUser =  [[UserDB instance] loadUser:covn.cid];
     
-    if(!currentUser.avatarURL && ![currentUser.avatarURL isEqualToString:@""]){
-        [cell.headView setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
-    }else{
-        [cell.headView setImage:[UIImage imageNamed:@"head1"]];
-    }
+    [cell.headView setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+    
     
     cell.namelabel.text = [currentUser displayName];
     if (covn.message.content.type == MESSAGE_IMAGE) {
-        cell.messageContent.text = @"收到一张图片";
+        cell.messageContent.text = @"一张图片";
     }else if(covn.message.content.type == MESSAGE_TEXT){
        cell.messageContent.text = covn.message.content.text;
     }else if(covn.message.content.type == MESSAGE_LOCATION){
-        cell.messageContent.text = @"收到一个地理位置";
+        cell.messageContent.text = @"一个地理位置";
+    }else if (covn.message.content.type == MESSAGE_AUDIO){
+       cell.messageContent.text = @"一个音频";
     }
     
     

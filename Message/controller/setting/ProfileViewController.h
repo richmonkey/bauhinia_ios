@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIImageView+WebCache.h"
 
-@interface ProfileViewController : UIViewController
+@interface ProfileViewController : UIViewController <UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+
+- (IBAction) editorHeadAction:(id)sender;
+
+-(IBAction) editorNameAction:(id)sender;
+
+-(IBAction)editorStatus:(id)sender;
+    
 
 @end
