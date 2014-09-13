@@ -525,7 +525,7 @@
     content.raw = im.content;
     m.content = content;
     m.timestamp = (int)time(NULL);
-
+    [self downloadAudio:m];
     [self insertMessage:m];
 }
 
@@ -696,9 +696,7 @@
                 self.playTimer = nil;
             }
             self.playingIndexPath = nil;
-            [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
-            [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
-            audioView.progressView.progress = 0.0f;
+            [audioView setPlaying:NO];
         }
     } else {
         if (self.player && [self.player isPlaying]) {
@@ -711,9 +709,7 @@
             MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:self.playingIndexPath];
             if (cell != nil) {
                 MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
-                [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
-                [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
-                audioView.progressView.progress = 0.0f;
+                [audioView setPlaying:NO];
             }
             self.playingIndexPath = nil;
         }
@@ -731,8 +727,7 @@
             AVAudioSession *session = [AVAudioSession sharedInstance];
             [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
             
-            [audioView.playBtn setImage:[UIImage imageNamed:@"PauseOS7"] forState:UIControlStateNormal];
-            [audioView.playBtn setImage:[UIImage imageNamed:@"PausePressed"] forState:UIControlStateSelected];
+            [audioView setPlaying:YES];
             
             if (![[self class] isHeadphone]) {
                 //打开外放
@@ -748,7 +743,7 @@
             //设置为与当前音频播放同步的Timer
             self.playTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateSlider) userInfo:nil repeats:YES];
             self.playingIndexPath = indexPath;
-            audioView.progressView.progress = 0;
+
             [self.player play];
 
         }
@@ -777,13 +772,23 @@
         }
     }
 
+    [cell setMessage:message andDelegate:self];
+    
     if (message.content.type == MESSAGE_AUDIO) {
         MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
         audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
         audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
+        
+        if (self.playingIndexPath.section == indexPath.section &&
+            self.playingIndexPath.row == indexPath.row) {
+            [audioView setPlaying:YES];
+            
+            audioView.progressView.progress = self.player.currentTime/self.player.duration;
+        } else {
+            [audioView setPlaying:NO];
+        }
+
     }
-    
-    [cell setMessage:message andDelegate:self];
     return cell;
 }
 
@@ -1047,6 +1052,23 @@
     [self sendMessage:msg];
 }
 
+- (void)downloadAudio:(IMessage*)msg {
+    FileCache *cache = [FileCache instance];
+    if (msg.content.type == MESSAGE_AUDIO && msg.sender == self.remoteUser.uid) {
+        
+        NSString *path = [cache queryCacheForKey:msg.content.audio.url];
+        if (!path) {
+            NSLog(@"download audio:%@", msg.content.audio.url);
+            [APIRequest downloadAudio:msg.content.audio.url
+                              success:^(NSData* data){
+                                  NSLog(@"download audio success");
+                                  [cache storeFile:data forKey:msg.content.audio.url];
+                              }fail:^{
+                                  NSLog(@"download audio fail");
+                              }];
+        }
+    }
+}
 - (void) processConversationData{
     
     self.messageArray = [NSMutableArray array];
@@ -1058,6 +1080,7 @@
     id<IMessageIterator> iterator =  [[PeerMessageDB instance] newPeerMessageIterator: self.remoteUser.uid];
     IMessage *msg = [iterator next];
     while (msg) {
+        [self downloadAudio:msg];
         curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
         if ([PublicFunc isTheDay:lastDate sameToThatDay:curtDate]) {
             [msgBlockArray insertObject:msg atIndex:0];
@@ -1156,7 +1179,6 @@
     }
     return nil;
 }
-
 
 - (void) reloadMessage:(int)msgLocalID{
     

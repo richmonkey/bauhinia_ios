@@ -24,4 +24,5 @@
 
 -(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType;
 
+-(void)setPlaying:(BOOL)playing;
 @end

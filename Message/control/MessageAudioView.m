@@ -60,7 +60,6 @@
         self.timeLengthLabel = [[UILabel alloc] initWithFrame:rect];
         [self.timeLengthLabel setFont:[UIFont systemFontOfSize:12.0f]];
         [self addSubview:self.timeLengthLabel];
-        [self.timeLengthLabel setText:@"111"];
         
         rect.origin.x = kAudioCellWidth - kmicroBtnWidth  - kblank;
         rect.origin.y = kAudioViewCellHeight - kmicroBtnHeight - kblank;
@@ -107,6 +106,18 @@
     rect.origin.x = kAudioCellWidth - kmicroBtnWidth  - kblank + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
     self.microPhoneBtn.frame = rect;
     
+}
+
+-(void)setPlaying:(BOOL)playing {
+    if (playing) {
+        [self.playBtn setImage:[UIImage imageNamed:@"PauseOS7"] forState:UIControlStateNormal];
+        [self.playBtn setImage:[UIImage imageNamed:@"PausePressed"] forState:UIControlStateSelected];
+        self.progressView.progress = 0;
+    } else {
+        [self.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+        [self.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+        self.progressView.progress = 0.0f;
+    }
 }
 
 #pragma mark - Drawing
