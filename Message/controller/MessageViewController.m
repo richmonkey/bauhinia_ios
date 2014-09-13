@@ -678,14 +678,6 @@
     }
     MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
     audioView.progressView.progress = self.player.currentTime/self.player.duration;
-    NSLog(@"%f",self.player.currentTime);
-    
-    int minute = message.content.audio.duration/60;
-    int second = message.content.audio.duration%60;
-
-    NSString *str = [NSString stringWithFormat:@"%02d:%02d",minute,second];
-
-    [audioView.timeLengthLabel setText:str];
 }
 
 -(void)AudioAction:(UIButton*)btn{
