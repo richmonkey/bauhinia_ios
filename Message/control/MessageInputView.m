@@ -108,7 +108,8 @@
         CGRect labelFrame = CGRectMake(100, 0, 160, 26);
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
         self.slipLabel = [[UILabel alloc] initWithFrame:labelFrame];
-        self.slipLabel.text = @"滑动取消";
+        [self.slipLabel setFont:[UIFont systemFontOfSize:15.0f]];
+        self.slipLabel.text = @"滑动取消 <";
         [self.recordingView addSubview:self.slipLabel];
         
         CGRect maskFrame = CGRectMake(0, 0, 70, frame.size.height);
