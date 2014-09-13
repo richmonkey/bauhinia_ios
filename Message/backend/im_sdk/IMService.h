@@ -68,7 +68,7 @@
 -(void)start:(int64_t)uid;
 -(void)stop;
 
--(BOOL)sendPeerMessage:(IMMessage*)msg;
+-(void)sendPeerMessage:(IMMessage*)msg;
 
 //正在输入
 -(void)sendInputing:(MessageInputing*)inputing;
