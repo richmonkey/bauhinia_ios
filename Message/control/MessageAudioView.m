@@ -140,4 +140,13 @@
     [self drawMsgStateSign: rect];
 }
 
+-(void)setDownloading:(BOOL)downloading {
+    //todo download的动画
+}
+
+-(void)setUploading:(BOOL)uploading {
+    //todo uploading的动画
+    
+}
+
 @end

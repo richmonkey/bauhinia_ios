@@ -25,4 +25,6 @@
 -(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType;
 
 -(void)setPlaying:(BOOL)playing;
+-(void)setDownloading:(BOOL)downloading;
+-(void)setUploading:(BOOL)uploading;
 @end

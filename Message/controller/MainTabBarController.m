@@ -90,12 +90,11 @@
     });
     
     [self startRefreshTimer];
+    [[IMService instance] start:[UserPresent instance].uid];
     
     self.reach = [Reachability reachabilityWithHostname:@"www.message.im"];
-
     self.reach.reachableBlock = ^(Reachability*reach) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[IMService instance] stop];
             [[IMService instance] start:[UserPresent instance].uid];
         });
     };
@@ -109,7 +108,6 @@
     [self.reach startNotifier];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
     

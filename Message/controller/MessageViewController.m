@@ -27,6 +27,7 @@
 #import "MessageImageView.h"
 #import "Outbox.h"
 #import "LevelDB.h"
+#import "AudioDownloader.h"
 
 #define INPUT_HEIGHT 46.0f
 
@@ -92,17 +93,20 @@
 
     [self processConversationData];
     [[IMService instance] addMessageObserver:self];
+    [[Outbox instance] addBoxObserver:self];
+    [[AudioDownloader instance] addDownloaderObserver:self];
+    [[IMService instance] subscribeState:self.remoteUser.uid];
 }
 
 -(void) viewDidAppear:(BOOL)animated{
 
-    [[IMService instance] subscribeState:self.remoteUser.uid];
+
  
 }
 
 -(void) viewDidDisappear:(BOOL)animated{
     
-   [[IMService instance] unsubscribeState:self.remoteUser.uid];
+
 }
 
 - (void)setup
@@ -488,7 +492,7 @@
     NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
     content.raw =  newStr;
     msg.content = content;
-    msg.timestamp = time(NULL);
+    msg.timestamp = (int)time(NULL);
 
     //todo 优化读文件次数
     NSData *data = [NSData dataWithContentsOfFile:[recorder.url path]];
@@ -497,6 +501,8 @@
 
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     
+    [[Outbox instance] uploadAudio:msg];
+    
     [JSMessageSoundEffect playMessageSentSound];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
@@ -504,8 +510,6 @@
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     
     [self insertMessage:msg];
-    
-    [[Outbox instance] uploadAudio:msg];
 }
 
 #pragma mark - MessageObserver
@@ -525,7 +529,12 @@
     content.raw = im.content;
     m.content = content;
     m.timestamp = (int)time(NULL);
-    [self downloadAudio:m];
+
+    if (m.content.type == MESSAGE_AUDIO) {
+        AudioDownloader *downloader = [AudioDownloader instance];
+        [downloader downloadAudio:m];
+    }
+
     [self insertMessage:m];
 }
 
@@ -613,9 +622,9 @@
         return;
     }
     
-    int lastSection = [self.messageArray count] - 1;
+    long lastSection = [self.messageArray count] - 1;
     NSMutableArray *array = [self.messageArray objectAtIndex: lastSection];
-    int lastRow = [array count] - 1;
+    long lastRow = [array count] - 1;
     
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:lastRow inSection:lastSection]
 						  atScrollPosition:UITableViewScrollPositionBottom
@@ -662,16 +671,31 @@
     }
     MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
     audioView.progressView.progress = self.player.currentTime/self.player.duration;
-    NSLog(@"%f",self.player.currentTime);
-    
-    int minute = message.content.audio.duration/60;
-    int second = message.content.audio.duration%60;
-
-    NSString *str = [NSString stringWithFormat:@"%02d:%02d",minute,second];
-
-    [audioView.timeLengthLabel setText:str];
 }
 
+-(BOOL)isM4A:(NSString*)path {
+    FILE *file = fopen([path UTF8String], "rb");
+    if (!file) {
+        return NO;
+    }
+    int r = fseek(file, 4, SEEK_SET);
+    if (r == -1) {
+        fclose(file);
+        return NO;
+    }
+    char buf[8] = {0};
+    int n = fread(buf, 1, 7, file);
+    if (n != 7) {
+        fclose(file);
+        return NO;
+    }
+    fclose(file);
+    if (strcmp(buf, "ftypM4A") == 0) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
 -(void)AudioAction:(UIButton*)btn{
     int row = btn.tag & 0xffff;
     int section = (int)(btn.tag >> 16);
@@ -722,7 +746,7 @@
         FileCache *fileCache = [FileCache instance];
         NSString *url = message.content.audio.url;
         NSString *path = [fileCache queryCacheForKey:url];
-        if (path != nil) {
+        if (path != nil && [self isM4A:path]) {
             // Setup audio session
             AVAudioSession *session = [AVAudioSession sharedInstance];
             [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
@@ -782,12 +806,16 @@
         if (self.playingIndexPath.section == indexPath.section &&
             self.playingIndexPath.row == indexPath.row) {
             [audioView setPlaying:YES];
-            
             audioView.progressView.progress = self.player.currentTime/self.player.duration;
         } else {
             [audioView setPlaying:NO];
         }
-
+        
+        [audioView setUploading:[[Outbox instance] isUploading:message]];
+        [audioView setDownloading:[[AudioDownloader instance] isDownloading:message]];
+    } else if (message.content.type == MESSAGE_IMAGE) {
+        MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
+        [imageView setUploading:[[Outbox instance] isUploading:message]];
     }
     return cell;
 }
@@ -985,7 +1013,7 @@
     NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
     content.raw =  newStr;
     msg.content = content;
-    msg.timestamp = time(NULL);
+    msg.timestamp = (int)time(NULL);
 
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
 
@@ -993,15 +1021,14 @@
     
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     
+    [[Outbox instance] uploadImage:msg];
+    
     [JSMessageSoundEffect playMessageSentSound];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
-    
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     
     [self insertMessage:msg];
-    
-    [[Outbox instance] uploadImage:msg];
 	
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -1047,28 +1074,11 @@
     NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
     content.raw =  newStr;
     msg.content = content;
-    msg.timestamp = time(NULL);
+    msg.timestamp = (int)time(NULL);
     
     [self sendMessage:msg];
 }
 
-- (void)downloadAudio:(IMessage*)msg {
-    FileCache *cache = [FileCache instance];
-    if (msg.content.type == MESSAGE_AUDIO && msg.sender == self.remoteUser.uid) {
-        
-        NSString *path = [cache queryCacheForKey:msg.content.audio.url];
-        if (!path) {
-            NSLog(@"download audio:%@", msg.content.audio.url);
-            [APIRequest downloadAudio:msg.content.audio.url
-                              success:^(NSData* data){
-                                  NSLog(@"download audio success");
-                                  [cache storeFile:data forKey:msg.content.audio.url];
-                              }fail:^{
-                                  NSLog(@"download audio fail");
-                              }];
-        }
-    }
-}
 - (void) processConversationData{
     
     self.messageArray = [NSMutableArray array];
@@ -1080,7 +1090,15 @@
     id<IMessageIterator> iterator =  [[PeerMessageDB instance] newPeerMessageIterator: self.remoteUser.uid];
     IMessage *msg = [iterator next];
     while (msg) {
-        [self downloadAudio:msg];
+        FileCache *cache = [FileCache instance];
+        AudioDownloader *downloader = [AudioDownloader instance];
+        if (msg.content.type == MESSAGE_AUDIO && msg.sender == self.remoteUser.uid) {
+            NSString *path = [cache queryCacheForKey:msg.content.audio.url];
+            if (!path && ![downloader isDownloading:msg]) {
+                [downloader downloadAudio:msg];
+            }
+        }
+        
         curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
         if ([PublicFunc isTheDay:lastDate sameToThatDay:curtDate]) {
             [msgBlockArray insertObject:msg atIndex:0];
@@ -1166,10 +1184,10 @@
 
 - (IMessage*) getImMessageById:(int)msgLocalID{
     
-    for ( int sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
+    for ( long sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
         
         NSMutableArray *rowArrays = [self.messageArray objectAtIndex:sectionIndex];
-        for (int rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
+        for (long rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
             
             IMessage *tmpMsg = (IMessage*) [rowArrays objectAtIndex:rowindex];
             if (tmpMsg.msgLocalID == msgLocalID) {
@@ -1180,12 +1198,29 @@
     return nil;
 }
 
-- (void) reloadMessage:(int)msgLocalID{
-    
-    for ( int sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
+- (NSIndexPath*) getIndexPathById:(int)msgLocalID{
+    for ( long sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
         
         NSMutableArray *rowArrays = [self.messageArray objectAtIndex:sectionIndex];
-        for (int rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
+        for (long rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
+            
+            IMMessage *tmpMsg = [rowArrays objectAtIndex:rowindex];
+            if (tmpMsg.msgLocalID == msgLocalID) {
+                
+                NSIndexPath *findpath = [NSIndexPath indexPathForRow:rowindex inSection: sectionIndex];
+                return findpath;
+            }
+        }
+    }
+    return nil;
+}
+
+- (void) reloadMessage:(int)msgLocalID{
+    
+    for ( long sectionIndex = [self.messageArray count] - 1; sectionIndex >= 0; sectionIndex--) {
+        
+        NSMutableArray *rowArrays = [self.messageArray objectAtIndex:sectionIndex];
+        for (long rowindex = [rowArrays count ] - 1;rowindex >= 0 ; rowindex--) {
             
             IMMessage *tmpMsg = [rowArrays objectAtIndex:rowindex];
             if (tmpMsg.msgLocalID == msgLocalID) {
@@ -1199,8 +1234,10 @@
 }
 
 -(void)returnMainTableViewController {
-
+    [[IMService instance] unsubscribeState:self.remoteUser.uid];
     [[IMService instance] removeMessageObserver:self];
+    [[Outbox instance] removeBoxObserver:self];
+    [[AudioDownloader instance] removeDownloaderObserver:self];
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     delegate.tabBarController.selectedIndex = 2;
     [self.navigationController popToRootViewControllerAnimated:YES];
@@ -1208,19 +1245,58 @@
 
 #pragma mark - Outbox Observer
 -(void)onAudioUploadSuccess:(IMessage*)msg URL:(NSString*)url {
-
+    if (msg.receiver == self.remoteUser.uid) {
+        NSIndexPath *indexPath = [self getIndexPathById:msg.msgLocalID];
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        [audioView setUploading:NO];
+    }
 }
 
 -(void)onAudioUploadFail:(IMessage*)msg {
-  
+    if (msg.receiver == self.remoteUser.uid) {
+        NSIndexPath *indexPath = [self getIndexPathById:msg.msgLocalID];
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        [audioView setUploading:NO];
+    }
 }
 
 -(void)onImageUploadSuccess:(IMessage*)msg URL:(NSString*)url {
-
+    if (msg.receiver == self.remoteUser.uid) {
+        NSIndexPath *indexPath = [self getIndexPathById:msg.msgLocalID];
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
+        [imageView setUploading:NO];
+    }
 }
 
 -(void)onImageUploadFail:(IMessage*)msg {
+    if (msg.receiver == self.remoteUser.uid) {
+        NSIndexPath *indexPath = [self getIndexPathById:msg.msgLocalID];
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
+        [imageView setUploading:NO];
+    }
+}
 
+#pragma mark - Audio Downloader Observer
+-(void)onAudioDownloadSuccess:(IMessage*)msg {
+    if (msg.sender == self.remoteUser.uid) {
+        NSIndexPath *indexPath = [self getIndexPathById:msg.msgLocalID];
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        [audioView setDownloading:NO];
+    }
+}
+
+-(void)onAudioDownloadFail:(IMessage*)msg {
+    if (msg.sender == self.remoteUser.uid) {
+        NSIndexPath *indexPath = [self getIndexPathById:msg.msgLocalID];
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        [audioView setDownloading:NO];
+    }
 }
 
 @end

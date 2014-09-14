@@ -22,12 +22,13 @@
 
 #import "MessageInputView.h"
 #import "OutBox.h"
+#import "AudioDownloader.h"
 
 @class ConversationHeadButtonView;
 
 
-@interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,MessageObserver,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
-    OutboxObserver>
+@interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
+    MessageObserver, OutboxObserver, AudioDownloaderObserver>
 
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic,strong) UIImage *willSendImage;

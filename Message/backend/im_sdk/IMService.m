@@ -90,6 +90,7 @@
         return;
     }
     
+    NSLog(@"stop im service");
     self.stopped = YES;
     dispatch_suspend(self.connectTimer);
     dispatch_suspend(self.heartbeatTimer);

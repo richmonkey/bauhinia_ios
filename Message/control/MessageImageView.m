@@ -94,4 +94,7 @@
     }
 }
 
+-(void) setUploading:(BOOL)uploading {
+    //todo uploading的动画
+}
 @end
