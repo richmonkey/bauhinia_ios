@@ -18,6 +18,9 @@
 #import "PeerMessageHandler.h"
 #import "GroupMessageHandler.h"
 
+#import "IntroductionViewController.h"
+
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -37,10 +40,9 @@
         UITabBarController *tabController = [[MainTabBarController alloc] init];
         self.tabBarController = tabController;
         self.window.rootViewController = tabController;
-        
     } else {
-        UIViewController *ctl = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        self.window.rootViewController = ctl;
+        IntroductionViewController *ctrl = [[IntroductionViewController alloc] init];
+        self.window.rootViewController = ctrl;
     }
     
     self.window.backgroundColor = [UIColor whiteColor];

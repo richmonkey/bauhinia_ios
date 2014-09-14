@@ -19,10 +19,16 @@
 #import "CustomStatusViewController.h"
 
 
+#import "MainTabBarController.h"
+#import "AppDelegate.h"
+
 @interface ProfileViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *headView;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UIButton *statusBtn;
+@property (weak, nonatomic) IBOutlet UIView *netStatusArea;
+
+@property  (nonatomic)               UIBarButtonItem *nextButton;
 
 @end
 
@@ -53,12 +59,27 @@
     }else{
         [self.headView setImage:[UIImage imageNamed:@"BrdtAttachContact"]];
     }
-    
-    if ([UserPresent instance].state.length > 0) {
+    if (self.editorState == ProfileEditorSettingType) {
         
-        [self.statusBtn setTitle:[UserPresent instance].state forState:UIControlStateNormal];
-    }else{
-        [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
+        [self.netStatusArea setHidden:NO];
+        
+        if ([UserPresent instance].state.length > 0) {
+            
+            [self.statusBtn setTitle:[UserPresent instance].state forState:UIControlStateNormal];
+        }else{
+            [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
+        }
+        
+    }else if(self.editorState == ProfileEditorLoginingType){
+        
+        [self.netStatusArea setHidden: YES];
+        self.nextButton = [[UIBarButtonItem alloc]
+                           initWithTitle:@"下一步"
+                           style:UIBarButtonItemStylePlain
+                           target:self
+                           action:@selector(nextAction)];
+        [self.navigationItem setRightBarButtonItem:self.nextButton];
+        [self.nextButton setEnabled:YES];
     }
 
 }
@@ -86,6 +107,16 @@
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
     [self presentViewController:picker animated:YES completion:NULL];
     
+}
+
+- (void) nextAction{
+    UITabBarController *tabController = [[MainTabBarController alloc] init];
+    UINavigationController *navCtl = [[UINavigationController alloc] initWithRootViewController:tabController];
+    navCtl.navigationBarHidden = YES;
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    delegate.tabBarController = tabController;
+    delegate.window.rootViewController = navCtl;
+
 }
 
 -(IBAction) editorNameAction:(id)sender{

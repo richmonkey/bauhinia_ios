@@ -9,7 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "UIImageView+WebCache.h"
 
+typedef enum {
+    ProfileEditorSettingType = 0,
+    ProfileEditorLoginingType
+} ProfileEditorType;
+
+
 @interface ProfileViewController : UIViewController <UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+
+@property (nonatomic) ProfileEditorType editorState;
 
 - (IBAction) editorHeadAction:(id)sender;
 

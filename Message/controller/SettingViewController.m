@@ -10,6 +10,8 @@
 #import "AboutViewController.h"
 #import "ProfileViewController.h"
 
+#import "ConversationSettingViewController.h"
+
 
 #define kNetStatusSection 2
 #define kNetStatusRow     0
@@ -40,7 +42,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.cellTitleArray = @[ @[@"关于",@"告诉朋友"],
-                                 @[@"个人资讯",@"账号",@"对话设置",@"通知"],
+                                 @[@"个人资讯",@"账号",@"会话设置",@"通知"],
                                  @[@"网络状态",@"系统状态"],
                                  @"清除所有对话记录"
                                 ];
@@ -163,7 +165,7 @@
         case kProfileCellTag:
         {
             ProfileViewController * profileController = [[ProfileViewController alloc] init];
-            
+            profileController.editorState = ProfileEditorSettingType;
             profileController.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:profileController animated: YES];
         }
@@ -176,8 +178,11 @@
             break;
         case kConversationCellSettingTag:
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
+            
+            ConversationSettingViewController * conSettingController = [[ConversationSettingViewController alloc] init];
+            
+            conSettingController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:conSettingController animated: YES];
         }
             break;
         case knotificationCellTag:
