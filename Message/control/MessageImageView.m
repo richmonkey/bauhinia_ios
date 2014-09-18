@@ -13,13 +13,15 @@
 #define kImageWidth  100
 #define kImageHeight 100
 
+#define KInComingMoveRight  8.0
+#define kOuttingMoveRight   3.0
+
 @implementation MessageImageView
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        [self setBackgroundColor:[UIColor grayColor]];
         self.imageView = [[UIImageView alloc] init];
         [self.imageView setUserInteractionEnabled:YES];
         [self addSubview:self.imageView];
@@ -38,6 +40,25 @@
 
 - (void)setData:(id)newData{
     _data = newData;
+    
+    if (_data) {
+        if(![[SDImageCache sharedImageCache] diskImageExistsWithKey:_data]){
+            self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            self.loadIndicatorView.hidesWhenStopped = YES;
+            CGRect bubbleFrame = [self bubbleFrame];
+            [self.loadIndicatorView setFrame: bubbleFrame];
+            [self.loadIndicatorView startAnimating];
+            [self addSubview: self.loadIndicatorView];
+        }
+        [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:_data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
+                [self.loadIndicatorView stopAnimating];
+                [self.loadIndicatorView removeFromSuperview];
+            }
+        }];
+    }
+    
+    
     [self setNeedsDisplay];
 }
 
@@ -54,7 +75,7 @@
     if (self.imageView) {
         
         CGSize imageSize = CGSizeMake(kImageWidth, kImageHeight);
-        CGFloat imgX = image.leftCapWidth + 3.0f + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
+        CGFloat imgX = image.leftCapWidth + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x + kOuttingMoveRight: KInComingMoveRight);
         
         CGRect imageFrame = CGRectMake(imgX,
                                        kPaddingTop + kMarginTop,
@@ -62,9 +83,6 @@
                                        imageSize.height - kPaddingBottom + 2.f);
         [self.imageView setFrame:imageFrame];
         
-        if (self.data) {
-            [self.imageView setImageWithURL:[[NSURL alloc] initWithString:self.data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"]];
-        }
     }
 }
 
@@ -95,6 +113,24 @@
 }
 
 -(void) setUploading:(BOOL)uploading {
-    //todo uploading的动画
+    //uploading的动画
+    if (uploading) {
+        self.isUpLoad = YES;
+        self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        self.loadIndicatorView.hidesWhenStopped = YES;
+        CGRect bubbleFrame = [self bubbleFrame];
+        
+        UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
+        bubbleFrame.origin.x -= image.leftCapWidth;
+        
+        [self.loadIndicatorView setFrame: bubbleFrame];
+        [self.loadIndicatorView startAnimating];
+        [self addSubview: self.loadIndicatorView];
+    }else{
+        self.isUpLoad = NO;
+        if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
+            [self.loadIndicatorView stopAnimating];
+        }
+    }
 }
 @end

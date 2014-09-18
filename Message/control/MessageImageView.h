@@ -15,6 +15,8 @@
 
 @property (weak, nonatomic) UIViewController *dgtController;
 @property (nonatomic) UIImageView *imageView;
+@property (nonatomic) BOOL isUpLoad;
+
 @property (nonatomic) id data;
 
 -(void) setDelegte:(UIViewController*)del;

@@ -54,7 +54,7 @@
     if ([UserPresent instance].avatarURL) {
         
         NSURL *headUrl = [[NSURL alloc] initWithString:[UserPresent instance].avatarURL];
-        [self.headView setImageWithURL:headUrl];
+        [self.headView sd_setImageWithURL:headUrl];
     
     }else{
         [self.headView setImage:[UIImage imageNamed:@"BrdtAttachContact"]];

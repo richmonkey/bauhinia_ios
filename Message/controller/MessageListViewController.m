@@ -152,7 +152,7 @@
     
     IMUser *currentUser =  [[UserDB instance] loadUser:covn.cid];
     
-    [cell.headView setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+    [cell.headView sd_setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
     
     
     cell.namelabel.text = [currentUser displayName];

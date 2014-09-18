@@ -33,6 +33,9 @@
 
 #define navBarHeadButtonSize 35
 
+#define kTakePicActionSheetTag  101
+
+
 
 @interface MessageViewController()
 @property(nonatomic, assign)CGRect tableFrame;
@@ -515,7 +518,7 @@
 #pragma mark - MessageObserver
 
 -(void)onPeerMessage:(IMMessage*)im{
-    if (im.receiver != self.remoteUser.uid) {
+    if (im.sender != self.remoteUser.uid) {
         return;
     }
     [JSMessageSoundEffect playMessageReceivedSound];
@@ -947,11 +950,41 @@
 
 
 - (void)cameraPressed:(id)sender{
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate  = self;
-    picker.allowsEditing = YES;
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    [self presentViewController:picker animated:YES completion:NULL];
+    
+    if ([self.inputToolBarView.textView isFirstResponder]) {
+        [self.inputToolBarView.textView resignFirstResponder];
+    }
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:nil
+                                  delegate:self
+                                  cancelButtonTitle:@"取消"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"摄像头拍照", @"从相册选取",nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    actionSheet.tag = kTakePicActionSheetTag;
+    [actionSheet showInView:self.view];
+    
+
+}
+
+#pragma mark - UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (actionSheet.tag==kTakePicActionSheetTag) {
+        if (buttonIndex == 0) {
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.delegate  = self;
+            picker.allowsEditing = YES;
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [self presentViewController:picker animated:YES completion:NULL];
+        }else if(buttonIndex == 1){
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.delegate  = self;
+            picker.allowsEditing = YES;
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:picker animated:YES completion:NULL];
+        }
+    }
 }
 
 

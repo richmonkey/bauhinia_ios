@@ -142,11 +142,34 @@
 
 -(void)setDownloading:(BOOL)downloading {
     //todo download的动画
+    if (downloading) {
+        self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        self.loadIndicatorView.hidesWhenStopped = NO;
+        CGRect bubbleFrame = [self bubbleFrame];
+        [self.loadIndicatorView setFrame: bubbleFrame];
+        [self.loadIndicatorView startAnimating];
+        [self addSubview: self.loadIndicatorView];
+    }else{
+        if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
+            [self.loadIndicatorView stopAnimating];
+        }
+    }
 }
 
 -(void)setUploading:(BOOL)uploading {
     //todo uploading的动画
-    
+    if (uploading) {
+        self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        self.loadIndicatorView.hidesWhenStopped = NO;
+        CGRect bubbleFrame = [self bubbleFrame];
+        [self.loadIndicatorView setFrame: bubbleFrame];
+        [self.loadIndicatorView startAnimating];
+        [self addSubview: self.loadIndicatorView];
+    }else{
+        if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
+            [self.loadIndicatorView stopAnimating];
+        }
+    }
 }
 
 @end
