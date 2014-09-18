@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UILabel *timeLengthLabel;
 @property (nonatomic, strong) UILabel *createTimeLabel;
 
+
 @property (nonatomic ,strong) IMessage *msg;
 
 -(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType;

@@ -87,15 +87,16 @@
 
 
 -(void)updatePosition{
+    UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
     CGSize bubbleSize = CGSizeMake(kAudioCellWidth, kAudioViewCellHeight);
     
     CGRect rect = self.playBtn.frame;
-    rect.origin.x = kMargin + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width  : 0.0f);
+    rect.origin.x = image.leftCapWidth + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width  : 0.0f);
      self.playBtn.frame = rect;
     
     rect = self.progressView.frame;
     rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
-    rect.size.width = kAudioCellWidth - kMargin - kPlayBtnWidth - 2*kblank - 20;
+    rect.size.width = kAudioCellWidth - image.leftCapWidth - kPlayBtnWidth - 2*kblank   - (self.type == BubbleMessageTypeOutgoing ?  2*image.leftCapWidth  : 10);
     self.progressView.frame = rect;
     
     rect = self.timeLengthLabel.frame;
@@ -103,7 +104,7 @@
     self.timeLengthLabel.frame = rect;
     
     rect = self.microPhoneBtn.frame;
-    rect.origin.x = kAudioCellWidth - kmicroBtnWidth  - kblank + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
+    rect.origin.x = kAudioCellWidth - image.leftCapWidth - kmicroBtnWidth + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
     self.microPhoneBtn.frame = rect;
     
 }
@@ -143,15 +144,14 @@
 -(void)setDownloading:(BOOL)downloading {
     //todo download的动画
     if (downloading) {
-        self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        self.loadIndicatorView.hidesWhenStopped = NO;
+        self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         CGRect bubbleFrame = [self bubbleFrame];
-        [self.loadIndicatorView setFrame: bubbleFrame];
-        [self.loadIndicatorView startAnimating];
-        [self addSubview: self.loadIndicatorView];
+        [self.downloadIndicatorView setFrame: bubbleFrame];
+        [self.downloadIndicatorView startAnimating];
+        [self addSubview: self.downloadIndicatorView];
     }else{
-        if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
-            [self.loadIndicatorView stopAnimating];
+        if (self.downloadIndicatorView&&[self.downloadIndicatorView isAnimating]) {
+            [self.downloadIndicatorView stopAnimating];
         }
     }
 }
@@ -159,15 +159,14 @@
 -(void)setUploading:(BOOL)uploading {
     //todo uploading的动画
     if (uploading) {
-        self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        self.loadIndicatorView.hidesWhenStopped = NO;
+        self.uploadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         CGRect bubbleFrame = [self bubbleFrame];
-        [self.loadIndicatorView setFrame: bubbleFrame];
-        [self.loadIndicatorView startAnimating];
-        [self addSubview: self.loadIndicatorView];
+        [self.uploadIndicatorView setFrame: bubbleFrame];
+        [self.uploadIndicatorView startAnimating];
+        [self addSubview: self.uploadIndicatorView];
     }else{
-        if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
-            [self.loadIndicatorView stopAnimating];
+        if (self.uploadIndicatorView&&[self.uploadIndicatorView isAnimating]) {
+            [self.uploadIndicatorView stopAnimating];
         }
     }
 }

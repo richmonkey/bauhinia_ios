@@ -39,21 +39,21 @@
 }
 
 - (void)setData:(id)newData{
+    //TODO  下载小图
     _data = newData;
     
     if (_data) {
         if(![[SDImageCache sharedImageCache] diskImageExistsWithKey:_data]){
-            self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            self.loadIndicatorView.hidesWhenStopped = YES;
+            self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
             CGRect bubbleFrame = [self bubbleFrame];
-            [self.loadIndicatorView setFrame: bubbleFrame];
-            [self.loadIndicatorView startAnimating];
-            [self addSubview: self.loadIndicatorView];
+            [self.downloadIndicatorView setFrame: bubbleFrame];
+            [self.downloadIndicatorView startAnimating];
+            [self addSubview: self.downloadIndicatorView];
         }
         [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:_data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
-                [self.loadIndicatorView stopAnimating];
-                [self.loadIndicatorView removeFromSuperview];
+            if (self.downloadIndicatorView&&[self.downloadIndicatorView isAnimating]) {
+                [self.downloadIndicatorView stopAnimating];
+                [self.downloadIndicatorView removeFromSuperview];
             }
         }];
     }
@@ -115,21 +115,18 @@
 -(void) setUploading:(BOOL)uploading {
     //uploading的动画
     if (uploading) {
-        self.isUpLoad = YES;
-        self.loadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        self.loadIndicatorView.hidesWhenStopped = YES;
+        self.uploadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         CGRect bubbleFrame = [self bubbleFrame];
         
         UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
         bubbleFrame.origin.x -= image.leftCapWidth;
         
-        [self.loadIndicatorView setFrame: bubbleFrame];
-        [self.loadIndicatorView startAnimating];
-        [self addSubview: self.loadIndicatorView];
+        [self.uploadIndicatorView setFrame: bubbleFrame];
+        [self.uploadIndicatorView startAnimating];
+        [self addSubview: self.uploadIndicatorView];
     }else{
-        self.isUpLoad = NO;
-        if (self.loadIndicatorView&&[self.loadIndicatorView isAnimating]) {
-            [self.loadIndicatorView stopAnimating];
+        if (self.uploadIndicatorView&&[self.uploadIndicatorView isAnimating]) {
+            [self.uploadIndicatorView stopAnimating];
         }
     }
 }

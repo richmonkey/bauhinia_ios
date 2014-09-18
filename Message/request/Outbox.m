@@ -152,7 +152,8 @@
     if (data == nil) {
         return NO;
     }
-
+    
+    [self.messages addObject:msg];
     [APIRequest uploadAudio:data
                     success:^(NSString *url) {
                         [self.messages removeObject:msg];
