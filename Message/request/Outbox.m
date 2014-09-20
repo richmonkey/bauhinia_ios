@@ -13,6 +13,7 @@
 #import "IMService.h"
 #import "LevelDB.h"
 #import "PeerMessageDB.h"
+#import "wav_amr.h"
 
 @interface Outbox()
 @property(nonatomic) NSMutableArray *observers;
@@ -148,7 +149,20 @@
     FileCache *cache = [FileCache instance];
     NSString *path = [cache queryCacheForKey:msg.content.audio.url];
 
-    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSString *tmp = [NSString stringWithFormat:@"%@.amr", path];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:tmp]) {
+        const char *amr = [tmp UTF8String];
+        const char *wav = [path UTF8String];
+    
+        int r = encode_amr(wav, amr);
+        if (r != 0) {
+            return NO;
+        }
+
+    }
+
+    NSData *data = [NSData dataWithContentsOfFile:tmp];
     if (data == nil) {
         return NO;
     }

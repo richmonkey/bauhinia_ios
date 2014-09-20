@@ -292,16 +292,16 @@
     
     NSArray *pathComponents = [NSArray arrayWithObjects:
                                [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-                               @"MyAudioMemo.m4a",
+                               @"MyAudioMemo.wav",
                                nil];
     NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
     
     // Define the recorder setting
     NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
-    
-    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatMPEG4AAC] forKey:AVFormatIDKey];
-    [recordSetting setValue:[NSNumber numberWithFloat:44100.0] forKey:AVSampleRateKey];
-    [recordSetting setValue:[NSNumber numberWithInt: 2] forKey:AVNumberOfChannelsKey];
+
+    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey:AVFormatIDKey];
+    [recordSetting setValue:[NSNumber numberWithFloat:8000] forKey:AVSampleRateKey];
+    [recordSetting setValue:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
     
     self.recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:NULL];
     self.recorder.delegate = self;
@@ -679,6 +679,7 @@
 }
 
 -(BOOL)isM4A:(NSString*)path {
+    return YES;
     FILE *file = fopen([path UTF8String], "rb");
     if (!file) {
         return NO;
@@ -701,6 +702,7 @@
         return NO;
     }
 }
+
 -(void)AudioAction:(UIButton*)btn{
     int row = btn.tag & 0xffff;
     int section = (int)(btn.tag >> 16);
