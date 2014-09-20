@@ -39,18 +39,19 @@
 }
 
 - (void)setData:(id)newData{
-    //TODO  下载小图
     _data = newData;
-    
     if (_data) {
-        if(![[SDImageCache sharedImageCache] diskImageExistsWithKey:_data]){
+        //在原图URL后面添加"@{width}w_{heigth}h_{1|0}c", 支持128x128, 256x256
+        NSString *url = [NSString stringWithFormat:@"%@@128w_128h_0c", _data];
+        if(![[SDImageCache sharedImageCache] diskImageExistsWithKey:url]){
             self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
             CGRect bubbleFrame = [self bubbleFrame];
             [self.downloadIndicatorView setFrame: bubbleFrame];
             [self.downloadIndicatorView startAnimating];
             [self addSubview: self.downloadIndicatorView];
         }
-        [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:_data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+
+        [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:url] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (self.downloadIndicatorView&&[self.downloadIndicatorView isAnimating]) {
                 [self.downloadIndicatorView stopAnimating];
                 [self.downloadIndicatorView removeFromSuperview];
