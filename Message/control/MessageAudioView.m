@@ -66,8 +66,9 @@
         rect.size.width = kmicroBtnWidth;
         rect.size.height = kmicroBtnHeight;
         self.microPhoneBtn = [[UIButton alloc] initWithFrame:rect ];
-        [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicBlueIncoming"] forState:UIControlStateNormal];
+
         [self addSubview:self.microPhoneBtn];
+
         
     }
     return self;
@@ -83,6 +84,19 @@
     int second = self.msg.content.audio.duration%60;
     NSString *str = [NSString stringWithFormat:@"%02d:%02d",minute,second];
     [self.timeLengthLabel setText:str];
+   
+    if ([self.msg isListened]) {
+        [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicBlueIncoming"] forState:UIControlStateNormal];
+    }else{
+        [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicNewIncoming"] forState:UIControlStateNormal];
+    }
+    
+    if(self.type == BubbleMessageTypeOutgoing){
+        [self.microPhoneBtn setHidden:YES];
+    }else{
+        [self.microPhoneBtn setHidden:NO];
+    }
+    
 }
 
 
@@ -119,6 +133,12 @@
         [self.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
         self.progressView.progress = 0.0f;
     }
+}
+
+-(void)setListened{
+    
+    [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicBlueIncoming"] forState:UIControlStateNormal];
+    
 }
 
 #pragma mark - Drawing

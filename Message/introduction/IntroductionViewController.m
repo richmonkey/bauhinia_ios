@@ -38,7 +38,7 @@
 
 -(void)buildIntro{
     UIView *headerView = [[NSBundle mainBundle] loadNibNamed:@"header" owner:nil options:nil][0];
-    MYIntroductionPanel *panel1 = [[MYIntroductionPanel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"欢迎使用MESSAGE" description:@"让距离不在遥远!" image:[UIImage imageNamed:@"HeaderImage.png"] header:headerView];
+    MYIntroductionPanel *panel1 = [[MYIntroductionPanel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"欢迎使用MESSAGE" description:@"云中谁寄锦书来?雁字回时,月满西楼。" image:[UIImage imageNamed:@"HeaderImage.png"] header:headerView];
    
     UIView *headerViewtow = [[NSBundle mainBundle] loadNibNamed:@"header" owner:nil options:nil][0];
     MYIntroductionPanel *panel2 = [[MYIntroductionPanel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) title:@"说句知心话" description:@"语音骚扰下" image:[UIImage imageNamed:@"ForkImage.png"] header:headerViewtow];

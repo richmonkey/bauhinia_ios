@@ -17,17 +17,14 @@
 #define kNetStatusRow     0
 #define kClearAllConversationSection 3
 
+#define kClearAllContentTag  101
 
 #define kAboutCellTag                   100
-#define kTellFriendCellTag              101
 
 #define kProfileCellTag                 200
-#define kAccountCellTag                 201
-#define kConversationCellSettingTag     202
-#define knotificationCellTag            203
+#define kConversationCellSettingTag     201
 
 #define kNetStatusCellTag               300
-#define kSystemStatusCellTag            301
 
 #define kClearConversationCellTag       400
 
@@ -41,9 +38,9 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.cellTitleArray = @[ @[@"关于",@"告诉朋友"],
-                                 @[@"个人资讯",@"账号",@"会话设置",@"通知"],
-                                 @[@"网络状态",@"系统状态"],
+        self.cellTitleArray = @[ @"关于",
+                                 @[@"个人资讯",@"会话设置"],
+                                 @"网络状态",
                                  @"清除所有对话记录"
                                 ];
         [[IMService instance] addMessageObserver:self];
@@ -156,24 +153,12 @@
             [self.navigationController pushViewController:aboutController animated: YES];
         }
             break;
-        case kTellFriendCellTag:
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
-        }
-            break;
         case kProfileCellTag:
         {
             ProfileViewController * profileController = [[ProfileViewController alloc] init];
             profileController.editorState = ProfileEditorSettingType;
             profileController.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:profileController animated: YES];
-        }
-            break;
-        case kAccountCellTag:
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
         }
             break;
         case kConversationCellSettingTag:
@@ -185,27 +170,16 @@
             [self.navigationController pushViewController:conSettingController animated: YES];
         }
             break;
-        case knotificationCellTag:
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
-        }
-            break;
         case kNetStatusCellTag:
         {
 
         }
             break;
-        case kSystemStatusCellTag:
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
-        }
-            break;
         case kClearConversationCellTag:
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"确认" message:@"是否清除所有聊天记录?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
+            alertView.tag = kClearAllContentTag;
+            [alertView show];
         }
             break;
         default:
@@ -281,9 +255,22 @@
 
 }
 
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == kClearAllContentTag) {
+        if (buttonIndex == 0) {
+        //取消
+            
+        }else if(buttonIndex == 1){
+        //确认
+            
+        }
+    }
+}
+
+
+
 #pragma mark - UITableViewDelegate
-
-
 
 -(void) addActivityView:(UITableViewCell*)cell{
     if (cell.accessoryView&& [cell.accessoryView isKindOfClass:[UIActivityIndicatorView class]]){

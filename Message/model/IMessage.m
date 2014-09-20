@@ -99,6 +99,10 @@
     return self.flags&MESSAGE_FLAG_FAILURE;
 }
 
+-(BOOL)isListened{
+    return self.flags&MESSAGE_FLAG_LISTENED;
+}
+
 @end
 
 @implementation Conversation

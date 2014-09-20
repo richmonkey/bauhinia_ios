@@ -11,22 +11,22 @@
 #import "UserPresent.h"
 #import "APIRequest.h"
 #import "UserDB.h"
-
 #import "MBProgressHUD.h"
-
 #import "UIImage+Resize.h"
-
 #import "CustomStatusViewController.h"
-
-
+#import "SystemProperty.h"
 #import "MainTabBarController.h"
 #import "AppDelegate.h"
 
+#define kTakePicActionSheetTag  101
+
+
+
 @interface ProfileViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *headView;
-@property (weak, nonatomic) IBOutlet UITextField *nameTextField;
-@property (weak, nonatomic) IBOutlet UIButton *statusBtn;
-@property (weak, nonatomic) IBOutlet UIView *netStatusArea;
+@property (weak, nonatomic) IBOutlet UIImageView    *headView;
+@property (weak, nonatomic) IBOutlet UITextField    *nameTextField;
+@property (weak, nonatomic) IBOutlet UIButton       *statusBtn;
+@property (weak, nonatomic) IBOutlet UIView         *netStatusArea;
 
 @property  (nonatomic)               UIBarButtonItem *nextButton;
 
@@ -50,6 +50,8 @@
     [self setTitle:@"个人资讯"];
     
     [self.headView setUserInteractionEnabled: YES];
+    
+    [self.nameTextField setText: [SystemProperty instance].nameString];
     
     if ([UserPresent instance].avatarURL) {
         
@@ -101,11 +103,21 @@
 
 - (IBAction) editorHeadAction:(id)sender{
     
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate  = self;
-    picker.allowsEditing = YES;
-    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    [self presentViewController:picker animated:YES completion:NULL];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:nil
+                                  delegate:self
+                                  cancelButtonTitle:@"取消"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"摄像头拍照", @"从相册选取",nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    actionSheet.tag = kTakePicActionSheetTag;
+    [actionSheet showInView:self.view];
+    
+//    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+//    picker.delegate  = self;
+//    picker.allowsEditing = YES;
+//    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+//    [self presentViewController:picker animated:YES completion:NULL];
     
 }
 
@@ -120,7 +132,8 @@
 }
 
 -(IBAction) editorNameAction:(id)sender{
-  
+    
+    [[SystemProperty instance] setNameString:self.nameTextField.text];
     
 }
 
@@ -128,6 +141,7 @@
    
     CustomStatusViewController * ctr = [[CustomStatusViewController alloc] init];
    [self.navigationController pushViewController:ctr animated: YES];
+    
 }
 
 
@@ -168,6 +182,26 @@
     [UIView commitAnimations];
     
 }
+
+#pragma mark - UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (actionSheet.tag==kTakePicActionSheetTag) {
+        if (buttonIndex == 0) {
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.delegate  = self;
+            picker.allowsEditing = YES;
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [self presentViewController:picker animated:YES completion:NULL];
+        }else if(buttonIndex == 1){
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.delegate  = self;
+            picker.allowsEditing = YES;
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:picker animated:YES completion:NULL];
+        }
+    }
+}
+
 -(void) updateAvatar:(UIImage*)img theURL:(NSString*) url theMBHud:(MBProgressHUD*)hud{
     [APIRequest  updateAvatar:url
                       success:^{

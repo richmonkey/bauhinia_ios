@@ -1,7 +1,6 @@
 //
 //  ConversationSettingViewController.m
 //  Message
-//
 //  Created by 杨朋亮 on 14-9-14.
 //  Copyright (c) 2014年 daozhu. All rights reserved.
 //
@@ -9,11 +8,8 @@
 #import "ConversationSettingViewController.h"
 #import "DownLoadSettingViewController.h"
 
-#define kSetBackgroundCellTag             100
-#define kRetBackgroudnCellTag              101
-
-#define kAutoLoadPicCellTag               200
-#define kAutoLoadAudioCellTag             201
+#define kAutoLoadPicCellTag               100
+#define kAutoLoadAudioCellTag             101
 
 
 
@@ -32,7 +28,9 @@
     if (self) {
         
        [self setTitle:@"会话设置"];
-        self.cellTitleArray = @[@[@"聊天背景图" ,@"重置背景图"],@[@"自动下载音频",@"自动下载图片"]];
+        self.cellTitleArray = @[
+//  @[@"聊天背景图" ,@"重置背景图"],
+  @[@"自动下载音频",@"自动下载图片"]];
     }
     return self;
 }
@@ -96,20 +94,6 @@
     
     int cellTag = (indexPath.section + 1) *100 + indexPath.row;
     switch (cellTag) {
-        case kSetBackgroundCellTag:
-        {
-//            AboutViewController * aboutController = [[AboutViewController alloc] init];
-            
-//            aboutController.hidesBottomBarWhenPushed = YES;
-//            [self.navigationController pushViewController:aboutController animated: YES];
-        }
-            break;
-        case kRetBackgroudnCellTag:
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"  message:@"正在研发中.."  delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
-        }
-            break;
         case kAutoLoadPicCellTag:
         {
             DownLoadSettingViewController * downloadSetController = [[DownLoadSettingViewController alloc] init];
