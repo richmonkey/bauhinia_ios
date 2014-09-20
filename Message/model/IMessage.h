@@ -63,5 +63,6 @@
 @property(nonatomic)int type;
 @property(nonatomic, assign)int64_t cid;
 @property(nonatomic, copy)NSString *name;
+@property(nonatomic, copy)NSString *avatarURL;
 @property(nonatomic)IMessage *message;
 @end
