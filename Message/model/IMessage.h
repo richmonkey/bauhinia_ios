@@ -22,6 +22,7 @@
 #define MESSAGE_FLAG_FAILURE 8
 #define MESSAGE_FLAG_UPLOADING 16
 #define MESSAGE_FLAG_SENDING 32
+#define MESSAGE_FLAG_LISTENED 64
 
 @interface Audio : NSObject
 @property(nonatomic, copy) NSString *url;
@@ -52,6 +53,7 @@
 @property(nonatomic, readonly) BOOL isACK;
 @property(nonatomic, readonly) BOOL isPeerACK;
 @property(nonatomic, readonly) BOOL isFailure;
+@property(nonatomic)           BOOL isListened;
 @end
 
 

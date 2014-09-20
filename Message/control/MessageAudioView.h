@@ -28,4 +28,6 @@
 -(void)setPlaying:(BOOL)playing;
 -(void)setDownloading:(BOOL)downloading;
 -(void)setUploading:(BOOL)uploading;
+-(void)setListened;
+
 @end

@@ -29,6 +29,7 @@
 #import "LevelDB.h"
 #import "AudioDownloader.h"
 #import "ESImageViewController.h"
+#import "UIImage+Resize.h"
 
 #define INPUT_HEIGHT 46.0f
 
@@ -749,6 +750,12 @@
         MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
         FileCache *fileCache = [FileCache instance];
         NSString *url = message.content.audio.url;
+        
+        message.flags |= MESSAGE_FLAG_LISTENED;
+        if (message.receiver == [UserPresent instance].uid) {
+            [[PeerMessageDB instance] markPeerMesageListened:message.msgLocalID uid:message.sender];
+            [audioView setListened];
+        }
         NSString *path = [fileCache queryCacheForKey:url];
         if (path != nil && [self isM4A:path]) {
             // Setup audio session
@@ -922,7 +929,7 @@
         //当天
         int hour = [PublicFunc getHourComponentOfDate:curtDate];
         int minute = [PublicFunc getMinuteComponentOfDate:curtDate];
-        timeStr = [NSString stringWithFormat:@"%d:%d",hour,minute];
+        timeStr = [NSString stringWithFormat:@"%02d:%02d",hour,minute];
         sectionView.sectionHeader.text = timeStr;
         
     }else{
@@ -1074,8 +1081,11 @@
     msg.timestamp = (int)time(NULL);
 
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
 
     [[SDImageCache sharedImageCache] storeImage:image forKey:msg.content.imageURL];
+    NSString *littleUrl = [NSString stringWithFormat:@"%@@128w_128h_0c", msg.content.imageURL];
+    [[SDImageCache sharedImageCache] storeImage:sizeImage forKey: littleUrl];
     
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     

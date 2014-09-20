@@ -149,6 +149,11 @@
     return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_FAILURE];
 }
 
+-(BOOL)markPeerMesageListened:(int)msgLocalID uid:(int64_t)uid{
+    NSString *path = [self getPeerPath:uid];
+    return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_LISTENED];
+}
+
 
 -(id<IMessageIterator>)newPeerMessageIterator:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];
