@@ -51,11 +51,11 @@
     
     MYBlurIntroductionView *introductionView = [[MYBlurIntroductionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     introductionView.theDelegate = self;
+//    introductionView.backgroundColor = UIColorFromRGB(0x3d3e3e);
+    introductionView.BackgroundImageView.image = [UIImage imageNamed:@"introdutionBK.png"];
     
-    introductionView.BackgroundImageView.image = [UIImage imageNamed:@"pgyfy-1.png"];
     
-    
-    [introductionView setBackgroundColor:[UIColor colorWithRed:190.0f/255.0f green:175.0f/255.0f blue:113.0f/255.0f alpha:0]];
+//    [introductionView setBackgroundColor:[UIColor colorWithRed:190.0f/255.0f green:175.0f/255.0f blue:113.0f/255.0f alpha:0]];
     
     [introductionView buildIntroductionWithPanels:panels];
     

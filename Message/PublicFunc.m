@@ -148,6 +148,42 @@
 	return [formatter stringFromDate:date];
 }
 
++(NSString *) getConversationTimeString:(NSDate *)date{
+    
+    NSMutableString *outStr;
+    NSCalendar *gregorian = [[NSCalendar alloc]
+                             initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [gregorian components:NSUIntegerMax fromDate:date];
+    NSDateComponents *todayComponents = [gregorian components:NSIntegerMax fromDate:[NSDate date]];
+    
+    
+    if (components.year == todayComponents.year && components.day == todayComponents.day && components.month == todayComponents.month) {
+        
+        NSString *format = @"HH:mm";
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+        [formatter setDateFormat:format];
+        [formatter setTimeZone:[NSTimeZone systemTimeZone]];
+        
+        NSString *timeStr = [formatter stringFromDate:date];
+        
+        if (components.hour > 11) {
+           //下午
+            outStr = [NSMutableString stringWithFormat:@"%@ %@",@"下午",timeStr];
+        }else{
+           //上午
+            outStr = [NSMutableString stringWithFormat:@"%@ %@",@"上午",timeStr];
+        }
+         return outStr;
+    }else{
+        NSString *format = @"MM-dd HH:mm";
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+        [formatter setDateFormat:format];
+        [formatter setTimeZone:[NSTimeZone systemTimeZone]];
+        
+        return [formatter stringFromDate:date];
+    }
+}
+
 +(NSString *) getShowTimeString:(NSDate *)date format:(NSString *)strFormat {
 	NSString *format = strFormat;
 	if (nil == format) {

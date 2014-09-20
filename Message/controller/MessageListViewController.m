@@ -168,8 +168,8 @@
     
     
     NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
-    
-    cell.timelabel.text = [PublicFunc getTimeString:date format:@"yy-mm-dd"];
+    NSString *str = [PublicFunc getConversationTimeString:date ];
+    cell.timelabel.text = str;
     cell.namelabel.text = covn.name; 
     
     cell.delegate = self;

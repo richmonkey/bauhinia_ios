@@ -27,6 +27,7 @@
 +(NSString *) getCurrentTimeWithFormat:(NSString *)strFormat;
 +(NSString *) getEndTimeInTheDayWithFormat:(NSString *)strFormat;
 +(NSString *) getTimeString:(NSDate *)date format:(NSString *)strFormat;
++(NSString *) getConversationTimeString:(NSDate *)dat;
 +(NSString *) getShowTimeString:(NSDate *)date format:(NSString *)strFormat;
 +(NSDate *)getZeroDate;
 +(NSDate *)get1970Date;

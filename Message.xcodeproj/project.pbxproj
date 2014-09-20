@@ -129,6 +129,7 @@
 		48C20EEB19BFE81C009494A1 /* ESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EE819BFE81C009494A1 /* ESImageViewController.m */; };
 		48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */; };
 		48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */; };
+		48FB25B919CD8DBD001B1E75 /* introdutionBK.png in Resources */ = {isa = PBXBuildFile; fileRef = 48FB25B819CD8DBD001B1E75 /* introdutionBK.png */; };
 		6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76771967B8AC0058DECF /* AsyncTCP.m */; };
 		6D0D76841967B8AC0058DECF /* IMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767B1967B8AC0058DECF /* IMService.m */; };
 		6D0D76851967B8AC0058DECF /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767D1967B8AC0058DECF /* Message.m */; };
@@ -374,6 +375,7 @@
 		48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESModalImageViewAnimationController.m; sourceTree = "<group>"; };
 		48C20EED19BFF6CA009494A1 /* MessageAudioView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageAudioView.h; sourceTree = "<group>"; };
 		48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageAudioView.m; sourceTree = "<group>"; };
+		48FB25B819CD8DBD001B1E75 /* introdutionBK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = introdutionBK.png; sourceTree = "<group>"; };
 		6D0D76761967B8AC0058DECF /* AsyncTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTCP.h; sourceTree = "<group>"; };
 		6D0D76771967B8AC0058DECF /* AsyncTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncTCP.m; sourceTree = "<group>"; };
 		6D0D767A1967B8AC0058DECF /* IMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMService.h; sourceTree = "<group>"; };
@@ -860,6 +862,7 @@
 		48338B4519C593D600BA2392 /* introduction */ = {
 			isa = PBXGroup;
 			children = (
+				48FB25B819CD8DBD001B1E75 /* introdutionBK.png */,
 				48731E1419C5DA0D00FF8A7C /* pic333.png */,
 				489949A719C5A1F900A3A576 /* pgyfy-1.png */,
 				48338B4619C593D600BA2392 /* ForkImage.png */,
@@ -1100,6 +1103,7 @@
 				48338B5119C593D600BA2392 /* HeaderImage.png in Resources */,
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
+				48FB25B919CD8DBD001B1E75 /* introdutionBK.png in Resources */,
 				48338B3319C521A600BA2392 /* ConversationSettingViewController.xib in Resources */,
 				48731E1B19C5E95400FF8A7C /* AskPhoneNumberViewController.xib in Resources */,
 				48338B5619C593D600BA2392 /* TestPanel3.xib in Resources */,

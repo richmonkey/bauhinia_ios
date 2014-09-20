@@ -35,15 +35,15 @@
     application.statusBarHidden = NO;
     
     
-    Token *token = [Token instance];
-    if (token.accessToken) {
-        UITabBarController *tabController = [[MainTabBarController alloc] init];
-        self.tabBarController = tabController;
-        self.window.rootViewController = tabController;
-    } else {
+//    Token *token = [Token instance];
+//    if (token.accessToken) {
+//        UITabBarController *tabController = [[MainTabBarController alloc] init];
+//        self.tabBarController = tabController;
+//        self.window.rootViewController = tabController;
+//    } else {
         IntroductionViewController *ctrl = [[IntroductionViewController alloc] init];
         self.window.rootViewController = ctrl;
-    }
+//    }
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
