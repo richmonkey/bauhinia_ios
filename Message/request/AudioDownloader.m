@@ -9,6 +9,7 @@
 #import "AudioDownloader.h"
 #import "TAHttpOperation.h"
 #import "FileCache.h"
+#import "wav_amr.h"
 
 @interface AudioDownloader()
 @property(nonatomic)NSMutableArray *observers;
@@ -93,7 +94,17 @@
                     [self.messages removeObject:msg];
                     FileCache *cache = [FileCache instance];
                     [cache storeFile:data forKey:msg.content.audio.url];
-                    [self onDownloadSuccess:msg];
+                    
+                    NSString *amr_path = [cache queryCacheForKey:msg.content.audio.url];
+                    NSString *wav_path = [NSString stringWithFormat:@"%@.wav", amr_path];
+                    int r = decode_amr([amr_path UTF8String], [wav_path UTF8String]);
+                    if (r != 0) {
+                        [self onDownloadFail:msg];
+                    } else {
+                        [cache.fileManager removeItemAtPath:amr_path error:nil];
+                        [cache.fileManager moveItemAtPath:wav_path toPath:amr_path error:nil];
+                        [self onDownloadSuccess:msg];
+                    }
                 }
                    fail:^{
                        [self.messages removeObject:msg];

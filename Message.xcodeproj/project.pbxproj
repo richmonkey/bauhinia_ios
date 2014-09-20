@@ -153,6 +153,10 @@
 		6D76216F198362DE00B690D7 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76216D198362DE00B690D7 /* LoginViewController.m */; };
 		6D762170198362DE00B690D7 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D76216E198362DE00B690D7 /* LoginViewController.xib */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
+		6DA2CEB119CD7F2C0056A084 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DA2CEA919CD7F2C0056A084 /* libopencore-amrnb.a */; };
+		6DA2CEB319CD7F2C0056A084 /* wav_amr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6DA2CEAB19CD7F2C0056A084 /* wav_amr.c */; };
+		6DA2CEB419CD7F2C0056A084 /* wavreader.c in Sources */ = {isa = PBXBuildFile; fileRef = 6DA2CEAD19CD7F2C0056A084 /* wavreader.c */; };
+		6DA2CEB519CD7F2C0056A084 /* wavwriter.c in Sources */ = {isa = PBXBuildFile; fileRef = 6DA2CEAF19CD7F2C0056A084 /* wavwriter.c */; };
 		6DB0AA2719BF50BA0027A658 /* MessageViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA2619BF50BA0027A658 /* MessageViewCell.m */; };
 		6DB0AA2A19BF54F00027A658 /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA2919BF54F00027A658 /* BubbleView.m */; };
 		6DB0AA2D19BF558D0027A658 /* MessageTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA2C19BF558D0027A658 /* MessageTextView.m */; };
@@ -431,6 +435,15 @@
 		6D76216E198362DE00B690D7 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
+		6DA2CEA719CD7F2C0056A084 /* interf_dec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interf_dec.h; sourceTree = "<group>"; };
+		6DA2CEA819CD7F2C0056A084 /* interf_enc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interf_enc.h; sourceTree = "<group>"; };
+		6DA2CEA919CD7F2C0056A084 /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopencore-amrnb.a"; sourceTree = "<group>"; };
+		6DA2CEAB19CD7F2C0056A084 /* wav_amr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wav_amr.c; sourceTree = "<group>"; };
+		6DA2CEAC19CD7F2C0056A084 /* wav_amr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wav_amr.h; sourceTree = "<group>"; };
+		6DA2CEAD19CD7F2C0056A084 /* wavreader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wavreader.c; sourceTree = "<group>"; };
+		6DA2CEAE19CD7F2C0056A084 /* wavreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wavreader.h; sourceTree = "<group>"; };
+		6DA2CEAF19CD7F2C0056A084 /* wavwriter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wavwriter.c; sourceTree = "<group>"; };
+		6DA2CEB019CD7F2C0056A084 /* wavwriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wavwriter.h; sourceTree = "<group>"; };
 		6DB0AA2519BF50BA0027A658 /* MessageViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewCell.h; sourceTree = "<group>"; };
 		6DB0AA2619BF50BA0027A658 /* MessageViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewCell.m; sourceTree = "<group>"; };
 		6DB0AA2819BF54F00027A658 /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleView.h; sourceTree = "<group>"; };
@@ -461,6 +474,7 @@
 				6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */,
 				2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
+				6DA2CEB119CD7F2C0056A084 /* libopencore-amrnb.a in Frameworks */,
 				6D7621651981626900B690D7 /* libleveldb.a in Frameworks */,
 				2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */,
 				217261981954155000F09E33 /* AddressBook.framework in Frameworks */,
@@ -654,6 +668,7 @@
 		2142CB0C1962683E0002E4A9 /* backend */ = {
 			isa = PBXGroup;
 			children = (
+				6DA2CEA619CD7F2C0056A084 /* amr */,
 				6D0D76881967C1430058DECF /* leveldb */,
 				6D0D76751967B8AC0058DECF /* im_sdk */,
 				2142CB52196268860002E4A9 /* contact */,
@@ -979,6 +994,22 @@
 			path = leveldb;
 			sourceTree = "<group>";
 		};
+		6DA2CEA619CD7F2C0056A084 /* amr */ = {
+			isa = PBXGroup;
+			children = (
+				6DA2CEA719CD7F2C0056A084 /* interf_dec.h */,
+				6DA2CEA819CD7F2C0056A084 /* interf_enc.h */,
+				6DA2CEA919CD7F2C0056A084 /* libopencore-amrnb.a */,
+				6DA2CEAB19CD7F2C0056A084 /* wav_amr.c */,
+				6DA2CEAC19CD7F2C0056A084 /* wav_amr.h */,
+				6DA2CEAD19CD7F2C0056A084 /* wavreader.c */,
+				6DA2CEAE19CD7F2C0056A084 /* wavreader.h */,
+				6DA2CEAF19CD7F2C0056A084 /* wavwriter.c */,
+				6DA2CEB019CD7F2C0056A084 /* wavwriter.h */,
+			);
+			path = amr;
+			sourceTree = "<group>";
+		};
 		6DB0AA3419C0A5D50027A658 /* Reachability */ = {
 			isa = PBXGroup;
 			children = (
@@ -1159,6 +1190,7 @@
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
 				6D76215D197ECA9300B690D7 /* PeerMessageHandler.m in Sources */,
+				6DA2CEB419CD7F2C0056A084 /* wavreader.c in Sources */,
 				48731E1A19C5E95400FF8A7C /* AskPhoneNumberViewController.m in Sources */,
 				48AED77B19CB2A3900DB447F /* UIImageView+HighlightedWebCache.m in Sources */,
 				6D762161197ECAE800B690D7 /* MessageDB.m in Sources */,
@@ -1202,6 +1234,7 @@
 				6D0D76871967B8AC0058DECF /* util.c in Sources */,
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				2173C66519738745004A88A5 /* SDWebImageDecoder.m in Sources */,
+				6DA2CEB519CD7F2C0056A084 /* wavwriter.c in Sources */,
 				48338B5419C593D600BA2392 /* IntroductionViewController.m in Sources */,
 				6D76215A197ECA9300B690D7 /* IMessage.m in Sources */,
 				6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */,
@@ -1215,6 +1248,7 @@
 				6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */,
 				6D0D76851967B8AC0058DECF /* Message.m in Sources */,
 				2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */,
+				6DA2CEB319CD7F2C0056A084 /* wav_amr.c in Sources */,
 				2173C66D19738745004A88A5 /* UIImage+WebP.m in Sources */,
 				21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */,
 				210564D719695FC1008D3A83 /* NSString+JSMessagesView.m in Sources */,
@@ -1373,8 +1407,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
@@ -1382,9 +1416,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Message/backend/leveldb",
+					"$(PROJECT_DIR)/Message/backend/amr",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
@@ -1405,9 +1440,10 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Message/backend/leveldb",
+					"$(PROJECT_DIR)/Message/backend/amr",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
