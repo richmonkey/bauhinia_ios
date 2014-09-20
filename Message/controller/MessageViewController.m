@@ -28,6 +28,7 @@
 #import "Outbox.h"
 #import "LevelDB.h"
 #import "AudioDownloader.h"
+#import "ESImageViewController.h"
 
 #define INPUT_HEIGHT 46.0f
 
@@ -778,6 +779,24 @@
 }
 
 
+- (void) handleTapImageView:(UITapGestureRecognizer*)tap{
+    int row = tap.view.tag & 0xffff;
+    int section = (int)(tap.view.tag >> 16);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return;
+    }
+    
+    if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:message.content.imageURL]) {
+        UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: message.content.imageURL];
+        ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
+        [imgcontroller setImage:cacheImg];
+        [imgcontroller setTappedThumbnail:tap.view];
+        [self presentViewController:imgcontroller animated:YES completion:nil];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -796,10 +815,15 @@
             MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
             [audioView.microPhoneBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
             [audioView.playBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
+        } else if(message.content.type == MESSAGE_IMAGE) {
+            UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapImageView:)];
+            [tap setNumberOfTouchesRequired: 1];
+            MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
+            [imageView.imageView addGestureRecognizer:tap];
         }
     }
 
-    [cell setMessage:message andDelegate:self];
+    [cell setMessage:message];
     
     if (message.content.type == MESSAGE_AUDIO) {
         MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
@@ -818,6 +842,7 @@
         [audioView setDownloading:[[AudioDownloader instance] isDownloading:message]];
     } else if (message.content.type == MESSAGE_IMAGE) {
         MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
+        imageView.imageView.tag = indexPath.section<<16 | indexPath.row;
         [imageView setUploading:[[Outbox instance] isUploading:message]];
     }
     return cell;

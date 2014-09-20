@@ -13,6 +13,6 @@
 
 -(id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier;
 
-- (void) setMessage:(IMessage *)message andDelegate:(UIViewController*)del;
+- (void) setMessage:(IMessage *)message;
 
 @end

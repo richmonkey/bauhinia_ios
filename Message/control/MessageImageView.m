@@ -29,15 +29,6 @@
     return self;
 }
 
-- (void) setDelegte:(UIViewController*)del{
-    
-    self.dgtController = del;
-    UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [tap setNumberOfTouchesRequired: 1];
-    [self.imageView addGestureRecognizer: tap];
-    
-}
-
 - (void)setData:(id)newData{
     _data = newData;
     if (_data) {
@@ -58,7 +49,6 @@
             }
         }];
     }
-    
     
     [self setNeedsDisplay];
 }
@@ -96,21 +86,6 @@
                       floorf(bubbleSize.width),
                       floorf(bubbleSize.height));
     
-}
-
-
-- (void) handleTap:(UITapGestureRecognizer*)tap{
-    if (self.dgtController) {
-        if ([tap.view isKindOfClass:[UIImageView class]]) {
-            if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:self.data]) {
-                UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: self.data];
-                ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
-                [imgcontroller setImage:cacheImg];
-                [imgcontroller setTappedThumbnail:self];
-                [self.dgtController presentViewController:imgcontroller animated:YES completion:nil];
-            }
-        }
-    }
 }
 
 -(void) setUploading:(BOOL)uploading {
