@@ -21,6 +21,8 @@
 #define kClearStatusCellSection 2
 #define kClearSelfDefineStatusCellRow  0
 
+#define kRedColor    RGBCOLOR(207,6,6)
+
 @interface CustomStatusViewController ()
 
 @end
@@ -95,7 +97,6 @@
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"definestatuscell"];
             }
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             [cell.textLabel setText: self.currentStatus];
             
         }else{
@@ -117,7 +118,7 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"clearcell"];
             [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
-            [cell.textLabel setTextColor:[UIColor redColor]];
+            [cell.textLabel setTextColor:kRedColor];
             [cell.textLabel setText:@"清除自定义状态"];
         }
     }

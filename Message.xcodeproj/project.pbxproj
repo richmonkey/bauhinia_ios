@@ -129,6 +129,7 @@
 		48C20EEB19BFE81C009494A1 /* ESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EE819BFE81C009494A1 /* ESImageViewController.m */; };
 		48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */; };
 		48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */; };
+		48D5AB2519CDD07100A288F9 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D5AB2419CDD07100A288F9 /* UIView+Toast.m */; };
 		48FB25B919CD8DBD001B1E75 /* introdutionBK.png in Resources */ = {isa = PBXBuildFile; fileRef = 48FB25B819CD8DBD001B1E75 /* introdutionBK.png */; };
 		6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76771967B8AC0058DECF /* AsyncTCP.m */; };
 		6D0D76841967B8AC0058DECF /* IMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767B1967B8AC0058DECF /* IMService.m */; };
@@ -379,6 +380,8 @@
 		48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESModalImageViewAnimationController.m; sourceTree = "<group>"; };
 		48C20EED19BFF6CA009494A1 /* MessageAudioView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageAudioView.h; sourceTree = "<group>"; };
 		48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageAudioView.m; sourceTree = "<group>"; };
+		48D5AB2319CDD07100A288F9 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		48D5AB2419CDD07100A288F9 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
 		48FB25B819CD8DBD001B1E75 /* introdutionBK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = introdutionBK.png; sourceTree = "<group>"; };
 		6D0D76761967B8AC0058DECF /* AsyncTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTCP.h; sourceTree = "<group>"; };
 		6D0D76771967B8AC0058DECF /* AsyncTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncTCP.m; sourceTree = "<group>"; };
@@ -533,6 +536,7 @@
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
+				48D5AB2219CDD07100A288F9 /* Toast */,
 				489949A919C5A9FB00A3A576 /* SWParallaxScrollView */,
 				48338B3E19C5938A00BA2392 /* MYBlurIntroductionView */,
 				489933DA19C47F5200C56F2D /* UIImage+Resize.h */,
@@ -962,6 +966,15 @@
 			path = Titanium;
 			sourceTree = "<group>";
 		};
+		48D5AB2219CDD07100A288F9 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				48D5AB2319CDD07100A288F9 /* UIView+Toast.h */,
+				48D5AB2419CDD07100A288F9 /* UIView+Toast.m */,
+			);
+			path = Toast;
+			sourceTree = "<group>";
+		};
 		6D0D76751967B8AC0058DECF /* im_sdk */ = {
 			isa = PBXGroup;
 			children = (
@@ -1206,6 +1219,7 @@
 				6DB0AA2719BF50BA0027A658 /* MessageViewCell.m in Sources */,
 				6DB0AA3319BF6B710027A658 /* UIImage+JSMessagesView.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
+				48D5AB2519CDD07100A288F9 /* UIView+Toast.m in Sources */,
 				21050A3819741B1900F26E43 /* PublicFunc.m in Sources */,
 				2173C66B19738745004A88A5 /* UIImage+GIF.m in Sources */,
 				48338B5219C593D600BA2392 /* MYCustomPanel.m in Sources */,
@@ -1411,8 +1425,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
@@ -1423,7 +1437,7 @@
 					"$(PROJECT_DIR)/Message/backend/amr",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;
@@ -1447,7 +1461,7 @@
 					"$(PROJECT_DIR)/Message/backend/amr",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3C196E16-2F1A-488C-BC6F-BA3F5A34C009";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				WRAPPER_EXTENSION = app;

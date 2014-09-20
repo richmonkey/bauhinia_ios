@@ -30,6 +30,7 @@
 #import "AudioDownloader.h"
 #import "ESImageViewController.h"
 #import "UIImage+Resize.h"
+#import "SystemProperty.h"
 
 #define INPUT_HEIGHT 46.0f
 
@@ -66,7 +67,7 @@
         CGRect screenBounds = [[UIScreen mainScreen] bounds];
         int w = CGRectGetWidth(screenBounds);
         int h = CGRectGetHeight(screenBounds);
-        self.tableFrame = CGRectMake(0.0f, KNavigationBarHeight + kStatusBarHeight, w,  h - INPUT_HEIGHT - KNavigationBarHeight - kStatusBarHeight);
+        self.tableFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT);
         self.inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
     }
     return self;
@@ -101,6 +102,7 @@
     [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
     [[IMService instance] subscribeState:self.remoteUser.uid];
+    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -126,9 +128,12 @@
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView setBackgroundColor:[UIColor clearColor]];
-    
-    UIImageView *bgColor = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bakground"]];
-    [self.view addSubview: bgColor];
+   
+    //背景图
+    if ([[SystemProperty instance] backgroundString].length != 0) {
+       UIImage *img = [UIImage imageWithContentsOfFile:[[SystemProperty instance]backgroundString]];
+        [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:img ]  ];
+    }
     
 	[self.view addSubview:self.tableView];
 	
@@ -212,6 +217,7 @@
 {
     self.tableView = nil;
     self.inputToolBarView = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - View rotation

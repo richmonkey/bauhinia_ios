@@ -13,6 +13,12 @@
 
 #define SETCOLOR(RED,GREEN,BLUE) [UIColor colorWithRed:RED/255 green:GREEN/255 blue:BLUE/255 alpha:1.0]
 
+//RGB颜色
+#define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
+//RGB颜色和不透明度
+#define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f \
+alpha:(a)]
+
 //Address Book contact
 #define KPHONELABELDICDEFINE		@"KPhoneLabelDicDefine"
 #define KPHONENUMBERDICDEFINE	@"KPhoneNumberDicDefine"
@@ -27,7 +33,6 @@
 
 #define CREATE_NEW_CONVERSATION @"creat_new_conversation"
 #define SEND_FIRST_MESSAGE_OK   @"send_first_message_ok"
-
 
 
 #endif

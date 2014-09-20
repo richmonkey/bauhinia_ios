@@ -28,6 +28,9 @@
 
 #define kClearConversationCellTag       400
 
+#define kGreenColor  RGBCOLOR(48,176,87)
+#define kRedColor    RGBCOLOR(207,6,6)
+
 @interface SettingViewController ()
 
 @end
@@ -107,7 +110,7 @@
             if ([[IMService instance] connectState] != STATE_CONNECTED) {
                 [self addActivityView:cell];
             }else{
-                [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+                [cell.detailTextLabel setTextColor: kGreenColor];
                 [cell.detailTextLabel setText:@"已链接"];
             }
             
@@ -126,7 +129,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"clearcell"];
             cell.tag = (indexPath.section + 1) * 100 + indexPath.row;
             [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
-            [cell.textLabel setTextColor:[UIColor redColor]];
+            [cell.textLabel setTextColor:kRedColor];
         }
     }
     
@@ -218,33 +221,33 @@
 }
 
 -(void) onConnectState:(int)state {
-   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:kNetStatusSection inSection:kNetStatusRow];
+   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:kNetStatusRow inSection:kNetStatusSection];
     UITableViewCell *cell  = [self.tableView cellForRowAtIndexPath:indexPath];
     switch (state) {
         case STATE_UNCONNECTED:
         {
-            [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+            [cell.detailTextLabel setTextColor:kGreenColor];
             [cell.detailTextLabel setText:@"未链接.."];
             [self hideActivityView:cell];
         }
             break;
         case STATE_CONNECTING :
         {
-            [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+            [cell.detailTextLabel setTextColor:kGreenColor];
             [cell.detailTextLabel setText:@""];
             [self addActivityView:cell];
         }
             break;
         case STATE_CONNECTED :
         {
-            [cell.detailTextLabel setTextColor:[UIColor greenColor]];
+            [cell.detailTextLabel setTextColor:kGreenColor];
             [cell.detailTextLabel setText:@"已链接"];
             [self hideActivityView:cell];
         }
             break;
         case STATE_CONNECTFAIL :
         {
-            [cell.detailTextLabel setTextColor:[UIColor redColor]];
+            [cell.detailTextLabel setTextColor:kRedColor];
             [cell.detailTextLabel setText:@"未链接"];
             [self hideActivityView:cell];
         }
@@ -287,7 +290,8 @@
 
 -(void)hideActivityView:(UITableViewCell*)cell{
     if(cell.accessoryView&&[cell.accessoryView isKindOfClass:[UIActivityIndicatorView class]]){
-        [(UIActivityIndicatorView*)cell stopAnimating];
+        [(UIActivityIndicatorView*)cell.accessoryView stopAnimating];
+        cell.accessoryView = nil;
     }
 }
 

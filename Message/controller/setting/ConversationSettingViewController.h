@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ConversationSettingViewController : UIViewController
+@interface ConversationSettingViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @end

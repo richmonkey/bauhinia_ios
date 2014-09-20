@@ -16,5 +16,6 @@
 @property (nonatomic) NSNumber *loadImageSetting;
 @property (nonatomic) NSString *ImgBackgroundSetting;
 @property (nonatomic) NSString *nameString;
+@property (nonatomic) NSString *backgroundString;
 
 @end

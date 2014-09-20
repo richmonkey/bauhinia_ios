@@ -17,9 +17,7 @@
 #import "MainTabBarController.h"
 #import "PeerMessageHandler.h"
 #import "GroupMessageHandler.h"
-
-#import "IntroductionViewController.h"
-
+#import "AskPhoneNumberViewController.h"
 
 @implementation AppDelegate
 
@@ -35,15 +33,17 @@
     application.statusBarHidden = NO;
     
     
-//    Token *token = [Token instance];
-//    if (token.accessToken) {
-//        UITabBarController *tabController = [[MainTabBarController alloc] init];
-//        self.tabBarController = tabController;
-//        self.window.rootViewController = tabController;
-//    } else {
-        IntroductionViewController *ctrl = [[IntroductionViewController alloc] init];
-        self.window.rootViewController = ctrl;
-//    }
+    Token *token = [Token instance];
+    if (token.accessToken) {
+        UITabBarController *tabController = [[MainTabBarController alloc] init];
+        self.tabBarController = tabController;
+        self.window.rootViewController = tabController;
+    }else{
+        AskPhoneNumberViewController *ctl = [[AskPhoneNumberViewController alloc] init];
+        UINavigationController * navCtr = [[UINavigationController alloc] initWithRootViewController: ctl];
+        self.window.rootViewController = navCtr;
+    }
+    
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

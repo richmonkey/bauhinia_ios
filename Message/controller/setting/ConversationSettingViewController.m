@@ -7,9 +7,14 @@
 
 #import "ConversationSettingViewController.h"
 #import "DownLoadSettingViewController.h"
+#import "UIImage+Resize.h"
+#import "SystemProperty.h"
+#import "UIView+Toast.h"
 
-#define kAutoLoadPicCellTag               100
-#define kAutoLoadAudioCellTag             101
+#define kSetBackgroundCellTag             100
+#define kRetBackgroudnCellTag              101
+#define kAutoLoadPicCellTag               200
+#define kAutoLoadAudioCellTag             201
 
 
 
@@ -29,7 +34,7 @@
         
        [self setTitle:@"会话设置"];
         self.cellTitleArray = @[
-//  @[@"聊天背景图" ,@"重置背景图"],
+  @[@"聊天背景图" ,@"重置背景图"],
   @[@"自动下载音频",@"自动下载图片"]];
     }
     return self;
@@ -94,6 +99,23 @@
     
     int cellTag = (indexPath.section + 1) *100 + indexPath.row;
     switch (cellTag) {
+        case kSetBackgroundCellTag:
+        {
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.delegate  = self;
+            picker.allowsEditing = NO;
+            picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+            [self presentViewController:picker animated:YES completion:NULL];
+        }
+            break;
+        case kRetBackgroudnCellTag:
+        {
+            if ( [[SystemProperty instance] backgroundString].length != 0) {
+                [[SystemProperty instance] setBackgroundString:@""];
+                [self.view makeToast:@"背景图设置成功!" duration:1.0 position:@"bottom"];
+            }
+        }
+            break;
         case kAutoLoadPicCellTag:
         {
             DownLoadSettingViewController * downloadSetController = [[DownLoadSettingViewController alloc] init];
@@ -117,7 +139,32 @@
         default:
             break;
     }
+}
+
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo{
+    NSLog(@"Chose image!  Details:  %@", image);
+    CGSize size = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+    UIImage *sizeImg = [image resizedImage:size interpolationQuality: kCGInterpolationDefault];
+   
+    // Create path.
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"bk.png"];
     
+    // Save image.
+    [UIImagePNGRepresentation(sizeImg) writeToFile:filePath atomically:YES];
+    [[SystemProperty instance] setBackgroundString:filePath];
+    
+    [self.view makeToast:@"背景图设置成功!" duration:1.0 position:@"bottom"];
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
+    
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
     
 }
 
