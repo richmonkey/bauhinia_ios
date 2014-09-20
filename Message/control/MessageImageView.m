@@ -29,35 +29,26 @@
     return self;
 }
 
-- (void) setDelegte:(UIViewController*)del{
-    
-    self.dgtController = del;
-    UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [tap setNumberOfTouchesRequired: 1];
-    [self.imageView addGestureRecognizer: tap];
-    
-}
-
 - (void)setData:(id)newData{
-    //TODO  下载小图
     _data = newData;
-    
     if (_data) {
-        if(![[SDImageCache sharedImageCache] diskImageExistsWithKey:_data]){
+        //在原图URL后面添加"@{width}w_{heigth}h_{1|0}c", 支持128x128, 256x256
+        NSString *url = [NSString stringWithFormat:@"%@@128w_128h_0c", _data];
+        if(![[SDImageCache sharedImageCache] diskImageExistsWithKey:url]){
             self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
             CGRect bubbleFrame = [self bubbleFrame];
             [self.downloadIndicatorView setFrame: bubbleFrame];
             [self.downloadIndicatorView startAnimating];
             [self addSubview: self.downloadIndicatorView];
         }
-        [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:_data] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+
+        [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:url] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (self.downloadIndicatorView&&[self.downloadIndicatorView isAnimating]) {
                 [self.downloadIndicatorView stopAnimating];
                 [self.downloadIndicatorView removeFromSuperview];
             }
         }];
     }
-    
     
     [self setNeedsDisplay];
 }
@@ -95,21 +86,6 @@
                       floorf(bubbleSize.width),
                       floorf(bubbleSize.height));
     
-}
-
-
-- (void) handleTap:(UITapGestureRecognizer*)tap{
-    if (self.dgtController) {
-        if ([tap.view isKindOfClass:[UIImageView class]]) {
-            if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:self.data]) {
-                UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: self.data];
-                ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
-                [imgcontroller setImage:cacheImg];
-                [imgcontroller setTappedThumbnail:self];
-                [self.dgtController presentViewController:imgcontroller animated:YES completion:nil];
-            }
-        }
-    }
 }
 
 -(void) setUploading:(BOOL)uploading {

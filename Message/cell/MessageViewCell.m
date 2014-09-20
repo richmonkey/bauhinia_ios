@@ -77,10 +77,7 @@
 
 #pragma mark - Message Cell
 
-- (void) setMessage:(IMessage *)message andDelegate:(UIViewController*)del{
-    
-    self.dgtController = del;
-    
+- (void) setMessage:(IMessage *)message{
     BubbleMessageType msgType;
     if(message.sender == [UserPresent instance].uid){
         msgType = BubbleMessageTypeOutgoing;
@@ -113,7 +110,6 @@
             msgImageView.data = message.content.imageURL;
             msgImageView.type = msgType;
             msgImageView.msgStateType = state;
-            [msgImageView setDelegte:self.dgtController];
         }
             break;
         case MESSAGE_AUDIO:
