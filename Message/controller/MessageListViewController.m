@@ -86,6 +86,7 @@
     while (conversation) {
         IMUser *user = [db loadUser:conversation.cid];
         conversation.name = [user displayName];
+        conversation.avatarURL = user.avatarURL;
         [self.conversations addObject:conversation];
         conversation = [iterator next];
     }
@@ -150,12 +151,11 @@
         covn =   (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
     }
     
-    IMUser *currentUser =  [[UserDB instance] loadUser:covn.cid];
+
     
-    [cell.headView sd_setImageWithURL: [NSURL URLWithString: currentUser.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+    [cell.headView sd_setImageWithURL: [NSURL URLWithString:covn.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
     
-    
-    cell.namelabel.text = [currentUser displayName];
+
     if (covn.message.content.type == MESSAGE_IMAGE) {
         cell.messageContent.text = @"一张图片";
     }else if(covn.message.content.type == MESSAGE_TEXT){
@@ -170,7 +170,7 @@
     NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
     
     cell.timelabel.text = [PublicFunc getTimeString:date format:@"yy-mm-dd"];
-    cell.namelabel.text = covn.name; 
+    cell.namelabel.text = covn.name;
     
     cell.delegate = self;
     
@@ -384,8 +384,8 @@
         
         UserDB *db = [UserDB instance];
         IMUser *user = [db loadUser:con.cid];
-        con.name = user.contact.contactName;
-        
+        con.name = [user displayName];
+        con.avatarURL = user.avatarURL;
         [self.conversations insertObject:con atIndex:0];
         NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
         NSArray *array = [NSArray arrayWithObject:path];
