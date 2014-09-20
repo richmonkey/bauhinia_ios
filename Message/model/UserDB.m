@@ -74,13 +74,18 @@
     
     if (!u.phoneNumber.isValid) {
         NSString *s = [NSString stringWithFormat:@"%lld", u.uid];
-        NSArray *array = [s componentsSeparatedByString:@"0"];
-        if ([array count] != 2) {
+        NSRange range = [s rangeOfString:@"0"];
+        if (range.length == 0) {
             return nil;
         }
+        
+
+        NSRange r1 = NSMakeRange(0, range.location);
+        NSString *zone = [s substringWithRange:r1];
+        NSString *n = [s substringFromIndex:range.location + range.length];
         number = [[PhoneNumber alloc] init];
-        number.zone = array[0];
-        number.number = array[1];
+        number.zone = zone;
+        number.number = n;
         u.phoneNumber = number;
     }
 
@@ -90,7 +95,6 @@
     }
     return u;
 }
-
 
 
 -(User*)loadUserWithNumber:(PhoneNumber*)number {
