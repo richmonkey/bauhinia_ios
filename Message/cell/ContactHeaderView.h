@@ -10,6 +10,7 @@
 
 @interface ContactHeaderView : UIView
 
+@property (weak, nonatomic) IBOutlet UIImageView *headView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *pinyinLabel;
 @property (weak, nonatomic) IBOutlet UILabel *jobLabel;

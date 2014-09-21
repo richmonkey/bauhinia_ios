@@ -9,6 +9,7 @@
 #import "DownLoadSettingViewController.h"
 #import "UIImage+Resize.h"
 #import "SystemProperty.h"
+#import "UIView+Toast.h"
 
 #define kSetBackgroundCellTag             100
 #define kRetBackgroudnCellTag             101
@@ -109,10 +110,8 @@
             break;
         case kRetBackgroudnCellTag:
         {
-            if ( [[SystemProperty instance] backgroundString].length != 0) {
-                [[SystemProperty instance] setBackgroundString:@""];
-                [self.view makeToast:@"背景图设置成功!" duration:1.0 position:@"bottom"];
-            }
+            [[SystemProperty instance] setBackgroundString:@""];
+            [self.view makeToast:@"背景图设置成功!" duration:1.0 position:@"bottom"];
         }
             break;
         case kAutoLoadPicCellTag:

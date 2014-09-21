@@ -28,8 +28,8 @@
 
 #define kClearConversationCellTag       400
 
-#define kGreenColor  RGBCOLOR(48,176,87)
-#define kRedColor    RGBCOLOR(207,6,6)
+#define kGreenColor         RGBCOLOR(48,176,87)
+#define kRedColor           RGBCOLOR(207,6,6)
 
 @interface SettingViewController ()
 
@@ -55,15 +55,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - KTabBarHeight - KNavigationBarHeight - kStatusBarHeight);
-    self.tableView = [[UITableView alloc] initWithFrame:rect style: UITableViewStyleGrouped];
-    self.tableView.dataSource = self;
-    self.tableView.delegate = self;
-    [self.view addSubview:self.tableView];
-    
-    
-    
     
 }
 

@@ -15,7 +15,7 @@ typedef enum {
 } ProfileEditorType;
 
 
-@interface ProfileViewController : UIViewController <UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIActionSheetDelegate>
+@interface ProfileViewController : UIViewController <UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIActionSheetDelegate,UIScrollViewDelegate>
 
 @property (nonatomic) ProfileEditorType editorState;
 

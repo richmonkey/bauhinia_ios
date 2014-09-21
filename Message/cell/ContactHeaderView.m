@@ -13,7 +13,11 @@
 
 
 -(void)awakeFromNib{
-
+    
+    CALayer *imageLayer = [self.headView layer];   //获取ImageView的层
+    [imageLayer setMasksToBounds:YES];
+    [imageLayer setCornerRadius:self.headView.frame.size.width/2];
+    
 }
 
 /*

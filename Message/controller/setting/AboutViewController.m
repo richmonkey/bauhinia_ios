@@ -7,7 +7,7 @@
 //
 
 #import "AboutViewController.h"
-
+#import "UIView+Toast.h"
 
 
 @interface AboutViewController ()

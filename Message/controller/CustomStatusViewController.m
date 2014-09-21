@@ -98,6 +98,7 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"definestatuscell"];
             }
             [cell.textLabel setText: self.currentStatus];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
         }else{
             cell  = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];

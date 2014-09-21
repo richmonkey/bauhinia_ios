@@ -41,7 +41,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="right_arrow" id="NyV-kh-jhP">
-                            <rect key="frame" x="299" y="20" width="16" height="20"/>
+                            <rect key="frame" x="299" y="25" width="16" height="14"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
                     </subviews>

@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UITextField    *nameTextField;
 @property (weak, nonatomic) IBOutlet UIButton       *statusBtn;
 @property (weak, nonatomic) IBOutlet UIView         *netStatusArea;
+@property (weak, nonatomic) IBOutlet UIScrollView   *scrollView;
 
 @property  (nonatomic)               UIBarButtonItem *nextButton;
 
@@ -50,6 +51,9 @@
     [self setTitle:@"个人资讯"];
     
     [self.headView setUserInteractionEnabled: YES];
+    CALayer *imageLayer = [self.headView layer];   //获取ImageView的层
+    [imageLayer setMasksToBounds:YES];
+    [imageLayer setCornerRadius:6];
     
     [self.nameTextField setText: [SystemProperty instance].nameString];
     
@@ -83,7 +87,11 @@
         [self.navigationItem setRightBarButtonItem:self.nextButton];
         [self.nextButton setEnabled:YES];
     }
-
+    
+    [self.scrollView setContentSize:CGSizeMake(0, self.view.frame.size.height)];
+    [self.scrollView setScrollEnabled:YES];
+    [self.scrollView setClipsToBounds:YES];
+    self.scrollView.delegate = self;
 }
 
 - (void) viewWillAppear:(BOOL)animated{
