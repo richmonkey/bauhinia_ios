@@ -8,10 +8,14 @@
 
 #import "AboutViewController.h"
 
+
+
 @interface AboutViewController ()
 
--(IBAction) contactUs:(UIButton*)btn;
 @property (weak, nonatomic) IBOutlet UIButton *contactUsBtn;
+@property (strong, nonatomic) NSArray *reciver;
+
+-(IBAction) contactUs:(UIButton*)btn;
 
 @end
 
@@ -30,7 +34,16 @@
 {
     [super viewDidLoad];
     [self setTitle:@"关于"];
-    // Do any additional setup after loading the view from its nib.
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"联系我们"];
+    NSRange strRange = {0,[str length]};
+    
+    [str addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:strRange];
+    [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:strRange];
+    
+    [self.contactUsBtn setAttributedTitle:str forState:UIControlStateNormal];
+    [self.contactUsBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,8 +53,54 @@
 }
 
 -(IBAction) contactUs:(UIButton*)btn{
+    //检测设备是否支持邮件发送功能
+    Class mailClass = (NSClassFromString(@"MFMailComposeViewController"));
+    if (mailClass != nil)
+    {
+        // We must always check whether the current device is configured for sending emails
+        if ([mailClass canSendMail])
+        {
+            [self displayComposerSheet];//调用发送邮件的方法
+        }
+    }
 
 }
 
+-(void) displayComposerSheet{
+    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+    mc.mailComposeDelegate = self;
+    self.reciver = @[@"11@11.com"];
+    [mc setSubject:@"Message,建议及意见!"];
+    [mc setToRecipients:self.reciver];
+    [mc setMessageBody:@"Message!!!\n\n!" isHTML:NO];
+    [self presentViewController:mc animated:YES completion:nil];
+    
+}
+
+#pragma - mark  MFMailComposeViewControllerDelegate
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Mail send canceled...");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Mail saved...");
+            [self.view makeToast:@"邮件保存成功!"];
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"Mail sent...");
+            [self.view makeToast:@"发生成功!"];
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Mail send errored: %@...", [error localizedDescription]);
+            [self.view makeToast:@"发生失败!"];
+            break;
+        default:
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+}
 
 @end

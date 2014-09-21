@@ -99,14 +99,6 @@
 		48338B3D19C56A8A00BA2392 /* SystemProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B3C19C56A8A00BA2392 /* SystemProperty.m */; };
 		48338B4319C5938A00BA2392 /* MYBlurIntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B4019C5938A00BA2392 /* MYBlurIntroductionView.m */; };
 		48338B4419C5938A00BA2392 /* MYIntroductionPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B4219C5938A00BA2392 /* MYIntroductionPanel.m */; };
-		48338B5019C593D600BA2392 /* ForkImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 48338B4619C593D600BA2392 /* ForkImage.png */; };
-		48338B5119C593D600BA2392 /* HeaderImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 48338B4719C593D600BA2392 /* HeaderImage.png */; };
-		48338B5219C593D600BA2392 /* MYCustomPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B4919C593D600BA2392 /* MYCustomPanel.m */; };
-		48338B5319C593D600BA2392 /* MYCustomPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48338B4A19C593D600BA2392 /* MYCustomPanel.xib */; };
-		48338B5419C593D600BA2392 /* IntroductionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B4C19C593D600BA2392 /* IntroductionViewController.m */; };
-		48338B5519C593D600BA2392 /* header.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48338B4D19C593D600BA2392 /* header.xib */; };
-		48338B5619C593D600BA2392 /* TestPanel3.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48338B4E19C593D600BA2392 /* TestPanel3.xib */; };
-		48731E1519C5DA0D00FF8A7C /* pic333.png in Resources */ = {isa = PBXBuildFile; fileRef = 48731E1419C5DA0D00FF8A7C /* pic333.png */; };
 		48731E1A19C5E95400FF8A7C /* AskPhoneNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48731E1819C5E95400FF8A7C /* AskPhoneNumberViewController.m */; };
 		48731E1B19C5E95400FF8A7C /* AskPhoneNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48731E1919C5E95400FF8A7C /* AskPhoneNumberViewController.xib */; };
 		48731E1F19C5F17900FF8A7C /* CheckVerifyCodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48731E1D19C5F17900FF8A7C /* CheckVerifyCodeController.m */; };
@@ -121,7 +113,6 @@
 		489933D919C44E3300C56F2D /* CotactMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489933D719C44E3300C56F2D /* CotactMeViewController.xib */; };
 		489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DB19C47F5200C56F2D /* UIImage+Resize.m */; };
 		489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DD19C47F5200C56F2D /* UIImage+UKImage.m */; };
-		489949A819C5A1F900A3A576 /* pgyfy-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 489949A719C5A1F900A3A576 /* pgyfy-1.png */; };
 		489949AC19C5A9FB00A3A576 /* SWParallaxScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 489949AB19C5A9FB00A3A576 /* SWParallaxScrollView.mm */; };
 		48AED77A19CB2A3900DB447F /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 48AED77519CB2A3900DB447F /* NSData+ImageContentType.m */; };
 		48AED77B19CB2A3900DB447F /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 48AED77719CB2A3900DB447F /* UIImageView+HighlightedWebCache.m */; };
@@ -130,7 +121,7 @@
 		48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEA19BFE81C009494A1 /* ESModalImageViewAnimationController.m */; };
 		48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */; };
 		48D5AB2519CDD07100A288F9 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 48D5AB2419CDD07100A288F9 /* UIView+Toast.m */; };
-		48FB25B919CD8DBD001B1E75 /* introdutionBK.png in Resources */ = {isa = PBXBuildFile; fileRef = 48FB25B819CD8DBD001B1E75 /* introdutionBK.png */; };
+		48F02E1D19CE6C7E005E6D41 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F02E1C19CE6C7E005E6D41 /* MessageUI.framework */; };
 		6D0D76821967B8AC0058DECF /* AsyncTCP.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76771967B8AC0058DECF /* AsyncTCP.m */; };
 		6D0D76841967B8AC0058DECF /* IMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767B1967B8AC0058DECF /* IMService.m */; };
 		6D0D76851967B8AC0058DECF /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D767D1967B8AC0058DECF /* Message.m */; };
@@ -326,19 +317,9 @@
 		48338B4019C5938A00BA2392 /* MYBlurIntroductionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYBlurIntroductionView.m; sourceTree = "<group>"; };
 		48338B4119C5938A00BA2392 /* MYIntroductionPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYIntroductionPanel.h; sourceTree = "<group>"; };
 		48338B4219C5938A00BA2392 /* MYIntroductionPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYIntroductionPanel.m; sourceTree = "<group>"; };
-		48338B4619C593D600BA2392 /* ForkImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ForkImage.png; sourceTree = "<group>"; };
-		48338B4719C593D600BA2392 /* HeaderImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HeaderImage.png; sourceTree = "<group>"; };
-		48338B4819C593D600BA2392 /* MYCustomPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYCustomPanel.h; sourceTree = "<group>"; };
-		48338B4919C593D600BA2392 /* MYCustomPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCustomPanel.m; sourceTree = "<group>"; };
-		48338B4A19C593D600BA2392 /* MYCustomPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MYCustomPanel.xib; sourceTree = "<group>"; };
-		48338B4B19C593D600BA2392 /* IntroductionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroductionViewController.h; sourceTree = "<group>"; };
-		48338B4C19C593D600BA2392 /* IntroductionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroductionViewController.m; sourceTree = "<group>"; };
-		48338B4D19C593D600BA2392 /* header.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = header.xib; sourceTree = "<group>"; };
-		48338B4E19C593D600BA2392 /* TestPanel3.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestPanel3.xib; sourceTree = "<group>"; };
 		486FF44919BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		486FF44A19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		486FF44B19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		48731E1419C5DA0D00FF8A7C /* pic333.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pic333.png; sourceTree = "<group>"; };
 		48731E1719C5E95400FF8A7C /* AskPhoneNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AskPhoneNumberViewController.h; sourceTree = "<group>"; };
 		48731E1819C5E95400FF8A7C /* AskPhoneNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AskPhoneNumberViewController.m; sourceTree = "<group>"; };
 		48731E1919C5E95400FF8A7C /* AskPhoneNumberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AskPhoneNumberViewController.xib; sourceTree = "<group>"; };
@@ -364,7 +345,6 @@
 		489933DB19C47F5200C56F2D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		489933DC19C47F5200C56F2D /* UIImage+UKImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+UKImage.h"; sourceTree = "<group>"; };
 		489933DD19C47F5200C56F2D /* UIImage+UKImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UKImage.m"; sourceTree = "<group>"; };
-		489949A719C5A1F900A3A576 /* pgyfy-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pgyfy-1.png"; sourceTree = "<group>"; };
 		489949AA19C5A9FB00A3A576 /* SWParallaxScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWParallaxScrollView.h; sourceTree = "<group>"; };
 		489949AB19C5A9FB00A3A576 /* SWParallaxScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SWParallaxScrollView.mm; sourceTree = "<group>"; };
 		48AED77419CB2A3900DB447F /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -382,7 +362,7 @@
 		48C20EEE19BFF6CA009494A1 /* MessageAudioView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageAudioView.m; sourceTree = "<group>"; };
 		48D5AB2319CDD07100A288F9 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
 		48D5AB2419CDD07100A288F9 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
-		48FB25B819CD8DBD001B1E75 /* introdutionBK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = introdutionBK.png; sourceTree = "<group>"; };
+		48F02E1C19CE6C7E005E6D41 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		6D0D76761967B8AC0058DECF /* AsyncTCP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTCP.h; sourceTree = "<group>"; };
 		6D0D76771967B8AC0058DECF /* AsyncTCP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncTCP.m; sourceTree = "<group>"; };
 		6D0D767A1967B8AC0058DECF /* IMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMService.h; sourceTree = "<group>"; };
@@ -476,6 +456,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48F02E1D19CE6C7E005E6D41 /* MessageUI.framework in Frameworks */,
 				6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */,
 				2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
@@ -769,6 +750,7 @@
 		21798F95194E9C4600B67C1F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				48F02E1C19CE6C7E005E6D41 /* MessageUI.framework */,
 				6D32393B19BD79C7005A00B2 /* AVFoundation.framework */,
 				6D7621641981626900B690D7 /* libleveldb.a */,
 				2173C09F19668B8800BC3BDF /* libxml2.2.dylib */,
@@ -787,7 +769,6 @@
 		21798F9C194E9C4600B67C1F /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				48338B4519C593D600BA2392 /* introduction */,
 				6DB0AA4219C4BDF10027A658 /* request */,
 				2105650A1969839F008D3A83 /* control */,
 				2105646619695FC0008D3A83 /* controller */,
@@ -876,25 +857,6 @@
 				48338B4219C5938A00BA2392 /* MYIntroductionPanel.m */,
 			);
 			path = MYBlurIntroductionView;
-			sourceTree = "<group>";
-		};
-		48338B4519C593D600BA2392 /* introduction */ = {
-			isa = PBXGroup;
-			children = (
-				48FB25B819CD8DBD001B1E75 /* introdutionBK.png */,
-				48731E1419C5DA0D00FF8A7C /* pic333.png */,
-				489949A719C5A1F900A3A576 /* pgyfy-1.png */,
-				48338B4619C593D600BA2392 /* ForkImage.png */,
-				48338B4719C593D600BA2392 /* HeaderImage.png */,
-				48338B4819C593D600BA2392 /* MYCustomPanel.h */,
-				48338B4919C593D600BA2392 /* MYCustomPanel.m */,
-				48338B4A19C593D600BA2392 /* MYCustomPanel.xib */,
-				48338B4B19C593D600BA2392 /* IntroductionViewController.h */,
-				48338B4C19C593D600BA2392 /* IntroductionViewController.m */,
-				48338B4D19C593D600BA2392 /* header.xib */,
-				48338B4E19C593D600BA2392 /* TestPanel3.xib */,
-			);
-			path = introduction;
 			sourceTree = "<group>";
 		};
 		48731E1619C5E92E00FF8A7C /* register */ = {
@@ -1130,27 +1092,21 @@
 				217261AD1954173200F09E33 /* InfoPlist.strings in Resources */,
 				21798FA1194E9C4600B67C1F /* InfoPlist.strings in Resources */,
 				489933CF19C44C0F00C56F2D /* AboutViewController.xib in Resources */,
-				48338B5319C593D600BA2392 /* MYCustomPanel.xib in Resources */,
-				48338B5019C593D600BA2392 /* ForkImage.png in Resources */,
 				210564FD19695FC1008D3A83 /* input-field@2x.png in Resources */,
 				21F419E01981493000934ACA /* customStatus.plist in Resources */,
 				48338B3819C5266A00BA2392 /* DownLoadSettingViewController.xib in Resources */,
 				210564F719695FC1008D3A83 /* bubble-typing@2x.png in Resources */,
 				210564FB19695FC1008D3A83 /* input-bar@2x.png in Resources */,
-				48731E1519C5DA0D00FF8A7C /* pic333.png in Resources */,
 				2105650119695FC1008D3A83 /* send-highlighted@2x.png in Resources */,
 				489933D919C44E3300C56F2D /* CotactMeViewController.xib in Resources */,
 				2105650F1969839F008D3A83 /* ConversationHeadButtonView.xib in Resources */,
 				2105650219695FC1008D3A83 /* send.png in Resources */,
 				210564F819695FC1008D3A83 /* input-bar-flat.png in Resources */,
 				21573735198531A40071C2EF /* ContactPhoneTableViewCell.xib in Resources */,
-				48338B5119C593D600BA2392 /* HeaderImage.png in Resources */,
 				210564F619695FC1008D3A83 /* bubble-typing.png in Resources */,
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
-				48FB25B919CD8DBD001B1E75 /* introdutionBK.png in Resources */,
 				48338B3319C521A600BA2392 /* ConversationSettingViewController.xib in Resources */,
 				48731E1B19C5E95400FF8A7C /* AskPhoneNumberViewController.xib in Resources */,
-				48338B5619C593D600BA2392 /* TestPanel3.xib in Resources */,
 				6D762170198362DE00B690D7 /* LoginViewController.xib in Resources */,
 				48731E2019C5F17900FF8A7C /* CheckVerifyCodeController.xib in Resources */,
 				2157372B19850B100071C2EF /* ContactHeaderView.xib in Resources */,
@@ -1158,8 +1114,6 @@
 				212F28FD197BF6420066A166 /* MessageTableSectionHeaderView.xib in Resources */,
 				48338B3A19C52A1C00BA2392 /* setting.plist in Resources */,
 				210564FE19695FC1008D3A83 /* PhotoIcon.png in Resources */,
-				489949A819C5A1F900A3A576 /* pgyfy-1.png in Resources */,
-				48338B5519C593D600BA2392 /* header.xib in Resources */,
 				2105650019695FC1008D3A83 /* send-highlighted.png in Resources */,
 				2105650519695FC1008D3A83 /* messageSent.aiff in Resources */,
 				210564FA19695FC1008D3A83 /* input-bar.png in Resources */,
@@ -1222,7 +1176,6 @@
 				48D5AB2519CDD07100A288F9 /* UIView+Toast.m in Sources */,
 				21050A3819741B1900F26E43 /* PublicFunc.m in Sources */,
 				2173C66B19738745004A88A5 /* UIImage+GIF.m in Sources */,
-				48338B5219C593D600BA2392 /* MYCustomPanel.m in Sources */,
 				48AED77A19CB2A3900DB447F /* NSData+ImageContentType.m in Sources */,
 				48338B4419C5938A00BA2392 /* MYIntroductionPanel.m in Sources */,
 				6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */,
@@ -1253,7 +1206,6 @@
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				2173C66519738745004A88A5 /* SDWebImageDecoder.m in Sources */,
 				6DA2CEB519CD7F2C0056A084 /* wavwriter.c in Sources */,
-				48338B5419C593D600BA2392 /* IntroductionViewController.m in Sources */,
 				6D76215A197ECA9300B690D7 /* IMessage.m in Sources */,
 				6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */,
 				6DB0AA4E19C4BF340027A658 /* Outbox.m in Sources */,

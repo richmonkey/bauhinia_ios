@@ -9,10 +9,9 @@
 #import "DownLoadSettingViewController.h"
 #import "UIImage+Resize.h"
 #import "SystemProperty.h"
-#import "UIView+Toast.h"
 
 #define kSetBackgroundCellTag             100
-#define kRetBackgroudnCellTag              101
+#define kRetBackgroudnCellTag             101
 #define kAutoLoadPicCellTag               200
 #define kAutoLoadAudioCellTag             201
 
