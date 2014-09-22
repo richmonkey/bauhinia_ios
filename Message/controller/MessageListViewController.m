@@ -42,7 +42,9 @@
 }
 
 -(void)dealloc{
-
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 - (void)viewDidLoad{
@@ -50,6 +52,7 @@
     [super viewDidLoad];
 
     self.title = @"对话";
+
     
     self.tableview = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	self.tableview.delegate = self;
@@ -79,6 +82,9 @@
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:SEND_FIRST_MESSAGE_OK object:nil];
     
+   [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearAllConversation:) name:CLEAR_ALL_CONVESATION object:nil];
+    
+    
     UserDB *db = [UserDB instance];
     id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
     
@@ -94,6 +100,10 @@
     if ([[IMService instance] connectState] == STATE_CONNECTING) {
         [self showConectingState];
     }
+    
+    
+    [self updateEmputyContentView];
+    
 }
 
 
@@ -210,6 +220,10 @@
     [self onNewMessage:m cid:m.receiver];
 }
 
+-(void) clearAllConversation:(NSNotification*) notification{
+    [self reloadTheConversation];
+    [self updateEmputyContentView];
+}
 
 #pragma mark - UISearchBarDelegate
 
@@ -310,6 +324,8 @@
         [[PeerMessageDB instance] clearConversation:con.cid];
         [self.conversations removeObject:con];
         [self.tableview reloadData];
+        
+        [self updateEmputyContentView];
     }
 }
 
@@ -391,6 +407,9 @@
         NSArray *array = [NSArray arrayWithObject:path];
         [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
     }
+    
+     [self updateEmputyContentView];
+    
 }
 
 -(void)onPeerMessage:(IMMessage*)im {
@@ -478,4 +497,50 @@
     titleview.center = CGPointMake(self.view.frame.size.width/2 , 22);
     self.navigationItem.titleView = titleview;
 }
+
+- (void) updateEmputyContentView{
+    if ([self.conversations count] == 0) {
+        self.emputyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
+        [self.emputyLabel setFont:[UIFont systemFontOfSize:14.0f]];
+        [self.emputyLabel setBackgroundColor:RGBACOLOR(240, 240, 240, 1.0f)];
+        [self.emputyLabel setText:@"可以到通讯录选择一个人发起对话"];
+        [self.emputyLabel setTextAlignment:NSTextAlignmentCenter];
+        [self.emputyLabel setTextColor:RGBACOLOR(20, 20, 20, 0.8f)];
+        [self.emputyLabel setCenter:CGPointMake(self.view.center.x, self.view.center.y - 20)];
+        CALayer *labelLayer = [self.emputyLabel layer];
+        [self.emputyLabel setHidden:NO];
+        [labelLayer setMasksToBounds:YES];
+        [labelLayer setCornerRadius: 16];
+        [self.view addSubview:self.emputyLabel];
+        [self.tableview setHidden:YES];
+    }else{
+        if (self.emputyLabel) {
+            [self.emputyLabel setHidden:YES];
+            [self.emputyLabel removeFromSuperview];
+            self.emputyLabel = nil;
+        }
+        [self.tableview setHidden:NO];
+    }
+}
+
+-(void) reloadTheConversation{
+    
+    [self.conversations removeAllObjects];
+    
+    UserDB *db = [UserDB instance];
+    id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
+    
+    Conversation * conversation = [iterator next];
+    while (conversation) {
+        IMUser *user = [db loadUser:conversation.cid];
+        conversation.name = [user displayName];
+        conversation.avatarURL = user.avatarURL;
+        [self.conversations addObject:conversation];
+        conversation = [iterator next];
+    }
+    
+    [self.tableview reloadData];
+    
+}
+
 @end

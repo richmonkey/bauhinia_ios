@@ -49,8 +49,8 @@
         [self.progressView setProgressViewStyle:UIProgressViewStyleDefault];
         [self.progressView setBackgroundColor:[UIColor greenColor]];
         self.progressView.progress = 0.0f;
-        [self.progressView setTrackTintColor:[UIColor grayColor]];
-        [self.progressView setTintColor:[UIColor blueColor]];
+        [self.progressView setTrackTintColor:RGBACOLOR(179, 179, 179, 1.0)];
+        [self.progressView setTintColor:RGBACOLOR(43, 11, 207, 1.0)];
         [self addSubview:self.progressView];
         
         rect.size.height = ktimeLabelHeight;

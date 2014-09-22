@@ -33,6 +33,7 @@ alpha:(a)]
 
 #define CREATE_NEW_CONVERSATION @"creat_new_conversation"
 #define SEND_FIRST_MESSAGE_OK   @"send_first_message_ok"
+#define CLEAR_ALL_CONVESATION  @"clear_all_conversation"
 
 
 #endif

@@ -28,6 +28,7 @@
 @property (strong , nonatomic) UISearchBar *searchBar;
 @property (strong , nonatomic) NSMutableArray *filteredArray;
 @property (strong , nonatomic) UITableView *tableview;
+@property (strong,nonatomic) UILabel *emputyLabel;
 
 @property (nonatomic, weak) UITableViewCell *cellDisplayingMenuOptions;
 @property (nonatomic, weak) MessageConversationCell *mostRecentlySelectedMoreCell;

@@ -11,6 +11,8 @@
 #import "ProfileViewController.h"
 
 #import "ConversationSettingViewController.h"
+#import "PeerMessageDB.h"
+#import "UIView+Toast.h"
 
 
 #define kNetStatusSection 2
@@ -257,7 +259,14 @@
             
         }else if(buttonIndex == 1){
         //确认
-            
+          BOOL result =  [[PeerMessageDB instance] clear];
+            if (result) {
+                
+                NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_ALL_CONVESATION object: nil userInfo:nil];
+                [[NSNotificationCenter defaultCenter] postNotification:notification];
+                
+                [self.view makeToast:@"会话清理完毕" duration:0.9 position:@"center"];
+            }
         }
     }
 }

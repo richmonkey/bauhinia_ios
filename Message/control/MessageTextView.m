@@ -52,15 +52,15 @@
     
     CGSize textSize = [BubbleView textSizeForText:self.text];
     
-    CGFloat textX = image.leftCapWidth - 3.0f + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
+    CGFloat textX = image.leftCapWidth  + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
     
     CGRect textFrame = CGRectMake(textX,
-                                  kPaddingTop + kMarginTop,
+                                  kPaddingTop + kMarginTop - 2,
                                   textSize.width,
                                   textSize.height);
     
     if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending){
-        UIColor* textColor = [UIColor blackColor];
+        UIColor* textColor = RGBACOLOR(31.0f, 31.0f, 31.0f, 1.0f);
         if (self.selectedToShowCopyMenu){
             textColor = [UIColor lightTextColor];
         }
