@@ -87,8 +87,7 @@
     if ([self getUserCount] > 0) {
   
         rect = CGRectMake(0, 0, self.view.frame.size.width, 50);
-        self.sendIMBtn = [UIButton  buttonWithType:UIButtonTypeCustom];
-        [self.sendIMBtn setFrame:rect];
+        self.sendIMBtn = [[UIButton  alloc] initWithFrame: rect];
         [self.sendIMBtn setBackgroundColor:RGBACOLOR(47, 174, 136, 0.9f)];
         [self.sendIMBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
         [self.sendIMBtn setTitle:@"发送信息" forState:UIControlStateNormal];

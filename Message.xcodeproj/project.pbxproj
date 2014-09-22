@@ -103,6 +103,7 @@
 		48731E1B19C5E95400FF8A7C /* AskPhoneNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48731E1919C5E95400FF8A7C /* AskPhoneNumberViewController.xib */; };
 		48731E1F19C5F17900FF8A7C /* CheckVerifyCodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48731E1D19C5F17900FF8A7C /* CheckVerifyCodeController.m */; };
 		48731E2019C5F17900FF8A7C /* CheckVerifyCodeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48731E1E19C5F17900FF8A7C /* CheckVerifyCodeController.xib */; };
+		48860CA019CFC8FF00DF7466 /* UIApplication+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 48860C9F19CFC8FF00DF7466 /* UIApplication+Util.m */; };
 		489933C819C436ED00C56F2D /* FBShimmeringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933C519C436ED00C56F2D /* FBShimmeringLayer.m */; };
 		489933C919C436ED00C56F2D /* FBShimmeringView.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933C719C436ED00C56F2D /* FBShimmeringView.m */; };
 		489933CE19C44C0F00C56F2D /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933CC19C44C0F00C56F2D /* AboutViewController.m */; };
@@ -326,6 +327,8 @@
 		48731E1C19C5F17900FF8A7C /* CheckVerifyCodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckVerifyCodeController.h; sourceTree = "<group>"; };
 		48731E1D19C5F17900FF8A7C /* CheckVerifyCodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckVerifyCodeController.m; sourceTree = "<group>"; };
 		48731E1E19C5F17900FF8A7C /* CheckVerifyCodeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckVerifyCodeController.xib; sourceTree = "<group>"; };
+		48860C9E19CFC8FF00DF7466 /* UIApplication+Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Util.h"; sourceTree = "<group>"; };
+		48860C9F19CFC8FF00DF7466 /* UIApplication+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Util.m"; sourceTree = "<group>"; };
 		489933C219C436ED00C56F2D /* FBShimmering-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBShimmering-Prefix.pch"; sourceTree = "<group>"; };
 		489933C319C436ED00C56F2D /* FBShimmering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmering.h; sourceTree = "<group>"; };
 		489933C419C436ED00C56F2D /* FBShimmeringLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringLayer.h; sourceTree = "<group>"; };
@@ -535,6 +538,8 @@
 				21150CAD196F79AA009DE9DE /* TAHttpOperation.m */,
 				210564C319695FC1008D3A83 /* UIView+AnimationOptionsForCurve.h */,
 				210564C419695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m */,
+				48860C9E19CFC8FF00DF7466 /* UIApplication+Util.h */,
+				48860C9F19CFC8FF00DF7466 /* UIApplication+Util.m */,
 			);
 			path = "third-party";
 			sourceTree = "<group>";
@@ -1222,6 +1227,7 @@
 				2173C66D19738745004A88A5 /* UIImage+WebP.m in Sources */,
 				21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */,
 				210564D719695FC1008D3A83 /* NSString+JSMessagesView.m in Sources */,
+				48860CA019CFC8FF00DF7466 /* UIApplication+Util.m in Sources */,
 				6D762156197ECA9300B690D7 /* Group.m in Sources */,
 				6D762159197ECA9300B690D7 /* GroupMessageHandler.m in Sources */,
 				21798FA3194E9C4600B67C1F /* main.m in Sources */,

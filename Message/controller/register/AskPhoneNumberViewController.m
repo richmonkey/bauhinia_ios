@@ -10,6 +10,8 @@
 #import "APIRequest.h"
 #import "MBProgressHUD.h"
 #import "CheckVerifyCodeController.h"
+#import "UIApplication+Util.h"
+#import "UIView+Toast.h"
 
 
 
@@ -39,7 +41,7 @@
     [self setTitle:@"您的电话号码"];
     
     self.nextButton = [[UIBarButtonItem alloc]
-                                   initWithTitle:@"下一步"
+                                   initWithTitle:@"获取验证码"
                                    style:UIBarButtonItemStylePlain
                                    target:self
                                    action:@selector(nextAction)];
@@ -61,50 +63,44 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) textFieldDidChange:(id) sender {
-    UITextField *_field = (UITextField *)sender;
-    NSLog(@"%@",[_field text]);
-    if ([_field text].length == 11) {
-        [self.nextButton setEnabled:YES];
-    }else{
-        [self.nextButton setEnabled:NO];
-    }
-}
 
 -(void) nextAction {
-    
+   
     NSLog(@"验证码");
     NSString *number = self.phoneTextField.text;
     if (number.length != 11) return;
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    UIWindow *foreWindow  = [[UIApplication sharedApplication] foregroundWindow];
+    UIView *backView =[[UIView alloc] initWithFrame:foreWindow.frame];
+    [backView setBackgroundColor:RGBACOLOR(134, 136, 137, 0.95f)];
+    [foreWindow addSubview:backView];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:backView animated:YES];
     [APIRequest requestVerifyCode:@"86" number:number success:^(NSString *code){
         IMLog(@"code:%@", code);
         [hud hide:YES];
+        [backView removeFromSuperview];
         CheckVerifyCodeController * ctrl = [[CheckVerifyCodeController alloc] init];
         ctrl.phoneNumberStr = number;
         [self.navigationController pushViewController:ctrl animated: YES];
-        
     } fail:^{
         IMLog(@"获取验证码失败");
         [hud hide:NO];
-        [self alertError:@"获取验证码失败"];
+        [backView removeFromSuperview];
+        [self.view makeToast:@"获取验证码失败" duration:1.0f position:@"center"];
     }];
     
 }
 
-#pragma mark 弹出错误提示
-- (void)alertError:(NSString *)error
-{
-    // 1.弹框
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登录失败" message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-    [alert show];
-    
-    // 2.发抖
-//    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.x"];
-//    anim.repeatCount = 1;
-//    anim.values = @[@-10, @10, @-10];
-//    [self.loginView.layer addAnimation:anim forKey:nil];
+- (void) textFieldDidChange:(id) sender {
+    UITextField *_field = (UITextField *)sender;
+    if ([_field text].length == 11) {
+        [self.nextButton setEnabled:YES];
+    }else if([_field text].length > 11){
+        UIWindow *foreWindow  = [[UIApplication sharedApplication] foregroundWindow];
+        [foreWindow makeToast:@"请确认手机号码是11位" duration:1.0f position:@"bottom"];
+        [self.nextButton setEnabled:NO];
+    }else{
+        [self.nextButton setEnabled:NO];
+    }
 }
 
 #pragma mark - UITextFieldDelegate

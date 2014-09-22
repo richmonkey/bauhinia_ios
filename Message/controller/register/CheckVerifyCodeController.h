@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
-@interface CheckVerifyCodeController : UIViewController <UITextFieldDelegate>
+@interface CheckVerifyCodeController : UIViewController <UITextFieldDelegate,MFMailComposeViewControllerDelegate>
 
 @property (nonatomic) NSString *phoneNumberStr;
 

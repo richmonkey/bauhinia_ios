@@ -90,11 +90,11 @@
             break;
         case MFMailComposeResultSent:
             NSLog(@"Mail sent...");
-            [self.view makeToast:@"发生成功!"];
+            [self.view makeToast:@"发送成功!"];
             break;
         case MFMailComposeResultFailed:
             NSLog(@"Mail send errored: %@...", [error localizedDescription]);
-            [self.view makeToast:@"发生失败!"];
+            [self.view makeToast:@"发送失败!"];
             break;
         default:
             break;
