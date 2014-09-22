@@ -3,12 +3,7 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "MicRecRed.png"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "MicRecRed2X.png"
+      "filename" : "MicEmpty.png"
     }
   ],
   "info" : {

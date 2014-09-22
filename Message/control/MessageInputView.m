@@ -6,7 +6,7 @@
 #import "FBShimmeringView.h"
 #import "IMService.h"
 
-#define SEND_BUTTON_WIDTH 70.0f
+#define SEND_BUTTON_WIDTH 64.0f
 
 #define INPUT_HEIGHT 46.0f
 
@@ -50,7 +50,7 @@
     {
         self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
         CGRect frame = self.frame;
-        double x = frame.size.width - 60.0;
+        double x = frame.size.width - 56.0;
         double y = (frame.size.height - 26.0)/2;
         double width = 60.0;
         double height = 26.0;
@@ -70,7 +70,7 @@
         self.recordButton = [UIButton buttonWithType:UIButtonTypeSystem];
         
         CGRect frame = self.frame;
-        double x = frame.size.width - 60.0;
+        double x = frame.size.width - 56.0;
         double y = (frame.size.height - 26.0)/2;
         double width = 60.0;
         double height = 26.0;
@@ -91,7 +91,7 @@
         // set up the image and button frame
 		UIImage* image = [UIImage imageNamed:@"PhotoIcon"];
         CGRect frame = self.frame;
-		CGRect buttonFrame = CGRectMake(4, 0, image.size.width, image.size.height);
+		CGRect buttonFrame = CGRectMake(8, 0, image.size.width, image.size.height);
 		CGFloat yHeight = (frame.size.height - buttonFrame.size.height) / 2.0f;
 		buttonFrame.origin.y = yHeight;
 		
@@ -112,7 +112,6 @@
         labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
         self.slipLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [self.slipLabel setTextAlignment: NSTextAlignmentCenter];
-//        [self.slipLabel setBackgroundColor: [UIColor grayColor]];
         [self.slipLabel setFont: [UIFont systemFontOfSize:19.0f]];
         self.slipLabel.text = @"滑动取消 <";
         [self.recordingView addSubview: self.slipLabel];
@@ -135,13 +134,13 @@
         [self.recordingView addSubview:self.timerLabel];
 
         
-        NSArray *ary = @[[UIImage imageNamed:@"MicRecRed"],[UIImage imageNamed:@"MicRecGray"]];
+        NSArray *ary = @[[UIImage imageNamed:@"MicRecRed"],[UIImage imageNamed:@"MicEmpty"]];
         CGRect recordAFrame = CGRectMake(13, 0, 18, 29);
         recordAFrame.origin.y = (frame.size.height - recordAFrame.size.height)/2;
         
         self.recordAnimationView = [[UIImageView alloc] initWithFrame: recordAFrame];
         self.recordAnimationView.animationImages = ary;
-        self.recordAnimationView.animationDuration = 0.5;
+        self.recordAnimationView.animationDuration = 0.75;
         [self.recordAnimationView startAnimating];
         [self.recordingView addSubview:self.recordAnimationView];
        
@@ -172,7 +171,7 @@
     CGFloat height = [MessageInputView textViewLineHeight];
     CGRect frame = self.frame;
     
-    double x = 34.0;
+    double x = 40.0;
     double y = (frame.size.height - height)/2;
 
     

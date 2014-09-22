@@ -67,25 +67,29 @@
    
     NSLog(@"验证码");
     NSString *number = self.phoneTextField.text;
+    
     if (number.length != 11) return;
-    UIWindow *foreWindow  = [[UIApplication sharedApplication] foregroundWindow];
-    UIView *backView =[[UIView alloc] initWithFrame:foreWindow.frame];
-    [backView setBackgroundColor:RGBACOLOR(134, 136, 137, 0.95f)];
-    [foreWindow addSubview:backView];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:backView animated:YES];
-    [APIRequest requestVerifyCode:@"86" number:number success:^(NSString *code){
-        IMLog(@"code:%@", code);
-        [hud hide:YES];
-        [backView removeFromSuperview];
-        CheckVerifyCodeController * ctrl = [[CheckVerifyCodeController alloc] init];
-        ctrl.phoneNumberStr = number;
-        [self.navigationController pushViewController:ctrl animated: YES];
-    } fail:^{
-        IMLog(@"获取验证码失败");
-        [hud hide:NO];
-        [backView removeFromSuperview];
-        [self.view makeToast:@"获取验证码失败" duration:1.0f position:@"center"];
-    }];
+    
+    if ([self checkTel:number]) {
+        UIWindow *foreWindow  = [[UIApplication sharedApplication] foregroundWindow];
+        UIView *backView =[[UIView alloc] initWithFrame:foreWindow.frame];
+        [backView setBackgroundColor:RGBACOLOR(134, 136, 137, 0.95f)];
+        [foreWindow addSubview:backView];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:backView animated:YES];
+        [APIRequest requestVerifyCode:@"86" number:number success:^(NSString *code){
+            IMLog(@"code:%@", code);
+            [hud hide:YES];
+            [backView removeFromSuperview];
+            CheckVerifyCodeController * ctrl = [[CheckVerifyCodeController alloc] init];
+            ctrl.phoneNumberStr = number;
+            [self.navigationController pushViewController:ctrl animated: YES];
+        } fail:^{
+            IMLog(@"获取验证码失败");
+            [hud hide:NO];
+            [backView removeFromSuperview];
+            [self.view makeToast:@"获取验证码失败" duration:1.0f position:@"center"];
+        }];
+    }
     
 }
 
@@ -112,6 +116,20 @@
     
 }
 
+- (BOOL)checkTel:(NSString *)str
+{
+    //1[0-9]{10}
+    //^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$
+    //    NSString *regex = @"[0-9]{11}";
+    NSString *regex = @"^((13[0-9])|(147)|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    BOOL isMatch = [pred evaluateWithObject:str];
+    if (!isMatch) {
+        [self.view makeToast:@"请输入正确的手机号码" duration:1.0f position:@"center"];
+        return NO;
+    }
+    return YES;
+}
 
 
 @end

@@ -56,7 +56,7 @@
 	self.tableview.dataSource = self;
 	self.tableview.scrollEnabled = YES;
 	self.tableview.showsVerticalScrollIndicator = NO;
-	self.tableview.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	self.tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableview.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
     self.tableview.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
