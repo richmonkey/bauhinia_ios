@@ -39,7 +39,6 @@
     [super viewDidLoad];
     
     [self setTitle:@"您的电话号码"];
-    
     self.nextButton = [[UIBarButtonItem alloc]
                                    initWithTitle:@"获取验证码"
                                    style:UIBarButtonItemStylePlain

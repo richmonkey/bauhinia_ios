@@ -58,13 +58,14 @@
                        action:@selector(nextAction)];
     [self.navigationItem setRightBarButtonItem:self.nextButton];
     [self.nextButton setEnabled:NO];
+    
     [self.navigationItem setHidesBackButton:YES];
     
     [self.verifyCodeTextField becomeFirstResponder];
     [self.verifyCodeTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     
     [self.l_timeButton addTarget:self action:@selector(contactUs:) forControlEvents:UIControlEventTouchUpInside];
-    [self startTime];
+    [self.l_timeButton setHidden:YES];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -80,7 +81,6 @@
 
 - (void) textFieldDidChange:(id) sender {
     UITextField *_field = (UITextField *)sender;
-    NSLog(@"%@",[_field text]);
     if ([_field text].length == 6) {
         [self.nextButton setEnabled:YES];
     }else{
@@ -112,13 +112,18 @@
                              [UserPresent instance].state = state;
                              [[UserDB instance] addUser:[UserPresent instance]];
                              [hud hide:NO];
+                             [backView removeFromSuperview];
                              [self verifySuccess];
                              IMLog(@"auth token success");
                          }
                             fail:^{
                                 IMLog(@"auth token fail");
                                 [hud hide:NO];
+                                [backView removeFromSuperview];
                                 [self.view makeToast:@"验证码不正确!" duration:1.0f position:@"center"];
+                                
+                                [self performSelector:@selector(showContactButton) withObject:nil afterDelay:1.5f];
+                                
                             }];
 }
 
@@ -130,38 +135,11 @@
 
 }
 
--(void)startTime{
-    __block int timeout = 30; //倒计时时间
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
-    dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
-    dispatch_source_set_event_handler(_timer, ^{
-        if(timeout <= 0){ //倒计时结束，关闭
-            dispatch_source_cancel(_timer);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //设置界面的按钮显示 根据自己需求设置
-                [self.l_timeButton setTitle:@"获取验证码失败,联系我们" forState:UIControlStateNormal];
-                self.l_timeButton.userInteractionEnabled = YES;
-            });
-        }else{
-            int seconds = timeout % 60;
-            NSString *strTime = [NSString stringWithFormat:@"%.2d", seconds];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //设置界面的按钮显示 根据自己需求设置
-                NSLog(@"____%@",strTime);
-                [self.l_timeButton setTitle:[NSString stringWithFormat:@"剩余(%@秒)",strTime] forState:UIControlStateNormal];
-                self.l_timeButton.userInteractionEnabled = NO;
-                
-            });
-            timeout--;
-            
-        }
-    });
-    dispatch_resume(_timer);
-    
+-(void) showContactButton{
+    [self.l_timeButton setHidden:NO];
 }
 
--(IBAction) contactUs:(UIButton*)btn{
+-(void) contactUs:(UIButton*)btn{
     //检测设备是否支持邮件发送功能
     Class mailClass = (NSClassFromString(@"MFMailComposeViewController"));
     if (mailClass != nil)
@@ -220,5 +198,6 @@
     
     
 }
+
 
 @end

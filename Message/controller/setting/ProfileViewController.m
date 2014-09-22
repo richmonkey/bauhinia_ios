@@ -17,6 +17,8 @@
 #import "SystemProperty.h"
 #import "MainTabBarController.h"
 #import "AppDelegate.h"
+#import "UIView+Toast.h"
+
 
 #define kTakePicActionSheetTag  101
 
@@ -76,22 +78,26 @@
             [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
         }
         
-    }else if(self.editorState == ProfileEditorLoginingType){
+       
+        [self.scrollView setScrollEnabled:YES];
         
+    }else if(self.editorState == ProfileEditorLoginingType){
+        [self.navigationItem setHidesBackButton:YES];
         [self.netStatusArea setHidden: YES];
         self.nextButton = [[UIBarButtonItem alloc]
-                           initWithTitle:@"下一步"
+                           initWithTitle:@"跳过"
                            style:UIBarButtonItemStylePlain
                            target:self
                            action:@selector(nextAction)];
         [self.navigationItem setRightBarButtonItem:self.nextButton];
         [self.nextButton setEnabled:YES];
+        [self.scrollView setScrollEnabled:NO];
     }
     
     [self.scrollView setContentSize:CGSizeMake(0, self.view.frame.size.height)];
-    [self.scrollView setScrollEnabled:YES];
     [self.scrollView setClipsToBounds:YES];
     self.scrollView.delegate = self;
+    
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -121,22 +127,21 @@
     actionSheet.tag = kTakePicActionSheetTag;
     [actionSheet showInView:self.view];
     
-//    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-//    picker.delegate  = self;
-//    picker.allowsEditing = YES;
-//    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-//    [self presentViewController:picker animated:YES completion:NULL];
-    
 }
 
 - (void) nextAction{
+    
+    [self.view makeToast:@"您可以在设置>个人资讯 重新设置" duration:1.0f position:@"center"];
+    [self performSelector:@selector(jumpToMainController) withObject:nil afterDelay:1.3f];
+}
+
+-(void) jumpToMainController{
     UITabBarController *tabController = [[MainTabBarController alloc] init];
     UINavigationController *navCtl = [[UINavigationController alloc] initWithRootViewController:tabController];
     navCtl.navigationBarHidden = YES;
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     delegate.tabBarController = tabController;
     delegate.window.rootViewController = navCtl;
-
 }
 
 -(IBAction) editorNameAction:(id)sender{
@@ -174,7 +179,7 @@
 
 - (void)animateTextField:(BOOL)up
 {
-    const int movementDistance = 50;
+    const int movementDistance = 80;
     const float movementDuration = 0.3f;
     
     int movement = (up ? -movementDistance : movementDistance);
