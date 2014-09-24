@@ -17,6 +17,10 @@
 #import "ContactHeaderView.h"
 #import "ContactPhoneTableViewCell.h"
 
+#import "UIImageView+Letters.h"
+#import "UIImageView+WebCache.h"
+#import "pinyin.h"
+
 /*
  ----------
  tableheaderView
@@ -76,6 +80,8 @@
     [self.view addSubview:self.tableview];
     
     ContactHeaderView *headerView = [[[NSBundle mainBundle]loadNibNamed:@"ContactHeaderView" owner:self options:nil] lastObject];
+    
+    
     [self.tableview setTableHeaderView: headerView];
     
     if (self.contact.contactName && [self.contact.contactName length]!= 0) {
@@ -83,6 +89,8 @@
     }else{
        [headerView.nameLabel setText:@" "];
     }
+   
+    [self handleHeadViewImage:headerView];
     
     if ([self getUserCount] > 0) {
   
@@ -224,6 +232,26 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void) handleHeadViewImage:(ContactHeaderView *)headerView{
+    if ([self.contact.users count] > 0) {
+        for(IMUser* usr in self.contact.users) {
+            if (usr.avatarURL.length > 0) {
+               [headerView.headView sd_setImageWithURL:[[NSURL alloc] initWithString:usr.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+            }
+        }
+    }else{
+        if (self.contact.contactName && [self.contact.contactName length]!= 0) {
+            NSString *nameChars;
+            if([self.contact.contactName length] >= 2){
+                nameChars = [NSString stringWithFormat:@"%c %c",pinyinFirstLetter([self.contact.contactName characterAtIndex:0]),pinyinFirstLetter([self.contact.contactName characterAtIndex:1])];
+            }else if([self.contact.contactName length] == 1){
+                nameChars = [NSString stringWithFormat:@"%c",pinyinFirstLetter([self.contact.contactName characterAtIndex:0])];
+            }
+            [headerView.headView setImageWithString:nameChars];
+        }
+    }
 }
 
 @end
