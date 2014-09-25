@@ -83,7 +83,7 @@
     
     
     self.viewControllers = [NSArray arrayWithObjects: nav1, nav2, nav3, nav4, nil];
-    self.selectedIndex = 1;
+    self.selectedIndex = 2;
     
     dispatch_queue_t queue = dispatch_get_main_queue();
     self.refreshTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
