@@ -39,6 +39,7 @@
     if (self) {
         self.filteredArray =  [NSMutableArray array];
         self.conversations = [[NSMutableArray alloc] init];
+        self.selectingConv = nil;
     }
     return self;
 }
@@ -106,6 +107,11 @@
     
     [self updateEmputyContentView];
     
+}
+
+-(void) viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.selectingConv = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -301,6 +307,7 @@
             [cell clearNewMessage];
             [self resetConversationsViewControllerNewState];
         }
+        self.selectingConv = con;
         
         MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: rmtUser];
         
@@ -317,6 +324,10 @@
         Conversation *con = [self.filteredArray objectAtIndex:findPath.row];
         
         [[PeerMessageDB instance] clearConversation:con.cid];
+       
+        if (self.selectingConv && self.selectingConv.cid == con.cid) {
+            self.selectingConv = nil;
+        }
         
         [self.filteredArray removeObject:con];
         [self.conversations removeObject:con];
@@ -394,7 +405,13 @@
         [self.conversations removeObjectAtIndex:index];
         [self.conversations insertObject:con atIndex:0];
         con.message = msg;
-        con.newMsgCount += 1;
+        
+        //不是当前查看的conv
+        if (!self.selectingConv ||(self.selectingConv && self.selectingConv.cid != con.cid)) {
+            con.newMsgCount += 1;
+            NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+            [[NSNotificationCenter defaultCenter] postNotification:notification];
+        }
 //        if (index != 0) {
 //            NSIndexPath *path1 = [NSIndexPath indexPathForRow:index inSection:0];
 //            NSIndexPath *path2 = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -406,7 +423,11 @@
     } else {
         Conversation *con = [[Conversation alloc] init];
         con.message = msg;
+        
         con.newMsgCount += 1;
+        NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+        
         con.type = CONVERSATION_PEER;
         con.cid = cid;
         
@@ -425,9 +446,6 @@
 }
 
 -(void)onPeerMessage:(IMMessage*)im {
-    
-    NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
     
     IMessage *m = [[IMessage alloc] init];
     m.sender = im.sender;

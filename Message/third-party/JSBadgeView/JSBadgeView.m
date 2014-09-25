@@ -89,6 +89,7 @@ static BOOL JSBadgeViewIsUIKitFlatMode(void)
     badgeViewAppearanceProxy.badgeShadowColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
     badgeViewAppearanceProxy.badgeShadowSize = CGSizeMake(0.0f, 3.0f);
     badgeViewAppearanceProxy.badgeStrokeWidth = 2.0f;
+    badgeViewAppearanceProxy.badgeTextFont = [UIFont boldSystemFontOfSize:UIFont.systemFontSize];
     badgeViewAppearanceProxy.badgeStrokeColor = UIColor.whiteColor;
 }
 
@@ -100,6 +101,7 @@ static BOOL JSBadgeViewIsUIKitFlatMode(void)
     badgeViewAppearanceProxy.badgeTextShadowColor = UIColor.clearColor;
     badgeViewAppearanceProxy.badgeShadowColor = UIColor.clearColor;
     badgeViewAppearanceProxy.badgeStrokeWidth = 0.0f;
+    badgeViewAppearanceProxy.badgeTextFont = [UIFont boldSystemFontOfSize:UIFont.systemFontSize];
     badgeViewAppearanceProxy.badgeStrokeColor = badgeViewAppearanceProxy.badgeBackgroundColor;
 }
 
@@ -213,6 +215,9 @@ static BOOL JSBadgeViewIsUIKitFlatMode(void)
 - (CGSize)sizeOfTextForCurrentSettings
 {
     JSBadgeViewSilenceDeprecatedMethodStart();
+    if (!self.badgeTextFont) {
+        _badgeTextFont = [UIFont boldSystemFontOfSize:UIFont.systemFontSize];
+    }
     return [self.badgeText sizeWithFont:self.badgeTextFont];
     JSBadgeViewSilenceDeprecatedMethodEnd();
 }

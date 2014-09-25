@@ -13,6 +13,7 @@
 #import "PublicFunc.h"
 #import "ContactDB.h"
 
+@class Conversation;
 
 @interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver, ContactDBObserver>
 {
@@ -29,6 +30,7 @@
 @property (strong , nonatomic) NSMutableArray *filteredArray;
 @property (strong , nonatomic) UITableView *tableview;
 @property (strong,nonatomic) UILabel *emputyLabel;
+@property (strong,nonatomic) Conversation *selectingConv;
 
 @property (nonatomic, weak) UITableViewCell *cellDisplayingMenuOptions;
 @property (nonatomic, weak) MessageConversationCell *mostRecentlySelectedMoreCell;

@@ -85,7 +85,7 @@
         [self.navigationItem setHidesBackButton:YES];
         [self.netStatusArea setHidden: YES];
         self.nextButton = [[UIBarButtonItem alloc]
-                           initWithTitle:@"跳过"
+                           initWithTitle:@"下一步"
                            style:UIBarButtonItemStylePlain
                            target:self
                            action:@selector(nextAction)];
