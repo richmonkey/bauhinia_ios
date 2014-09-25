@@ -15,6 +15,8 @@
 #import "UserDB.h"
 #import "UIImageView+WebCache.h"
 
+#import "JSBadgeView.h"
+
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
 
@@ -106,7 +108,6 @@
     
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -183,6 +184,10 @@
     cell.namelabel.text = covn.name; 
     
     cell.delegate = self;
+   
+    if (covn.newMsgCount > 0) {
+        [cell showNewMessage:covn.newMsgCount];
+    }
     
     return cell;
     
@@ -291,6 +296,11 @@
         NSIndexPath  *path = [self.tableview indexPathForCell:cell];
         Conversation *con = [self.conversations objectAtIndex:path.row];
         IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
+        if (con.newMsgCount > 0) {
+            con.newMsgCount = 0;
+            [cell clearNewMessage];
+            [self resetConversationsViewControllerNewState];
+        }
         
         MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: rmtUser];
         
@@ -384,17 +394,19 @@
         [self.conversations removeObjectAtIndex:index];
         [self.conversations insertObject:con atIndex:0];
         con.message = msg;
-        if (index != 0) {
-            NSIndexPath *path1 = [NSIndexPath indexPathForRow:index inSection:0];
-            NSIndexPath *path2 = [NSIndexPath indexPathForRow:0 inSection:0];
-            [self.tableview moveRowAtIndexPath:path1 toIndexPath:path2];
-        } else {
+        con.newMsgCount += 1;
+//        if (index != 0) {
+//            NSIndexPath *path1 = [NSIndexPath indexPathForRow:index inSection:0];
+//            NSIndexPath *path2 = [NSIndexPath indexPathForRow:0 inSection:0];
+//            [self.tableview moveRowAtIndexPath:path1 toIndexPath:path2];
+//        } else {
             NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
             [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
-        }
+//        }
     } else {
         Conversation *con = [[Conversation alloc] init];
         con.message = msg;
+        con.newMsgCount += 1;
         con.type = CONVERSATION_PEER;
         con.cid = cid;
         
@@ -413,6 +425,10 @@
 }
 
 -(void)onPeerMessage:(IMMessage*)im {
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
     IMessage *m = [[IMessage alloc] init];
     m.sender = im.sender;
     m.receiver = im.receiver;
@@ -427,6 +443,8 @@
         IMLog(@"message:%@", c.text);
     }
     [self onNewMessage:m cid:m.sender];
+    
+    
 }
 
 //服务器ack
@@ -541,6 +559,21 @@
     
     [self.tableview reloadData];
     
+}
+
+-(void) resetConversationsViewControllerNewState{
+    BOOL shouldClearNewCount = YES;
+    for (Conversation *conv in self.conversations) {
+        if (conv.newMsgCount > 0) {
+            shouldClearNewCount = NO;
+            break;
+        }
+    }
+    
+    if (shouldClearNewCount) {
+        NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }
 }
 
 @end

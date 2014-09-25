@@ -40,10 +40,6 @@
                             <rect key="frame" x="10" y="6" width="48" height="48"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="right_arrow" id="NyV-kh-jhP">
-                            <rect key="frame" x="299" y="25" width="16" height="14"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
                         <view alpha="0.34999999999999964" contentMode="scaleToFill" id="1H7-7F-Nt9">
                             <rect key="frame" x="0.0" y="59" width="315" height="1"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -65,7 +61,4 @@
             </connections>
         </view>
     </objects>
-    <resources>
-        <image name="right_arrow" width="25" height="25"/>
-    </resources>
 </document>

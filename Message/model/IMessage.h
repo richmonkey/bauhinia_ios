@@ -65,4 +65,5 @@
 @property(nonatomic, copy)NSString *name;
 @property(nonatomic, copy)NSString *avatarURL;
 @property(nonatomic)IMessage *message;
+@property(nonatomic)int newMsgCount;
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "MessageConversationCell.h"
-
+#import "JSBadgeView.h"
 
 //#define kCatchWidth 148.0f
 #define kCatchWidth 74.0f
@@ -155,5 +155,24 @@
     
     // Configure the view for the selected state
 }
+
+-(void) showNewMessage:(int)count{
+    JSBadgeView *badgeView = [[JSBadgeView alloc] initWithParentView:self.scrollViewContentView alignment:JSBadgeViewAlignmentCenterRight];
+    if (count > 99) {
+       badgeView.badgeText = @"99+";
+    }else{
+        badgeView.badgeText = [NSString stringWithFormat:@"%d",count];
+    }
+}
+
+-(void) clearNewMessage{
+    for (UIView *vi in [self.scrollViewContentView subviews]) {
+        if ([vi isKindOfClass:[JSBadgeView class]]) {
+            [vi removeFromSuperview];
+        }
+    }
+    
+}
+
 
 @end

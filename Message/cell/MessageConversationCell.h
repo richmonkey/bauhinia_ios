@@ -33,5 +33,7 @@
 
 @property (nonatomic, weak) id<TLSwipeForOptionsCellDelegate> delegate;
 
+-(void) showNewMessage:(int)count;
+-(void) clearNewMessage;
 
 @end

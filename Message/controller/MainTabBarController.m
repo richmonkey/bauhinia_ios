@@ -16,6 +16,8 @@
 #import "UserPresent.h"
 #import "Reachability.h"
 #import "APIRequest.h"
+#import "JSBadgeView.h"
+
 
 @interface MainTabBarController ()
 @property(atomic) Reachability *reach;
@@ -111,6 +113,10 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNewMessage:) name:ON_NEW_MESSAGE_NOTIFY object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearNewMessage:) name:CLEAR_NEW_MESSAGE_NOTIFY object:nil];
+
 }
 
 
@@ -170,6 +176,17 @@
     }
 }
 
+-(void) onNewMessage:(NSNotification*)ntf{
+    UITabBar *tabBar = self.tabBar;
+    UITabBarItem * cc =  [tabBar.items objectAtIndex: 2];
+    [cc setBadgeValue:@""];
+}
+
+-(void) clearNewMessage:(NSNotification*)ntf{
+    UITabBar *tabBar = self.tabBar;
+    UITabBarItem * cc =  [tabBar.items objectAtIndex: 2];
+    [cc setBadgeValue:nil];
+}
 
 -(void)startRefreshTimer {
     [self prepareTimer];

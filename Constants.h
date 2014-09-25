@@ -33,7 +33,9 @@ alpha:(a)]
 
 #define CREATE_NEW_CONVERSATION @"creat_new_conversation"
 #define SEND_FIRST_MESSAGE_OK   @"send_first_message_ok"
-#define CLEAR_ALL_CONVESATION  @"clear_all_conversation"
+#define CLEAR_ALL_CONVESATION   @"clear_all_conversation"
 
+#define ON_NEW_MESSAGE_NOTIFY  @"on_new_message_notify"
+#define CLEAR_NEW_MESSAGE_NOTIFY  @"clear_new_message_notify"
 
 #endif
