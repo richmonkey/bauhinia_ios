@@ -3,7 +3,7 @@
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "ME58X58-1.png",
+      "filename" : "ME29X29.png",
       "scale" : "1x"
     },
     {
@@ -16,6 +16,12 @@
       "size" : "40x40",
       "idiom" : "iphone",
       "filename" : "ME80X80.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "60x60",
+      "idiom" : "iphone",
+      "filename" : "Me120X120.png",
       "scale" : "2x"
     }
   ],

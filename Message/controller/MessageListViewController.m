@@ -402,8 +402,6 @@
     
     if (index != -1) {
         Conversation *con = [self.conversations objectAtIndex:index];
-        [self.conversations removeObjectAtIndex:index];
-        [self.conversations insertObject:con atIndex:0];
         con.message = msg;
         
         //不是当前查看的conv
@@ -412,14 +410,8 @@
             NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
             [[NSNotificationCenter defaultCenter] postNotification:notification];
         }
-//        if (index != 0) {
-//            NSIndexPath *path1 = [NSIndexPath indexPathForRow:index inSection:0];
-//            NSIndexPath *path2 = [NSIndexPath indexPathForRow:0 inSection:0];
-//            [self.tableview moveRowAtIndexPath:path1 toIndexPath:path2];
-//        } else {
-            NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-            [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
-//        }
+        NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
     } else {
         Conversation *con = [[Conversation alloc] init];
         con.message = msg;
