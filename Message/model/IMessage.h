@@ -37,6 +37,9 @@
 @property(nonatomic, readonly)NSString *imageURL;
 @property(nonatomic, readonly)Audio *audio;
 @property(nonatomic, readonly)CLLocationCoordinate2D location;
+
+-(NSString*) littleImageURL;
+
 @end
 
 @interface MessageContent(Text)

@@ -15,6 +15,10 @@
  */
 @property (nonatomic, strong) UIImage *image;
 
+@property (nonatomic,strong) NSString *imgUrl;
+
+@property (nonatomic,strong) UIActivityIndicatorView * indicatorView;
+
 /**
  * The thumbnail view that corresponds to the image that will be displayed.
  * This will be used to animate from the thumbnail into the full-screen imageView.

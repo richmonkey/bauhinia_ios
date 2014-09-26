@@ -8,6 +8,7 @@
 
 #import "ESModalImageViewAnimationController.h"
 #import "ESImageViewController-Internals.h"
+#import "UIImageView+WebCache.h"
 
 typedef NS_ENUM(BOOL, ESModalTransitionDirection) {
     ESModalTransitionDirectionPresenting = YES,
@@ -64,7 +65,23 @@ static CGFloat const kMaskingDuration = 0.15;
     
     UIImage *image = presentedViewController.image;
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:[presentedViewController imageViewFrameForImage:presentedViewController.image]];
-    [imageView setImage:image];
+    
+    if (presentedViewController.imgUrl) {
+        presentedViewController.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        CGRect rect = CGRectMake(0, 0, imageView.bounds.size.width, imageView.bounds.size.height);
+        [presentedViewController.indicatorView setFrame: rect];
+        [presentedViewController.indicatorView startAnimating];
+        [imageView addSubview: presentedViewController.indicatorView];
+        
+    [imageView sd_setImageWithURL:[[NSURL alloc] initWithString:presentedViewController.imgUrl]     placeholderImage:image completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        if (presentedViewController.indicatorView&&[presentedViewController.indicatorView isAnimating]) {
+            [presentedViewController.indicatorView stopAnimating];
+            [presentedViewController.indicatorView removeFromSuperview];
+        }
+    }];
+    }else{
+        [imageView setImage:image];
+    }
     
     CALayer *mask = [self maskWithImageViewFrame:imageView.frame thumbnailFrame:self.thumbnailView.frame direction:ESModalTransitionDirectionPresenting animated:YES];
     [imageView.layer setMask:mask];

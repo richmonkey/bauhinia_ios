@@ -410,7 +410,7 @@
             NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
             [[NSNotificationCenter defaultCenter] postNotification:notification];
         }
-        NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+        NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
         [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
     } else {
         Conversation *con = [[Conversation alloc] init];

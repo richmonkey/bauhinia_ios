@@ -802,11 +802,19 @@
     if (message == nil) {
         return;
     }
+    NSString *littleUrl = [message.content littleImageURL];
     
     if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:message.content.imageURL]) {
         UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: message.content.imageURL];
         ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
         [imgcontroller setImage:cacheImg];
+        [imgcontroller setTappedThumbnail:tap.view];
+        [self presentViewController:imgcontroller animated:YES completion:nil];
+    } else if([[SDImageCache sharedImageCache] diskImageExistsWithKey:littleUrl]){
+        UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: littleUrl];
+        ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
+        [imgcontroller setImage:cacheImg];
+        [imgcontroller setImgUrl:message.content.imageURL];
         [imgcontroller setTappedThumbnail:tap.view];
         [self presentViewController:imgcontroller animated:YES completion:nil];
     }
@@ -1092,7 +1100,7 @@
     UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
 
     [[SDImageCache sharedImageCache] storeImage:image forKey:msg.content.imageURL];
-    NSString *littleUrl = [NSString stringWithFormat:@"%@@128w_128h_0c", msg.content.imageURL];
+    NSString *littleUrl =  [msg.content littleImageURL];
     [[SDImageCache sharedImageCache] storeImage:sizeImage forKey: littleUrl];
     
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];

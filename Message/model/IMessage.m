@@ -43,6 +43,12 @@
     return[self.dict objectForKey:@"image"];
 }
 
+-(NSString*) littleImageURL{
+    NSAssert(self.type==MESSAGE_IMAGE, @"littleImageURL:类型错误");
+    NSString *littleUrl = [NSString stringWithFormat:@"%@@128w_128h_0c", [self imageURL]];
+    return littleUrl;
+}
+
 -(Audio*)audio {
     NSDictionary *obj = [self.dict objectForKey:@"audio"];
     Audio *audio = [[Audio alloc] init];
