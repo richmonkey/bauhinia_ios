@@ -1105,7 +1105,7 @@
     
     [[PeerMessageDB instance] insertPeerMessage:msg uid:msg.receiver];
     
-    [[Outbox instance] uploadImage:msg];
+    [[Outbox instance] uploadImage:msg image:image];
     
     [JSMessageSoundEffect playMessageSentSound];
     

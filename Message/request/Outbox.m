@@ -118,13 +118,7 @@
     }
 }
 
--(BOOL)uploadImage:(IMessage*)msg {
-    SDImageCache *cache = [SDImageCache sharedImageCache];
-    UIImage *image = [cache imageFromDiskCacheForKey:msg.content.imageURL];
-    if (image == nil) {
-        return NO;
-    }
-    
+-(BOOL)uploadImage:(IMessage*)msg image:(UIImage*)image{
     [self.messages addObject:msg];
     [APIRequest uploadImage:image
                     success:^(NSString *url) {
