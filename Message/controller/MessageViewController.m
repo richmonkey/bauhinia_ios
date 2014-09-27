@@ -350,7 +350,7 @@
     if (translation.x < 0) {
         [self.inputToolBarView slipLabelFrame:translation.x];
     }
-    if (translation.x < -100 && self.recorder.recording) {
+    if (translation.x < -50 && self.recorder.recording) {
         NSLog(@"cancel record...");
         self.recordCanceled = YES;
         [self stopRecord];
@@ -1028,13 +1028,13 @@
         if (buttonIndex == 0) {
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = NO;
+            picker.allowsEditing = YES;
             picker.sourceType = UIImagePickerControllerSourceTypeCamera;
             [self presentViewController:picker animated:YES completion:NULL];
         }else if(buttonIndex == 1){
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = NO;
+            picker.allowsEditing = YES;
             picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             [self presentViewController:picker animated:YES completion:NULL];
         }
@@ -1093,7 +1093,7 @@
     msg.content = content;
     msg.timestamp = (int)time(NULL);
 
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
 
     [[SDImageCache sharedImageCache] storeImage:image forKey:msg.content.imageURL];
