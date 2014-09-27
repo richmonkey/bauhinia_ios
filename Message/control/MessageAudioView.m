@@ -34,15 +34,16 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor clearColor];
         CGRect rect = CGRectMake(kMargin, 0, kPlayBtnWidth, kPlayBtnHeight);
-        rect.origin.y = (kAudioViewCellHeight - kPlayBtnHeight  + kblank)/2;
+        rect.origin.y = (kAudioViewCellHeight - kPlayBtnHeight  )/2;
         self.playBtn = [[UIButton alloc] initWithFrame: rect];
         [self.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
         [self.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
 
         [self addSubview:self.playBtn];
         rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
-        rect.origin.y = (kAudioViewCellHeight - kProgressViewHeight  + kblank)/2;
+        rect.origin.y = (kAudioViewCellHeight - kProgressViewHeight )/2;
         rect.size.width = kAudioCellWidth - kMargin - kPlayBtnWidth - 2*kblank;
         rect.size.height = kProgressViewHeight;
         self.progressView = [[UIProgressView alloc] initWithFrame:rect];
@@ -56,13 +57,13 @@
         rect.size.height = ktimeLabelHeight;
         rect.size.width = ktimeLabelWidth;
         rect.origin.x = self.progressView.frame.origin.x;
-        rect.origin.y = kAudioViewCellHeight - ktimeLabelHeight;
+        rect.origin.y = kAudioViewCellHeight - ktimeLabelHeight - kPaddingBottom;
         self.timeLengthLabel = [[UILabel alloc] initWithFrame:rect];
         [self.timeLengthLabel setFont:[UIFont systemFontOfSize:12.0f]];
         [self addSubview:self.timeLengthLabel];
         
         rect.origin.x = kAudioCellWidth - kmicroBtnWidth  - kblank;
-        rect.origin.y = kAudioViewCellHeight - kmicroBtnHeight - kblank;
+        rect.origin.y = kAudioViewCellHeight - kmicroBtnHeight - kPaddingBottom;
         rect.size.width = kmicroBtnWidth;
         rect.size.height = kmicroBtnHeight;
         self.microPhoneBtn = [[UIButton alloc] initWithFrame:rect ];
@@ -148,7 +149,7 @@
     return CGRectMake(floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
                       floorf(kMarginTop),
                       floorf(bubbleSize.width),
-                      floorf(bubbleSize.height));
+                      floorf(bubbleSize.height - 4));
     
 }
 

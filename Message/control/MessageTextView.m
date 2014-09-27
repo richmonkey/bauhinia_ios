@@ -49,7 +49,6 @@
     
     [self drawMsgStateSign: frame];
     
-    
     CGSize textSize = [BubbleView textSizeForText:self.text];
     
     CGFloat textX = image.leftCapWidth  + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);

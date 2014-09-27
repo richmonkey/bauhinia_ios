@@ -569,6 +569,9 @@
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags & MESSAGE_FLAG_FAILURE;
     [self reloadMessage:msgLocalID];
+    
+    [[PeerMessageDB instance] markPeerMessageFailure:msgLocalID uid:uid];
+    
 }
 
 //用户连线状态
@@ -795,6 +798,28 @@
     }
 }
 
+-(void) reSendMessage:(UIButton*)btn{
+    int row = btn.tag & 0xffff;
+    int section = (int)(btn.tag >> 16);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return;
+    }
+    message.flags = message.flags & (~MESSAGE_FLAG_FAILURE);
+    Message *m = [[Message alloc] init];
+    m.cmd = MSG_IM;
+    IMMessage *im = [[IMMessage alloc] init];
+    im.sender = message.sender;
+    im.receiver = message.receiver;
+    im.msgLocalID = message.msgLocalID;
+    im.content = message.content.raw;
+    m.body = im;
+    [[IMService instance] sendPeerMessage:im];
+    
+//   [[PeerMessageDB instance] markPeerMessageSuccess:message.msgLocalID uid:message.sender];
+    
+}
 
 - (void) handleTapImageView:(UITapGestureRecognizer*)tap{
     int row = tap.view.tag & 0xffff;
@@ -846,9 +871,13 @@
             MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
             [imageView.imageView addGestureRecognizer:tap];
         }
+       
+        //errorButton
+//        [cell.bubbleView.msgSendErrorBtn addTarget:self action:@selector(reSendMessage:) forControlEvents:UIControlEventTouchUpInside];
     }
 
     [cell setMessage:message];
+    
     
     if (message.content.type == MESSAGE_AUDIO) {
         MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
@@ -1056,15 +1085,6 @@
     return [self.timestamps objectAtIndex:indexPath.row];
 }
 
-- (UIImage *)avatarImageForIncomingMessage
-{
-    return [UIImage imageNamed:@"head1.png"];
-}
-
-- (UIImage *)avatarImageForOutgoingMessage
-{
-    return [UIImage imageNamed:@"head2.png"];
-}
 
 -(NSString*)guid {
     CFUUIDRef    uuidObj = CFUUIDCreate(nil);

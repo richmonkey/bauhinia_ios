@@ -20,6 +20,11 @@ CGFloat const kJSAvatarSize = 50.0f;
     if(self) {
         self.backgroundColor = [UIColor clearColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.msgSendErrorBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [self.msgSendErrorBtn setImage:[UIImage imageNamed:@"MessageSendError"] forState:UIControlStateNormal];
+        [self.msgSendErrorBtn setImage:[UIImage imageNamed:@"MessageSendError"]  forState: UIControlStateHighlighted];
+        self.msgSendErrorBtn.hidden = YES;
+        [self addSubview:self.msgSendErrorBtn];
     }
     return self;
 }
@@ -55,6 +60,13 @@ CGFloat const kJSAvatarSize = 50.0f;
     return (self.type == BubbleMessageTypeIncoming) ? [UIImage bubbleDefaultIncomingSelected] : [UIImage bubbleDefaultOutgoingSelected];
 }
 
+-(void) showSendErrorBtn:(BOOL)show{
+    if (self.type == BubbleMessageTypeOutgoing) {
+        [self.msgSendErrorBtn setHidden:!show];
+    }
+
+}
+
 -(void) drawMsgStateSign:(CGRect) frame{
     if (self.type == BubbleMessageTypeOutgoing) {
         UIImage *msgSignImg = nil;
@@ -86,6 +98,14 @@ CGFloat const kJSAvatarSize = 50.0f;
         CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
         
         [msgSignImg drawInRect:msgStateSignRect];
+        
+        
+        imgX = bubbleFrame.origin.x;
+        CGRect rect = self.msgSendErrorBtn.frame;
+        rect.origin.x = imgX - self.msgSendErrorBtn.frame.size.width + 2;
+        rect.origin.y = bubbleFrame.origin.y + bubbleFrame.size.height  - self.msgSendErrorBtn.frame.size.height - kMarginBottom;
+        [self.msgSendErrorBtn setFrame:rect];
+        [self bringSubviewToFront:self.msgSendErrorBtn];
     }
 }
 

@@ -28,16 +28,17 @@ typedef enum {
 @property (assign, nonatomic) BOOL selectedToShowCopyMenu;
 @property (nonatomic) BubbleMessageReceiveStateType msgStateType;
 @property (nonatomic) UIImageView *receiveStateImgSign;
-//@property (nonatomic) UIActivityIndicatorView *loadIndicatorView;
 @property (nonatomic) UIActivityIndicatorView *downloadIndicatorView;
 @property (nonatomic) UIActivityIndicatorView *uploadIndicatorView;
 @property (nonatomic) CGRect contentFrame;
-
+@property (strong, nonatomic) UIButton *msgSendErrorBtn;
 
 #pragma mark - Drawing
 - (CGRect)bubbleFrame;
 - (UIImage *)bubbleImage;
 - (UIImage *)bubbleImageHighlighted;
+
+-(void) showSendErrorBtn:(BOOL)show;
 
 -(void) drawMsgStateSign:(CGRect) frame;
 
