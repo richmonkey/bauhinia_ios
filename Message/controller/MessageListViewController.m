@@ -123,7 +123,8 @@
     UserDB *db = [UserDB instance];
     for (Conversation *conv in self.conversations) {
         IMUser *user = [db loadUser:conv.cid];
-        conv.name = user.contact.contactName;
+        conv.name = user.displayName;
+        conv.avatarURL = user.avatarURL;
     }
     [self.tableview reloadData];
 }

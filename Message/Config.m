@@ -23,12 +23,12 @@
 -(id)init {
     self = [super init];
     if (self) {
-        self.host = @"106.186.122.158";
+        self.host = @"im.yufeng.me";
         self.port = 23000;
     }
     return self;
 }
 -(NSString*)URL {
-    return @"http://106.186.122.158:5000";
+    return @"http://im.yufeng.me:5000";
 }
 @end
