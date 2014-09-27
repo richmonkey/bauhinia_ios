@@ -63,6 +63,8 @@
 	self.tableview.showsVerticalScrollIndicator = NO;
 	self.tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
     
+    [self.tableview setBackgroundColor:RGBACOLOR(235, 235, 237, 1)];
+    
     self.tableview.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
     self.tableview.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:self.tableview];
