@@ -11,7 +11,7 @@
 #import "Message.h"
 #import "util.h"
 
-#define HEARTBEAT (10ull*NSEC_PER_SEC)
+#define HEARTBEAT (180ull*NSEC_PER_SEC)
 
 @interface IMService()
 @property(nonatomic, assign)BOOL stopped;
