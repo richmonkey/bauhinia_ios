@@ -13,8 +13,6 @@
 
 #define kSetBackgroundCellTag             100
 #define kRetBackgroudnCellTag             101
-#define kAutoLoadPicCellTag               200
-#define kAutoLoadAudioCellTag             201
 
 
 
@@ -34,8 +32,8 @@
         
        [self setTitle:@"会话设置"];
         self.cellTitleArray = @[
-  @[@"聊天背景图" ,@"重置背景图"],
-  @[@"自动下载音频",@"自动下载图片"]];
+  @[@"聊天背景图" ,@"重置背景图"]
+  ];
     }
     return self;
 }
@@ -112,26 +110,6 @@
         {
             [[SystemProperty instance] setBackgroundString:@""];
             [self.view makeToast:@"背景图设置成功!" duration:1.0 position:@"bottom"];
-        }
-            break;
-        case kAutoLoadPicCellTag:
-        {
-            DownLoadSettingViewController * downloadSetController = [[DownLoadSettingViewController alloc] init];
-            
-            downloadSetController.hidesBottomBarWhenPushed = YES;
-            [downloadSetController setTitle:@"图片下载设置"];
-            
-            [self.navigationController pushViewController:downloadSetController animated: YES];
-        }
-            break;
-        case kAutoLoadAudioCellTag:
-        {
-            DownLoadSettingViewController * downloadSetController = [[DownLoadSettingViewController alloc] init];
-            
-            downloadSetController.hidesBottomBarWhenPushed = YES;
-            [downloadSetController setTitle:@"音频下载设置"];
-            
-            [self.navigationController pushViewController:downloadSetController animated: YES];
         }
             break;
         default:

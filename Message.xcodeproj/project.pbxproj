@@ -146,8 +146,6 @@
 		6D762161197ECAE800B690D7 /* MessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762160197ECAE800B690D7 /* MessageDB.m */; };
 		6D7621651981626900B690D7 /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7621641981626900B690D7 /* libleveldb.a */; };
 		6D76216819834DA100B690D7 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76216719834DA100B690D7 /* MBProgressHUD.m */; };
-		6D76216F198362DE00B690D7 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76216D198362DE00B690D7 /* LoginViewController.m */; };
-		6D762170198362DE00B690D7 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D76216E198362DE00B690D7 /* LoginViewController.xib */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
 		6DA2CEB119CD7F2C0056A084 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DA2CEA919CD7F2C0056A084 /* libopencore-amrnb.a */; };
 		6DA2CEB319CD7F2C0056A084 /* wav_amr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6DA2CEAB19CD7F2C0056A084 /* wav_amr.c */; };
@@ -424,9 +422,6 @@
 		6D7621641981626900B690D7 /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = Message/backend/leveldb/libleveldb.a; sourceTree = "<group>"; };
 		6D76216619834DA100B690D7 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		6D76216719834DA100B690D7 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
-		6D76216C198362DE00B690D7 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		6D76216D198362DE00B690D7 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		6D76216E198362DE00B690D7 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		6DA2CEA719CD7F2C0056A084 /* interf_dec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interf_dec.h; sourceTree = "<group>"; };
@@ -497,9 +492,6 @@
 			children = (
 				48731E1619C5E92E00FF8A7C /* register */,
 				489933CA19C44BE500C56F2D /* setting */,
-				6D76216C198362DE00B690D7 /* LoginViewController.h */,
-				6D76216D198362DE00B690D7 /* LoginViewController.m */,
-				6D76216E198362DE00B690D7 /* LoginViewController.xib */,
 				2105646719695FC0008D3A83 /* ContactListTableViewController.h */,
 				2105646819695FC0008D3A83 /* ContactListTableViewController.m */,
 				2105646919695FC0008D3A83 /* ContactViewController.h */,
@@ -1138,7 +1130,6 @@
 				210564FC19695FC1008D3A83 /* input-field.png in Resources */,
 				48338B3319C521A600BA2392 /* ConversationSettingViewController.xib in Resources */,
 				48731E1B19C5E95400FF8A7C /* AskPhoneNumberViewController.xib in Resources */,
-				6D762170198362DE00B690D7 /* LoginViewController.xib in Resources */,
 				48731E2019C5F17900FF8A7C /* CheckVerifyCodeController.xib in Resources */,
 				2157372B19850B100071C2EF /* ContactHeaderView.xib in Resources */,
 				210564FF19695FC1008D3A83 /* PhotoIcon@2x.png in Resources */,
@@ -1186,7 +1177,6 @@
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
 				489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */,
 				489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */,
-				6D76216F198362DE00B690D7 /* LoginViewController.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
 				210564CD19695FC1008D3A83 /* MessageViewController.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,

@@ -1022,13 +1022,13 @@
         if (buttonIndex == 0) {
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = YES;
+            picker.allowsEditing = NO;
             picker.sourceType = UIImagePickerControllerSourceTypeCamera;
             [self presentViewController:picker animated:YES completion:NULL];
         }else if(buttonIndex == 1){
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = YES;
+            picker.allowsEditing = NO;
             picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             [self presentViewController:picker animated:YES completion:NULL];
         }
@@ -1096,7 +1096,7 @@
     msg.content = content;
     msg.timestamp = (int)time(NULL);
 
-    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
 
     [[SDImageCache sharedImageCache] storeImage:image forKey:msg.content.imageURL];

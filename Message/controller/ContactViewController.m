@@ -62,16 +62,11 @@
     return self;
 }
 
--(void)loadView {
-    CGRect rect = CGRectMake(0, 0, 320, 480);
-    self.view = [[UIView alloc] initWithFrame:rect];
-    self.view.backgroundColor = [UIColor whiteColor];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     
     CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     self.tableview = [[UITableView alloc] initWithFrame:rect style: UITableViewStyleGrouped];

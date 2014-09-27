@@ -39,7 +39,7 @@
     [super viewDidLoad];
     self.tabBarController.navigationItem.title = @"所有联系人";
 	
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,kStatusBarHeight + KNavigationBarHeight, 320.0f, kSearchBarHeight)];
+	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,kStatusBarHeight + KNavigationBarHeight, self.view.frame.size.width, kSearchBarHeight)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
@@ -61,9 +61,9 @@
     NSLog(@"height:%f", self.view.frame.size.height);
 	[self.view addSubview:self.tableView];
 
-    UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
     PhoneNumber *phoneNumber = [UserPresent instance].phoneNumber;
-    NSString *s = [NSString stringWithFormat:@"   我的电话号码:+%@ %@", phoneNumber.zone, phoneNumber.number];
+    NSString *s = [NSString stringWithFormat:@"   我的电话号码: +%@ %@", phoneNumber.zone, phoneNumber.number];
     NSMutableAttributedString *attrTitle = [[NSMutableAttributedString alloc] initWithString: s];
     [attrTitle addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x35bc6e) range:NSMakeRange(10, [s length]-10)];
  

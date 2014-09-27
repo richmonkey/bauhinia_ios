@@ -33,29 +33,29 @@
 #pragma mark 即将旋转屏幕的时候自动调用
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    [UIView animateWithDuration:duration animations:^{
-        CGFloat width = 0,height = 0;
-        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            width = 640;
-            height  = 320;
-        } else {
-            width = 320;
-            height = 640;
-        }
-        self.view.frame = CGRectMake(0, 0, width,height);
-        self.loginView.center = CGPointMake(width/2, height/2);
-        self.loginView.frame = CGRectMake(0, 0, 120, 120);
-        
-    }];
+//    [UIView animateWithDuration:duration animations:^{
+//        CGFloat width = 0,height = 0;
+//        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+//            width = 640;
+//            height  = 320;
+//        } else {
+//            width = 320;
+//            height = 640;
+//        }
+//        self.view.frame = CGRectMake(0, 0, width,height);
+//        self.loginView.center = CGPointMake(width/2, height/2);
+//        self.loginView.frame = CGRectMake(0, 0, 120, 120);
+//        
+//    }];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
-    return YES;
-}
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+//    return YES;
+//}
 
-- (BOOL)shouldAutorotate {
-    return YES;
-}
+//- (BOOL)shouldAutorotate {
+//    return YES;
+//}
 - (IBAction)onTap:(id)sender
 {
     [self.mobile   resignFirstResponder];

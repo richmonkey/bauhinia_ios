@@ -60,7 +60,12 @@
     
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"customStatus" ofType:@"plist"];
     self.statusArray = [[NSMutableArray alloc] initWithContentsOfFile:plistPath];
-    CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height -(KNavigationBarHeight + KTabBarHeight));
+    CGRect rect = CGRectZero;
+    if (iPhone5) {
+       rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    }else{
+        rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height -(KNavigationBarHeight + KTabBarHeight));
+    }
     self.tableView  = [[UITableView alloc] initWithFrame:rect style:UITableViewStyleGrouped];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;

@@ -14,7 +14,7 @@
 #import "MessageGroupConversationCell.h"
 #import "UserDB.h"
 #import "UIImageView+WebCache.h"
-
+#import "UserPresent.h"
 #import "JSBadgeView.h"
 
 #define kPeerConversationCellHeight         60
@@ -415,10 +415,12 @@
     } else {
         Conversation *con = [[Conversation alloc] init];
         con.message = msg;
-        
-        con.newMsgCount += 1;
-        NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
+       
+        if ([UserPresent instance].uid == msg.receiver) {
+            con.newMsgCount += 1;
+            NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+            [[NSNotificationCenter defaultCenter] postNotification:notification];
+        }
         
         con.type = CONVERSATION_PEER;
         con.cid = cid;
