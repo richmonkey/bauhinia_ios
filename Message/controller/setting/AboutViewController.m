@@ -69,7 +69,7 @@
 -(void) displayComposerSheet{
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
     mc.mailComposeDelegate = self;
-    self.reciver = @[@"11@11.com"];
+    self.reciver = @[@"daibou007@163.com"];
     [mc setSubject:@"Message,建议及意见!"];
     [mc setToRecipients:self.reciver];
     [mc setMessageBody:@"Message!!!\n\n!" isHTML:NO];
