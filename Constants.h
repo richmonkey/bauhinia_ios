@@ -38,6 +38,7 @@ alpha:(a)]
 #define CLEAR_ALL_CONVESATION   @"clear_all_conversation"
 
 #define ON_NEW_MESSAGE_NOTIFY  @"on_new_message_notify"
-#define CLEAR_NEW_MESSAGE_NOTIFY  @"clear_new_message_notify"
+#define CLEAR_SINGLE_CONV_NEW_MESSAGE_NOTIFY @"clear_single_conv_new_message_notify"
+#define CLEAR_TAB_BAR_NEW_MESSAGE_NOTIFY  @"clear_tab_bar_new_message_notify"
 
 #endif

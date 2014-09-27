@@ -39,7 +39,6 @@
     if (self) {
         self.filteredArray =  [NSMutableArray array];
         self.conversations = [[NSMutableArray alloc] init];
-        self.selectingConv = nil;
     }
     return self;
 }
@@ -87,6 +86,7 @@
     
    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearAllConversation:) name:CLEAR_ALL_CONVESATION object:nil];
     
+   [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSingleConvNewState:) name:CLEAR_SINGLE_CONV_NEW_MESSAGE_NOTIFY object:nil];
     
     UserDB *db = [UserDB instance];
     id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
@@ -111,7 +111,6 @@
 
 -(void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    self.selectingConv = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -236,6 +235,24 @@
     [self updateEmputyContentView];
 }
 
+-(void) clearSingleConvNewState:(NSNotification*) notification{
+    int64_t usrid = [(NSNumber*)notification.object longLongValue];
+    for (int index = 0 ; index < [self.conversations count] ; index++) {
+        Conversation *conv = [self.conversations objectAtIndex:index];
+        if (conv.cid == usrid) {
+            if (conv.newMsgCount > 0) {
+                conv.newMsgCount = 0;
+                 NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+                 MessageConversationCell *cell = (MessageConversationCell*)[self.tableview cellForRowAtIndexPath:path];
+                [cell clearNewMessage];
+                [self resetConversationsViewControllerNewState];
+            }
+        }
+
+    }
+    
+}
+
 #pragma mark - UISearchBarDelegate
 
 //获取每一个字符的拼音的首字符
@@ -302,12 +319,6 @@
         NSIndexPath  *path = [self.tableview indexPathForCell:cell];
         Conversation *con = [self.conversations objectAtIndex:path.row];
         IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
-        if (con.newMsgCount > 0) {
-            con.newMsgCount = 0;
-            [cell clearNewMessage];
-            [self resetConversationsViewControllerNewState];
-        }
-        self.selectingConv = con;
         
         MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: rmtUser];
         
@@ -324,10 +335,6 @@
         Conversation *con = [self.filteredArray objectAtIndex:findPath.row];
         
         [[PeerMessageDB instance] clearConversation:con.cid];
-       
-        if (self.selectingConv && self.selectingConv.cid == con.cid) {
-            self.selectingConv = nil;
-        }
         
         [self.filteredArray removeObject:con];
         [self.conversations removeObject:con];
@@ -404,12 +411,10 @@
         Conversation *con = [self.conversations objectAtIndex:index];
         con.message = msg;
         
-        //不是当前查看的conv
-        if (!self.selectingConv ||(self.selectingConv && self.selectingConv.cid != con.cid)) {
-            con.newMsgCount += 1;
-            NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+        con.newMsgCount += 1;
+        NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
             [[NSNotificationCenter defaultCenter] postNotification:notification];
-        }
+        
         NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
         [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
     } else {
@@ -583,7 +588,7 @@
     }
     
     if (shouldClearNewCount) {
-        NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+        NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_TAB_BAR_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
     }
 }

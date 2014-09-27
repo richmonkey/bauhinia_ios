@@ -68,7 +68,7 @@
     MessageListViewController* msgController = [[MessageListViewController alloc] init];
     msgController.title = @"对话";
     msgController.tabBarItem.title = @"对话";
-    msgController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChats"];
+    msgController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChatsOn"];
     msgController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
     
     UINavigationController *nav3 = [[UINavigationController alloc] initWithRootViewController:msgController];
@@ -115,8 +115,11 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNewMessage:) name:ON_NEW_MESSAGE_NOTIFY object:nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearNewMessage:) name:CLEAR_NEW_MESSAGE_NOTIFY object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearNewMessage:) name:CLEAR_TAB_BAR_NEW_MESSAGE_NOTIFY object:nil];
 
+    [[self tabBar] setTintColor: RGBACOLOR(48,176,87, 1)];
+    [[self tabBar] setBarTintColor: RGBACOLOR(245, 245, 246, 1)];
+    
 }
 
 

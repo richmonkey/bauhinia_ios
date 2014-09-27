@@ -107,18 +107,17 @@
 
 -(void) viewDidAppear:(BOOL)animated{
 
-
- 
 }
 
 -(void) viewDidDisappear:(BOOL)animated{
     
-
 }
 
 - (void)setup
 {
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+    UIImage *backColor = [UIImage imageNamed:@"chatBack"];
+    UIColor *color = [[UIColor alloc] initWithPatternImage:backColor];
+    [self.view setBackgroundColor:color];
 	
     CGRect tableFrame = self.tableFrame;
 	self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
@@ -205,6 +204,9 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_SINGLE_CONV_NEW_MESSAGE_NOTIFY object:[NSNumber numberWithLongLong:self.remoteUser.uid] userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 - (void)didReceiveMemoryWarning
