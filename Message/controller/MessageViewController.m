@@ -98,6 +98,10 @@
     self.navigationItem.titleView = self.navigationBarButtonsView;
 
     [self processConversationData];
+
+    [self.tableView reloadData];
+    [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
+
     [[IMService instance] addMessageObserver:self];
     [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
@@ -183,7 +187,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self scrollToBottomAnimated:NO];
+
     
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(handleWillShowKeyboard:)
@@ -640,7 +644,7 @@
     
     long lastSection = [self.messageArray count] - 1;
     NSMutableArray *array = [self.messageArray objectAtIndex: lastSection];
-    long lastRow = [array count] - 1;
+    long lastRow = [array count]-1;
     
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:lastRow inSection:lastSection]
 						  atScrollPosition:UITableViewScrollPositionBottom
