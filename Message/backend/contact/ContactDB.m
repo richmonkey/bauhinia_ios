@@ -201,8 +201,11 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
 	for (int i = 0; i < ABMultiValueGetCount(theProperty); i++)
 	{
 		NSString *label = (__bridge NSString *)ABMultiValueCopyLabelAtIndex(theProperty, i);
-		[labels addObject:label];
-        
+        if (label == nil) {
+            [labels addObject:@""];
+        } else {
+            [labels addObject:label];
+        }
 	}
 	CFRelease(theProperty);
 	return labels;
