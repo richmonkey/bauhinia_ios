@@ -5,15 +5,19 @@
 //  Created by houxh on 14-6-26.
 //  Copyright (c) 2014年 potato. All rights reserved.
 //
-
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #import "IMService.h"
 #import "AsyncTCP.h"
 #import "Message.h"
 #import "util.h"
 
+
 #define HEARTBEAT (180ull*NSEC_PER_SEC)
 
 @interface IMService()
+@property(atomic, copy) NSString *hostIP;
 @property(nonatomic, assign)BOOL stopped;
 @property(nonatomic)AsyncTCP *tcp;
 @property(nonatomic, strong)dispatch_source_t connectTimer;
@@ -83,6 +87,8 @@
     w = dispatch_walltime(NULL, HEARTBEAT);
     dispatch_source_set_timer(self.heartbeatTimer, w, HEARTBEAT, HEARTBEAT/2);
     dispatch_resume(self.heartbeatTimer);
+    
+    [self refreshHostIP];
 }
 
 -(void)stop {
@@ -330,6 +336,41 @@
     }
 }
 
+-(NSString*)resolveIP:(NSString*)host {
+    struct addrinfo hints;
+    struct addrinfo *result, *rp;
+    int s;
+    
+    char buf[32];
+    snprintf(buf, 32, "%d", 0);
+    
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = 0;
+    
+    s = getaddrinfo([host UTF8String], buf, &hints, &result);
+    if (s != 0) {
+        return nil;
+    }
+    NSString *ip = nil;
+    for (rp = result; rp != NULL; rp = rp->ai_next) {
+        struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
+        const char *str = inet_ntoa(addr->sin_addr);
+        ip = [NSString stringWithUTF8String:str];
+        break;
+    }
+    
+    freeaddrinfo(result);
+    return ip;
+}
+
+-(void)refreshHostIP {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        self.hostIP = [self resolveIP:self.host];
+    });
+}
 -(void)connect {
     if (self.tcp) {
         return;
@@ -344,6 +385,11 @@
     
     self.tcp = [[AsyncTCP alloc] init];
     __weak IMService *wself = self;
+    NSString *host = self.hostIP;
+    if (host.length == 0) {
+        host = self.host;
+    }
+    
     BOOL r = [self.tcp connect:self.host port:self.port cb:^(AsyncTCP *tcp, int err) {
         if (err) {
             NSLog(@"tcp connect err");
