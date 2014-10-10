@@ -202,7 +202,6 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)aTableView {
 	if (aTableView == self.tableView) {
-        return nil;
 		NSMutableArray *indices = [NSMutableArray arrayWithObject:UITableViewIndexSearch];
 		for (int i = 0; i < 27; i++){
 			if ([[self.sectionArray objectAtIndex:i] count]){
