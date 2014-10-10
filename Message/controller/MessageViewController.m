@@ -222,7 +222,9 @@
 - (void)dealloc
 {
     self.tableView = nil;
+    self.inputToolBarView.textView.delegate = nil;
     self.inputToolBarView = nil;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
