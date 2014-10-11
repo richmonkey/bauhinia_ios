@@ -40,7 +40,7 @@ int64_t ntoh64(int64_t val )
     high = (int64_t)(val & 0x00000000FFFFFFFF);
     low = ntohl( low );
     high = ntohl( high );
-
+    
     return (int64_t)low << 32 | high;
 }
 
@@ -70,7 +70,7 @@ int lookupAddr(const char *host, int port, struct sockaddr_in *addr) {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
     int s;
-
+    
     char buf[32];
     snprintf(buf, 32, "%d", port);
     
@@ -106,7 +106,7 @@ int sock_nonblock(int fd, int set) {
 
 int write_data(int fd, uint8_t *bytes, int len) {
     int n = 0;
-
+    
     do {
         n = send(fd, bytes, len, 0);
     } while(n == -1 && errno == EINTR);
@@ -119,3 +119,13 @@ int write_data(int fd, uint8_t *bytes, int len) {
         return n;
     }
 }
+
+size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d )
+{
+    return fwrite(a, b, c, d);
+}
+char* strerror$UNIX2003( int errnum )
+{
+    return strerror(errnum);
+}
+
