@@ -605,17 +605,15 @@
     if (uid != self.remoteUser.uid) {
         return;
     }
-    
     if (on) {
-        
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
+        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:12.0f]];
         self.onlineState = UserOnlineStateOnline;
     }else{
-        
-        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
+        [self.navigationBarButtonsView.conectInformationLabel setText: [self getRemoteUserLastOnlineTimestamp]];
+        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
         self.onlineState = UserOnlineStateOffline;
     }
-    
 }
 
 //对方正在输入
@@ -639,8 +637,10 @@
     self.inputStatusTimer = nil;
     if (self.onlineState == UserOnlineStateOnline) {
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
+        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:12.0f]];
     }else if(self.onlineState == UserOnlineStateOffline){
-        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
+        [self.navigationBarButtonsView.conectInformationLabel setText:[self getRemoteUserLastOnlineTimestamp]];
+        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
     }
 }
 
@@ -1287,6 +1287,25 @@
 }
 
 #pragma mark - function
+
+-(NSString*) getRemoteUserLastOnlineTimestamp{
+    
+    NSDate *lastDate =  [[NSDate alloc] initWithTimeIntervalSince1970:self.remoteUser.lastUpTimestamp];
+    
+    NSDate *todayDate = [NSDate date];
+    NSString *timeStr = nil;
+    if ([PublicFunc isTheDay:lastDate sameToThatDay:todayDate] ) {
+        //当天
+        int hour = [PublicFunc getHourComponentOfDate:lastDate];
+        int minute = [PublicFunc getMinuteComponentOfDate:lastDate];
+        timeStr = [NSString stringWithFormat:@"%@%02d:%02d",@"最后上线时间: 今天 ",hour,minute];
+    }else{
+        int week = [PublicFunc getWeekDayComponentOfDate: lastDate];
+        NSString *weekStr = [PublicFunc getWeekDayString: week];
+        timeStr = [NSString stringWithFormat:@"%@%@",@"最后上线时间: ",weekStr];
+    }
+    return timeStr;
+}
 
 -(void) setNormalNavigationButtons{
     
