@@ -609,11 +609,11 @@
     if (on) {
         
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-        self.remoteUser.onlineState = UserOnlineStateOnline;
+        self.onlineState = UserOnlineStateOnline;
     }else{
         
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
-        self.remoteUser.onlineState = UserOnlineStateOffline;
+        self.onlineState = UserOnlineStateOffline;
     }
     
 }
@@ -637,9 +637,9 @@
     
     [self.inputStatusTimer invalidate];
     self.inputStatusTimer = nil;
-    if (self.remoteUser.onlineState == UserOnlineStateOnline) {
+    if (self.onlineState == UserOnlineStateOnline) {
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-    }else if(self.remoteUser.onlineState == UserOnlineStateOffline){
+    }else if(self.onlineState == UserOnlineStateOffline){
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
     }
 }
