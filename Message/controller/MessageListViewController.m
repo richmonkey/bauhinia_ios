@@ -189,9 +189,7 @@
     NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
     NSString *str = [PublicFunc getConversationTimeString:date ];
     cell.timelabel.text = str;
-    cell.namelabel.text = covn.name; 
-    
-    cell.delegate = self;
+    cell.namelabel.text = covn.name;
    
     if (covn.newMsgCount > 0) {
         [cell showNewMessage:covn.newMsgCount];
@@ -213,13 +211,51 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+        if ([self.searchDC isActive]) {
+            Conversation *con = [self.filteredArray objectAtIndex:indexPath.row];
+            
+            [[PeerMessageDB instance] clearConversation:con.cid];
+            
+            [self.filteredArray removeObject:con];
+            [self.conversations removeObject:con];
+            
+            [self.tableview reloadData];
+            [self.searchDC.searchResultsTableView reloadData];
+            
+            if([self.filteredArray count] == 0){
+                [self.searchDC setActive:NO];
+            }
+            
+        }else{
+            Conversation *con = [self.conversations objectAtIndex:indexPath.row];
+            [[PeerMessageDB instance] clearConversation:con.cid];
+            [self.conversations removeObject:con];
+            [self.tableview reloadData];
+            
+            [self updateEmputyContentView];
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    if ([self.searchDisplayController isActive]) {
+        [self.searchBar resignFirstResponder];
+    }
+    
+    Conversation *con = [self.conversations objectAtIndex:indexPath.row];
+    IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
+    
+    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: rmtUser];
+    
+    msgController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:msgController animated: YES];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -308,96 +344,6 @@
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	[self.searchBar setText:@""];
 }
-
-
-#pragma mark - TLSwipeForOptionsCellDelegate Methods
-
--(void)orignalCellDidSelected:(MessageConversationCell *)cell{
-    if (![cell selectionStyle] == UITableViewCellSelectionStyleNone) {
-
-        if ([self.searchDisplayController isActive]) {
-            [self.searchBar resignFirstResponder];
-        }
-        
-        NSIndexPath  *path = [self.tableview indexPathForCell:cell];
-        Conversation *con = [self.conversations objectAtIndex:path.row];
-        IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
-        
-        MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: rmtUser];
-        
-        msgController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:msgController animated: YES];
-    }
-    
-}
-
--(void)cellDidSelectDelete:(MessageConversationCell *)cell {
-    
-    if ([self.searchDC isActive]) {
-        NSIndexPath * findPath =  [self.searchDC.searchResultsTableView indexPathForCell:cell];
-        Conversation *con = [self.filteredArray objectAtIndex:findPath.row];
-        
-        [[PeerMessageDB instance] clearConversation:con.cid];
-        
-        [self.filteredArray removeObject:con];
-        [self.conversations removeObject:con];
-        
-        [self.tableview reloadData];
-        [self.searchDC.searchResultsTableView reloadData];
-        
-        if([self.filteredArray count] == 0){
-            [self.searchDC setActive:NO];
-        }
-        
-    }else{
-        NSIndexPath * findPath =  [self.tableview indexPathForCell:cell];
-        Conversation *con = [self.conversations objectAtIndex:findPath.row];
-        [[PeerMessageDB instance] clearConversation:con.cid];
-        [self.conversations removeObject:con];
-        [self.tableview reloadData];
-        
-        [self updateEmputyContentView];
-    }
-}
-
--(void)cellDidSelectMore:(MessageConversationCell *)cell {
-    self.mostRecentlySelectedMoreCell = cell;
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle: nil otherButtonTitles:@"联系资讯", @"清除对话", nil];
-    actionSheet.destructiveButtonIndex= 2 ;
-    
-    [actionSheet showInView:self.view];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        
-    }
-    else if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        [self cellDidSelectDelete:self.mostRecentlySelectedMoreCell];
-    }else if(buttonIndex == kActionSheetContact){
-       //TODO
-        if ([self.searchDC isActive]) {
-            NSIndexPath * findPath =  [self.searchDC.searchResultsTableView indexPathForCell:self.mostRecentlySelectedMoreCell];
-            Conversation *con = [self.filteredArray objectAtIndex:findPath.row];
-            IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
-            
-            [self.searchDC setActive:NO];
-            
-        }else{
-            NSIndexPath * findPath =  [self.tableview indexPathForCell:self.mostRecentlySelectedMoreCell];
-            Conversation *con = [self.conversations objectAtIndex:findPath.row];
-            [[PeerMessageDB instance] clearConversation:con.cid];
-            [self.conversations removeObject:con];
-            [self.tableview reloadData];
-        }
-    }
-    
-}
-
-#pragma mark - Action
-
-
-
 
 -(void)onNewMessage:(IMessage*)msg cid:(int64_t)cid{
     int index = -1;

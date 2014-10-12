@@ -12,26 +12,12 @@
 @class MessageConversationCell;
 
 
-@protocol TLSwipeForOptionsCellDelegate <NSObject>
-
-- (void)cellDidSelectDelete:(MessageConversationCell *)cell;
-
-- (void)cellDidSelectMore:(MessageConversationCell *)cell;
-
-- (void)orignalCellDidSelected:(MessageConversationCell *)cell;
-
-@end
-
-
 @interface MessageConversationCell : UITableViewCell
 
-@property (weak, nonatomic)     IBOutlet UIView* myContentView;
 @property (weak, nonatomic)     IBOutlet UIImageView* headView;
 @property (weak, nonatomic)     IBOutlet UILabel* namelabel;
 @property (weak, nonatomic)     IBOutlet UILabel* messageContent;
 @property (weak, nonatomic)     IBOutlet UILabel* timelabel;
-
-@property (nonatomic, weak) id<TLSwipeForOptionsCellDelegate> delegate;
 
 -(void) showNewMessage:(int)count;
 -(void) clearNewMessage;
