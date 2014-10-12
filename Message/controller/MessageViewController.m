@@ -704,7 +704,8 @@
         return;
     }
 
-    if (indexPath.section == self.playingIndexPath.section &&
+    if (self.playingIndexPath != nil &&
+        indexPath.section == self.playingIndexPath.section &&
         indexPath.row == self.playingIndexPath.row) {
 
         MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -865,7 +866,8 @@
         audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
         audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
         
-        if (self.playingIndexPath.section == indexPath.section &&
+        if (self.playingIndexPath != nil &&
+            self.playingIndexPath.section == indexPath.section &&
             self.playingIndexPath.row == indexPath.row) {
             [audioView setPlaying:YES];
             audioView.progressView.progress = self.player.currentTime/self.player.duration;
