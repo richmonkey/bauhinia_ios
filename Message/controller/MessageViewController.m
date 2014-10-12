@@ -272,6 +272,48 @@
     self.inputToolBarView.timerLabel.text = str;
 }
 
+- (void)startRecord {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryRecord error:nil];
+    BOOL r = [session setActive:YES error:nil];
+    if (!r) {
+        NSLog(@"activate audio session fail");
+        return;
+    }
+    NSLog(@"start record...");
+    
+    NSArray *pathComponents = [NSArray arrayWithObjects:
+                               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+                               @"MyAudioMemo.wav",
+                               nil];
+    NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
+    
+    // Define the recorder setting
+    NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
+    
+    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey:AVFormatIDKey];
+    [recordSetting setValue:[NSNumber numberWithFloat:8000] forKey:AVSampleRateKey];
+    [recordSetting setValue:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
+    
+    self.recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:NULL];
+    self.recorder.delegate = self;
+    self.recorder.meteringEnabled = YES;
+    if (![self.recorder prepareToRecord]) {
+        NSLog(@"prepare record fail");
+        return;
+    }
+    if (![self.recorder record]) {
+        NSLog(@"start record fail");
+        return;
+    }
+    
+    [self.inputToolBarView setRecordShowing];
+    
+    self.recordCanceled = NO;
+    self.seconds = 0;
+    self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+}
+
 - (void)recordTouchDown:(UIButton *)sender
 {
     if (self.recorder.recording) {
@@ -295,45 +337,14 @@
         self.playingIndexPath = nil;
     }
     
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryRecord error:nil];
-    BOOL r = [session setActive:YES error:nil];
-    if (!r) {
-        NSLog(@"activate audio session fail");
-        return;
-    }
-    NSLog(@"start record...");
-    
-    NSArray *pathComponents = [NSArray arrayWithObjects:
-                               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-                               @"MyAudioMemo.wav",
-                               nil];
-    NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
-    
-    // Define the recorder setting
-    NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
 
-    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey:AVFormatIDKey];
-    [recordSetting setValue:[NSNumber numberWithFloat:8000] forKey:AVSampleRateKey];
-    [recordSetting setValue:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
-    
-    self.recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:NULL];
-    self.recorder.delegate = self;
-    self.recorder.meteringEnabled = YES;
-    if (![self.recorder prepareToRecord]) {
-        NSLog(@"prepare record fail");
-        return;
-    }
-    if (![self.recorder record]) {
-        NSLog(@"start record fail");
-        return;
-    }
-    
-    [self.inputToolBarView setRecordShowing];
-    
-    self.recordCanceled = NO;
-    self.seconds = 0;
-    self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        if (granted) {
+            [self startRecord];
+        } else {
+            NSLog(@"can't grant record permission");
+        }
+    }];
 }
 
 - (void)recordTouchUp:(UIButton *)sender {
@@ -559,6 +570,9 @@
 
 //服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_ACK;
     [self reloadMessage:msgLocalID];
@@ -566,12 +580,18 @@
 
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_PEER_ACK;
     [self reloadMessage:msgLocalID];
 }
 
 -(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags & MESSAGE_FLAG_FAILURE;
     [self reloadMessage:msgLocalID];
@@ -582,20 +602,27 @@
 
 //用户连线状态
 -(void)onOnlineState:(int64_t)uid state:(BOOL)on{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
+    
     if (on) {
         
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-        self.remoteUser.onlineState = UserOnlineStateOnline;
+        self.onlineState = UserOnlineStateOnline;
     }else{
         
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
-        self.remoteUser.onlineState = UserOnlineStateOffline;
+        self.onlineState = UserOnlineStateOffline;
     }
     
 }
 
 //对方正在输入
 -(void)onPeerInputing:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
   
     [self.navigationBarButtonsView.conectInformationLabel setText:@"对方正在输入"];
   
@@ -610,9 +637,9 @@
     
     [self.inputStatusTimer invalidate];
     self.inputStatusTimer = nil;
-    if (self.remoteUser.onlineState == UserOnlineStateOnline) {
+    if (self.onlineState == UserOnlineStateOnline) {
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-    }else if(self.remoteUser.onlineState == UserOnlineStateOffline){
+    }else if(self.onlineState == UserOnlineStateOffline){
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方不在线"];
     }
 }
@@ -704,7 +731,8 @@
         return;
     }
 
-    if (indexPath.section == self.playingIndexPath.section &&
+    if (self.playingIndexPath != nil &&
+        indexPath.section == self.playingIndexPath.section &&
         indexPath.row == self.playingIndexPath.row) {
 
         MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -865,7 +893,8 @@
         audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
         audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
         
-        if (self.playingIndexPath.section == indexPath.section &&
+        if (self.playingIndexPath != nil &&
+            self.playingIndexPath.section == indexPath.section &&
             self.playingIndexPath.row == indexPath.row) {
             [audioView setPlaying:YES];
             audioView.progressView.progress = self.player.currentTime/self.player.duration;

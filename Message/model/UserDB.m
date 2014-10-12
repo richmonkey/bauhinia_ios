@@ -45,6 +45,11 @@
         k = [NSString stringWithFormat:@"numbers_%@", user.phoneNumber.zoneNumber];
         [db setInt:user.uid forKey:k];
     }
+    
+    if (user.lastUpTimestamp) {
+        NSString *k = [key stringByAppendingString:@"_up"];
+        [db setInt:user.lastUpTimestamp forKey:k];
+    }
 
     return YES;
 }
@@ -63,14 +68,17 @@
     NSString *k1 = [key stringByAppendingString:@"_avatar"];
     NSString *k2 = [key stringByAppendingString:@"_state"];
     NSString *k3 = [key stringByAppendingString:@"_number"];
+    NSString *k4 = [key stringByAppendingString:@"_up"];
     IMUser *u = [[IMUser alloc] init];
     u.uid = uid;
     u.avatarURL = [db stringForKey:k1];
     u.state = [db stringForKey:k2];
+    
     NSString *zoneNumber = [db stringForKey:k3];
     PhoneNumber *number = [[PhoneNumber alloc] initWithZoneNumber:zoneNumber];
-    
     u.phoneNumber = number;
+    
+    u.lastUpTimestamp = [db intForKey:k4];
     
     if (!u.phoneNumber.isValid) {
         NSString *s = [NSString stringWithFormat:@"%lld", u.uid];
@@ -109,6 +117,7 @@
     NSString *k1 = [key stringByAppendingString:@"_avatar"];
     NSString *k2 = [key stringByAppendingString:@"_state"];
     NSString *k3 = [key stringByAppendingString:@"_number"];
+    NSString *k4 = [key stringByAppendingString:@"_up"];
     User *u = [[User alloc] init];
     u.uid = uid;
     u.avatarURL = [db stringForKey:k1];
@@ -122,6 +131,8 @@
         !u.phoneNumber.isValid) {
         return nil;
     }
+    
+    u.lastUpTimestamp = [db intForKey:k4];
     return u;
 }
 @end

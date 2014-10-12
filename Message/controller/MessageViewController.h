@@ -26,6 +26,11 @@
 
 @class ConversationHeadButtonView;
 
+typedef enum {
+    UserOnlineStateNone = 0,
+    UserOnlineStateOnline,
+    UserOnlineStateOffline
+} UserOnlineStateType;
 
 @interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
     MessageObserver, OutboxObserver, AudioDownloaderObserver,UIActionSheetDelegate>
@@ -37,6 +42,9 @@
 @property (nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
 @property (nonatomic) int  inputTimestamp;
 @property (nonatomic) IMUser *remoteUser;
+//对方是否在线
+@property(nonatomic, assign)UserOnlineStateType onlineState;
+
 @property (nonatomic) NSTimer  *inputStatusTimer;
 
 -(id) initWithRemoteUser:(IMUser*) rmtUser;

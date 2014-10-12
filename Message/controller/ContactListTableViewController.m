@@ -131,6 +131,7 @@
                              user.uid = [[dict objectForKey:@"uid"] longLongValue];
                              user.avatarURL = [dict objectForKey:@"avatar"];
                              user.state = [dict objectForKey:@"state"];
+                             user.lastUpTimestamp = [[dict objectForKey:@"up_timestamp"] longLongValue];
                              user.phoneNumber = number;
                              if (user.uid > 0) {
                                  [[UserDB instance] addUser:user];
