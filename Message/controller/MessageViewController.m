@@ -272,6 +272,48 @@
     self.inputToolBarView.timerLabel.text = str;
 }
 
+- (void)startRecord {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryRecord error:nil];
+    BOOL r = [session setActive:YES error:nil];
+    if (!r) {
+        NSLog(@"activate audio session fail");
+        return;
+    }
+    NSLog(@"start record...");
+    
+    NSArray *pathComponents = [NSArray arrayWithObjects:
+                               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+                               @"MyAudioMemo.wav",
+                               nil];
+    NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
+    
+    // Define the recorder setting
+    NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
+    
+    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey:AVFormatIDKey];
+    [recordSetting setValue:[NSNumber numberWithFloat:8000] forKey:AVSampleRateKey];
+    [recordSetting setValue:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
+    
+    self.recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:NULL];
+    self.recorder.delegate = self;
+    self.recorder.meteringEnabled = YES;
+    if (![self.recorder prepareToRecord]) {
+        NSLog(@"prepare record fail");
+        return;
+    }
+    if (![self.recorder record]) {
+        NSLog(@"start record fail");
+        return;
+    }
+    
+    [self.inputToolBarView setRecordShowing];
+    
+    self.recordCanceled = NO;
+    self.seconds = 0;
+    self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+}
+
 - (void)recordTouchDown:(UIButton *)sender
 {
     if (self.recorder.recording) {
@@ -295,45 +337,14 @@
         self.playingIndexPath = nil;
     }
     
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryRecord error:nil];
-    BOOL r = [session setActive:YES error:nil];
-    if (!r) {
-        NSLog(@"activate audio session fail");
-        return;
-    }
-    NSLog(@"start record...");
-    
-    NSArray *pathComponents = [NSArray arrayWithObjects:
-                               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-                               @"MyAudioMemo.wav",
-                               nil];
-    NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
-    
-    // Define the recorder setting
-    NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
 
-    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey:AVFormatIDKey];
-    [recordSetting setValue:[NSNumber numberWithFloat:8000] forKey:AVSampleRateKey];
-    [recordSetting setValue:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
-    
-    self.recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:NULL];
-    self.recorder.delegate = self;
-    self.recorder.meteringEnabled = YES;
-    if (![self.recorder prepareToRecord]) {
-        NSLog(@"prepare record fail");
-        return;
-    }
-    if (![self.recorder record]) {
-        NSLog(@"start record fail");
-        return;
-    }
-    
-    [self.inputToolBarView setRecordShowing];
-    
-    self.recordCanceled = NO;
-    self.seconds = 0;
-    self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        if (granted) {
+            [self startRecord];
+        } else {
+            NSLog(@"can't grant record permission");
+        }
+    }];
 }
 
 - (void)recordTouchUp:(UIButton *)sender {
