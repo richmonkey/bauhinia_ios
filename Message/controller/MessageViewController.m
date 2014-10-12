@@ -559,6 +559,9 @@
 
 //服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_ACK;
     [self reloadMessage:msgLocalID];
@@ -566,12 +569,18 @@
 
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_PEER_ACK;
     [self reloadMessage:msgLocalID];
 }
 
 -(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
     IMessage *msg = [self getImMessageById:msgLocalID];
     msg.flags = msg.flags & MESSAGE_FLAG_FAILURE;
     [self reloadMessage:msgLocalID];
@@ -582,6 +591,10 @@
 
 //用户连线状态
 -(void)onOnlineState:(int64_t)uid state:(BOOL)on{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
+    
     if (on) {
         
         [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
@@ -596,6 +609,9 @@
 
 //对方正在输入
 -(void)onPeerInputing:(int64_t)uid{
+    if (uid != self.remoteUser.uid) {
+        return;
+    }
   
     [self.navigationBarButtonsView.conectInformationLabel setText:@"对方正在输入"];
   
