@@ -15,7 +15,7 @@
 
 @class Conversation;
 
-@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,TLSwipeForOptionsCellDelegate,UIActionSheetDelegate, MessageObserver, ContactDBObserver>
+@interface MessageListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,UIActionSheetDelegate, MessageObserver, ContactDBObserver>
 {
   
 	UITableView *tableview;
