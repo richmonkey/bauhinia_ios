@@ -11,7 +11,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+        <view autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -22,7 +22,7 @@
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="123123123123" borderStyle="line" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="Y4m-4p-Ukv">
+                <textField autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="123123123123" borderStyle="line" clearsOnBeginEditing="YES" adjustsFontSizeToFit="NO" minimumFontSize="26" clearButtonMode="unlessEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Y4m-4p-Ukv">
                     <rect key="frame" x="80" y="160" width="209" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -33,7 +33,7 @@
                     </connections>
                 </textField>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+86" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D41-20-Ekd">
-                    <rect key="frame" x="28" y="164" width="44" height="32"/>
+                    <rect key="frame" x="20" y="164" width="44" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="26"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -58,13 +58,13 @@
                 <constraint firstItem="lcl-vP-bmM" firstAttribute="leading" secondItem="lpx-Hk-19w" secondAttribute="leading" id="H2y-5U-tFR"/>
                 <constraint firstItem="Y4m-4p-Ukv" firstAttribute="top" secondItem="lcl-vP-bmM" secondAttribute="bottom" constant="25" id="NfL-zO-oSC"/>
                 <constraint firstItem="lcl-vP-bmM" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" symbolic="YES" id="SSb-Gb-KFI"/>
-                <constraint firstItem="D41-20-Ekd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="28" id="Ssk-uV-BG9"/>
+                <constraint firstItem="D41-20-Ekd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Ssk-uV-BG9"/>
                 <constraint firstAttribute="trailing" secondItem="lcl-vP-bmM" secondAttribute="trailing" constant="20" symbolic="YES" id="dXd-Jo-Cit"/>
                 <constraint firstAttribute="bottom" secondItem="lcl-vP-bmM" secondAttribute="bottom" constant="345" id="drX-BS-plw"/>
                 <constraint firstItem="lcl-vP-bmM" firstAttribute="top" secondItem="CfQ-pG-g2I" secondAttribute="bottom" constant="26" id="hnj-UP-qFt"/>
                 <constraint firstAttribute="bottom" secondItem="CfQ-pG-g2I" secondAttribute="bottom" constant="372" id="lYg-1n-TGO"/>
                 <constraint firstItem="lpx-Hk-19w" firstAttribute="top" secondItem="D41-20-Ekd" secondAttribute="bottom" constant="28" id="pGT-bU-shr"/>
-                <constraint firstItem="Y4m-4p-Ukv" firstAttribute="leading" secondItem="D41-20-Ekd" secondAttribute="trailing" constant="8" symbolic="YES" id="tRH-Ur-V1P"/>
+                <constraint firstItem="Y4m-4p-Ukv" firstAttribute="leading" secondItem="D41-20-Ekd" secondAttribute="trailing" constant="16" id="tRH-Ur-V1P"/>
                 <constraint firstItem="lcl-vP-bmM" firstAttribute="centerX" secondItem="CfQ-pG-g2I" secondAttribute="centerX" id="uci-3W-Pg5"/>
                 <constraint firstItem="lcl-vP-bmM" firstAttribute="trailing" secondItem="lpx-Hk-19w" secondAttribute="trailing" id="xCC-sF-UUB"/>
             </constraints>
