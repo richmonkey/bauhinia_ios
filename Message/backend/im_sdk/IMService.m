@@ -18,6 +18,8 @@
 
 @interface IMService()
 @property(atomic, copy) NSString *hostIP;
+@property(atomic, assign) time_t timestmap;
+
 @property(nonatomic, assign)BOOL stopped;
 @property(nonatomic)AsyncTCP *tcp;
 @property(nonatomic, strong)dispatch_source_t connectTimer;
@@ -115,12 +117,7 @@
     }
 }
 
--(void)onClose {
-    NSLog(@"im service on close");
-    self.tcp = nil;
-    if (self.stopped) return;
-    
-    NSLog(@"start connect timer");
+-(void)startConnectTimer {
     //重连
     int64_t t = 0;
     if (self.connectFailCount > 60) {
@@ -129,10 +126,18 @@
         t = self.connectFailCount*NSEC_PER_SEC;
     }
     
-    t = 10ull*NSEC_PER_SEC;
     dispatch_time_t w = dispatch_walltime(NULL, t);
     dispatch_source_set_timer(self.connectTimer, w, DISPATCH_TIME_FOREVER, 0);
+    
+    NSLog(@"start connect timer:%lld", t/NSEC_PER_SEC);
+}
 
+-(void)onClose {
+    NSLog(@"im service on close");
+    self.tcp = nil;
+    if (self.stopped) return;
+    
+    [self startConnectTimer];
 }
 
 -(void)handleClose {
@@ -367,10 +372,16 @@
 }
 
 -(void)refreshHostIP {
+    NSLog(@"refresh host ip...");
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        self.hostIP = [self resolveIP:self.host];
+        NSString *ip = [self resolveIP:self.host];
+        if ([ip length] > 0) {
+            self.hostIP = ip;
+            self.timestmap = time(NULL);
+        }
     });
 }
+
 -(void)connect {
     if (self.tcp) {
         return;
@@ -380,16 +391,22 @@
         return;
     }
     
-    self.connectState = STATE_CONNECTING;
-    [self publishConnectState:STATE_CONNECTING];
-    
-    self.tcp = [[AsyncTCP alloc] init];
-    __weak IMService *wself = self;
     NSString *host = self.hostIP;
     if (host.length == 0) {
-        host = self.host;
+        [self refreshHostIP];
+        self.connectFailCount = self.connectFailCount + 1;
+        [self startConnectTimer];
+        return;
+    }
+    time_t now = time(NULL);
+    if (now - self.timestmap > 5*60) {
+        [self refreshHostIP];
     }
     
+    self.connectState = STATE_CONNECTING;
+    [self publishConnectState:STATE_CONNECTING];
+    self.tcp = [[AsyncTCP alloc] init];
+    __weak IMService *wself = self;
     BOOL r = [self.tcp connect:self.host port:self.port cb:^(AsyncTCP *tcp, int err) {
         if (err) {
             NSLog(@"tcp connect err");
