@@ -160,39 +160,39 @@
     if (cell == nil) {
         cell = [[[NSBundle mainBundle]loadNibNamed:@"MessageConversationCell" owner:self options:nil] lastObject];
     }
-    Conversation * covn = nil;
+    Conversation * conv = nil;
     if (tableView == self.tableview) {
         
-         covn =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
+         conv =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
     
     }else{
         
-        covn =   (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
+        conv =   (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
     }
     
 
     
-    [cell.headView sd_setImageWithURL: [NSURL URLWithString:covn.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+    [cell.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
     
 
-    if (covn.message.content.type == MESSAGE_IMAGE) {
+    if (conv.message.content.type == MESSAGE_IMAGE) {
         cell.messageContent.text = @"一张图片";
-    }else if(covn.message.content.type == MESSAGE_TEXT){
-       cell.messageContent.text = covn.message.content.text;
-    }else if(covn.message.content.type == MESSAGE_LOCATION){
+    }else if(conv.message.content.type == MESSAGE_TEXT){
+       cell.messageContent.text = conv.message.content.text;
+    }else if(conv.message.content.type == MESSAGE_LOCATION){
         cell.messageContent.text = @"一个地理位置";
-    }else if (covn.message.content.type == MESSAGE_AUDIO){
+    }else if (conv.message.content.type == MESSAGE_AUDIO){
        cell.messageContent.text = @"一个音频";
     }
     
     
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970: covn.message.timestamp];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970: conv.message.timestamp];
     NSString *str = [PublicFunc getConversationTimeString:date ];
     cell.timelabel.text = str;
-    cell.namelabel.text = covn.name;
+    cell.namelabel.text = conv.name;
    
-    if (covn.newMsgCount > 0) {
-        [cell showNewMessage:covn.newMsgCount];
+    if (conv.newMsgCount > 0) {
+        [cell showNewMessage:conv.newMsgCount];
     }
     
     return cell;
@@ -221,8 +221,14 @@
             [self.filteredArray removeObject:con];
             [self.conversations removeObject:con];
             
-            [self.tableview reloadData];
-            [self.searchDC.searchResultsTableView reloadData];
+            /*IOS8中删除最后一个cell的时，报一个错误
+            [RemindersCell _setDeleteAnimationInProgress:]: message sent to deallocated instance
+            在重新刷新tableView的时候延迟一下*/
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.tableview reloadData];
+                [self.searchDC.searchResultsTableView reloadData];
+            });
             
             if([self.filteredArray count] == 0){
                 [self.searchDC setActive:NO];
@@ -232,7 +238,13 @@
             Conversation *con = [self.conversations objectAtIndex:indexPath.row];
             [[PeerMessageDB instance] clearConversation:con.cid];
             [self.conversations removeObject:con];
-            [self.tableview reloadData];
+            
+            /*IOS8中删除最后一个cell的时，报一个错误
+             [RemindersCell _setDeleteAnimationInProgress:]: message sent to deallocated instance
+             在重新刷新tableView的时候延迟一下*/
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.tableview reloadData];
+            });
             
             [self updateEmputyContentView];
         }
@@ -326,10 +338,13 @@
         }
         
         NSString *name = [self getPinYin:string];
+        NSString *contentStr = conv.message.content.text;
         
         if ([self searchResult:name searchText:self.searchBar.text]) {
             [self.filteredArray addObject:conv];
         } else if ([self searchResult:string searchText:self.searchBar.text]) {
+            [self.filteredArray addObject:conv];
+        } else if([self searchResult:contentStr searchText:self.searchBar.text]){
             [self.filteredArray addObject:conv];
         }
     }
@@ -359,11 +374,11 @@
     if (index != -1) {
         Conversation *con = [self.conversations objectAtIndex:index];
         con.message = msg;
-        
-        con.newMsgCount += 1;
-        NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
-        
+        if ([UserPresent instance].uid == msg.receiver) {
+            con.newMsgCount += 1;
+            NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
+                [[NSNotificationCenter defaultCenter] postNotification:notification];
+        }
         NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
         [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
     } else {

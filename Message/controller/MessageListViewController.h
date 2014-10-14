@@ -31,7 +31,4 @@
 @property (strong , nonatomic) UITableView *tableview;
 @property (strong,nonatomic) UILabel *emputyLabel;
 
-@property (nonatomic, weak) UITableViewCell *cellDisplayingMenuOptions;
-@property (nonatomic, weak) MessageConversationCell *mostRecentlySelectedMoreCell;
-
 @end
