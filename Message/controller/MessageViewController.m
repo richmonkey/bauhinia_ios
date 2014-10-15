@@ -865,7 +865,7 @@
         return nil;
     }
     
-    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d", message.content.type];
+    NSString *CellID = [self getMessageViewCellId:message];
     MessageViewCell *cell = (MessageViewCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     
     if(!cell) {
@@ -1431,6 +1431,16 @@
         MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
         MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
         [audioView setDownloading:NO];
+    }
+}
+/*
+ * 复用ID区分来去类型
+ */
+-(NSString*) getMessageViewCellId:(IMessage*)msg{
+    if(msg.sender == [UserPresent instance].uid){
+        return [NSString stringWithFormat:@"MessageCell_%d%d", msg.content.type,BubbleMessageTypeOutgoing];
+    }else{
+        return [NSString stringWithFormat:@"MessageCell_%d%d", msg.content.type,BubbleMessageTypeIncoming];
     }
 }
 
