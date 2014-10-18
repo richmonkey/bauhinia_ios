@@ -8,7 +8,6 @@
 #import "ContactViewController.h"
 #import "UserPresent.h"
 #import "APIRequest.h"
-#import "UIView+Toast.h"
 
 
 @interface ContactListTableViewController()

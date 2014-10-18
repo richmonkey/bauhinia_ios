@@ -8,6 +8,8 @@
 
 #define SEND_BUTTON_WIDTH 64.0f
 
+#define  CANCEL_SEND_DISTANCE  50.0f
+
 #define INPUT_HEIGHT 46.0f
 
 @interface MessageInputView ()
@@ -22,10 +24,11 @@
 @implementation MessageInputView
 
 #pragma mark - Initialization
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame andDelegate:(id < MessageInputRecordDelegate>) dleg
 {
     self = [super initWithFrame:frame];
     if(self) {
+        self.delegate = dleg;
         [self setup];
     }
     return self;
@@ -40,7 +43,15 @@
 #pragma mark - Setup
 - (void)setup
 {
-    self.image = [UIImage inputBar];
+    [self setUserInteractionEnabled:YES];
+    
+    UIImageView *bkview = [[UIImageView alloc] initWithFrame:self.frame];
+    [bkview setFrame:CGRectMake(0, 0, 320, 44)];
+    UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
+    UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
+    [bkview setImage:stretchImg];
+    [self addSubview:bkview];
+    
     self.backgroundColor = [UIColor whiteColor];
     self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
     self.opaque = YES;
@@ -67,10 +78,10 @@
     }
 
     {
-        self.recordButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        self.recordButton = [[UILabel alloc] init];
         
         CGRect frame = self.frame;
-        double x = frame.size.width - 56.0;
+        double x = frame.size.width - 46.0;
         double y = (frame.size.height - 26.0)/2;
         double width = 60.0;
         double height = 26.0;
@@ -79,9 +90,9 @@
         self.recordButton.frame = CGRectMake(x, y, width, height);
         
         NSString *title = @"录音";
-        [self.recordButton setTitle:title forState:UIControlStateNormal];
-        [self.recordButton setTitle:title forState:UIControlStateHighlighted];
-        [self.recordButton setTitle:title forState:UIControlStateDisabled];
+        [self.recordButton setText:title];
+        [self.recordButton setTextColor:RGBACOLOR(60, 140, 246, 1)];
+        [self.recordButton setBackgroundColor:[UIColor clearColor]];
         self.recordButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin);
         
         [self addSubview:self.recordButton];
@@ -104,8 +115,9 @@
     {
         CGRect frame = self.frame;
         CGRect viewFrame = self.frame;
-        viewFrame = CGRectMake(0, 0, frame.size.width-60, frame.size.height);
+        viewFrame = CGRectMake(0, 0, frame.size.width, frame.size.height);
         self.recordingView = [[UIView alloc] initWithFrame:viewFrame];
+        [self.recordingView setBackgroundColor:[UIColor clearColor]];
         
         CGRect labelFrame = CGRectMake(100, 0, 160, 26);
         labelFrame.origin.x = (frame.size.width - labelFrame.size.width)/2;
@@ -113,6 +125,7 @@
         self.slipLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [self.slipLabel setTextAlignment: NSTextAlignmentCenter];
         [self.slipLabel setFont: [UIFont systemFontOfSize:19.0f]];
+        [self.slipLabel setBackgroundColor:[UIColor clearColor]];
         self.slipLabel.text = @"滑动取消 <";
         [self.recordingView addSubview: self.slipLabel];
         
@@ -123,8 +136,10 @@
         [self.recordingView addSubview:shimmeringView];
         
         CGRect maskFrame = CGRectMake(0, 0, 70, frame.size.height);
-        UIImageView *maskView = [[UIImageView alloc] initWithImage:[UIImage inputBar]];
-        maskView.frame = maskFrame;
+        UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
+        UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
+       UIImageView *maskView = [[UIImageView alloc] initWithFrame:maskFrame];
+        [maskView setImage:stretchImg];
         [self.recordingView addSubview:maskView];
         
         labelFrame = CGRectMake(40, 0, 60, 26);
@@ -204,6 +219,49 @@
     self.recordButton.hidden = NO;
     self.recordButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
 }
+
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touchBegan");
+    UITouch *touch      = [touches anyObject];
+    
+    if(touch.tapCount == 1){
+        CGPoint superPoint  = [touch locationInView:self];
+        if(CGRectContainsPoint(self.recordButton.frame,superPoint)){
+            
+            self.lastPoint = superPoint;
+            
+            
+            if (self.delegate && [self.delegate respondsToSelector:@selector(recordStart)]) {
+                [self.delegate recordStart];
+            }
+        }
+    }
+    
+}
+
+-(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touchmove");
+    UITouch *touch      = [touches anyObject];
+    if (touch.tapCount == 1) {
+        CGPoint newPoint = [touch locationInView:self];
+        CGFloat xmove = newPoint.x - self.lastPoint.x;
+        NSLog(@"xmove:%f",xmove);
+        if (xmove < 0 && abs(xmove) > CANCEL_SEND_DISTANCE) {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(recordCancel:)]){
+                [self.delegate recordCancel:xmove];
+            }
+        }
+    }
+}
+
+-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touchEnded");
+    if (self.delegate && [self.delegate respondsToSelector:@selector(recordEnd)]) {
+
+        [self.delegate recordEnd];
+    }
+}
+
 
 #pragma mark - Message input view
 + (CGFloat)textViewLineHeight

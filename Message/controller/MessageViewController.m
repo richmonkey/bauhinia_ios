@@ -141,26 +141,12 @@
     
 	[self.view addSubview:self.tableView];
 	
-    self.inputToolBarView = [[MessageInputView alloc] initWithFrame:self.inputFrame];
+    self.inputToolBarView = [[MessageInputView alloc] initWithFrame:self.inputFrame andDelegate:self];
     
     self.inputToolBarView.textView.delegate = self;
 
     [self.inputToolBarView.sendButton addTarget:self action:@selector(sendPressed:)
                                forControlEvents:UIControlEventTouchUpInside];
-
-    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchDown:)
-                               forControlEvents:UIControlEventTouchDown];
-    
-    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchUp:)
-                               forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchUp:)
-                                  forControlEvents:UIControlEventTouchUpOutside];
-    
-    [self.inputToolBarView.recordButton addTarget:self action:@selector(recordTouchCancel:)
-                                 forControlEvents:UIControlEventTouchCancel];
-    
-    
     
     [self.inputToolBarView.mediaButton addTarget:self action:@selector(cameraAction:)
                                 forControlEvents:UIControlEventTouchUpInside];
@@ -176,11 +162,6 @@
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate  = self;
 
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleInputToolBarPan:)];
-    panRecognizer.delegate = self;
-    [self.inputToolBarView addGestureRecognizer:panRecognizer];
-    self.panRecognizer.cancelsTouchesInView = NO;
-    self.panRecognizer = panRecognizer;
 }
 
 #pragma mark - View lifecycle
@@ -346,33 +327,6 @@
             [self.view makeToast:@"无法录音,请到设置-隐私-麦克风,允许程序访问"];
         }
     }];
-}
-
-- (void)recordTouchUp:(UIButton *)sender {
-    if (self.recorder.recording) {
-        NSLog(@"stop record...");
-        [self stopRecord];
-    }
-}
-
-- (void)recordTouchCancel:(UIButton *)sender {
-    NSLog(@"touch cancel");
-    if (self.recorder.recording) {
-        NSLog(@"stop record...");
-        [self stopRecord];
-    }
-}
-
--(void)handleInputToolBarPan:(UIPanGestureRecognizer*)recognizer {
-    CGPoint translation = [recognizer translationInView:self.inputToolBarView];
-    if (translation.x < 0) {
-        [self.inputToolBarView slipLabelFrame:translation.x];
-    }
-    if (translation.x < -50 && self.recorder.recording) {
-        NSLog(@"cancel record...");
-        self.recordCanceled = YES;
-        [self stopRecord];
-    }
 }
 
 -(void)stopRecord {
@@ -1442,5 +1396,60 @@
         return [NSString stringWithFormat:@"MessageCell_%d%d", msg.content.type,BubbleMessageTypeIncoming];
     }
 }
+
+#pragma mark - MessageInputRecordDelegate
+
+-(void) recordStart{
+    if (self.recorder.recording) {
+        return;
+    }
+    
+    if (self.player && [self.player isPlaying]) {
+        [self.player stop];
+        if ([self.playTimer isValid]) {
+            [self.playTimer invalidate];
+            self.playTimer = nil;
+        }
+        
+        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:self.playingIndexPath];
+        if (cell != nil) {
+            MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+            [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+            [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+            audioView.progressView.progress = 0.0f;
+        }
+        self.playingIndexPath = nil;
+    }
+    
+    
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        if (granted) {
+            [self startRecord];
+        } else {
+            [self.view makeToast:@"无法录音,请到设置-隐私-麦克风,允许程序访问"];
+        }
+    }];
+}
+
+ -(void) recordCancel:(CGFloat)xMove{
+    NSLog(@"touch cancel");
+   
+     if (xMove < 0) {
+         [self.inputToolBarView slipLabelFrame:xMove];
+     }
+     if (xMove < -50 && self.recorder.recording) {
+         NSLog(@"cancel record...");
+         self.recordCanceled = YES;
+         [self stopRecord];
+     }
+}
+
+-(void) recordEnd{
+    if (self.recorder.recording) {
+        NSLog(@"stop record...");
+        [self stopRecord];
+    }
+}
+
 
 @end

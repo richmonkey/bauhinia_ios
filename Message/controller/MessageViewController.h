@@ -33,7 +33,7 @@ typedef enum {
 } UserOnlineStateType;
 
 @interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
-    MessageObserver, OutboxObserver, AudioDownloaderObserver,UIActionSheetDelegate>
+    MessageObserver, OutboxObserver, AudioDownloaderObserver,UIActionSheetDelegate,MessageInputRecordDelegate>
 
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic,strong) UIImage *willSendImage;

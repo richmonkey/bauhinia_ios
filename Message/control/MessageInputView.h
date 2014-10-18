@@ -15,19 +15,33 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MessageInputView : UIImageView
+
+@protocol MessageInputRecordDelegate <NSObject>
+
+-(void) recordStart;
+-(void) recordCancel:(CGFloat)xMove;
+-(void) recordEnd;
+
+@end
+
+
+@interface MessageInputView : UIView
 
 @property (nonatomic) UITextView *textView;
 @property (nonatomic) UIButton *sendButton;
-@property (nonatomic) UIButton *recordButton;
+@property (nonatomic) UILabel *recordButton;
 @property (nonatomic) UIButton* mediaButton;
 
 @property (nonatomic) UIView *recordingView;
 @property (nonatomic) UILabel *timerLabel;
 @property (nonatomic) UIImageView *recordAnimationView;
 @property (nonatomic) UILabel *slipLabel;
+@property (nonatomic) CGPoint lastPoint;
 
-- (id)initWithFrame:(CGRect)frame;
+
+@property (nonatomic ,weak) id <MessageInputRecordDelegate>  delegate;
+
+- (id)initWithFrame:(CGRect)frame andDelegate:(id < MessageInputRecordDelegate>) dleg;
 
 - (void)slipLabelFrame:(double)x;
 - (void)resetLabelFrame;
