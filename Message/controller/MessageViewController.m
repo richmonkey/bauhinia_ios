@@ -31,6 +31,7 @@
 #import "ESImageViewController.h"
 #import "UIImage+Resize.h"
 #import "SystemProperty.h"
+#import "UIView+Toast.h"
 
 #define INPUT_HEIGHT 46.0f
 
@@ -342,7 +343,7 @@
         if (granted) {
             [self startRecord];
         } else {
-            NSLog(@"can't grant record permission");
+            [self.view makeToast:@"无法录音,请到设置-隐私-麦克风,允许程序访问"];
         }
     }];
 }
@@ -1076,7 +1077,6 @@
     }
 }
 
-
 #pragma mark - Messages view data source
 
 - (IMessage*)messageForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -1110,9 +1110,8 @@
     return [NSString stringWithFormat:@"http://localhost/audios/%@.m4a", [self guid]];
 }
 
-#pragma UIImagePicker Delegate
+#pragma mark - UIImagePickerControllerDelegate
 
-#pragma mark - Image picker delegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	NSLog(@"Chose image!  Details:  %@", info);

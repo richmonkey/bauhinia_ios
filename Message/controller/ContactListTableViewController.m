@@ -8,6 +8,8 @@
 #import "ContactViewController.h"
 #import "UserPresent.h"
 #import "APIRequest.h"
+#import "UIView+Toast.h"
+
 
 @interface ContactListTableViewController()
 @property (nonatomic) NSArray *contacts;
@@ -30,7 +32,7 @@
 - (id)init{
     self = [super init];
     if (self) {
-
+        
     }
     return self;
 }
@@ -60,13 +62,13 @@
     self.tableView.frame = CGRectMake(0, KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight, self.view.frame.size.width, self.view.frame.size.height - (KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight + kTabBarHeight));
     NSLog(@"height:%f", self.view.frame.size.height);
 	[self.view addSubview:self.tableView];
-
+    
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
     PhoneNumber *phoneNumber = [UserPresent instance].phoneNumber;
     NSString *s = [NSString stringWithFormat:@"   我的电话号码: +%@ %@", phoneNumber.zone, phoneNumber.number];
     NSMutableAttributedString *attrTitle = [[NSMutableAttributedString alloc] initWithString: s];
     [attrTitle addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x35bc6e) range:NSMakeRange(10, [s length]-10)];
- 
+    
     [head setAttributedText:attrTitle];
     
     self.tableView.tableHeaderView = head;
@@ -75,6 +77,9 @@
     [self loadData];
     [self requestUsers];
     self.updateStateTimer = [NSTimer scheduledTimerWithTimeInterval:3600 target:self selector:@selector(updateUserState:) userInfo:nil repeats:YES];
+    
+    [self checkContactPermission];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -118,7 +123,7 @@
     NSString *key = @"request_timestamp";
     int t = (int)[db intForKey:key];
     if (time(NULL) - t < 24*3600) {
-      //  return;
+        //  return;
     }
     IMLog(@"request users.....");
     [APIRequest requestUsers:self.contacts
@@ -150,10 +155,10 @@
 
 -(void)loadData{
     self.contacts = [[ContactDB instance] contactsArray];
-
+    
     self.filteredArray =  [NSMutableArray array];
     self.sectionArray = [NSMutableArray arrayWithCapacity:27];
-  
+    
     for (int i = 0; i < 27; i++){
         [self.sectionArray addObject:[NSMutableArray array]];
     }
@@ -265,7 +270,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     [self.filteredArray removeAllObjects];
-
+    
     for(IMContact *contact in self.contacts) {
         NSString *string = contact.contactName;
         if (string.length == 0) {
@@ -291,10 +296,10 @@
                                                            self.tableView.frame.size.width,
                                                            self.tableView.frame.size.height + kStatusBarHeight+KNavigationBarHeight);
                          self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                      kStatusBarHeight,
-                                                      self.searchBar.frame.size.width,
-                                                      self.searchBar.frame.size.height);
-
+                                                           kStatusBarHeight,
+                                                           self.searchBar.frame.size.width,
+                                                           self.searchBar.frame.size.height);
+                         
                      }
                      completion:^(BOOL finished){
                          
@@ -376,7 +381,7 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"ContactCell"];
         }
-
+        
         IMContact *contact = [self.filteredArray objectAtIndex:indexPath.row];
         [cell.textLabel setText:contact.contactName];
         return cell;
@@ -391,7 +396,7 @@
 	}else{
 		contact = [self.filteredArray objectAtIndex:indexPath.row];
     }
-  
+    
     ContactViewController *ctl = [[ContactViewController alloc] init];
     ctl.hidesBottomBarWhenPushed = YES;
     ctl.contact = [[ContactDB instance] loadIMContact:contact.recordID];
@@ -415,5 +420,17 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+#pragma - mark contact auth
+
+-(void) checkContactPermission{
+    ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
+    if (status == kABAuthorizationStatusDenied){
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"无法读取通讯录,请到设置-隐私-通讯录,允许程序访问" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确认", nil];
+        [alertView show];
+    }
+}
+
 
 @end
