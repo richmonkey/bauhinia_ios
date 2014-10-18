@@ -149,7 +149,7 @@
         [self.recordingView addSubview:self.timerLabel];
 
         
-        NSArray *ary = @[[UIImage imageNamed:@"MicRecRed"],[UIImage imageNamed:@"MicEmpty"]];
+        NSArray *ary = @[[UIImage imageNamed:@"MicRecRed"],[UIImage imageNamed:@"MicRecRed90"],[UIImage imageNamed:@"MicRecRed70"],[UIImage imageNamed:@"MicRecRed50"],[UIImage imageNamed:@"MicEmpty"]];
         CGRect recordAFrame = CGRectMake(13, 0, 18, 29);
         recordAFrame.origin.y = (frame.size.height - recordAFrame.size.height)/2;
         
@@ -221,16 +221,14 @@
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchBegan");
-    UITouch *touch      = [touches anyObject];
+    UITouch *touch = [touches anyObject];
     
     if(touch.tapCount == 1){
         CGPoint superPoint  = [touch locationInView:self];
         if(CGRectContainsPoint(self.recordButton.frame,superPoint)){
             
             self.lastPoint = superPoint;
-            
-            
+           
             if (self.delegate && [self.delegate respondsToSelector:@selector(recordStart)]) {
                 [self.delegate recordStart];
             }
@@ -240,12 +238,10 @@
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchmove");
     UITouch *touch      = [touches anyObject];
     if (touch.tapCount == 1) {
         CGPoint newPoint = [touch locationInView:self];
         CGFloat xmove = newPoint.x - self.lastPoint.x;
-        NSLog(@"xmove:%f",xmove);
         if (xmove < 0 && abs(xmove) > CANCEL_SEND_DISTANCE) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(recordCancel:)]){
                 [self.delegate recordCancel:xmove];
@@ -255,9 +251,7 @@
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchEnded");
     if (self.delegate && [self.delegate respondsToSelector:@selector(recordEnd)]) {
-
         [self.delegate recordEnd];
     }
 }
