@@ -95,6 +95,7 @@
         [self.sendIMBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
         [self.sendIMBtn setTitle:@"发送信息" forState:UIControlStateNormal];
         [self.sendIMBtn setTitleColor:RGBACOLOR(239, 239, 239, 1.0f) forState:UIControlStateNormal];
+        [self.sendIMBtn setTitleColor:RGBACOLOR(199, 199, 199, 1.0f) forState:UIControlStateHighlighted];
         
         [self.sendIMBtn addTarget:self action:@selector(onSendMessage) forControlEvents:UIControlEventTouchUpInside];
         [self.tableview setTableFooterView: self.sendIMBtn];
