@@ -943,11 +943,13 @@
         int minute = [PublicFunc getMinuteComponentOfDate:curtDate];
         timeStr = [NSString stringWithFormat:@"%02d:%02d",hour,minute];
         sectionView.sectionHeader.text = timeStr;
-        
-    }else{
+    }
+    else if([PublicFunc isLessWeekOldDate:curtDate fromNewDate:todayDate]){
         int week = [PublicFunc getWeekDayComponentOfDate: curtDate];
         NSString *weekStr = [PublicFunc getWeekDayString: week];
         sectionView.sectionHeader.text = weekStr;
+    }else{
+        sectionView.sectionHeader.text = [PublicFunc getConversationTimeString:curtDate];
     }
     sectionView.alpha = 0.9;
     return sectionView;
@@ -1252,10 +1254,13 @@
         int hour = [PublicFunc getHourComponentOfDate:lastDate];
         int minute = [PublicFunc getMinuteComponentOfDate:lastDate];
         timeStr = [NSString stringWithFormat:@"%@%02d:%02d",@"最后上线时间: 今天 ",hour,minute];
-    }else{
+    }
+    else if([PublicFunc isLessWeekOldDate:lastDate fromNewDate:todayDate]){
         int week = [PublicFunc getWeekDayComponentOfDate: lastDate];
         NSString *weekStr = [PublicFunc getWeekDayString: week];
         timeStr = [NSString stringWithFormat:@"%@%@",@"最后上线时间: ",weekStr];
+    }else{
+       timeStr = [PublicFunc getConversationTimeString:lastDate];
     }
     return timeStr;
 }

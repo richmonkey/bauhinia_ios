@@ -19,6 +19,8 @@
 #import <mach/mach.h>
 
 
+#define sevenDaysSeconds  7*24*60*60
+
 @implementation PublicFunc
 
 //获取指定分钟的接近值。0 15 30 45
@@ -731,6 +733,16 @@
 		return !(iYear % 4);
 	}
 }
+
++(bool) isLessWeekOldDate:(NSDate*)date fromNewDate:(NSDate*)fromDate{
+    NSTimeInterval dateInterval = [date timeIntervalSince1970];
+    NSTimeInterval fromInterval = [fromDate timeIntervalSince1970];
+    if ((fromInterval - dateInterval) > sevenDaysSeconds) {
+        return NO;
+    }
+    return YES;
+}
+
 +(bool) isTheDay:(NSDate*)aDay sameToThatDay:(NSDate*)thatDay{
     if (([PublicFunc getYearComponentOfDate:aDay] == [PublicFunc getYearComponentOfDate:thatDay])
         &&([PublicFunc getMonthComponentOfDate:aDay] == [PublicFunc getMonthComponentOfDate:thatDay])
