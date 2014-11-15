@@ -154,7 +154,15 @@
     [self.view addSubview:self.inputToolBarView];
     
     if ([[IMService instance] connectState] == STATE_CONNECTED) {
+        self.inputToolBarView.sendButton.enabled = YES;
         self.inputToolBarView.recordButton.enabled = YES;
+        self.inputToolBarView.mediaButton.enabled = YES;
+        self.inputToolBarView.userInteractionEnabled = YES;
+    } else {
+        self.inputToolBarView.sendButton.enabled = NO;
+        self.inputToolBarView.recordButton.enabled = NO;
+        self.inputToolBarView.mediaButton.enabled = NO;
+        self.inputToolBarView.userInteractionEnabled = NO;
     }
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
@@ -606,16 +614,24 @@
     if (state == STATE_CONNECTING) {
         self.inputToolBarView.sendButton.enabled = NO;
         self.inputToolBarView.recordButton.enabled = NO;
+        self.inputToolBarView.mediaButton.enabled = NO;
+        self.inputToolBarView.userInteractionEnabled = NO;
     } else if(state == STATE_CONNECTED){
         UITextView *textView = self.inputToolBarView.textView;
         self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0);
         self.inputToolBarView.recordButton.enabled = YES;
+        self.inputToolBarView.mediaButton.enabled = YES;
+        self.inputToolBarView.userInteractionEnabled = YES;
     } else if(state == STATE_CONNECTFAIL){
         self.inputToolBarView.sendButton.enabled = NO;
         self.inputToolBarView.recordButton.enabled = NO;
+        self.inputToolBarView.mediaButton.enabled = NO;
+        self.inputToolBarView.userInteractionEnabled = NO;
     } else if(state == STATE_UNCONNECTED){
         self.inputToolBarView.sendButton.enabled = NO;
         self.inputToolBarView.recordButton.enabled = NO;
+        self.inputToolBarView.mediaButton.enabled = NO;
+        self.inputToolBarView.userInteractionEnabled = NO;
     }
 }
 #pragma mark - UItableView cell process
