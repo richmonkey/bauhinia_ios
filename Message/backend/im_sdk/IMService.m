@@ -364,9 +364,11 @@
 }
 
 -(void)refreshHostIP {
-    NSLog(@"refresh host ip...");
+   
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSLog(@"refresh host ip...");
         NSString *ip = [self resolveIP:self.host];
+        NSLog(@"host:%@ ip:%@", self.host, ip);
         if ([ip length] > 0) {
             self.hostIP = ip;
             self.timestmap = time(NULL);

@@ -41,12 +41,14 @@
 }
 
 -(BOOL)connect:(NSString*)host port:(int)port cb:(ConnectCB)cb {
+    int r;
     struct sockaddr_in addr;
     //todo nonblock
-    lookupAddr([host UTF8String], port, &addr);
-    
+    NSLog(@"looking...");
+    r = lookupAddr([host UTF8String], port, &addr);
+    NSLog(@"looked:%d", r);
     int sockfd;
-    int r;
+
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     sock_nonblock(sockfd, 1);
     do {

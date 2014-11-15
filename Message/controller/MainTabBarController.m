@@ -18,7 +18,6 @@
 #import "APIRequest.h"
 #import "JSBadgeView.h"
 
-
 @interface MainTabBarController ()
 @property(atomic) Reachability *reach;
 @property(nonatomic)dispatch_source_t refreshTimer;
@@ -92,17 +91,23 @@
     });
     
     [self startRefreshTimer];
-    [[IMService instance] start:[UserPresent instance].uid];
-    
-    self.reach = [Reachability reachabilityWithHostname:@"www.message.im"];
+
+    self.reach = [Reachability reachabilityForInternetConnection];
+
+    if ([self.reach isReachable]) {
+        [[IMService instance] start:[UserPresent instance].uid];
+    }
     self.reach.reachableBlock = ^(Reachability*reach) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"reachable");
+            [[IMService instance] stop];
             [[IMService instance] start:[UserPresent instance].uid];
         });
     };
     
     self.reach.unreachableBlock = ^(Reachability*reach) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"unreachable");
             [[IMService instance] stop];
         });
     };
@@ -131,12 +136,12 @@
 
 -(void)appDidEnterBackground {
     [[IMService instance] stop];
-    [self stopRefreshTimer];
 }
 
 -(void)appWillEnterForeground {
-    [[IMService instance] start:[UserPresent instance].uid];
-    [self startRefreshTimer];
+    if ([self.reach isReachable]) {
+        [[IMService instance] start:[UserPresent instance].uid];
+    }
 }
 
 
