@@ -128,7 +128,7 @@
                             [self onUploadImageSuccess:msg URL:url];
                         } else {
                             NSLog(@"upload image fail");
-                            [self onUploadAudioFail:msg];
+                            [self onUploadImageFail:msg];
                         }
                     }
                        fail:^() {
