@@ -743,10 +743,9 @@
             
             if (![[self class] isHeadphone]) {
                 //打开外放
-                UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-                AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
-                UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
-                AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,sizeof (audioRouteOverride),&audioRouteOverride);
+                [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker
+                                           error:nil];
+                
             }
             NSURL *u = [NSURL fileURLWithPath:path];
             self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:u error:nil];
@@ -959,18 +958,12 @@
 
 + (BOOL)isHeadphone
 {
-    UInt32 propertySize = sizeof(CFStringRef);
-    CFStringRef route = nil;
-    OSStatus error = AudioSessionGetProperty(kAudioSessionProperty_AudioRoute
-                                             ,&propertySize,&route);
-    //return @"Headphone" or @"Speaker" and so on.
-    //根据状态判断是否为耳机状态
-    if (!error && (route != NULL) && [(__bridge NSString*)route rangeOfString:@"Head"].location != NSNotFound) {
-        return YES;
+    AVAudioSessionRouteDescription* route = [[AVAudioSession sharedInstance] currentRoute];
+    for (AVAudioSessionPortDescription* desc in [route outputs]) {
+        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones])
+            return YES;
     }
-    else {
-        return NO;
-    }
+    return NO;
 }
 
 
