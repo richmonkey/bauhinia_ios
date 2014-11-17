@@ -211,6 +211,8 @@
 
 - (void)dealloc
 {
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
     self.tableView = nil;
     self.inputToolBarView.textView.delegate = nil;
     self.inputToolBarView = nil;
