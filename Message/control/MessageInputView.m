@@ -4,7 +4,6 @@
 #import "UIImage+JSMessagesView.h"
 
 #import "FBShimmeringView.h"
-#import "IMService.h"
 
 #define SEND_BUTTON_WIDTH 64.0f
 
@@ -43,8 +42,6 @@
 #pragma mark - Setup
 - (void)setup
 {
-    [self setUserInteractionEnabled:YES];
-    
     UIImageView *bkview = [[UIImageView alloc] initWithFrame:self.frame];
     [bkview setFrame:CGRectMake(0, 0, 320, 44)];
     UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
@@ -65,7 +62,6 @@
         double y = (frame.size.height - 26.0)/2;
         double width = 60.0;
         double height = 26.0;
-        self.sendButton.enabled = NO;
         self.sendButton.frame = CGRectMake(x, y, width, height);
         self.sendButton.hidden = YES;
         NSString *title = @"发送";
@@ -86,7 +82,6 @@
         double width = 60.0;
         double height = 26.0;
 
-        self.recordButton.enabled = NO;
         self.recordButton.frame = CGRectMake(x, y, width, height);
         
         NSString *title = @"录音";
@@ -214,10 +209,8 @@
 - (void) setNomarlShowing{
     [self.textView setText:nil];
     [self.textView resignFirstResponder];
-    self.sendButton.enabled = NO;
     self.sendButton.hidden = YES;
     self.recordButton.hidden = NO;
-    self.recordButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

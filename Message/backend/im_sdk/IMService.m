@@ -110,10 +110,9 @@
 
 -(void)close {
     if (self.tcp) {
-        __weak IMService *wself = self;
-        [self.tcp close:^(AsyncTCP *tcp, int err) {
-            [wself onClose];
-        }];
+        NSLog(@"im service on close");
+        [self.tcp close];
+        self.tcp = nil;
     }
 }
 
@@ -130,14 +129,6 @@
     dispatch_source_set_timer(self.connectTimer, w, DISPATCH_TIME_FOREVER, 0);
     
     NSLog(@"start connect timer:%lld", t/NSEC_PER_SEC);
-}
-
--(void)onClose {
-    NSLog(@"im service on close");
-    self.tcp = nil;
-    if (self.stopped) return;
-    
-    [self startConnectTimer];
 }
 
 -(void)handleClose {
@@ -158,6 +149,7 @@
     [self.peerMessages removeAllObjects];
     [self.groupMessages removeAllObjects];
     [self close];
+    [self startConnectTimer];
 }
 
 -(void)handleACK:(Message*)msg {
@@ -372,9 +364,11 @@
 }
 
 -(void)refreshHostIP {
-    NSLog(@"refresh host ip...");
+   
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSLog(@"refresh host ip...");
         NSString *ip = [self resolveIP:self.host];
+        NSLog(@"host:%@ ip:%@", self.host, ip);
         if ([ip length] > 0) {
             self.hostIP = ip;
             self.timestmap = time(NULL);
@@ -414,6 +408,7 @@
             [wself close];
             self.connectState = STATE_CONNECTFAIL;
             [self publishConnectState:STATE_CONNECTFAIL];
+            [self startConnectTimer];
             return;
         } else {
             NSLog(@"tcp connected");
@@ -432,7 +427,8 @@
         self.connectState = STATE_CONNECTFAIL;
         [self publishConnectState:STATE_CONNECTFAIL];
         
-        [self onClose];
+        self.tcp = nil;
+        [self startConnectTimer];
     }
 }
 
