@@ -211,6 +211,8 @@
 
 - (void)dealloc
 {
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
     self.tableView = nil;
     self.inputToolBarView.textView.delegate = nil;
     self.inputToolBarView = nil;
@@ -958,11 +960,13 @@
         int minute = [PublicFunc getMinuteComponentOfDate:curtDate];
         timeStr = [NSString stringWithFormat:@"%02d:%02d",hour,minute];
         sectionView.sectionHeader.text = timeStr;
-        
-    }else{
+    }
+    else if([PublicFunc isLessWeekOldDate:curtDate fromNewDate:todayDate]){
         int week = [PublicFunc getWeekDayComponentOfDate: curtDate];
         NSString *weekStr = [PublicFunc getWeekDayString: week];
         sectionView.sectionHeader.text = weekStr;
+    }else{
+        sectionView.sectionHeader.text = [PublicFunc getConversationTimeString:curtDate];
     }
     sectionView.alpha = 0.9;
     return sectionView;

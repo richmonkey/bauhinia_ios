@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+
+
 @interface PublicFunc : NSObject
 
 //获取指定分钟的接近值。0 15 30 45
@@ -18,6 +20,9 @@
 
 // 获取本地唯一串
 +(NSString *) getLocalUniqueID;
+
+//是否没有超过一周
++(bool) isLessWeekOldDate:(NSDate*)date fromNewDate:(NSDate*)fromDate;
 
 // 从数字获取对应的周时间字符串
 +(NSString *) getWeekDayString:(int)iDay;
