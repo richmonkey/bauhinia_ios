@@ -1250,22 +1250,63 @@
 
 #pragma mark - function
 
+-(NSDateComponents*) getComponentOfDate:(NSDate *)date {
+	NSCalendar *calendar = [NSCalendar currentCalendar];
+	[calendar setTimeZone:[NSTimeZone systemTimeZone]];
+	NSDateComponents *comps = [[NSDateComponents alloc] init];
+	NSInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSCalendarUnitWeekday | NSHourCalendarUnit | NSMinuteCalendarUnit | \
+	NSSecondCalendarUnit;
+	comps = [calendar components:unitFlags fromDate:date];
+    return comps;
+}
+
+-(BOOL)isSameDay:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDateComponents *c1 = [self getComponentOfDate:date1];
+    NSDateComponents *c2 = [self getComponentOfDate:date2];
+    return c1.year == c2.year && c1.month == c2.month && c1.day == c2.day;
+}
+
+-(BOOL)isYestoday:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *y = [date1 dateByAddingTimeInterval:-24*3600];
+    return [self isSameDay:y other:date2];
+}
+-(BOOL)isBeforeYestoday:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *y = [date1 dateByAddingTimeInterval:-2*24*3600];
+    return [self isSameDay:y other:date2];
+}
+
+-(BOOL)isInWeek:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *t = [date1 dateByAddingTimeInterval:-7*24*3600];
+    return [t compare:date2] == NSOrderedAscending && ![self isSameDay:t other:date2];
+}
+
+-(BOOL)isInMonth:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *t = [date1 dateByAddingTimeInterval:-30*24*3600];
+    return [t compare:date2] == NSOrderedAscending;
+}
+
 -(NSString*) getRemoteUserLastOnlineTimestamp{
-    
     NSDate *lastDate =  [[NSDate alloc] initWithTimeIntervalSince1970:self.remoteUser.lastUpTimestamp];
-    
     NSDate *todayDate = [NSDate date];
+    
+    NSDateComponents *upDate = [self getComponentOfDate:lastDate];
+    
     NSString *timeStr = nil;
-    if ([PublicFunc isTheDay:lastDate sameToThatDay:todayDate] ) {
-        //当天
-        int hour = [PublicFunc getHourComponentOfDate:lastDate];
-        int minute = [PublicFunc getMinuteComponentOfDate:lastDate];
-        timeStr = [NSString stringWithFormat:@"%@%02d:%02d",@"最后上线时间: 今天 ",hour,minute];
-    }else{
-        int week = [PublicFunc getWeekDayComponentOfDate: lastDate];
-        NSString *weekStr = [PublicFunc getWeekDayString: week];
-        timeStr = [NSString stringWithFormat:@"%@%@",@"最后上线时间: ",weekStr];
+    if ([self isSameDay:lastDate other:todayDate])
+        timeStr = [NSString stringWithFormat:@"最后上线时间: 今天%02d:%02d", upDate.hour, upDate.minute];
+    else if ([self isYestoday:lastDate other:todayDate]) {
+        timeStr = [NSString stringWithFormat:@"最后上线时间: 昨天%02d:%02d", upDate.hour, upDate.minute];
+    } else if ([self isBeforeYestoday:lastDate other:todayDate]) {
+        timeStr = [NSString stringWithFormat:@"最后上线时间: 前天%02d:%02d", upDate.hour, upDate.minute];
+    } else if ([self isInWeek:lastDate other:todayDate]){
+        const char *t[8] = {"", "周日", "周一", "周二", "周三", "周四", "周五", "周六"};
+        timeStr = [NSString stringWithFormat:@"最后上线于%@的%02d:%02d", [NSString stringWithUTF8String:t[upDate.weekday]], upDate.hour, upDate.minute];
+    } else if ([self isInMonth:lastDate other:todayDate]){
+        timeStr = [NSString stringWithFormat:@"最后上线 %02d-%02d-%02d %02d:%02d", upDate.year%100, upDate.month, upDate.day, upDate.hour, upDate.minute];
+    } else {
+        timeStr = [NSString stringWithFormat:@"最后上线%04d年%02d月%02d日", upDate.year, upDate.month, upDate.day];
     }
+    
     return timeStr;
 }
 
