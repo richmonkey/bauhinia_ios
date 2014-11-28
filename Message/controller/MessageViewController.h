@@ -18,7 +18,6 @@
 #import "JSMessageSoundEffect.h"
 #import "MBProgressHUD.h"
 
-#define INPUT_HEIGHT 46.0f
 
 #import "MessageInputView.h"
 #import "OutBox.h"

@@ -33,7 +33,8 @@
 #import "SystemProperty.h"
 #import "UIView+Toast.h"
 
-#define INPUT_HEIGHT 46.0f
+#define INPUT_HEIGHT 52.0f
+#define INPUT_TEXTVIEW_HEIGHT 30.0f
 
 #define navBarHeadButtonSize 35
 
@@ -42,8 +43,6 @@
 
 
 @interface MessageViewController()
-@property(nonatomic, assign)CGRect tableFrame;
-@property(nonatomic, assign)CGRect inputFrame;
 
 @property(nonatomic) AVAudioPlayer *player;
 @property(nonatomic) NSIndexPath *playingIndexPath;
@@ -65,11 +64,7 @@
     
     if (self = [super init]) {
         self.remoteUser = rmtUser;
-        CGRect screenBounds = [[UIScreen mainScreen] bounds];
-        int w = CGRectGetWidth(screenBounds);
-        int h = CGRectGetHeight(screenBounds);
-        self.tableFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT);
-        self.inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
+
     }
     return self;
 }
@@ -100,9 +95,6 @@
 
     [self processConversationData];
 
-    [self.tableView reloadData];
-    [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
-
     [[IMService instance] addMessageObserver:self];
     [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
@@ -120,11 +112,16 @@
 
 - (void)setup
 {
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    int w = CGRectGetWidth(screenBounds);
+    int h = CGRectGetHeight(screenBounds);
+    CGRect tableFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT);
+    CGRect inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
+    
     UIImage *backColor = [UIImage imageNamed:@"chatBack"];
     UIColor *color = [[UIColor alloc] initWithPatternImage:backColor];
     [self.view setBackgroundColor:color];
-	
-    CGRect tableFrame = self.tableFrame;
+
 	self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -141,7 +138,7 @@
     
 	[self.view addSubview:self.tableView];
 	
-    self.inputToolBarView = [[MessageInputView alloc] initWithFrame:self.inputFrame andDelegate:self];
+    self.inputToolBarView = [[MessageInputView alloc] initWithFrame:inputFrame andDelegate:self];
     
     self.inputToolBarView.textView.delegate = self;
 
@@ -387,8 +384,8 @@
     [UIView setAnimationCurve:animationCurve];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    CGRect inputViewFrame = CGRectOffset(self.inputFrame, 0, -keyboardRect.size.height);
-    CGRect tableViewFrame = self.tableFrame;
+    CGRect inputViewFrame = CGRectOffset(self.inputToolBarView.frame, 0, -keyboardRect.size.height);
+    CGRect tableViewFrame = self.tableView.frame;
     tableViewFrame.size.height -= keyboardRect.size.height;
     self.inputToolBarView.frame = inputViewFrame;
     self.tableView.frame = tableViewFrame;
@@ -398,6 +395,7 @@
 }
 
 - (void)handleWillHideKeyboard:(NSNotification *)notification{
+    CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	NSTimeInterval animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
     UIViewAnimationCurve animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -407,8 +405,13 @@
     [UIView setAnimationCurve:animationCurve];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    self.inputToolBarView.frame = self.inputFrame;
-    self.tableView.frame = self.tableFrame;
+    CGRect inputViewFrame = CGRectOffset(self.inputToolBarView.frame, 0, keyboardRect.size.height);
+    CGRect tableViewFrame = self.tableView.frame;
+    tableViewFrame.size.height += keyboardRect.size.height;
+    
+    self.inputToolBarView.frame = inputViewFrame;
+    self.tableView.frame = tableViewFrame;
+
     [self scrollToBottomAnimated:NO];
     [UIView commitAnimations];
 }
@@ -653,10 +656,36 @@
 								  animated:animated];
 }
 
+-(void)extendInputViewHeight:(CGFloat)e {
+
+    CGRect frame = self.inputToolBarView.frame;
+    CGRect inputFrame = CGRectMake(frame.origin.x, frame.origin.y-e, frame.size.width, frame.size.height+e);
+    NSLog(@"input frame:%f %f %f %f", inputFrame.origin.x, inputFrame.origin.y, inputFrame.size.width, inputFrame.size.height);
+    frame = self.tableView.frame;
+    CGRect tableFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height-e);
+    NSLog(@"table frame:%f %f %f %f", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
+    
+    if (inputFrame.origin.y < 60) {
+        return;
+    }
+
+    [UIView beginAnimations:nil context:NULL];
+    self.inputToolBarView.frame = inputFrame;
+    self.tableView.frame = tableFrame;
+    [UIView commitAnimations];
+}
 
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView{
+
+    if (textView.contentSize.height > textView.frame.size.height) {
+        CGFloat e = textView.contentSize.height - textView.frame.size.height;
+        [self extendInputViewHeight:e];
+    } else if (textView.contentSize.height < textView.frame.size.height) {
+        CGFloat e = textView.contentSize.height - textView.frame.size.height;
+        [self extendInputViewHeight:e];
+    }
     
     if ([textView.text trimWhitespace].length > 0) {
         self.inputToolBarView.sendButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
@@ -797,9 +826,6 @@
     im.content = message.content.raw;
     m.body = im;
     [[IMService instance] sendPeerMessage:im];
-    
-//   [[PeerMessageDB instance] markPeerMessageSuccess:message.msgLocalID uid:message.sender];
-    
 }
 
 - (void) handleTapImageView:(UITapGestureRecognizer*)tap{
@@ -852,9 +878,6 @@
             MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
             [imageView.imageView addGestureRecognizer:tap];
         }
-       
-        //errorButton
-//        [cell.bubbleView.msgSendErrorBtn addTarget:self action:@selector(reSendMessage:) forControlEvents:UIControlEventTouchUpInside];
     }
 
     [cell setMessage:message];

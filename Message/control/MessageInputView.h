@@ -26,6 +26,7 @@
 
 
 @interface MessageInputView : UIView
+@property (nonatomic) UIImageView *bkView;
 
 @property (nonatomic) UITextView *textView;
 @property (nonatomic) UIButton *sendButton;

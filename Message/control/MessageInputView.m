@@ -9,7 +9,7 @@
 
 #define  CANCEL_SEND_DISTANCE  50.0f
 
-#define INPUT_HEIGHT 46.0f
+#define INPUT_HEIGHT 52.0f
 
 @interface MessageInputView ()
 
@@ -48,6 +48,7 @@
     UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
     [bkview setImage:stretchImg];
     [self addSubview:bkview];
+    self.bkView = bkview;
     
     self.backgroundColor = [UIColor whiteColor];
     self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
@@ -249,6 +250,38 @@
     }
 }
 
+-(void)layoutSubviews {
+
+    self.bkView.frame = self.bounds;
+    
+    CGFloat x = 40.0;
+    CGFloat y = 8;
+    CGFloat w = self.bounds.size.width - SEND_BUTTON_WIDTH - 26;
+    CGFloat h = self.bounds.size.height - 16;
+    self.textView.frame = CGRectMake(x, y, w, h);
+
+    x = self.bounds.size.width - 56.0;
+    y = (self.bounds.size.height - 26.0)/2;
+    w = 60.0;
+    h = 26.0;
+    
+    self.sendButton.frame = CGRectMake(x, y, w, h);
+    
+    x = self.bounds.size.width - 46.0;
+    y = (self.bounds.size.height - 26.0)/2;
+    w = 60.0;
+    h = 26.0;
+    
+    self.recordButton.frame = CGRectMake(x, y, w, h);
+
+    h = 19;
+    w = 26;
+    x = 8;
+    y = (self.bounds.size.height-h)/2 ;
+    self.mediaButton.frame = CGRectMake(x, y, w, h);
+
+    self.recordingView.frame = self.bounds;
+}
 
 #pragma mark - Message input view
 + (CGFloat)textViewLineHeight
