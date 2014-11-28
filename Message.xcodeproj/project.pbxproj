@@ -134,6 +134,7 @@
 		6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D32393919BD6482005A00B2 /* MessageInputView.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
 		6D32394019BD962C005A00B2 /* FileCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D32393F19BD962C005A00B2 /* FileCache.m */; };
+		6D41B37C1A2884B200DC79FF /* DraftDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D41B37B1A2884B200DC79FF /* DraftDB.m */; };
 		6D762156197ECA9300B690D7 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762145197ECA9300B690D7 /* Group.m */; };
 		6D762157197ECA9300B690D7 /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762147197ECA9300B690D7 /* GroupDB.m */; };
 		6D762158197ECA9300B690D7 /* GroupMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762149197ECA9300B690D7 /* GroupMessageDB.m */; };
@@ -399,6 +400,8 @@
 		6D32393B19BD79C7005A00B2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		6D32393E19BD962C005A00B2 /* FileCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileCache.h; sourceTree = "<group>"; };
 		6D32393F19BD962C005A00B2 /* FileCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileCache.m; sourceTree = "<group>"; };
+		6D41B37A1A2884B200DC79FF /* DraftDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DraftDB.h; sourceTree = "<group>"; };
+		6D41B37B1A2884B200DC79FF /* DraftDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DraftDB.m; sourceTree = "<group>"; };
 		6D762144197ECA9300B690D7 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		6D762145197ECA9300B690D7 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		6D762146197ECA9300B690D7 /* GroupDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDB.h; sourceTree = "<group>"; };
@@ -653,6 +656,8 @@
 				21150C9F196F78A5009DE9DE /* UserPresent.m */,
 				6D32393E19BD962C005A00B2 /* FileCache.h */,
 				6D32393F19BD962C005A00B2 /* FileCache.m */,
+				6D41B37A1A2884B200DC79FF /* DraftDB.h */,
+				6D41B37B1A2884B200DC79FF /* DraftDB.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1215,6 +1220,7 @@
 				6D76215E197ECA9300B690D7 /* ReverseFile.m in Sources */,
 				6D0D76841967B8AC0058DECF /* IMService.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
+				6D41B37C1A2884B200DC79FF /* DraftDB.m in Sources */,
 				2173C66319738745004A88A5 /* SDImageCache.m in Sources */,
 				6DB0AA4D19C4BF340027A658 /* AudioDownloader.m in Sources */,
 				2173C66119738745004A88A5 /* MKAnnotationView+WebCache.m in Sources */,

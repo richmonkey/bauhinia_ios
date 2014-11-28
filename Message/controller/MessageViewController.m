@@ -32,6 +32,7 @@
 #import "UIImage+Resize.h"
 #import "SystemProperty.h"
 #import "UIView+Toast.h"
+#import "DraftDB.h"
 
 #define INPUT_HEIGHT 52.0f
 #define INPUT_TEXTVIEW_HEIGHT 30.0f
@@ -94,12 +95,14 @@
     self.navigationItem.titleView = self.navigationBarButtonsView;
 
     [self processConversationData];
-
+    //content scroll to bottom
+    [self.tableView reloadData];
+    [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
+    
     [[IMService instance] addMessageObserver:self];
     [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
     [[IMService instance] subscribeState:self.remoteUser.uid];
-    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -115,6 +118,8 @@
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     int w = CGRectGetWidth(screenBounds);
     int h = CGRectGetHeight(screenBounds);
+
+
     CGRect tableFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT);
     CGRect inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
     
@@ -166,7 +171,26 @@
     [self.tableView addGestureRecognizer:tapRecognizer];
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate  = self;
-
+    
+    DraftDB *db = [DraftDB instance];
+    NSString *draft = [db getDraft:self.remoteUser.uid];
+    if (draft.length > 0) {
+        self.inputToolBarView.textView.text = draft;
+        w = self.inputToolBarView.textView.frame.size.width;
+        CGSize size = [self.inputToolBarView.textView sizeThatFits:CGSizeMake(w, FLT_MAX)];
+        if (size.height > self.inputToolBarView.textView.frame.size.height) {
+            CGFloat e = size.height - self.inputToolBarView.textView.frame.size.height;
+            CGRect frame = self.inputToolBarView.frame;
+            CGRect inputFrame = CGRectMake(frame.origin.x, frame.origin.y-e, frame.size.width, frame.size.height+e);
+            NSLog(@"input frame:%f %f %f %f", inputFrame.origin.x, inputFrame.origin.y, inputFrame.size.width, inputFrame.size.height);
+            frame = self.tableView.frame;
+            CGRect tableFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height-e);
+            NSLog(@"table frame:%f %f %f %f", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
+            
+            self.inputToolBarView.frame = inputFrame;
+            self.tableView.frame = tableFrame;
+        }
+    }
 }
 
 #pragma mark - View lifecycle
@@ -1399,6 +1423,9 @@
 }
 
 -(void)returnMainTableViewController {
+    DraftDB *db = [DraftDB instance];
+    [db setDraft:self.remoteUser.uid draft:self.inputToolBarView.textView.text];
+    
     [[IMService instance] unsubscribeState:self.remoteUser.uid];
     [[IMService instance] removeMessageObserver:self];
     [[Outbox instance] removeBoxObserver:self];

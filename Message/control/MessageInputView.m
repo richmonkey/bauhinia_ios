@@ -134,7 +134,7 @@
         CGRect maskFrame = CGRectMake(0, 0, 70, frame.size.height);
         UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
         UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
-       UIImageView *maskView = [[UIImageView alloc] initWithFrame:maskFrame];
+        UIImageView *maskView = [[UIImageView alloc] initWithFrame:maskFrame];
         [maskView setImage:stretchImg];
         [self.recordingView addSubview:maskView];
         
@@ -159,6 +159,8 @@
         self.recordingView.hidden = YES;
 
     }
+    
+    [self layoutSubviews];
 }
 
 - (void)slipLabelFrame:(double)x {
@@ -179,7 +181,7 @@
 - (void)setupTextView
 {
     CGFloat width = self.frame.size.width - SEND_BUTTON_WIDTH - 26;
-    CGFloat height = [MessageInputView textViewLineHeight];
+    CGFloat height = 36.0;
     CGRect frame = self.frame;
     
     double x = 40.0;
@@ -289,14 +291,5 @@
     return 30.0f; // for fontSize 16.0f
 }
 
-+ (CGFloat)maxLines
-{
-    return 4.0f;
-}
-
-+ (CGFloat)maxHeight
-{
-    return ([MessageInputView maxLines] + 1.0f) * [MessageInputView textViewLineHeight];
-}
 
 @end
