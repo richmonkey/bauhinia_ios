@@ -175,6 +175,11 @@
     DraftDB *db = [DraftDB instance];
     NSString *draft = [db getDraft:self.remoteUser.uid];
     if (draft.length > 0) {
+        self.inputToolBarView.sendButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
+        self.inputToolBarView.sendButton.hidden = NO;
+        
+        self.inputToolBarView.recordButton.hidden = YES;
+        
         self.inputToolBarView.textView.text = draft;
         w = self.inputToolBarView.textView.frame.size.width;
         CGSize size = [self.inputToolBarView.textView sizeThatFits:CGSizeMake(w, FLT_MAX)];
@@ -273,7 +278,10 @@
     [self sendTextMessage:text];
     
     [self.inputToolBarView setNomarlShowing];
-    
+    if (INPUT_HEIGHT < self.inputToolBarView.frame.size.height) {
+        CGFloat e = INPUT_HEIGHT - self.inputToolBarView.frame.size.height;
+        [self extendInputViewHeight:e];
+    }
 }
 
 - (void)timerFired:(NSTimer*)timer {
@@ -585,7 +593,7 @@
         return;
     }
     IMessage *msg = [self getImMessageById:msgLocalID];
-    msg.flags = msg.flags & MESSAGE_FLAG_FAILURE;
+    msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
     [self reloadMessage:msgLocalID];
     
     [[PeerMessageDB instance] markPeerMessageFailure:msgLocalID uid:uid];

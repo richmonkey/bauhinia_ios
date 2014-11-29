@@ -122,7 +122,7 @@
         default:
             break;
     }
-    if (!(message.flags|MESSAGE_FLAG_FAILURE)) {
+    if (message.flags&MESSAGE_FLAG_FAILURE) {
         [self.bubbleView showSendErrorBtn:YES];
     }else{
         [self.bubbleView showSendErrorBtn:NO];
