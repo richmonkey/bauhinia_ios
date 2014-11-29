@@ -187,15 +187,12 @@
     double x = 40.0;
     double y = (frame.size.height - height)/2;
 
-    
-    self.textView = [[UITextView  alloc] initWithFrame:CGRectMake(x, y, width, height)];
-    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(x, y, width, height)];
     self.textView.backgroundColor = [UIColor clearColor];
     [self.textView setFont:[UIFont systemFontOfSize:16]];
     self.textView.layer.borderColor = [[UIColor colorWithWhite:.8 alpha:1.0] CGColor];
     self.textView.layer.borderWidth = 0.65f;
     self.textView.layer.cornerRadius = 6.0f;
-
 
     [self addSubview:self.textView];
 }
@@ -261,7 +258,7 @@
     CGFloat w = self.bounds.size.width - SEND_BUTTON_WIDTH - 26;
     CGFloat h = self.bounds.size.height - 16;
     self.textView.frame = CGRectMake(x, y, w, h);
-
+    NSLog(@"text view heigth:%f", h);
     x = self.bounds.size.width - 56.0;
     y = (self.bounds.size.height - 26.0)/2;
     w = 60.0;
@@ -284,12 +281,5 @@
 
     self.recordingView.frame = self.bounds;
 }
-
-#pragma mark - Message input view
-+ (CGFloat)textViewLineHeight
-{
-    return 30.0f; // for fontSize 16.0f
-}
-
 
 @end

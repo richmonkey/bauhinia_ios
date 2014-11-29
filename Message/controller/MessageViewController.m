@@ -35,7 +35,6 @@
 #import "DraftDB.h"
 
 #define INPUT_HEIGHT 52.0f
-#define INPUT_TEXTVIEW_HEIGHT 30.0f
 
 #define navBarHeadButtonSize 35
 
@@ -144,7 +143,7 @@
 	[self.view addSubview:self.tableView];
 	
     self.inputToolBarView = [[MessageInputView alloc] initWithFrame:inputFrame andDelegate:self];
-    
+    self.inputToolBarView.textView.maxHeight = 100;
     self.inputToolBarView.textView.delegate = self;
 
     [self.inputToolBarView.sendButton addTarget:self action:@selector(sendPressed:)
@@ -406,6 +405,7 @@
 
 #pragma mark - Keyboard notifications
 - (void)handleWillShowKeyboard:(NSNotification *)notification{
+    NSLog(@"keyboard show");
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	NSTimeInterval animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
@@ -416,9 +416,14 @@
     [UIView setAnimationCurve:animationCurve];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    CGRect inputViewFrame = CGRectOffset(self.inputToolBarView.frame, 0, -keyboardRect.size.height);
-    CGRect tableViewFrame = self.tableView.frame;
-    tableViewFrame.size.height -= keyboardRect.size.height;
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    int h = CGRectGetHeight(screenBounds);
+    int w = CGRectGetWidth(screenBounds);
+    
+    CGRect tableViewFrame = CGRectMake(0.0f,  0.0f, w,  h - self.inputToolBarView.frame.size.height - keyboardRect.size.height);
+    CGFloat y = h - keyboardRect.size.height;
+    y -= self.inputToolBarView.frame.size.height;
+    CGRect inputViewFrame = CGRectMake(0, y, self.inputToolBarView.frame.size.width, self.inputToolBarView.frame.size.height);
     self.inputToolBarView.frame = inputViewFrame;
     self.tableView.frame = tableViewFrame;
     [self scrollToBottomAnimated:NO];
@@ -427,6 +432,7 @@
 }
 
 - (void)handleWillHideKeyboard:(NSNotification *)notification{
+    NSLog(@"keyboard hide");
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	NSTimeInterval animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
@@ -654,7 +660,7 @@
         self.inputToolBarView.mediaButton.enabled = NO;
         self.inputToolBarView.userInteractionEnabled = NO;
     } else if(state == STATE_CONNECTED){
-        UITextView *textView = self.inputToolBarView.textView;
+        HPGrowingTextView *textView = self.inputToolBarView.textView;
         self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0);
         self.inputToolBarView.recordButton.enabled = YES;
         self.inputToolBarView.mediaButton.enabled = YES;
@@ -690,35 +696,43 @@
 
 -(void)extendInputViewHeight:(CGFloat)e {
 
+    
     CGRect frame = self.inputToolBarView.frame;
     CGRect inputFrame = CGRectMake(frame.origin.x, frame.origin.y-e, frame.size.width, frame.size.height+e);
-    NSLog(@"input frame:%f %f %f %f", inputFrame.origin.x, inputFrame.origin.y, inputFrame.size.width, inputFrame.size.height);
+
     frame = self.tableView.frame;
     CGRect tableFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height-e);
-    NSLog(@"table frame:%f %f %f %f", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
     
     if (inputFrame.origin.y < 60) {
         return;
     }
-
+    NSLog(@"input frame:%f %f %f %f", inputFrame.origin.x, inputFrame.origin.y, inputFrame.size.width, inputFrame.size.height);
+    NSLog(@"table frame:%f %f %f %f", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
     [UIView beginAnimations:nil context:NULL];
     self.inputToolBarView.frame = inputFrame;
     self.tableView.frame = tableFrame;
     [UIView commitAnimations];
 }
 
-#pragma mark - UITextViewDelegate
 
-- (void)textViewDidChange:(UITextView *)textView{
+#pragma mark - HPGrowingTextViewDelegate
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+{
 
-    if (textView.contentSize.height > textView.frame.size.height) {
-        CGFloat e = textView.contentSize.height - textView.frame.size.height;
+    NSLog(@"change height:%f", height);
+    HPGrowingTextView *textView = growingTextView;
+    NSLog(@"text:%@, height:%f", textView.text, height);
+    if (height > textView.frame.size.height) {
+        CGFloat e = height - textView.frame.size.height;
         [self extendInputViewHeight:e];
-    } else if (textView.contentSize.height < textView.frame.size.height) {
-        CGFloat e = textView.contentSize.height - textView.frame.size.height;
+    } else if (height < textView.frame.size.height) {
+        CGFloat e = height - textView.frame.size.height;
         [self extendInputViewHeight:e];
     }
-    
+}
+
+- (void)growingTextViewDidChange:(HPGrowingTextView *)textView {
+
     if ([textView.text trimWhitespace].length > 0) {
         self.inputToolBarView.sendButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
         self.inputToolBarView.sendButton.hidden = NO;
