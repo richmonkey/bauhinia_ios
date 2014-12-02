@@ -176,24 +176,8 @@
     if (draft.length > 0) {
         self.inputToolBarView.sendButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
         self.inputToolBarView.sendButton.hidden = NO;
-        
         self.inputToolBarView.recordButton.hidden = YES;
-        
         self.inputToolBarView.textView.text = draft;
-        w = self.inputToolBarView.textView.frame.size.width;
-        CGSize size = [self.inputToolBarView.textView sizeThatFits:CGSizeMake(w, FLT_MAX)];
-        if (size.height > self.inputToolBarView.textView.frame.size.height) {
-            CGFloat e = size.height - self.inputToolBarView.textView.frame.size.height;
-            CGRect frame = self.inputToolBarView.frame;
-            CGRect inputFrame = CGRectMake(frame.origin.x, frame.origin.y-e, frame.size.width, frame.size.height+e);
-            NSLog(@"input frame:%f %f %f %f", inputFrame.origin.x, inputFrame.origin.y, inputFrame.size.width, inputFrame.size.height);
-            frame = self.tableView.frame;
-            CGRect tableFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height-e);
-            NSLog(@"table frame:%f %f %f %f", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
-            
-            self.inputToolBarView.frame = inputFrame;
-            self.tableView.frame = tableFrame;
-        }
     }
 }
 
