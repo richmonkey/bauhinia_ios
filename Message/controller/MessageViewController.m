@@ -1084,13 +1084,13 @@
         if (buttonIndex == 0) {
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = YES;
+            picker.allowsEditing = NO;
             picker.sourceType = UIImagePickerControllerSourceTypeCamera;
             [self presentViewController:picker animated:YES completion:NULL];
         }else if(buttonIndex == 1){
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = YES;
+            picker.allowsEditing = NO;
             picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             [self presentViewController:picker animated:YES completion:NULL];
         }
@@ -1147,9 +1147,18 @@
     msg.content = content;
     msg.timestamp = (int)time(NULL);
 
-    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
-    UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    if (image.size.height == 0) {
+        return;
+    }
+    
+    float newHeigth = 640;
+    float newWidth = newHeigth*image.size.width/image.size.height;
 
+    UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
+    image = [image resizedImage:CGSizeMake(newWidth, newHeigth) interpolationQuality:kCGInterpolationDefault];
+    
     [[SDImageCache sharedImageCache] storeImage:image forKey:msg.content.imageURL];
     NSString *littleUrl =  [msg.content littleImageURL];
     [[SDImageCache sharedImageCache] storeImage:sizeImage forKey: littleUrl];
@@ -1457,6 +1466,9 @@
         MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
         MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
         [audioView setUploading:NO];
+        
+        msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
+        [self reloadMessage:msg.msgLocalID];
     }
 }
 
@@ -1475,6 +1487,11 @@
         MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
         MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
         [imageView setUploading:NO];
+        
+
+        msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
+        [self reloadMessage:msg.msgLocalID];
+
     }
 }
 
