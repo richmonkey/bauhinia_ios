@@ -384,9 +384,8 @@
         NSLog(@"opps......");
         return;
     }
-    
-    NSString *host = self.hostIP;
-    if (host.length == 0) {
+
+    if (self.hostIP.length == 0) {
         [self refreshHostIP];
         self.connectFailCount = self.connectFailCount + 1;
         [self startConnectTimer];
@@ -401,7 +400,7 @@
     [self publishConnectState:STATE_CONNECTING];
     self.tcp = [[AsyncTCP alloc] init];
     __weak IMService *wself = self;
-    BOOL r = [self.tcp connect:self.host port:self.port cb:^(AsyncTCP *tcp, int err) {
+    BOOL r = [self.tcp connect:self.hostIP port:self.port cb:^(AsyncTCP *tcp, int err) {
         if (err) {
             NSLog(@"tcp connect err");
             wself.connectFailCount = wself.connectFailCount + 1;
