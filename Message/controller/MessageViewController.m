@@ -91,6 +91,9 @@
     }else{
         [self.navigationBarButtonsView.nameLabel setText:self.remoteUser.contact.contactName];
     }
+    [self.navigationBarButtonsView.conectInformationLabel setText: [self getRemoteUserLastOnlineTimestamp]];
+    [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
+    
     self.navigationItem.titleView = self.navigationBarButtonsView;
 
     [self processConversationData];
@@ -101,7 +104,6 @@
     [[IMService instance] addMessageObserver:self];
     [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
-    [[IMService instance] subscribeState:self.remoteUser.uid];
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -588,22 +590,6 @@
     
     [[PeerMessageDB instance] markPeerMessageFailure:msgLocalID uid:uid];
     
-}
-
-//用户连线状态
--(void)onOnlineState:(int64_t)uid state:(BOOL)on{
-    if (uid != self.remoteUser.uid) {
-        return;
-    }
-    if (on) {
-        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:12.0f]];
-        self.onlineState = UserOnlineStateOnline;
-    }else{
-        [self.navigationBarButtonsView.conectInformationLabel setText: [self getRemoteUserLastOnlineTimestamp]];
-        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
-        self.onlineState = UserOnlineStateOffline;
-    }
 }
 
 //对方正在输入
@@ -1440,8 +1426,7 @@
 -(void)returnMainTableViewController {
     DraftDB *db = [DraftDB instance];
     [db setDraft:self.remoteUser.uid draft:self.inputToolBarView.textView.text];
-    
-    [[IMService instance] unsubscribeState:self.remoteUser.uid];
+
     [[IMService instance] removeMessageObserver:self];
     [[Outbox instance] removeBoxObserver:self];
     [[AudioDownloader instance] removeDownloaderObserver:self];

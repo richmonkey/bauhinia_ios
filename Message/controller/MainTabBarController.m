@@ -92,16 +92,17 @@
     
     [self startRefreshTimer];
 
+    [IMService instance].token = [Token instance].accessToken;
     self.reach = [Reachability reachabilityForInternetConnection];
 
     if ([self.reach isReachable]) {
-        [[IMService instance] start:[UserPresent instance].uid];
+        [[IMService instance] start];
     }
     self.reach.reachableBlock = ^(Reachability*reach) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"reachable");
             [[IMService instance] stop];
-            [[IMService instance] start:[UserPresent instance].uid];
+            [[IMService instance] start];
         });
     };
     
@@ -140,7 +141,7 @@
 
 -(void)appWillEnterForeground {
     if ([self.reach isReachable]) {
-        [[IMService instance] start:[UserPresent instance].uid];
+        [[IMService instance] start];
     }
 }
 

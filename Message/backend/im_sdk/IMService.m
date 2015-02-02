@@ -23,15 +23,16 @@
 @property(nonatomic, assign)BOOL stopped;
 @property(nonatomic)AsyncTCP *tcp;
 @property(nonatomic, strong)dispatch_source_t connectTimer;
+
 @property(nonatomic, strong)dispatch_source_t heartbeatTimer;
+@property(nonatomic)time_t pingTimestamp;
+
 @property(nonatomic)int connectFailCount;
 @property(nonatomic)int seq;
 @property(nonatomic)NSMutableArray *observers;
 @property(nonatomic)NSMutableData *data;
-@property(nonatomic)int64_t uid;
 @property(nonatomic)NSMutableDictionary *peerMessages;
 @property(nonatomic)NSMutableDictionary *groupMessages;
-@property(nonatomic)NSMutableDictionary *subs;
 @end
 
 @implementation IMService
@@ -60,7 +61,6 @@
             [self sendHeartbeat];
         });
         self.observers = [NSMutableArray array];
-        self.subs = [NSMutableDictionary dictionary];
         self.data = [NSMutableData data];
         self.peerMessages = [NSMutableDictionary dictionary];
         self.groupMessages = [NSMutableDictionary dictionary];
@@ -70,7 +70,7 @@
     return self;
 }
 
--(void)start:(int64_t)uid {
+-(void)start {
     if (!self.host || !self.port) {
         NSLog(@"should init im server host and port");
         exit(1);
@@ -80,7 +80,6 @@
     }
     NSLog(@"start im service");
 
-    self.uid = uid;
     self.stopped = NO;
     dispatch_time_t w = dispatch_walltime(NULL, 0);
     dispatch_source_set_timer(self.connectTimer, w, DISPATCH_TIME_FOREVER, 0);
@@ -196,17 +195,14 @@
 -(void)handleAuthStatus:(Message*)msg {
     int status = [(NSNumber*)msg.body intValue];
     NSLog(@"auth status:%d", status);
-    if (status == 0 && [self.subs count]) {
-        MessageSubsribe *sub = [[MessageSubsribe alloc] init];
-        sub.uids = [self.subs allKeys];
-        [self sendSubscribe:sub];
-    }
 }
 
 -(void)handleInputing:(Message*)msg {
     MessageInputing *inputing = (MessageInputing*)msg.body;
     for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerInputing:inputing.sender];
+        if ([ob respondsToSelector:@selector(onPeerInputing:)]) {
+            [ob onPeerInputing:inputing.sender];
+        }
     }
 }
 
@@ -215,49 +211,53 @@
     [self.peerMessageHandler handleMessageRemoteACK:ack.msgLocalID uid:ack.sender];
     
     for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerMessageRemoteACK:ack.msgLocalID uid:ack.sender];
+        if ([ob respondsToSelector:@selector(onPeerMessageRemoteACK:uid:)]) {
+            [ob onPeerMessageRemoteACK:ack.msgLocalID uid:ack.sender];
+        }
     }
 }
 
--(void)handleOnlineState:(Message*)msg {
-    MessageOnlineState *state = (MessageOnlineState*)msg.body;
-    NSNumber *key = [NSNumber numberWithLongLong:state.sender];
-    if ([self.subs objectForKey:key]) {
-        NSNumber *on = [NSNumber numberWithBool:state.online];
-        [self.subs setObject:on forKey:key];
-    }
-    for (id<MessageObserver> ob in self.observers) {
-        [ob onOnlineState:state.sender state:state.online];
-    }
+-(void)handlePong:(Message*)msg {
+    self.pingTimestamp = 0;
 }
 
 -(void)publishPeerMessage:(IMMessage*)msg {
     for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerMessage:msg];
+        if ([ob respondsToSelector:@selector(onPeerMessage:)]) {
+            [ob onPeerMessage:msg];
+        }
     }
 }
 
 -(void)publishPeerMessageACK:(int)msgLocalID uid:(int64_t)uid {
     for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerMessageACK:msgLocalID uid:uid];
+        if ([ob respondsToSelector:@selector(onPeerMessageACK:uid:)]) {
+            [ob onPeerMessageACK:msgLocalID uid:uid];
+        }
     }
 }
 
 -(void)publishPeerMessageFailure:(IMMessage*)msg {
     for (id<MessageObserver> ob in self.observers) {
-        [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
+        if ([ob respondsToSelector:@selector(onPeerMessageFailure:uid:)]) {
+            [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
+        }
     }
 }
 
 -(void)publishGroupMessage:(IMMessage*)msg {
     for (id<MessageObserver> ob in self.observers) {
-        [ob onGroupMessage:msg];
+        if ([ob respondsToSelector:@selector(onGroupMessage:)]) {
+            [ob onGroupMessage:msg];
+        }
     }
 }
 
 -(void)publishGroupMessageACK:(int)msgLocalID gid:(int64_t)gid {
     for (id<MessageObserver> ob in self.observers) {
-        [ob onGroupMessageACK:msgLocalID gid:gid];
+        if ([ob respondsToSelector:@selector(onGroupMessageACK:gid:)]) {
+            [ob onGroupMessageACK:msgLocalID gid:gid];
+        }
     }
 }
 
@@ -269,7 +269,9 @@
 
 -(void)publishConnectState:(int)state {
     for (id<MessageObserver> ob in self.observers) {
-        [ob onConnectState:state];
+        if ([ob respondsToSelector:@selector(onConnectState:)]) {
+            [ob onConnectState:state];
+        }
     }
 }
 
@@ -286,8 +288,8 @@
         [self handleInputing:msg];
     } else if (msg.cmd == MSG_PEER_ACK) {
         [self handlePeerACK:msg];
-    } else if (msg.cmd == MSG_ONLINE_STATE) {
-        [self handleOnlineState:msg];
+    } else if (msg.cmd == MSG_PONG) {
+        [self handlePong:msg];
     }
 }
 
@@ -485,17 +487,32 @@
 }
 
 -(void)sendHeartbeat {
-    NSLog(@"send heartbeat");
+    time_t now = time(NULL);
+    if (self.pingTimestamp > 0 && now - self.pingTimestamp > 60) {
+        NSLog(@"ping timeout");
+        [self close];
+        [self startConnectTimer];
+        return;
+    }
+    
+    NSLog(@"send ping");
     Message *msg = [[Message alloc] init];
-    msg.cmd = MSG_HEARTBEAT;
-    [self sendMessage:msg];
+    msg.cmd = MSG_PING;
+    BOOL r = [self sendMessage:msg];
+    if (r && self.pingTimestamp == 0) {
+        self.pingTimestamp = now;
+    }
 }
 
 -(void)sendAuth {
     NSLog(@"send auth");
     Message *msg = [[Message alloc] init];
-    msg.cmd = MSG_AUTH;
-    msg.body = [NSNumber numberWithLongLong:self.uid];
+    msg.cmd = MSG_AUTH_TOKEN;
+    AuthenticationToken *auth = [[AuthenticationToken alloc] init];
+    auth.token = self.token;
+    auth.platformID = PLATFORM_IOS;
+    auth.deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    msg.body = auth;
     [self sendMessage:msg];
 }
 
@@ -512,29 +529,6 @@
     msg.cmd = MSG_SUBSCRIBE_ONLINE_STATE;
     msg.body = sub;
     [self sendMessage:msg];
-}
-
-//订阅用户在线状态通知消息
--(void)subscribeState:(int64_t)uid {
-    NSNumber *n = [NSNumber numberWithLongLong:uid];
-    if (![self.subs objectForKey:n]) {
-        [self.subs setObject:[NSNumber numberWithBool:NO] forKey:n];
-        MessageSubsribe *sub = [[MessageSubsribe alloc] init];
-        sub.uids = [NSArray arrayWithObject:n];
-        [self sendSubscribe:sub];
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            BOOL online = [[self.subs objectForKey:n] boolValue];
-            for (id<MessageObserver> ob in self.observers) {
-                [ob onOnlineState:uid state:online];
-            }
-        });
-    }
-}
-
--(void)unsubscribeState:(int64_t)uid {
-    NSNumber *n = [NSNumber numberWithLongLong:uid];
-    [self.subs removeObjectForKey:n];
 }
 
 @end

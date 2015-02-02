@@ -32,6 +32,8 @@
 @end
 
 @protocol MessageObserver <NSObject>
+
+@optional
 -(void)onPeerMessage:(IMMessage*)msg;
 
 //服务器ack
@@ -40,9 +42,6 @@
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid;
 
 -(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
-
-//用户连线状态
--(void)onOnlineState:(int64_t)uid state:(BOOL)on;
 
 //对方正在输入
 -(void)onPeerInputing:(int64_t)uid;
@@ -58,6 +57,7 @@
 
 @interface IMService : NSObject
 
+@property(nonatomic, copy) NSString *token;
 @property(nonatomic)NSString *host;
 @property(nonatomic)int port;
 @property(nonatomic, assign)int connectState;
@@ -65,17 +65,13 @@
 @property(nonatomic, weak)id<IMGroupMessageHandler> groupMessageHandler;
 +(IMService*)instance;
 
--(void)start:(int64_t)uid;
+-(void)start;
 -(void)stop;
 
 -(void)sendPeerMessage:(IMMessage*)msg;
 
 //正在输入
 -(void)sendInputing:(MessageInputing*)inputing;
-
-//订阅用户在线状态通知消息
--(void)subscribeState:(int64_t)uid;
--(void)unsubscribeState:(int64_t)uid;
 
 -(void)addMessageObserver:(id<MessageObserver>)ob;
 -(void)removeMessageObserver:(id<MessageObserver>)ob;
