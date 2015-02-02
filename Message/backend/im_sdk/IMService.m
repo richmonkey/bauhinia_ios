@@ -490,8 +490,7 @@
     time_t now = time(NULL);
     if (self.pingTimestamp > 0 && now - self.pingTimestamp > 60) {
         NSLog(@"ping timeout");
-        [self close];
-        [self startConnectTimer];
+        [self handleClose];
         return;
     }
     
