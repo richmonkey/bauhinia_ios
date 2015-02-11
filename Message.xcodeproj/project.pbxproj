@@ -134,6 +134,9 @@
 		6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D32393919BD6482005A00B2 /* MessageInputView.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
 		6D32394019BD962C005A00B2 /* FileCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D32393F19BD962C005A00B2 /* FileCache.m */; };
+		6D41B37C1A2884B200DC79FF /* DraftDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D41B37B1A2884B200DC79FF /* DraftDB.m */; };
+		6D41B3821A2A0B3F00DC79FF /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D41B37F1A2A0B3F00DC79FF /* HPGrowingTextView.m */; };
+		6D41B3831A2A0B3F00DC79FF /* HPTextViewInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D41B3811A2A0B3F00DC79FF /* HPTextViewInternal.m */; };
 		6D762156197ECA9300B690D7 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762145197ECA9300B690D7 /* Group.m */; };
 		6D762157197ECA9300B690D7 /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762147197ECA9300B690D7 /* GroupDB.m */; };
 		6D762158197ECA9300B690D7 /* GroupMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D762149197ECA9300B690D7 /* GroupMessageDB.m */; };
@@ -399,6 +402,12 @@
 		6D32393B19BD79C7005A00B2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		6D32393E19BD962C005A00B2 /* FileCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileCache.h; sourceTree = "<group>"; };
 		6D32393F19BD962C005A00B2 /* FileCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileCache.m; sourceTree = "<group>"; };
+		6D41B37A1A2884B200DC79FF /* DraftDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DraftDB.h; sourceTree = "<group>"; };
+		6D41B37B1A2884B200DC79FF /* DraftDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DraftDB.m; sourceTree = "<group>"; };
+		6D41B37E1A2A0B3F00DC79FF /* HPGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPGrowingTextView.h; sourceTree = "<group>"; };
+		6D41B37F1A2A0B3F00DC79FF /* HPGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPGrowingTextView.m; sourceTree = "<group>"; };
+		6D41B3801A2A0B3F00DC79FF /* HPTextViewInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTextViewInternal.h; sourceTree = "<group>"; };
+		6D41B3811A2A0B3F00DC79FF /* HPTextViewInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPTextViewInternal.m; sourceTree = "<group>"; };
 		6D762144197ECA9300B690D7 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		6D762145197ECA9300B690D7 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		6D762146197ECA9300B690D7 /* GroupDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDB.h; sourceTree = "<group>"; };
@@ -518,6 +527,7 @@
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
+				6D41B37D1A2A0B3F00DC79FF /* HPGrowingTextView */,
 				48A4D2DC19D453FE00DE9AD2 /* JSBadgeView */,
 				48D83CD719D1CEFF009972B8 /* UIImageView+Letters */,
 				48D5AB2219CDD07100A288F9 /* Toast */,
@@ -653,6 +663,8 @@
 				21150C9F196F78A5009DE9DE /* UserPresent.m */,
 				6D32393E19BD962C005A00B2 /* FileCache.h */,
 				6D32393F19BD962C005A00B2 /* FileCache.m */,
+				6D41B37A1A2884B200DC79FF /* DraftDB.h */,
+				6D41B37B1A2884B200DC79FF /* DraftDB.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -995,6 +1007,17 @@
 			path = leveldb;
 			sourceTree = "<group>";
 		};
+		6D41B37D1A2A0B3F00DC79FF /* HPGrowingTextView */ = {
+			isa = PBXGroup;
+			children = (
+				6D41B37E1A2A0B3F00DC79FF /* HPGrowingTextView.h */,
+				6D41B37F1A2A0B3F00DC79FF /* HPGrowingTextView.m */,
+				6D41B3801A2A0B3F00DC79FF /* HPTextViewInternal.h */,
+				6D41B3811A2A0B3F00DC79FF /* HPTextViewInternal.m */,
+			);
+			path = HPGrowingTextView;
+			sourceTree = "<group>";
+		};
 		6DA2CEA619CD7F2C0056A084 /* amr */ = {
 			isa = PBXGroup;
 			children = (
@@ -1081,7 +1104,7 @@
 				ORGANIZATIONNAME = daozhu;
 				TargetAttributes = {
 					21798F92194E9C4600B67C1F = {
-						DevelopmentTeam = 7BYWNXT9F3;
+						DevelopmentTeam = HB5A8TLKYL;
 					};
 					21798FAD194E9C4600B67C1F = {
 						TestTargetID = 21798F92194E9C4600B67C1F;
@@ -1215,12 +1238,14 @@
 				6D76215E197ECA9300B690D7 /* ReverseFile.m in Sources */,
 				6D0D76841967B8AC0058DECF /* IMService.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
+				6D41B37C1A2884B200DC79FF /* DraftDB.m in Sources */,
 				2173C66319738745004A88A5 /* SDImageCache.m in Sources */,
 				6DB0AA4D19C4BF340027A658 /* AudioDownloader.m in Sources */,
 				2173C66119738745004A88A5 /* MKAnnotationView+WebCache.m in Sources */,
 				2173C66E19738745004A88A5 /* UIImageView+WebCache.m in Sources */,
 				210564CC19695FC1008D3A83 /* MessageListViewController.m in Sources */,
 				217F2C30196D62680064F478 /* MessageShowThePotraitViewController.m in Sources */,
+				6D41B3831A2A0B3F00DC79FF /* HPTextViewInternal.m in Sources */,
 				48C20EEF19BFF6CA009494A1 /* MessageAudioView.m in Sources */,
 				48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */,
 				6D76215C197ECA9300B690D7 /* PeerMessageDB.m in Sources */,
@@ -1229,6 +1254,7 @@
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				2173C66519738745004A88A5 /* SDWebImageDecoder.m in Sources */,
 				6DA2CEB519CD7F2C0056A084 /* wavwriter.c in Sources */,
+				6D41B3821A2A0B3F00DC79FF /* HPGrowingTextView.m in Sources */,
 				6D76215A197ECA9300B690D7 /* IMessage.m in Sources */,
 				6D32393A19BD6482005A00B2 /* MessageInputView.m in Sources */,
 				6DB0AA4E19C4BF340027A658 /* Outbox.m in Sources */,
@@ -1337,8 +1363,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1356,10 +1382,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "131fab71-7647-4a8f-8a36-aa14e4fad6b1";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = armv7;
 			};
 			name = Debug;
 		};
@@ -1380,8 +1406,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1392,34 +1418,36 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PROVISIONING_PROFILE = "131fab71-7647-4a8f-8a36-aa14e4fad6b1";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = armv7;
 			};
 			name = Release;
 		};
 		21798FC0194E9C4600B67C1F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 					"$(PROJECT_DIR)/Message/backend/amr",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "7851e03a-dcc4-4dcc-84e9-7a39cf726e69";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
+				VALID_ARCHS = "armv7 arm64 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1427,23 +1455,25 @@
 		21798FC1194E9C4600B67C1F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Message/Message-Prefix.pch";
 				INFOPLIST_FILE = "Message/Message-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Message/backend/leveldb",
 					"$(PROJECT_DIR)/Message/backend/amr",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "ce19e7f3-8d25-45a2-9611-1e88a8416d68";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
+				VALID_ARCHS = "armv7 arm64 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

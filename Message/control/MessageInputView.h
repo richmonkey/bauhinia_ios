@@ -14,7 +14,7 @@
 //  https://github.com/soffes/ssmessagesviewcontroller
 
 #import <UIKit/UIKit.h>
-
+#import "HPGrowingTextView.h"
 
 @protocol MessageInputRecordDelegate <NSObject>
 
@@ -26,8 +26,9 @@
 
 
 @interface MessageInputView : UIView
+@property (nonatomic) UIImageView *bkView;
 
-@property (nonatomic) UITextView *textView;
+@property (nonatomic) HPGrowingTextView *textView;
 @property (nonatomic) UIButton *sendButton;
 @property (nonatomic) UILabel *recordButton;
 @property (nonatomic) UIButton* mediaButton;
@@ -48,9 +49,5 @@
 
 - (void) setRecordShowing;
 - (void) setNomarlShowing;
-
-+ (CGFloat)textViewLineHeight;
-+ (CGFloat)maxLines;
-+ (CGFloat)maxHeight;
 
 @end

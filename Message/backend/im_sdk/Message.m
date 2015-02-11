@@ -29,6 +29,12 @@
 
 @end
 
+
+
+@implementation AuthenticationToken
+
+@end
+
 @implementation Message
 -(NSData*)pack {
     char buf[64*1024] = {0};
@@ -39,13 +45,26 @@
     *p = (uint8_t)self.cmd;
     p += 4;
     
-    if (self.cmd == MSG_HEARTBEAT) {
+    if (self.cmd == MSG_HEARTBEAT || self.cmd == MSG_PING) {
         return [NSData dataWithBytes:buf length:HEAD_SIZE];
     } else if (self.cmd == MSG_AUTH) {
         int64_t uid = [(NSNumber*)self.body longLongValue];
         writeInt64(uid, p);
         return [NSData dataWithBytes:buf length:HEAD_SIZE+8];
-    } else if (self.cmd == MSG_IM) {
+    } else if (self.cmd == MSG_AUTH_TOKEN) {
+        AuthenticationToken *auth = (AuthenticationToken*)self.body;
+        *p++ = auth.platformID;
+        const char *t;
+        t = [auth.token UTF8String];
+        *p++ = strlen(t);
+        memcpy(p, t, strlen(t));
+        p += strlen(t);
+        t = [auth.deviceID UTF8String];
+        *p++ = strlen(t);
+        memcpy(p, t, strlen(t));
+        p += strlen(t);
+        return [NSData dataWithBytes:buf length:(p-buf)];
+    }  else if (self.cmd == MSG_IM) {
         IMMessage *m = (IMMessage*)self.body;
         writeInt64(m.sender, p);
         p += 8;
@@ -89,7 +108,7 @@
     self.cmd = *p;
     p += 4;
     NSLog(@"seq:%d cmd:%d", self.seq, self.cmd);
-    if (self.cmd == MSG_RST) {
+    if (self.cmd == MSG_RST || self.cmd == MSG_PONG) {
         return YES;
     } else if (self.cmd == MSG_AUTH_STATUS) {
         int status = readInt32(p);
@@ -134,8 +153,10 @@
         state.online = readInt32(p);
         self.body = state;
         return YES;
+    } else {
+        self.body = [NSData dataWithBytes:p length:data.length-8];
+        return YES;
     }
-
     return NO;
 }
 

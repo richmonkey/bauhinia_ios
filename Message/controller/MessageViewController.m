@@ -32,8 +32,9 @@
 #import "UIImage+Resize.h"
 #import "SystemProperty.h"
 #import "UIView+Toast.h"
+#import "DraftDB.h"
 
-#define INPUT_HEIGHT 46.0f
+#define INPUT_HEIGHT 52.0f
 
 #define navBarHeadButtonSize 35
 
@@ -42,8 +43,6 @@
 
 
 @interface MessageViewController()
-@property(nonatomic, assign)CGRect tableFrame;
-@property(nonatomic, assign)CGRect inputFrame;
 
 @property(nonatomic) AVAudioPlayer *player;
 @property(nonatomic) NSIndexPath *playingIndexPath;
@@ -65,11 +64,7 @@
     
     if (self = [super init]) {
         self.remoteUser = rmtUser;
-        CGRect screenBounds = [[UIScreen mainScreen] bounds];
-        int w = CGRectGetWidth(screenBounds);
-        int h = CGRectGetHeight(screenBounds);
-        self.tableFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT);
-        self.inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
+
     }
     return self;
 }
@@ -96,18 +91,19 @@
     }else{
         [self.navigationBarButtonsView.nameLabel setText:self.remoteUser.contact.contactName];
     }
+    [self.navigationBarButtonsView.conectInformationLabel setText: [self getRemoteUserLastOnlineTimestamp]];
+    [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
+    
     self.navigationItem.titleView = self.navigationBarButtonsView;
 
     [self processConversationData];
-
+    //content scroll to bottom
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
-
+    
     [[IMService instance] addMessageObserver:self];
     [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
-    [[IMService instance] subscribeState:self.remoteUser.uid];
-    
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -120,11 +116,18 @@
 
 - (void)setup
 {
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    int w = CGRectGetWidth(screenBounds);
+    int h = CGRectGetHeight(screenBounds);
+
+
+    CGRect tableFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT);
+    CGRect inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
+    
     UIImage *backColor = [UIImage imageNamed:@"chatBack"];
     UIColor *color = [[UIColor alloc] initWithPatternImage:backColor];
     [self.view setBackgroundColor:color];
-	
-    CGRect tableFrame = self.tableFrame;
+
 	self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -141,8 +144,8 @@
     
 	[self.view addSubview:self.tableView];
 	
-    self.inputToolBarView = [[MessageInputView alloc] initWithFrame:self.inputFrame andDelegate:self];
-    
+    self.inputToolBarView = [[MessageInputView alloc] initWithFrame:inputFrame andDelegate:self];
+    self.inputToolBarView.textView.maxHeight = 100;
     self.inputToolBarView.textView.delegate = self;
 
     [self.inputToolBarView.sendButton addTarget:self action:@selector(sendPressed:)
@@ -169,7 +172,15 @@
     [self.tableView addGestureRecognizer:tapRecognizer];
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate  = self;
-
+    
+    DraftDB *db = [DraftDB instance];
+    NSString *draft = [db getDraft:self.remoteUser.uid];
+    if (draft.length > 0) {
+        self.inputToolBarView.sendButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
+        self.inputToolBarView.sendButton.hidden = NO;
+        self.inputToolBarView.recordButton.hidden = YES;
+        self.inputToolBarView.textView.text = draft;
+    }
 }
 
 #pragma mark - View lifecycle
@@ -252,7 +263,10 @@
     [self sendTextMessage:text];
     
     [self.inputToolBarView setNomarlShowing];
-    
+    if (INPUT_HEIGHT < self.inputToolBarView.frame.size.height) {
+        CGFloat e = INPUT_HEIGHT - self.inputToolBarView.frame.size.height;
+        [self extendInputViewHeight:e];
+    }
 }
 
 - (void)timerFired:(NSTimer*)timer {
@@ -377,6 +391,7 @@
 
 #pragma mark - Keyboard notifications
 - (void)handleWillShowKeyboard:(NSNotification *)notification{
+    NSLog(@"keyboard show");
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	NSTimeInterval animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
@@ -387,9 +402,14 @@
     [UIView setAnimationCurve:animationCurve];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    CGRect inputViewFrame = CGRectOffset(self.inputFrame, 0, -keyboardRect.size.height);
-    CGRect tableViewFrame = self.tableFrame;
-    tableViewFrame.size.height -= keyboardRect.size.height;
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    int h = CGRectGetHeight(screenBounds);
+    int w = CGRectGetWidth(screenBounds);
+    
+    CGRect tableViewFrame = CGRectMake(0.0f,  0.0f, w,  h - self.inputToolBarView.frame.size.height - keyboardRect.size.height);
+    CGFloat y = h - keyboardRect.size.height;
+    y -= self.inputToolBarView.frame.size.height;
+    CGRect inputViewFrame = CGRectMake(0, y, self.inputToolBarView.frame.size.width, self.inputToolBarView.frame.size.height);
     self.inputToolBarView.frame = inputViewFrame;
     self.tableView.frame = tableViewFrame;
     [self scrollToBottomAnimated:NO];
@@ -398,6 +418,8 @@
 }
 
 - (void)handleWillHideKeyboard:(NSNotification *)notification{
+    NSLog(@"keyboard hide");
+    CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	NSTimeInterval animationDuration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
     UIViewAnimationCurve animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -407,8 +429,13 @@
     [UIView setAnimationCurve:animationCurve];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    self.inputToolBarView.frame = self.inputFrame;
-    self.tableView.frame = self.tableFrame;
+    CGRect inputViewFrame = CGRectOffset(self.inputToolBarView.frame, 0, keyboardRect.size.height);
+    CGRect tableViewFrame = self.tableView.frame;
+    tableViewFrame.size.height += keyboardRect.size.height;
+    
+    self.inputToolBarView.frame = inputViewFrame;
+    self.tableView.frame = tableViewFrame;
+
     [self scrollToBottomAnimated:NO];
     [UIView commitAnimations];
 }
@@ -558,27 +585,11 @@
         return;
     }
     IMessage *msg = [self getImMessageById:msgLocalID];
-    msg.flags = msg.flags & MESSAGE_FLAG_FAILURE;
+    msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
     [self reloadMessage:msgLocalID];
     
     [[PeerMessageDB instance] markPeerMessageFailure:msgLocalID uid:uid];
     
-}
-
-//用户连线状态
--(void)onOnlineState:(int64_t)uid state:(BOOL)on{
-    if (uid != self.remoteUser.uid) {
-        return;
-    }
-    if (on) {
-        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:12.0f]];
-        self.onlineState = UserOnlineStateOnline;
-    }else{
-        [self.navigationBarButtonsView.conectInformationLabel setText: [self getRemoteUserLastOnlineTimestamp]];
-        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
-        self.onlineState = UserOnlineStateOffline;
-    }
 }
 
 //对方正在输入
@@ -619,7 +630,7 @@
         self.inputToolBarView.mediaButton.enabled = NO;
         self.inputToolBarView.userInteractionEnabled = NO;
     } else if(state == STATE_CONNECTED){
-        UITextView *textView = self.inputToolBarView.textView;
+        HPGrowingTextView *textView = self.inputToolBarView.textView;
         self.inputToolBarView.sendButton.enabled = ([textView.text trimWhitespace].length > 0);
         self.inputToolBarView.recordButton.enabled = YES;
         self.inputToolBarView.mediaButton.enabled = YES;
@@ -653,11 +664,45 @@
 								  animated:animated];
 }
 
+-(void)extendInputViewHeight:(CGFloat)e {
 
-#pragma mark - UITextViewDelegate
-
-- (void)textViewDidChange:(UITextView *)textView{
     
+    CGRect frame = self.inputToolBarView.frame;
+    CGRect inputFrame = CGRectMake(frame.origin.x, frame.origin.y-e, frame.size.width, frame.size.height+e);
+
+    frame = self.tableView.frame;
+    CGRect tableFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height-e);
+    
+    if (inputFrame.origin.y < 60) {
+        return;
+    }
+    NSLog(@"input frame:%f %f %f %f", inputFrame.origin.x, inputFrame.origin.y, inputFrame.size.width, inputFrame.size.height);
+    NSLog(@"table frame:%f %f %f %f", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
+    [UIView beginAnimations:nil context:NULL];
+    self.inputToolBarView.frame = inputFrame;
+    self.tableView.frame = tableFrame;
+    [UIView commitAnimations];
+}
+
+
+#pragma mark - HPGrowingTextViewDelegate
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+{
+
+    NSLog(@"change height:%f", height);
+    HPGrowingTextView *textView = growingTextView;
+    NSLog(@"text:%@, height:%f", textView.text, height);
+    if (height > textView.frame.size.height) {
+        CGFloat e = height - textView.frame.size.height;
+        [self extendInputViewHeight:e];
+    } else if (height < textView.frame.size.height) {
+        CGFloat e = height - textView.frame.size.height;
+        [self extendInputViewHeight:e];
+    }
+}
+
+- (void)growingTextViewDidChange:(HPGrowingTextView *)textView {
+
     if ([textView.text trimWhitespace].length > 0) {
         self.inputToolBarView.sendButton.enabled = ([[IMService instance] connectState] == STATE_CONNECTED);
         self.inputToolBarView.sendButton.hidden = NO;
@@ -797,9 +842,6 @@
     im.content = message.content.raw;
     m.body = im;
     [[IMService instance] sendPeerMessage:im];
-    
-//   [[PeerMessageDB instance] markPeerMessageSuccess:message.msgLocalID uid:message.sender];
-    
 }
 
 - (void) handleTapImageView:(UITapGestureRecognizer*)tap{
@@ -852,9 +894,6 @@
             MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
             [imageView.imageView addGestureRecognizer:tap];
         }
-       
-        //errorButton
-//        [cell.bubbleView.msgSendErrorBtn addTarget:self action:@selector(reSendMessage:) forControlEvents:UIControlEventTouchUpInside];
     }
 
     [cell setMessage:message];
@@ -1031,13 +1070,13 @@
         if (buttonIndex == 0) {
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = YES;
+            picker.allowsEditing = NO;
             picker.sourceType = UIImagePickerControllerSourceTypeCamera;
             [self presentViewController:picker animated:YES completion:NULL];
         }else if(buttonIndex == 1){
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate  = self;
-            picker.allowsEditing = YES;
+            picker.allowsEditing = NO;
             picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             [self presentViewController:picker animated:YES completion:NULL];
         }
@@ -1094,9 +1133,18 @@
     msg.content = content;
     msg.timestamp = (int)time(NULL);
 
-    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
-    UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    if (image.size.height == 0) {
+        return;
+    }
+    
+    float newHeigth = 640;
+    float newWidth = newHeigth*image.size.width/image.size.height;
 
+    UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
+    image = [image resizedImage:CGSizeMake(newWidth, newHeigth) interpolationQuality:kCGInterpolationDefault];
+    
     [[SDImageCache sharedImageCache] storeImage:image forKey:msg.content.imageURL];
     NSString *littleUrl =  [msg.content littleImageURL];
     [[SDImageCache sharedImageCache] storeImage:sizeImage forKey: littleUrl];
@@ -1254,25 +1302,63 @@
 
 #pragma mark - function
 
+-(NSDateComponents*) getComponentOfDate:(NSDate *)date {
+	NSCalendar *calendar = [NSCalendar currentCalendar];
+	[calendar setTimeZone:[NSTimeZone systemTimeZone]];
+	NSDateComponents *comps = [[NSDateComponents alloc] init];
+	NSInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSCalendarUnitWeekday | NSHourCalendarUnit | NSMinuteCalendarUnit | \
+	NSSecondCalendarUnit;
+	comps = [calendar components:unitFlags fromDate:date];
+    return comps;
+}
+
+-(BOOL)isSameDay:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDateComponents *c1 = [self getComponentOfDate:date1];
+    NSDateComponents *c2 = [self getComponentOfDate:date2];
+    return c1.year == c2.year && c1.month == c2.month && c1.day == c2.day;
+}
+
+-(BOOL)isYestoday:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *y = [date1 dateByAddingTimeInterval:-24*3600];
+    return [self isSameDay:y other:date2];
+}
+-(BOOL)isBeforeYestoday:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *y = [date1 dateByAddingTimeInterval:-2*24*3600];
+    return [self isSameDay:y other:date2];
+}
+
+-(BOOL)isInWeek:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *t = [date1 dateByAddingTimeInterval:-7*24*3600];
+    return [t compare:date2] == NSOrderedAscending && ![self isSameDay:t other:date2];
+}
+
+-(BOOL)isInMonth:(NSDate*)date1 other:(NSDate*)date2 {
+    NSDate *t = [date1 dateByAddingTimeInterval:-30*24*3600];
+    return [t compare:date2] == NSOrderedAscending;
+}
+
 -(NSString*) getRemoteUserLastOnlineTimestamp{
-    
     NSDate *lastDate =  [[NSDate alloc] initWithTimeIntervalSince1970:self.remoteUser.lastUpTimestamp];
-    
     NSDate *todayDate = [NSDate date];
+    
+    NSDateComponents *upDate = [self getComponentOfDate:lastDate];
+    
     NSString *timeStr = nil;
-    if ([PublicFunc isTheDay:lastDate sameToThatDay:todayDate] ) {
-        //当天
-        int hour = [PublicFunc getHourComponentOfDate:lastDate];
-        int minute = [PublicFunc getMinuteComponentOfDate:lastDate];
-        timeStr = [NSString stringWithFormat:@"%@%02d:%02d",@"最后上线时间: 今天 ",hour,minute];
+    if ([self isSameDay:lastDate other:todayDate])
+        timeStr = [NSString stringWithFormat:@"最后上线时间: 今天%02d:%02d", upDate.hour, upDate.minute];
+    else if ([self isYestoday:lastDate other:todayDate]) {
+        timeStr = [NSString stringWithFormat:@"最后上线时间: 昨天%02d:%02d", upDate.hour, upDate.minute];
+    } else if ([self isBeforeYestoday:lastDate other:todayDate]) {
+        timeStr = [NSString stringWithFormat:@"最后上线时间: 前天%02d:%02d", upDate.hour, upDate.minute];
+    } else if ([self isInWeek:lastDate other:todayDate]){
+        const char *t[8] = {"", "周日", "周一", "周二", "周三", "周四", "周五", "周六"};
+        timeStr = [NSString stringWithFormat:@"最后上线于%@的%02d:%02d", [NSString stringWithUTF8String:t[upDate.weekday]], upDate.hour, upDate.minute];
+    } else if ([self isInMonth:lastDate other:todayDate]){
+        timeStr = [NSString stringWithFormat:@"最后上线 %02d-%02d-%02d %02d:%02d", upDate.year%100, upDate.month, upDate.day, upDate.hour, upDate.minute];
+    } else {
+        timeStr = [NSString stringWithFormat:@"最后上线%04d年%02d月%02d日", upDate.year, upDate.month, upDate.day];
     }
-    else if([PublicFunc isLessWeekOldDate:lastDate fromNewDate:todayDate]){
-        int week = [PublicFunc getWeekDayComponentOfDate: lastDate];
-        NSString *weekStr = [PublicFunc getWeekDayString: week];
-        timeStr = [NSString stringWithFormat:@"%@%@",@"最后上线时间: ",weekStr];
-    }else{
-       timeStr = [PublicFunc getConversationTimeString:lastDate];
-    }
+    
     return timeStr;
 }
 
@@ -1338,7 +1424,9 @@
 }
 
 -(void)returnMainTableViewController {
-    [[IMService instance] unsubscribeState:self.remoteUser.uid];
+    DraftDB *db = [DraftDB instance];
+    [db setDraft:self.remoteUser.uid draft:self.inputToolBarView.textView.text];
+
     [[IMService instance] removeMessageObserver:self];
     [[Outbox instance] removeBoxObserver:self];
     [[AudioDownloader instance] removeDownloaderObserver:self];
@@ -1363,6 +1451,9 @@
         MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
         MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
         [audioView setUploading:NO];
+        
+        msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
+        [self reloadMessage:msg.msgLocalID];
     }
 }
 
@@ -1381,6 +1472,11 @@
         MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
         MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
         [imageView setUploading:NO];
+        
+
+        msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
+        [self reloadMessage:msg.msgLocalID];
+
     }
 }
 

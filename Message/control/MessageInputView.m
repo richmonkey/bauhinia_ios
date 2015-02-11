@@ -9,7 +9,7 @@
 
 #define  CANCEL_SEND_DISTANCE  50.0f
 
-#define INPUT_HEIGHT 46.0f
+#define INPUT_HEIGHT 52.0f
 
 @interface MessageInputView ()
 
@@ -48,6 +48,7 @@
     UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
     [bkview setImage:stretchImg];
     [self addSubview:bkview];
+    self.bkView = bkview;
     
     self.backgroundColor = [UIColor whiteColor];
     self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
@@ -133,7 +134,7 @@
         CGRect maskFrame = CGRectMake(0, 0, 70, frame.size.height);
         UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
         UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
-       UIImageView *maskView = [[UIImageView alloc] initWithFrame:maskFrame];
+        UIImageView *maskView = [[UIImageView alloc] initWithFrame:maskFrame];
         [maskView setImage:stretchImg];
         [self.recordingView addSubview:maskView];
         
@@ -158,6 +159,8 @@
         self.recordingView.hidden = YES;
 
     }
+    
+    [self layoutSubviews];
 }
 
 - (void)slipLabelFrame:(double)x {
@@ -178,21 +181,18 @@
 - (void)setupTextView
 {
     CGFloat width = self.frame.size.width - SEND_BUTTON_WIDTH - 26;
-    CGFloat height = [MessageInputView textViewLineHeight];
+    CGFloat height = 36.0;
     CGRect frame = self.frame;
     
     double x = 40.0;
     double y = (frame.size.height - height)/2;
 
-    
-    self.textView = [[UITextView  alloc] initWithFrame:CGRectMake(x, y, width, height)];
-    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(x, y, width, height)];
     self.textView.backgroundColor = [UIColor clearColor];
     [self.textView setFont:[UIFont systemFontOfSize:16]];
     self.textView.layer.borderColor = [[UIColor colorWithWhite:.8 alpha:1.0] CGColor];
     self.textView.layer.borderWidth = 0.65f;
     self.textView.layer.cornerRadius = 6.0f;
-
 
     [self addSubview:self.textView];
 }
@@ -249,21 +249,37 @@
     }
 }
 
+-(void)layoutSubviews {
 
-#pragma mark - Message input view
-+ (CGFloat)textViewLineHeight
-{
-    return 30.0f; // for fontSize 16.0f
-}
+    self.bkView.frame = self.bounds;
+    
+    CGFloat x = 40.0;
+    CGFloat y = 8;
+    CGFloat w = self.bounds.size.width - SEND_BUTTON_WIDTH - 26;
+    CGFloat h = self.bounds.size.height - 16;
+    self.textView.frame = CGRectMake(x, y, w, h);
+    NSLog(@"text view heigth:%f", h);
+    x = self.bounds.size.width - 56.0;
+    y = (self.bounds.size.height - 26.0)/2;
+    w = 60.0;
+    h = 26.0;
+    
+    self.sendButton.frame = CGRectMake(x, y, w, h);
+    
+    x = self.bounds.size.width - 46.0;
+    y = (self.bounds.size.height - 26.0)/2;
+    w = 60.0;
+    h = 26.0;
+    
+    self.recordButton.frame = CGRectMake(x, y, w, h);
 
-+ (CGFloat)maxLines
-{
-    return 4.0f;
-}
+    h = 19;
+    w = 26;
+    x = 8;
+    y = (self.bounds.size.height-h)/2 ;
+    self.mediaButton.frame = CGRectMake(x, y, w, h);
 
-+ (CGFloat)maxHeight
-{
-    return ([MessageInputView maxLines] + 1.0f) * [MessageInputView textViewLineHeight];
+    self.recordingView.frame = self.bounds;
 }
 
 @end

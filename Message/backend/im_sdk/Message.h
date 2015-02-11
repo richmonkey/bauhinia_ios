@@ -20,6 +20,13 @@
 #define MSG_INPUTING 10
 #define MSG_SUBSCRIBE_ONLINE_STATE 11
 #define MSG_ONLINE_STATE 12
+#define MSG_PING 13
+#define MSG_PONG 14
+#define MSG_AUTH_TOKEN 15
+#define MSG_LOGIN_POINT 16
+
+
+#define PLATFORM_IOS 1
 
 @interface IMMessage : NSObject
 @property(nonatomic, assign)int64_t sender;
@@ -46,6 +53,12 @@
 
 @interface MessageSubsribe : NSObject
 @property(nonatomic)NSArray *uids;
+@end
+
+@interface AuthenticationToken : NSObject
+@property(nonatomic, copy) NSString *token;
+@property(nonatomic, assign) int8_t platformID;
+@property(nonatomic, copy) NSString *deviceID;
 @end
 
 @interface Message : NSObject

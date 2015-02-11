@@ -428,40 +428,6 @@
     
 }
 
-//服务器ack
--(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid {
-    
-}
-//接受方ack
--(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid {
-    
-}
-
--(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid {
-    
-}
-
--(void)onGroupMessage:(IMMessage*)msg {
-    
-}
-
--(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid {
-    
-}
-
--(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid{
-    
-}
-
-//用户连线状态
--(void)onOnlineState:(int64_t)uid state:(BOOL)on {
-    
-}
-
-//对方正在输入
--(void)onPeerInputing:(int64_t)uid {
-    
-}
 
 //同IM服务器连接的状态变更通知
 -(void)onConnectState:(int)state {

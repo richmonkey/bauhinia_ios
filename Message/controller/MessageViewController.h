@@ -18,7 +18,6 @@
 #import "JSMessageSoundEffect.h"
 #import "MBProgressHUD.h"
 
-#define INPUT_HEIGHT 46.0f
 
 #import "MessageInputView.h"
 #import "OutBox.h"
@@ -33,7 +32,7 @@ typedef enum {
 } UserOnlineStateType;
 
 @interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
-    MessageObserver, OutboxObserver, AudioDownloaderObserver,UIActionSheetDelegate,MessageInputRecordDelegate>
+    MessageObserver, OutboxObserver, AudioDownloaderObserver,UIActionSheetDelegate,MessageInputRecordDelegate, HPGrowingTextViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic,strong) UIImage *willSendImage;
