@@ -45,7 +45,8 @@
 }
 
 -(void) showNewMessage:(int)count{
-    JSBadgeView *badgeView = [[JSBadgeView alloc] initWithParentView:self.contentView alignment:JSBadgeViewAlignmentCenterRight];
+    JSBadgeView *badgeView = [[JSBadgeView alloc] initWithParentView:self.messageContent alignment:JSBadgeViewAlignmentCenterRight];
+    [self.messageContent bringSubviewToFront:badgeView];
     if (count > 99) {
        badgeView.badgeText = @"99+";
     }else{
@@ -54,7 +55,7 @@
 }
 
 -(void) clearNewMessage{
-    for (UIView *vi in [self.contentView subviews]) {
+    for (UIView *vi in [self.messageContent subviews]) {
         if ([vi isKindOfClass:[JSBadgeView class]]) {
             [vi removeFromSuperview];
         }

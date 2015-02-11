@@ -19,6 +19,8 @@
 @property (weak, nonatomic)     IBOutlet UILabel* messageContent;
 @property (weak, nonatomic)     IBOutlet UILabel* timelabel;
 
+@property (weak,nonatomic) UIView *badgeFatherView;
+
 -(void) showNewMessage:(int)count;
 -(void) clearNewMessage;
 
