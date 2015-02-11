@@ -174,4 +174,6 @@
 + (float)getSystemVersion;
 + (UIImage *)resizeImageWithCapInsets:(UIEdgeInsets)edgeinset fromImage:(UIImage *)image;
 
++ (CGFloat)widthOfString:(NSString *)string withFont:(UIFont *)font;
+
 @end

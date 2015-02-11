@@ -1002,11 +1002,22 @@
     }
     else if([PublicFunc isLessWeekOldDate:curtDate fromNewDate:todayDate]){
         int week = [PublicFunc getWeekDayComponentOfDate: curtDate];
-        NSString *weekStr = [PublicFunc getWeekDayString: week];
-        sectionView.sectionHeader.text = weekStr;
+        timeStr = [PublicFunc getWeekDayString: week];
+        sectionView.sectionHeader.text = timeStr;
     }else{
-        sectionView.sectionHeader.text = [PublicFunc getConversationTimeString:curtDate];
+        timeStr = [PublicFunc getConversationTimeString:curtDate];
+        sectionView.sectionHeader.text = timeStr;
     }
+    
+    CGFloat width = [PublicFunc widthOfString:timeStr withFont:[UIFont systemFontOfSize:MES_SECTION_TIMER_FONT_SIZE]] + 12;
+    if (width>(self.view.frame.size.width/2)) {
+        width = self.view.frame.size.width/2;
+    }
+    CGRect frame = sectionView.sectionHeader.frame;
+    frame.size.width = width;
+    frame.origin.x = (sectionView.frame.size.width - width)/2;
+    [sectionView.sectionHeader setFrame:frame];
+    
     sectionView.alpha = 0.9;
     return sectionView;
 }
