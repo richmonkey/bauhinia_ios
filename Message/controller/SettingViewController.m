@@ -321,7 +321,7 @@
     
     //最上部view
     UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 80)];
-    upView.alpha = 0.3;
+    upView.alpha = 0.7;
     upView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:upView];
     
@@ -336,7 +336,7 @@
     
     //左侧的view
     UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 80, 20, 280)];
-    leftView.alpha = 0.3;
+    leftView.alpha = 0.7;
     leftView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:leftView];
     
@@ -344,7 +344,7 @@
     
     UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(300, 80, 20, 280)];
     
-    rightView.alpha = 0.3;
+    rightView.alpha = 0.7;
     
     rightView.backgroundColor = [UIColor blackColor];
     
@@ -352,13 +352,13 @@
     
     //底部view
     UIView * downView = [[UIView alloc] initWithFrame:CGRectMake(0, 360, 320, 120)];
-    downView.alpha = 0.3;
+    downView.alpha = 0.7;
     downView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:downView];
     
     //用于取消操作的button
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    cancelButton.alpha = 0.4;
+    cancelButton.alpha = 0.9;
     [cancelButton setFrame:CGRectMake(20, 390, 280, 40)];
     [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
     [cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
