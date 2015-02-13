@@ -29,6 +29,6 @@
     return self;
 }
 -(NSString*)URL {
-    return @"http://im.yufeng.me:5000";
+    return @"http://im.yufeng.me";
 }
 @end
