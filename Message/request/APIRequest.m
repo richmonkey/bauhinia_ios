@@ -309,4 +309,36 @@
     [[NSOperationQueue mainQueue] addOperation:request];
     return request;
 }
+
++(TAHttpOperation*)webIMlogin:(NSString*)scanToken success:(void (^)())success fail:(void (^)())fail {
+    
+    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+    request.targetURL = [[Config instance].URL stringByAppendingString:@"/qrcode/sweep"];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:scanToken forKey:@"sid"];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithObject:@"application/json" forKey:@"Content-Type"];
+    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
+    [headers setObject:auth forKey:@"Authorization"];
+    
+    request.headers = headers;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    request.postBody = data;
+    request.method = @"POST";
+    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+        int statusCode = [(NSHTTPURLResponse*)response statusCode];
+        if (statusCode != 200) {
+            IMLog(@"web login fail:%d",statusCode);
+            fail();
+            return;
+        }
+        success();
+    };
+    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+        IMLog(@"web login fail");
+        fail();
+    };
+    [[NSOperationQueue mainQueue] addOperation:request];
+    return request;
+}
+
 @end

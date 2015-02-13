@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "IMService.h"
+#import "ZBarReaderController.h"
 
-@interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MessageObserver,UIAlertViewDelegate>
+
+@interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MessageObserver,UIAlertViewDelegate,ZBarReaderDelegate>
 
 @property (strong,nonatomic) IBOutlet UITableView *tableView;
 @property (strong,nonatomic) NSArray *cellTitleArray;

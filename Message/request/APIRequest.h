@@ -35,4 +35,6 @@
 
 +(TAHttpOperation*)bindDeviceToken:(NSString*)deviceToken success:(void (^)())success fail:(void (^)())fail;
 
++(TAHttpOperation*)webIMlogin:(NSString*)scanToken success:(void (^)())success fail:(void (^)())fail;
+
 @end

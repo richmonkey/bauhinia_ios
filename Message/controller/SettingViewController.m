@@ -13,6 +13,7 @@
 #import "ConversationSettingViewController.h"
 #import "PeerMessageDB.h"
 #import "UIView+Toast.h"
+#import "APIRequest.h"
 
 
 #define kNetStatusSection 2
@@ -25,6 +26,7 @@
 
 #define kProfileCellTag                 200
 #define kConversationCellSettingTag     201
+#define kZbarScanCellTag                202
 
 #define kNetStatusCellTag               300
 
@@ -44,7 +46,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.cellTitleArray = @[ @"关于",
-                                 @[@"个人资讯",@"会话设置"],
+                                 @[@"个人资讯",@"会话设置",@"Web端登录"],
                                  @"网络状态",
                                  @"清除所有对话记录"
                                 ];
@@ -166,6 +168,11 @@
             [self.navigationController pushViewController:conSettingController animated: YES];
         }
             break;
+        case kZbarScanCellTag:
+        {
+            [self scan:nil];
+        }
+            break;
         case kNetStatusCellTag:
         {
 
@@ -266,6 +273,49 @@
         [(UIActivityIndicatorView*)cell.accessoryView stopAnimating];
         cell.accessoryView = nil;
     }
+}
+
+
+- (void)scan:(id)sender {
+    
+    ZBarReaderController * reader = [ZBarReaderController new];
+    reader.readerDelegate = self;
+    ZBarImageScanner * scanner = reader.scanner;
+    [scanner setSymbology:ZBAR_I25 config:ZBAR_CFG_ENABLE to:0];
+    
+    reader.showsZBarControls = YES;
+    
+    [self presentViewController:reader animated:YES completion:nil];
+}
+
+#pragma mark - ZBarReaderDelegate
+
+- (void) readerControllerDidFailToRead: (ZBarReaderController*) reader
+                             withRetry: (BOOL) retry{
+    
+}
+
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    id<NSFastEnumeration> results = [info objectForKey:ZBarReaderControllerResults];
+    ZBarSymbol * symbol;
+    for(symbol in results)
+        break;
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    NSString *text = symbol.data;
+    
+    [APIRequest webIMlogin:text
+                        success:^{
+                            NSLog(@"web login success");
+                            [self.view makeToast:@"WebIM登录成功!" duration:0.9 position:@"center"];
+                        }
+                           fail:^{
+                               NSLog(@"web login fail");
+                               [self.view makeToast:@"WebIM登录失败!" duration:0.9 position:@"center"];
+                           }];
 }
 
 - (void)didReceiveMemoryWarning
