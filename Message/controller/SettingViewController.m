@@ -275,17 +275,95 @@
     }
 }
 
-
-- (void)scan:(id)sender {
-    
-    ZBarReaderController * reader = [ZBarReaderController new];
+- (void)scan:(id)sender
+{
+    ZBarReaderViewController *reader = [ZBarReaderViewController new];
     reader.readerDelegate = self;
-    ZBarImageScanner * scanner = reader.scanner;
-    [scanner setSymbology:ZBAR_I25 config:ZBAR_CFG_ENABLE to:0];
     
-    reader.showsZBarControls = YES;
+    //非全屏
+    reader.edgesForExtendedLayout = UIRectEdgeAll;
     
+    //隐藏底部控制按钮
+    reader.showsZBarControls = NO;
+    
+    //设置自己定义的界面
+    [self setOverlayPickerView:reader];
+    ZBarImageScanner *scanner = reader.scanner;
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
     [self presentViewController:reader animated:YES completion:nil];
+    
+}
+
+- (void)setOverlayPickerView:(ZBarReaderViewController *)reader{
+    //清除原有控件
+    for (UIView *temp in [reader.view subviews]) {
+        for (UIButton *button in [temp subviews]) {
+            if ([button isKindOfClass:[UIButton class]]) {
+                [button removeFromSuperview];
+            }
+        }
+        
+        for (UIToolbar *toolbar in [temp subviews]) {
+            if ([toolbar isKindOfClass:[UIToolbar class]]) {
+                [toolbar setHidden:YES];
+                [toolbar removeFromSuperview];
+            }
+        }
+    }
+    
+    //画中间的基准线
+    UIView* line = [[UIView alloc] initWithFrame:CGRectMake(40, 220, 240, 1)];
+    line.backgroundColor = [UIColor redColor];
+    [reader.view addSubview:line];
+    
+    
+    //最上部view
+    UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 80)];
+    upView.alpha = 0.3;
+    upView.backgroundColor = [UIColor blackColor];
+    [reader.view addSubview:upView];
+    
+    //用于说明的label
+    UILabel * labIntroudction= [[UILabel alloc] init];
+    labIntroudction.backgroundColor = [UIColor clearColor];
+    labIntroudction.frame=CGRectMake(15, 20, 290, 50);
+    labIntroudction.numberOfLines=2;
+    labIntroudction.textColor=[UIColor whiteColor];
+    labIntroudction.text=@"将二维码图像置于矩形方框内，离手机摄像头10CM左右，系统会自动识别。";
+    [upView addSubview:labIntroudction];
+    
+    //左侧的view
+    UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 80, 20, 280)];
+    leftView.alpha = 0.3;
+    leftView.backgroundColor = [UIColor blackColor];
+    [reader.view addSubview:leftView];
+    
+    //右侧的view
+    
+    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(300, 80, 20, 280)];
+    
+    rightView.alpha = 0.3;
+    
+    rightView.backgroundColor = [UIColor blackColor];
+    
+    [reader.view addSubview:rightView];
+    
+    //底部view
+    UIView * downView = [[UIView alloc] initWithFrame:CGRectMake(0, 360, 320, 120)];
+    downView.alpha = 0.3;
+    downView.backgroundColor = [UIColor blackColor];
+    [reader.view addSubview:downView];
+    
+    //用于取消操作的button
+    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    cancelButton.alpha = 0.4;
+    [cancelButton setFrame:CGRectMake(20, 390, 280, 40)];
+    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [cancelButton addTarget:self action:@selector(dismissOverlayView:)forControlEvents:UIControlEventTouchUpInside];
+    [reader.view addSubview:cancelButton];
 }
 
 #pragma mark - ZBarReaderDelegate
@@ -316,6 +394,13 @@
                                NSLog(@"web login fail");
                                [self.view makeToast:@"WebIM登录失败!" duration:0.9 position:@"center"];
                            }];
+}
+
+
+//取消button方法
+
+- (void)dismissOverlayView:(id)sender{ 
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning

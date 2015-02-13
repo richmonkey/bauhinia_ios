@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "IMService.h"
-#import "ZBarReaderController.h"
+#import "ZBarReaderViewController.h"
 
 
 @interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MessageObserver,UIAlertViewDelegate,ZBarReaderDelegate>
