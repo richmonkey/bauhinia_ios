@@ -411,8 +411,6 @@
     //用于取消操作的button
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     cancelButton.alpha = 0.9;
-//    [cancelButton setBackgroundColor:[UIColor blueColor]];
-//    [cancelButton.titleLabel setTextColor:[UIColor whiteColor]];
     [cancelButton setFrame:CGRectMake(20, 390, 280, 40)];
     [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
     [cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];

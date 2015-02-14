@@ -106,7 +106,7 @@
 }
 
 + (UIImage *)bubbleDefaultIncomingSelected{
-    return [[UIImage imageNamed:@"BubbleIncoming"] makeStretchableDefaultIncoming];
+    return [[UIImage imageNamed:@"BubbleIncomingSelected"] makeStretchableDefaultIncoming];
 }
 
 #pragma mark - Outgoing message bubbles
@@ -115,7 +115,7 @@
 }
 
 + (UIImage *)bubbleDefaultOutgoingSelected{
-    return [[UIImage imageNamed:@"BubbleOutgoing"] makeStretchableDefaultOutgoing];
+    return [[UIImage imageNamed:@"BubbleOutgoingSelected"] makeStretchableDefaultOutgoing];
 }
 
 @end

@@ -28,11 +28,16 @@
 #import "Outbox.h"
 #import "LevelDB.h"
 #import "AudioDownloader.h"
-#import "ESImageViewController.h"
+#import "MEESImageViewController.h"
 #import "UIImage+Resize.h"
 #import "SystemProperty.h"
 #import "UIView+Toast.h"
 #import "DraftDB.h"
+
+#import "MessageTextView.h"
+#import "MessageImageView.h"
+#import "BubbleView.h"
+
 
 #define INPUT_HEIGHT 52.0f
 
@@ -856,14 +861,16 @@
     
     if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:message.content.imageURL]) {
         UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: message.content.imageURL];
-        ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
+        MEESImageViewController * imgcontroller = [[MEESImageViewController alloc] init];
         [imgcontroller setImage:cacheImg];
         [imgcontroller setTappedThumbnail:tap.view];
+        imgcontroller.isFullSize = YES;
         [self presentViewController:imgcontroller animated:YES completion:nil];
     } else if([[SDImageCache sharedImageCache] diskImageExistsWithKey:littleUrl]){
         UIImage *cacheImg = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey: littleUrl];
-        ESImageViewController * imgcontroller = [[ESImageViewController alloc] init];
+        MEESImageViewController * imgcontroller = [[MEESImageViewController alloc] init];
         [imgcontroller setImage:cacheImg];
+        imgcontroller.isFullSize = NO;
         [imgcontroller setImgUrl:message.content.imageURL];
         [imgcontroller setTappedThumbnail:tap.view];
         [self presentViewController:imgcontroller animated:YES completion:nil];
@@ -893,6 +900,8 @@
             [tap setNumberOfTouchesRequired: 1];
             MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
             [imageView.imageView addGestureRecognizer:tap];
+        }else if(message.content.type == MESSAGE_TEXT){
+            
         }
     }
 
@@ -920,6 +929,12 @@
         imageView.imageView.tag = indexPath.section<<16 | indexPath.row;
         [imageView setUploading:[[Outbox instance] isUploading:message]];
     }
+    
+    UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                             action:@selector(handleLongPress:)];
+    [recognizer setMinimumPressDuration:0.4];
+    [cell addGestureRecognizer:recognizer];
+    
     return cell;
 }
 
@@ -1572,6 +1587,33 @@
         NSLog(@"stop record...");
         [self stopRecord];
     }
+}
+
+
+#pragma mark - Gestures
+- (void)handleLongPress:(UILongPressGestureRecognizer *)longPress
+{
+    MessageViewCell *targetView = (MessageViewCell*)longPress.view;
+    
+    if(longPress.state != UIGestureRecognizerStateBegan
+       || ![targetView becomeFirstResponder])
+        return;
+    
+    UIMenuController *menu = [UIMenuController sharedMenuController];
+    
+    
+    CGRect targetRect = [targetView convertRect:[targetView.bubbleView bubbleFrame]
+                                 fromView:targetView.bubbleView];
+    [menu setTargetRect:CGRectInset(targetRect, 0.0f, 4.0f) inView:targetView];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:targetView
+                                             selector:@selector(handleMenuWillShowNotification:)
+                                                 name:UIMenuControllerWillShowMenuNotification
+                                               object:nil];
+    [menu setMenuVisible:YES animated:YES];
+    
+    [menu update];
 }
 
 

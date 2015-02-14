@@ -61,7 +61,7 @@
     if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending){
         UIColor* textColor = RGBACOLOR(31.0f, 31.0f, 31.0f, 1.0f);
         if (self.selectedToShowCopyMenu){
-            textColor = [UIColor lightTextColor];
+            textColor = RGBACOLOR(91.0f, 91.0f, 91.0f, 1.0f);
         }
         
         NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
