@@ -10,6 +10,8 @@
 
 #import "UIView+Toast.h"
 
+#import <AssetsLibrary/AssetsLibrary.h>
+
 @interface MEESImageViewController ()
 
 @end
@@ -44,14 +46,22 @@
     // Dispose of any resources that can be recreated.
 }
 
-
- 
  - (void) saveImage:(id)sender{
+     
+     ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+     if (status != ALAuthorizationStatusAuthorized) {
+         //show alert for asking the user to give permission
+        [self.view makeToast:@"请允许读取相册!可以到系统设置里修改" duration:0.9 position:@"center"];
+        return;
+     }
+     //TODO 权限问题
      UIImageWriteToSavedPhotosAlbum(self.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
  }
  
  
  - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+     
+     //TODO 错误描述处理，相册权限处理
      if (error != NULL){
          [self.view makeToast:@"保存失败!" duration:0.9 position:@"center"];
      }else{
