@@ -155,7 +155,7 @@
                                token.expireTimestamp = expireTimestamp;
                                [token save];
                                [self prepareTimer];
-                               
+                               NSLog(@"refresh token success");
                            }
                               fail:^{
                                   self.refreshFailCount = self.refreshFailCount + 1;
