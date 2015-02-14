@@ -216,6 +216,7 @@
             NSMutableDictionary *obj = [NSMutableDictionary dictionary];
             [obj setObject:number.zone forKey:@"zone"];
             [obj setObject:number.number forKey:@"number"];
+            [obj setObject:contact.contactName forKey:@"name"];
             [array addObject:obj];
         }
     }
