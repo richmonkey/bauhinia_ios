@@ -16,5 +16,6 @@
 @property (strong,nonatomic) IBOutlet UITableView *tableView;
 @property (strong,nonatomic) NSArray *cellTitleArray;
 @property (weak,nonatomic) UITableViewCell *statusCell;
+@property (strong,nonatomic) UIView* redScanLine;
 
 @end

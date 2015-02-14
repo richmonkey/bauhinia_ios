@@ -35,6 +35,12 @@
 #define kGreenColor         RGBCOLOR(48,176,87)
 #define kRedColor           RGBCOLOR(207,6,6)
 
+#define greenLineWidthHeight 40
+#define cornerWith   40
+#define redLineStartY       170
+#define redLineMoveLength   140
+#define scanTopBlank            120
+
 @interface SettingViewController ()
 
 @end
@@ -62,12 +68,24 @@
     
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-
+- (void)viewWillAppear:(BOOL)animated{
+    if(self.redScanLine){
+        [self.redScanLine.layer removeAllAnimations];
+    }
 }
 
--(void)viewDidDisappear:(BOOL)animated{
-
+-(void)viewWillDisappear:(BOOL)animated{
+    [UIView animateWithDuration:1 delay:0
+                        options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse
+                     animations:
+                         ^{
+                             if (self.redScanLine) {
+                                 CGRect frame = self.redScanLine.frame;
+                                 frame.origin.y += redLineMoveLength;
+                                 [self.redScanLine setFrame:frame];
+                             }
+                         }
+                     completion:nil];
 }
 
 #pragma mark - UITableViewDataSource
@@ -314,37 +332,71 @@
     }
     
     //画中间的基准线
-    UIView* line = [[UIView alloc] initWithFrame:CGRectMake(40, 220, 240, 1)];
-    line.backgroundColor = [UIColor redColor];
-    [reader.view addSubview:line];
+    self.redScanLine = [[UIView alloc] initWithFrame:CGRectMake(45, redLineStartY, 230, 2)];
+    self.redScanLine.backgroundColor = [UIColor redColor];
+    [reader.view addSubview:self.redScanLine];
+   
+    //|--
+    UIView *cornerTL = [[UIView alloc] initWithFrame:CGRectMake(cornerWith, scanTopBlank, greenLineWidthHeight, 1)];
+    cornerTL.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerTL];
+    //||-
+    UIView *cornerLT = [[UIView alloc] initWithFrame:CGRectMake(cornerWith, scanTopBlank, 1, greenLineWidthHeight)];
+    cornerLT.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerLT];
+    //--|
+    UIView *cornerTR = [[UIView alloc] initWithFrame:CGRectMake(320 - greenLineWidthHeight - cornerWith, scanTopBlank, greenLineWidthHeight, 1)];
+    cornerTR.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerTR];
+    //-||
+    UIView *cornerRT = [[UIView alloc] initWithFrame:CGRectMake(320-cornerWith-1, scanTopBlank, 1, greenLineWidthHeight)];
+    cornerRT.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerRT];
+    //|__
+    UIView *cornerBL = [[UIView alloc] initWithFrame:CGRectMake(cornerWith, 360-1, greenLineWidthHeight, 1)];
+    cornerBL.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerBL];
+    //||_
+    UIView *cornerLB = [[UIView alloc] initWithFrame:CGRectMake(cornerWith, 360-greenLineWidthHeight-1, 1, greenLineWidthHeight)];
+    cornerLB.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerLB];
+    //__|
+    UIView *cornerBR = [[UIView alloc] initWithFrame:CGRectMake(320-greenLineWidthHeight- cornerWith, 360-1, greenLineWidthHeight, 1)];
+    cornerBR.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerBR];
+    //_||
+    UIView *cornerRB = [[UIView alloc] initWithFrame:CGRectMake(320-cornerWith-1, 360-greenLineWidthHeight-1, 1, greenLineWidthHeight)];
+    cornerRB.backgroundColor = [UIColor greenColor];
+    [reader.view addSubview:cornerRB];
     
     
     //最上部view
-    UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 80)];
-    upView.alpha = 0.7;
+    UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, scanTopBlank)];
+    upView.alpha = 0.9;
     upView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:upView];
     
     //用于说明的label
     UILabel * labIntroudction= [[UILabel alloc] init];
     labIntroudction.backgroundColor = [UIColor clearColor];
-    labIntroudction.frame=CGRectMake(15, 20, 290, 50);
+    labIntroudction.frame=CGRectMake(15, 60, 290, 50);
+    [labIntroudction setFont:[UIFont systemFontOfSize:16.0f]];
     labIntroudction.numberOfLines=2;
     labIntroudction.textColor=[UIColor whiteColor];
     labIntroudction.text=@"将二维码图像置于矩形方框内，离手机摄像头10CM左右，系统会自动识别。";
     [upView addSubview:labIntroudction];
     
     //左侧的view
-    UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 80, 20, 280)];
-    leftView.alpha = 0.7;
+    UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, scanTopBlank, 40, 280)];
+    leftView.alpha = 0.9;
     leftView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:leftView];
     
     //右侧的view
     
-    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(300, 80, 20, 280)];
+    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(320 - 40, scanTopBlank, 40, 280)];
     
-    rightView.alpha = 0.7;
+    rightView.alpha = 0.9;
     
     rightView.backgroundColor = [UIColor blackColor];
     
@@ -352,13 +404,15 @@
     
     //底部view
     UIView * downView = [[UIView alloc] initWithFrame:CGRectMake(0, 360, 320, 120)];
-    downView.alpha = 0.7;
+    downView.alpha = 0.9;
     downView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:downView];
     
     //用于取消操作的button
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     cancelButton.alpha = 0.9;
+//    [cancelButton setBackgroundColor:[UIColor blueColor]];
+//    [cancelButton.titleLabel setTextColor:[UIColor whiteColor]];
     [cancelButton setFrame:CGRectMake(20, 390, 280, 40)];
     [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
     [cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
