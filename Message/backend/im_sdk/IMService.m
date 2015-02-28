@@ -195,6 +195,14 @@
 -(void)handleAuthStatus:(Message*)msg {
     int status = [(NSNumber*)msg.body intValue];
     NSLog(@"auth status:%d", status);
+    if (status != 0) {
+        //失效的accesstoken,2s后重新连接
+        self.connectFailCount = 2;
+        [self close];
+        [self startConnectTimer];
+        self.connectState = STATE_UNCONNECTED;
+        [self publishConnectState:STATE_UNCONNECTED];
+    }
 }
 
 -(void)handleInputing:(Message*)msg {

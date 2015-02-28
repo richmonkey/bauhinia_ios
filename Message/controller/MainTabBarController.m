@@ -155,6 +155,7 @@
                                token.expireTimestamp = expireTimestamp;
                                [token save];
                                [self prepareTimer];
+                               [IMService instance].token = accessToken;
                                NSLog(@"refresh token success");
                            }
                               fail:^{
