@@ -130,70 +130,11 @@
 
 }
 
-#pragma mark - Copying
-- (BOOL)canBecomeFirstResponder
-{
-    return YES;
-}
-
-- (BOOL)becomeFirstResponder
-{
-    return [super becomeFirstResponder];
-}
-
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
-    if ([self.bubbleView isKindOfClass:[MessageTextView class]]) {
-        if(action == @selector(copy:))
-            return YES;
-    }
-
-    return [super canPerformAction:action withSender:sender];
-}
 
 #pragma mark - Touch events
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [super touchesEnded:touches withEvent:event];
-    if(![self isFirstResponder])
-        return;
-    
-    UIMenuController *menu = [UIMenuController sharedMenuController];
-    [menu setMenuVisible:NO animated:YES];
-    [menu update];
-    [self resignFirstResponder];
-}
-
-- (void)copy:(id)sender
-{
-    MessageTextView* textView =(MessageTextView*)self.bubbleView;
-    [[UIPasteboard generalPasteboard] setString:textView.text];
-
-    [self resignFirstResponder];
-}
-
-
-#pragma mark - Notification
-- (void)handleMenuWillHideNotification:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIMenuControllerWillHideMenuNotification
-                                                  object:nil];
-    self.bubbleView.selectedToShowCopyMenu = NO;
-}
-
-- (void)handleMenuWillShowNotification:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIMenuControllerWillShowMenuNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleMenuWillHideNotification:)
-                                                 name:UIMenuControllerWillHideMenuNotification
-                                               object:nil];
-    
-    self.bubbleView.selectedToShowCopyMenu = YES;
 }
 
 @end

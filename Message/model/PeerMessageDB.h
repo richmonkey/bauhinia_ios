@@ -33,4 +33,5 @@
 -(BOOL)acknowledgePeerMessageFromRemote:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)markPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)markPeerMesageListened:(int)msgLocalID uid:(int64_t)uid;
+-(BOOL)erasePeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
 @end

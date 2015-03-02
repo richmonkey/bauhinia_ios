@@ -135,6 +135,32 @@
     }
     return YES;
 }
++(BOOL)eraseFlag:(int)msgLocalID path:(NSString*)path flag:(int)flag {
+    int fd = open([path UTF8String], O_RDWR);
+    if (fd == -1) {
+        NSLog(@"open file fail:%@", path);
+        return NO;
+    }
+    char buf[8+4];
+    int n = pread(fd, buf, 12, msgLocalID);
+    if (n != 12) {
+        return NO;
+    }
+    int magic = readInt32(buf);
+    if (magic != IMMAGIC) {
+        NSLog(@"invalid message local id:%d", msgLocalID);
+        return NO;
+    }
+    int flags = readInt32(buf + 8);
+    flags &= ~flag;
+    writeInt32(flags, buf);
+    n = pwrite(fd, buf, 4, msgLocalID + 8);
+    if (n != 4) {
+        NSLog(@"write error:%d", errno);
+        return NO;
+    }
+    return YES;
+}
 
 +(BOOL)clearMessages:(NSString*)path {
     int fd = open([path UTF8String], O_WRONLY);

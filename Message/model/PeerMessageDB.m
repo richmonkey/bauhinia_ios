@@ -154,6 +154,10 @@
     return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_LISTENED];
 }
 
+-(BOOL)erasePeerMessageFailure:(int)msgLocalID uid:(int64_t)uid {
+    NSString *path = [self getPeerPath:uid];
+    return [MessageDB eraseFlag:msgLocalID path:path flag:MESSAGE_FLAG_FAILURE];
+}
 
 -(id<IMessageIterator>)newPeerMessageIterator:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];

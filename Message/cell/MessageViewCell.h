@@ -15,7 +15,4 @@
 -(id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier;
 
 - (void) setMessage:(IMessage *)message;
-- (void) copy:(id)sender;
-- (void) handleMenuWillHideNotification:(NSNotification *)notification;
-- (void) handleMenuWillShowNotification:(NSNotification *)notification;
 @end

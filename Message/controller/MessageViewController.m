@@ -58,8 +58,8 @@
 @property(nonatomic, assign) int seconds;
 @property(nonatomic) BOOL recordCanceled;
 
-
-@property(nonatomic) UIPanGestureRecognizer *panRecognizer;
+@property(nonatomic) IMessage *selectedMessage;
+@property(nonatomic, weak) MessageViewCell *selectedCell;
 @end
 
 @implementation MessageViewController
@@ -177,6 +177,17 @@
     [self.tableView addGestureRecognizer:tapRecognizer];
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate  = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleMenuWillShowNotification:)
+                                                 name:UIMenuControllerWillShowMenuNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleMenuWillHideNotification:)
+                                                 name:UIMenuControllerWillHideMenuNotification
+                                               object:nil];
+    
     
     DraftDB *db = [DraftDB instance];
     NSString *draft = [db getDraft:self.remoteUser.uid];
@@ -393,6 +404,20 @@
 - (void)textViewDidEndEditing:(UITextView *)textView {
 
 }
+
+#pragma mark - menu notification
+- (void)handleMenuWillHideNotification:(NSNotification *)notification
+{
+    self.selectedCell.bubbleView.selectedToShowCopyMenu = NO;
+    self.selectedCell = nil;
+    self.selectedMessage = nil;
+}
+
+- (void)handleMenuWillShowNotification:(NSNotification *)notification
+{
+    self.selectedCell.bubbleView.selectedToShowCopyMenu = YES;
+}
+
 
 #pragma mark - Keyboard notifications
 - (void)handleWillShowKeyboard:(NSNotification *)notification{
@@ -829,26 +854,6 @@
     }
 }
 
--(void) reSendMessage:(UIButton*)btn{
-    int row = btn.tag & 0xffff;
-    int section = (int)(btn.tag >> 16);
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
-    IMessage *message = [self messageForRowAtIndexPath:indexPath];
-    if (message == nil) {
-        return;
-    }
-    message.flags = message.flags & (~MESSAGE_FLAG_FAILURE);
-    Message *m = [[Message alloc] init];
-    m.cmd = MSG_IM;
-    IMMessage *im = [[IMMessage alloc] init];
-    im.sender = message.sender;
-    im.receiver = message.receiver;
-    im.msgLocalID = message.msgLocalID;
-    im.content = message.content.raw;
-    m.body = im;
-    [[IMService instance] sendPeerMessage:im];
-}
-
 - (void) handleTapImageView:(UITapGestureRecognizer*)tap{
     int row = tap.view.tag & 0xffff;
     int section = (int)(tap.view.tag >> 16);
@@ -929,6 +934,7 @@
         imageView.imageView.tag = indexPath.section<<16 | indexPath.row;
         [imageView setUploading:[[Outbox instance] isUploading:message]];
     }
+    cell.tag = indexPath.section<<16 | indexPath.row;
     
     UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                              action:@selector(handleLongPress:)];
@@ -1589,31 +1595,109 @@
     }
 }
 
+- (void)resend:(id)sender
+{
+    
+    [self resignFirstResponder];
+    
+    NSLog(@"resend...");
+    if (self.selectedMessage == nil) {
+        return;
+    }
+    
+    IMessage *message = self.selectedMessage;
+    message.flags = message.flags & (~MESSAGE_FLAG_FAILURE);
+    PeerMessageDB *db = [PeerMessageDB instance];
+    [db erasePeerMessageFailure:message.msgLocalID uid:message.receiver];
+
+    if (message.content.type == MESSAGE_AUDIO) {
+        [[Outbox instance] uploadAudio:message];
+    } else if (message.content.type == MESSAGE_IMAGE) {
+        UIImage *image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:message.content.imageURL];
+        if (!image) {
+            return;
+        }
+        [[Outbox instance] uploadImage:message image:image];
+    } else {
+        Message *m = [[Message alloc] init];
+        m.cmd = MSG_IM;
+        IMMessage *im = [[IMMessage alloc] init];
+        im.sender = message.sender;
+        im.receiver = message.receiver;
+        im.msgLocalID = message.msgLocalID;
+        im.content = message.content.raw;
+        m.body = im;
+        [[IMService instance] sendPeerMessage:im];
+    }
+    
+    if (self.selectedCell == nil) {
+        return;
+    }
+    int row = self.selectedCell.tag & 0xffff;
+    int section = (int)(self.selectedCell.tag >> 16);
+    NSIndexPath *findpath = [NSIndexPath indexPathForRow:row inSection:section];
+    NSArray *array = [NSArray arrayWithObject:findpath];
+    [self.tableView reloadRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)copyText:(id)sender
+{
+    if (self.selectedMessage.content.type != MESSAGE_TEXT) {
+        return;
+    }
+    NSLog(@"copy...");
+
+    [[UIPasteboard generalPasteboard] setString:self.selectedMessage.content.text];
+    [self resignFirstResponder];
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
 
 #pragma mark - Gestures
 - (void)handleLongPress:(UILongPressGestureRecognizer *)longPress
 {
     MessageViewCell *targetView = (MessageViewCell*)longPress.view;
+
+    int row = targetView.tag & 0xffff;
+    int section = (int)(targetView.tag >> 16);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return;
+    }
     
     if(longPress.state != UIGestureRecognizerStateBegan
-       || ![targetView becomeFirstResponder])
+       || ![self becomeFirstResponder])
         return;
+   
+    NSMutableArray *menuItems = [NSMutableArray array];
+
+
+    if (message.content.type == MESSAGE_TEXT) {
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(copyText:)];
+        [menuItems addObject:item];
+    }
+    if (message.isFailure) {
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"重发" action:@selector(resend:)];
+        [menuItems addObject:item];
+    }
+    if ([menuItems count] == 0) {
+        return;
+    }
+
+    
+    self.selectedMessage = message;
+    self.selectedCell = targetView;
     
     UIMenuController *menu = [UIMenuController sharedMenuController];
-    
-    
+    menu.menuItems = menuItems;
     CGRect targetRect = [targetView convertRect:[targetView.bubbleView bubbleFrame]
                                  fromView:targetView.bubbleView];
     [menu setTargetRect:CGRectInset(targetRect, 0.0f, 4.0f) inView:targetView];
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:targetView
-                                             selector:@selector(handleMenuWillShowNotification:)
-                                                 name:UIMenuControllerWillShowMenuNotification
-                                               object:nil];
+
     [menu setMenuVisible:YES animated:YES];
-    
-    [menu update];
 }
 
 
