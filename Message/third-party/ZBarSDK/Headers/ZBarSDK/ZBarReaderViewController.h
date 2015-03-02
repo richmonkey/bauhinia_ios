@@ -65,7 +65,7 @@
 @property (nonatomic, readonly) ZBarImageScanner *scanner;
 
 // barcode result recipient
-@property (nonatomic, weak) id <ZBarReaderDelegate> readerDelegate;
+@property (nonatomic, assign) id <ZBarReaderDelegate> readerDelegate;
 
 // whether to use alternate control set
 @property (nonatomic) BOOL showsZBarControls;

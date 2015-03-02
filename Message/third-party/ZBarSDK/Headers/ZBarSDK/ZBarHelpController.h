@@ -48,7 +48,7 @@
     NSUInteger orientations;
 }
 
-@property (nonatomic, weak) id<ZBarHelpDelegate> delegate;
+@property (nonatomic, assign) id<ZBarHelpDelegate> delegate;
 
 // designated initializer
 - (id) initWithReason: (NSString*) reason;

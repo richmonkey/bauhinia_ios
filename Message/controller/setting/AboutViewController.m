@@ -13,6 +13,7 @@
 @interface AboutViewController ()
 
 @property (weak, nonatomic) IBOutlet UIButton *contactUsBtn;
+@property (weak,nonatomic) IBOutlet UIButton *recommendBtn;
 @property (strong, nonatomic) NSArray *reciver;
 
 -(IBAction) contactUs:(UIButton*)btn;
@@ -35,14 +36,8 @@
     [super viewDidLoad];
     [self setTitle:@"关于"];
     
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"联系我们"];
-    NSRange strRange = {0,[str length]};
-    
-    [str addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:strRange];
-    [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:strRange];
-    
-    [self.contactUsBtn setAttributedTitle:str forState:UIControlStateNormal];
-    [self.contactUsBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [self.contactUsBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.recommendBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     
 }
 
@@ -70,11 +65,55 @@
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
     mc.mailComposeDelegate = self;
     self.reciver = @[@"daibou007@163.com"];
-    [mc setSubject:@"Message,建议及意见!"];
+    [mc setSubject:@"Message,建议,意见及商务合作!"];
     [mc setToRecipients:self.reciver];
     [mc setMessageBody:@"Message!!!\n\n!" isHTML:NO];
     [self presentViewController:mc animated:YES completion:nil];
+}
+
+-(IBAction) recommend:(UIButton*)btn{
+    //检测设备是否支持SMS发送功能
+    Class smsClass = (NSClassFromString(@"MFMessageComposeViewController"));
+    if (smsClass != nil){
+        // We must always check whether the current device is configured for sending emails
+        if ([smsClass canSendText]){
+            [self displaySMSComposeSheet];//调用发送邮件的方法
+        }
+    }
+}
+
+-(void) displaySMSComposeSheet{
+    MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
+    picker.messageComposeDelegate = self;
     
+    picker.body = @"我正在使用“羊蹄甲”。 https://itunes.apple.com/cn/app/yang-ti-jia/id923695740?mt=8 可以给您的联系人发送消息，分享图片和音频。";
+    [self presentViewController:picker
+                       animated:YES
+                     completion:NULL];
+}
+
+#pragma mark - MFMessageComposeViewControllerDelegate
+
+-(void) messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
+    
+    switch (result){
+        case MessageComposeResultCancelled:
+            NSLog(@"Result: SMS sending canceled");
+            break;
+        case MessageComposeResultSent:
+            NSLog(@"Result: SMS sent");
+             [self.view makeToast:@"推荐发送成功!"];
+            break;
+        case MessageComposeResultFailed:
+            NSLog(@"Result: SMS sending failed");
+            [self.view makeToast:@"推荐发送失败!"];
+            break;
+        default:
+            NSLog(@"Result: SMS not sent");
+            break;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma - mark  MFMailComposeViewControllerDelegate

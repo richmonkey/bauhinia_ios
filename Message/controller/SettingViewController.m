@@ -14,6 +14,7 @@
 #import "PeerMessageDB.h"
 #import "UIView+Toast.h"
 #import "APIRequest.h"
+#import "MBProgressHUD.h"
 
 
 #define kNetStatusSection 2
@@ -433,18 +434,33 @@
     for(symbol in results)
         break;
     
-    [picker dismissViewControllerAnimated:YES completion:nil];
-    
     NSString *text = symbol.data;
+  
+    if(self.redScanLine){
+        [self.redScanLine.layer removeAllAnimations];
+        [self.redScanLine setHidden:YES];
+    }
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:picker.view animated:YES];
     
     [APIRequest webIMlogin:text
                         success:^{
                             NSLog(@"web login success");
-                            [self.view makeToast:@"WebIM登录成功!" duration:0.9 position:@"center"];
+                            [hud hide:YES];
+                            [picker.view makeToast:@"WebIM登录成功!" duration:0.9 position:@"center"];
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.8 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                [picker dismissViewControllerAnimated:YES completion:nil];
+                            });
+
+
                         }
                            fail:^{
                                NSLog(@"web login fail");
-                               [self.view makeToast:@"WebIM登录失败!" duration:0.9 position:@"center"];
+                               [hud hide:YES];
+                               [picker.view makeToast:@"WebIM登录失败!" duration:0.9 position:@"center"];
+                               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.8 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                   [picker dismissViewControllerAnimated:YES completion:nil];
+                               });
                            }];
 }
 
