@@ -1676,7 +1676,7 @@
 
 
     if (message.content.type == MESSAGE_TEXT) {
-        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(copyText:)];
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"拷贝" action:@selector(copyText:)];
         [menuItems addObject:item];
     }
     if (message.isFailure) {
