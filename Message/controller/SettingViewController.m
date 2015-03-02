@@ -76,9 +76,12 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    [UIView animateWithDuration:1 delay:0
-                        options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse
-                     animations:
+    
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    if (currSysVer.floatValue >= 8.0) {
+        [UIView animateWithDuration:1 delay:0
+                            options:UIViewAnimationOptionRepeat|UIViewAnimationOptionAutoreverse
+                         animations:
                          ^{
                              if (self.redScanLine) {
                                  CGRect frame = self.redScanLine.frame;
@@ -86,7 +89,13 @@
                                  [self.redScanLine setFrame:frame];
                              }
                          }
-                     completion:nil];
+                         completion:nil];
+    }else{
+        CGRect frame = self.redScanLine.frame;
+        frame.origin.y = redLineStartY + redLineMoveLength/2;
+        [self.redScanLine setFrame:frame];
+    }
+
 }
 
 #pragma mark - UITableViewDataSource
@@ -373,7 +382,7 @@
     
     //最上部view
     UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, scanTopBlank)];
-    upView.alpha = 0.9;
+    upView.alpha = 0.8;
     upView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:upView];
     
@@ -389,7 +398,7 @@
     
     //左侧的view
     UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, scanTopBlank, 40, 280)];
-    leftView.alpha = 0.9;
+    leftView.alpha = 0.8;
     leftView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:leftView];
     
@@ -397,7 +406,7 @@
     
     UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(320 - 40, scanTopBlank, 40, 280)];
     
-    rightView.alpha = 0.9;
+    rightView.alpha = 0.8;
     
     rightView.backgroundColor = [UIColor blackColor];
     
@@ -405,7 +414,7 @@
     
     //底部view
     UIView * downView = [[UIView alloc] initWithFrame:CGRectMake(0, 360, 320, 120)];
-    downView.alpha = 0.9;
+    downView.alpha = 0.8;
     downView.backgroundColor = [UIColor blackColor];
     [reader.view addSubview:downView];
     
@@ -418,6 +427,7 @@
     [cancelButton addTarget:self action:@selector(dismissOverlayView:)forControlEvents:UIControlEventTouchUpInside];
     [reader.view addSubview:cancelButton];
 }
+
 
 #pragma mark - ZBarReaderDelegate
 
@@ -441,7 +451,12 @@
         [self.redScanLine setHidden:YES];
     }
     
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:picker.view animated:YES];
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: picker.view];
+    [picker.view addSubview:hud];
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.detailsLabelText = @"正在登录..";
+    [hud setDetailsLabelFont:[UIFont systemFontOfSize:16.0f]];
+    [hud show:YES];
     
     [APIRequest webIMlogin:text
                         success:^{
@@ -451,8 +466,6 @@
                             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.8 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                                 [picker dismissViewControllerAnimated:YES completion:nil];
                             });
-
-
                         }
                            fail:^{
                                NSLog(@"web login fail");
@@ -464,10 +477,8 @@
                            }];
 }
 
-
 //取消button方法
-
-- (void)dismissOverlayView:(id)sender{ 
+- (void)dismissOverlayView:(id)sender{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
