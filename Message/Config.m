@@ -23,12 +23,15 @@
 -(id)init {
     self = [super init];
     if (self) {
-        self.host = @"im.yufeng.me";
+        self.host = @"gobelieve.io";
         self.port = 23000;
     }
     return self;
 }
 -(NSString*)URL {
-    return @"http://im.yufeng.me";
+    return @"http://gobelieve.io";
+}
+-(NSString*)downloadURL {
+    return @"http://gobelieve.io/download";
 }
 @end

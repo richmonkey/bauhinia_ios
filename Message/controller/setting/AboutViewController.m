@@ -8,7 +8,7 @@
 
 #import "AboutViewController.h"
 #import "UIView+Toast.h"
-
+#import "Config.h"
 
 @interface AboutViewController ()
 
@@ -86,7 +86,8 @@
     MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
     picker.messageComposeDelegate = self;
     
-    picker.body = @"我正在使用“羊蹄甲”。 https://itunes.apple.com/cn/app/yang-ti-jia/id923695740?mt=8 可以给您的联系人发送消息，分享图片和音频。";
+    Config *config = [Config instance];
+    picker.body = [NSString stringWithFormat:@"我正在使用“羊蹄甲”。 %@ 可以给您的联系人发送消息，分享图片和音频。", config.downloadURL];
     [self presentViewController:picker
                        animated:YES
                      completion:NULL];
