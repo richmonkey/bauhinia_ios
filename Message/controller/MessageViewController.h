@@ -35,8 +35,10 @@ typedef enum {
     MessageObserver, OutboxObserver, AudioDownloaderObserver,UIActionSheetDelegate,MessageInputRecordDelegate, HPGrowingTextViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *messageArray;
-@property (nonatomic,strong) UIImage *willSendImage;
 @property (strong, nonatomic) NSMutableArray *timestamps;
+@property (strong, nonatomic) NSMutableArray *messages;
+
+@property (nonatomic,strong) UIImage *willSendImage;
 
 @property (nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
 @property (nonatomic) int  inputTimestamp;
@@ -45,12 +47,11 @@ typedef enum {
 @property(nonatomic, assign)UserOnlineStateType onlineState;
 
 @property (nonatomic) NSTimer  *inputStatusTimer;
-
--(id) initWithRemoteUser:(IMUser*) rmtUser;
-
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) MessageInputView *inputToolBarView;
 @property (assign, nonatomic, readonly) UIEdgeInsets originalTableViewContentInset;
+
+-(id) initWithRemoteUser:(IMUser*) rmtUser;
 
 - (void)setup;
 

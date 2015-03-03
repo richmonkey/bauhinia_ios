@@ -23,6 +23,7 @@
 +(PeerMessageDB*)instance;
 
 -(id<IMessageIterator>)newPeerMessageIterator:(int64_t)uid;
+-(id<IMessageIterator>)newPeerMessageIterator:(int64_t)uid last:(int)lastMsgID;
 -(id<ConversationIterator>)newConversationIterator;
 
 -(BOOL)insertPeerMessage:(IMessage*)msg uid:(int64_t)uid;

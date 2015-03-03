@@ -24,12 +24,20 @@
 -(id)initWithPath:(NSString*)path {
     self = [super init];
     if (self) {
-        [self openFile:path];
+        [self openFile:path position:-1];
     }
     return self;
 }
 
--(void)openFile:(NSString*)path {
+-(id)initWithPath:(NSString*)path position:(int)position {
+    self = [super init];
+    if (self) {
+        [self openFile:path position:position];
+    }
+    return self;
+}
+
+-(void)openFile:(NSString*)path position:(int)position {
     
     int fd = open([path UTF8String], O_RDONLY);
     if (fd == -1) {
@@ -40,7 +48,11 @@
         close(fd);
         return;
     }
+    if (position == -1) {
+        position = (int)lseek(fd, 0, SEEK_END);
+    }
     self.file = [[ReverseFile alloc] initWithFD:fd];
+    self.file.pos = position;
 }
 
 -(IMessage*)nextMessage {
@@ -162,6 +174,11 @@
 -(id<IMessageIterator>)newPeerMessageIterator:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];
     return [[PeerMessageIterator alloc] initWithPath:path];
+}
+
+-(id<IMessageIterator>)newPeerMessageIterator:(int64_t)uid last:(int)lastMsgID {
+    NSString *path = [self getPeerPath:uid];
+    return [[PeerMessageIterator alloc] initWithPath:path position:lastMsgID];
 }
 
 -(id<ConversationIterator>)newConversationIterator {

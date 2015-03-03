@@ -12,7 +12,6 @@
 -(id)initWithFD:(int)fd {
     self = [super init];
     if (self) {
-        self.pos = (int)lseek(fd, 0, SEEK_END);
         self.fd = fd;
     }
     return self;

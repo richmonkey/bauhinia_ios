@@ -38,6 +38,7 @@
 #import "MessageImageView.h"
 #import "BubbleView.h"
 
+#define PAGE_COUNT 10
 
 #define INPUT_HEIGHT 52.0f
 
@@ -58,6 +59,8 @@
 @property(nonatomic, assign) int seconds;
 @property(nonatomic) BOOL recordCanceled;
 
+@property(nonatomic) UIRefreshControl *refreshControl;
+
 @property(nonatomic) IMessage *selectedMessage;
 @property(nonatomic, weak) MessageViewCell *selectedCell;
 @end
@@ -69,7 +72,7 @@
     
     if (self = [super init]) {
         self.remoteUser = rmtUser;
-
+        self.messages = [NSMutableArray array];
     }
     return self;
 }
@@ -147,6 +150,12 @@
         [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:img ]  ];
     }
     
+    UIView *refreshView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 0, 0)];
+    self.tableView.tableHeaderView = refreshView;
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(pullToRefresh) forControlEvents:UIControlEventValueChanged];
+    [refreshView addSubview:self.refreshControl];
+    
 	[self.view addSubview:self.tableView];
 	
     self.inputToolBarView = [[MessageInputView alloc] initWithFrame:inputFrame andDelegate:self];
@@ -197,6 +206,86 @@
         self.inputToolBarView.recordButton.hidden = YES;
         self.inputToolBarView.textView.text = draft;
     }
+}
+
+-(void)initTableData {
+    self.messageArray = [NSMutableArray array];
+    self.timestamps = [NSMutableArray array];
+    
+    int count = [self.messages count];
+    if (count == 0) {
+        return;
+    }
+    
+    NSDate *lastDate = nil;
+    NSDate *curtDate = nil;
+    NSMutableArray *msgBlockArray = nil;
+    
+    for (int i = count-1; i >= 0; i--) {
+        IMessage *msg = [self.messages objectAtIndex:i];
+        FileCache *cache = [FileCache instance];
+        AudioDownloader *downloader = [AudioDownloader instance];
+        if (msg.content.type == MESSAGE_AUDIO && msg.sender == self.remoteUser.uid) {
+            NSString *path = [cache queryCacheForKey:msg.content.audio.url];
+            if (!path && ![downloader isDownloading:msg]) {
+                [downloader downloadAudio:msg];
+            }
+        }
+        
+        curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
+        if ([PublicFunc isTheDay:lastDate sameToThatDay:curtDate]) {
+            [msgBlockArray insertObject:msg atIndex:0];
+        } else {
+            msgBlockArray  = [NSMutableArray arrayWithObject:msg];
+            
+            [self.messageArray insertObject:msgBlockArray atIndex:0];
+            [self.timestamps insertObject:curtDate atIndex:0];
+            lastDate = curtDate;
+        }
+    }
+}
+
+-(void)pullToRefresh {
+    NSLog(@"pull to refresh...");
+    [self.refreshControl endRefreshing];
+    
+    IMessage *last = [self.messages firstObject];
+    if (last == nil) {
+        return;
+    }
+    id<IMessageIterator> iterator =  [[PeerMessageDB instance] newPeerMessageIterator:self.remoteUser.uid last:last.msgLocalID];
+
+    int count = 0;
+    IMessage *msg = [iterator next];
+    while (msg) {
+        [self.messages insertObject:msg atIndex:0];
+        if (++count >= PAGE_COUNT) {
+            break;
+        }
+        msg = [iterator next];
+    }
+    if (count == 0) {
+        return;
+    }
+
+    [self initTableData];
+
+    [self.tableView reloadData];
+    
+    int section = 0;
+    int row = 0;
+    for (NSArray *block in self.messageArray) {
+        if (count < block.count) {
+            row = count;
+            break;
+        }
+        count -= [block count];
+        section++;
+    }
+    NSLog(@"scroll to row:%d section:%d", row, section);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
 #pragma mark - View lifecycle
@@ -1242,37 +1331,19 @@
 }
 
 - (void) processConversationData{
-    
-    self.messageArray = [NSMutableArray array];
-    self.timestamps = [NSMutableArray array];
-    
-    NSDate *lastDate = nil;
-    NSDate *curtDate = nil;
-    NSMutableArray *msgBlockArray = nil;
+    int count = 0;
     id<IMessageIterator> iterator =  [[PeerMessageDB instance] newPeerMessageIterator: self.remoteUser.uid];
     IMessage *msg = [iterator next];
     while (msg) {
-        FileCache *cache = [FileCache instance];
-        AudioDownloader *downloader = [AudioDownloader instance];
-        if (msg.content.type == MESSAGE_AUDIO && msg.sender == self.remoteUser.uid) {
-            NSString *path = [cache queryCacheForKey:msg.content.audio.url];
-            if (!path && ![downloader isDownloading:msg]) {
-                [downloader downloadAudio:msg];
-            }
-        }
-        
-        curtDate = [NSDate dateWithTimeIntervalSince1970: msg.timestamp];
-        if ([PublicFunc isTheDay:lastDate sameToThatDay:curtDate]) {
-            [msgBlockArray insertObject:msg atIndex:0];
-        } else {
-            msgBlockArray  = [NSMutableArray arrayWithObject:msg];
-            
-            [self.messageArray insertObject:msgBlockArray atIndex:0];
-            [self.timestamps insertObject:curtDate atIndex:0];
-            lastDate = curtDate;
+        [self.messages insertObject:msg atIndex:0];
+        if (++count >= PAGE_COUNT) {
+            break;
         }
         msg = [iterator next];
     }
+    
+    [self initTableData];
+    
 }
 
 -(void) insertMessage:(IMessage*)msg{
