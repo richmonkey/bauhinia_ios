@@ -518,7 +518,7 @@
     AuthenticationToken *auth = [[AuthenticationToken alloc] init];
     auth.token = self.token;
     auth.platformID = PLATFORM_IOS;
-    auth.deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    auth.deviceID = self.deviceID;
     msg.body = auth;
     [self sendMessage:msg];
 }

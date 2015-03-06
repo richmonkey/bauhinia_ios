@@ -26,6 +26,7 @@
     //配置im server地址
     [IMService instance].host = [Config instance].host;
     [IMService instance].port = [Config instance].port;
+    [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
     
