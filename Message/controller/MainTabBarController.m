@@ -17,6 +17,7 @@
 #import "Reachability.h"
 #import "APIRequest.h"
 #import "JSBadgeView.h"
+#import <imkit/IMHttpAPI.h>
 
 @interface MainTabBarController ()
 @property(atomic) Reachability *reach;
@@ -156,9 +157,11 @@
                                [token save];
                                [self prepareTimer];
                                [IMService instance].token = accessToken;
+                               [IMHttpAPI instance].accessToken = accessToken;
                                NSLog(@"refresh token success");
                            }
                               fail:^{
+                                  NSLog(@"refresh token fail");
                                   self.refreshFailCount = self.refreshFailCount + 1;
                                   int64_t timeout;
                                   if (self.refreshFailCount > 60) {

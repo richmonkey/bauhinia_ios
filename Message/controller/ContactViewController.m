@@ -11,8 +11,7 @@
 #import "AppDelegate.h"
 #import "User.h"
 #import "UserDB.h"
-#import "IMessage.h"
-#import "MessageViewController.h"
+#import <imkit/MessageViewController.h>
 #import "ContactIMUserTableViewCell.h"
 #import "ContactHeaderView.h"
 #import "ContactPhoneTableViewCell.h"
@@ -20,6 +19,7 @@
 #import "UIImageView+Letters.h"
 #import "UIImageView+WebCache.h"
 #import "pinyin.h"
+#import "UserPresent.h"
 
 /*
  ----------
@@ -157,7 +157,17 @@
 }
 
 -(void)presentMessageViewController:(IMUser*)user {
-    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: user];
+    MessageViewController* msgController = [[MessageViewController alloc] init];
+    msgController.peerUID = user.uid;
+    if ([user.contact.contactName length] == 0) {
+        msgController.peerName = user.displayName;
+    }else{
+        msgController.peerName = user.contact.contactName;
+        
+    }
+    msgController.peerLastUpTimestamp = user.lastUpTimestamp;
+    msgController.currentUID = [UserPresent instance].uid;
+    
     [self.navigationController pushViewController:msgController animated:YES];
 }
 
@@ -168,7 +178,17 @@
         NSLog(@"send message");
         User *u = [self.contact.users objectAtIndex:0];
         IMUser *mu = [[UserDB instance] loadUser:u.uid];
-        MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:mu];
+        MessageViewController* msgController = [[MessageViewController alloc] init];
+        msgController.peerUID = mu.uid;
+        if ([mu.contact.contactName length] == 0) {
+            msgController.peerName = mu.displayName;
+        }else{
+            msgController.peerName = mu.contact.contactName;
+            
+        }
+        msgController.peerLastUpTimestamp = mu.lastUpTimestamp;
+        msgController.currentUID = [UserPresent instance].uid;
+        
         [self.navigationController pushViewController:msgController animated:YES];
     } else if ([self.contact.users count] > 1) {
         if (self.contact.users.count == 2) {
@@ -220,7 +240,17 @@
         
     User *u = [self.contact.users objectAtIndex:buttonIndex];
     IMUser *mu = [[UserDB instance] loadUser:u.uid];
-    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser:mu];
+    MessageViewController* msgController = [[MessageViewController alloc] init];
+    msgController.peerUID = mu.uid;
+    if ([mu.contact.contactName length] == 0) {
+        msgController.peerName = mu.displayName;
+    }else{
+        msgController.peerName = mu.contact.contactName;
+        
+    }
+    msgController.peerLastUpTimestamp = mu.lastUpTimestamp;
+    msgController.currentUID = [UserPresent instance].uid;
+    
     [self.navigationController pushViewController:msgController animated:YES];
 }
 

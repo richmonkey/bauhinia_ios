@@ -9,13 +9,13 @@
 #import "AppDelegate.h"
 
 #import <imsdk/IMService.h>
-#import "IMessage.h"
+#import <imkit/IMessage.h>
+#import <imkit/PeerMessageHandler.h>
+#import <imkit/GroupMessageHandler.h>
 #import "Token.h"
 #import "UserPresent.h"
 #import "Config.h"
 #import "MainTabBarController.h"
-#import "PeerMessageHandler.h"
-#import "GroupMessageHandler.h"
 #import "AskPhoneNumberViewController.h"
 #import "APIRequest.h"
 
@@ -44,7 +44,6 @@
         UINavigationController * navCtr = [[UINavigationController alloc] initWithRootViewController: ctl];
         self.window.rootViewController = navCtr;
     }
-    
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

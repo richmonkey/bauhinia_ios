@@ -10,7 +10,7 @@
 #import "FileCache.h"
 #import "MessageViewController.h"
 #import <QuartzCore/QuartzCore.h>
-
+#import "Constants.h"
 
 #define kblank 5
 #define kMargin 20

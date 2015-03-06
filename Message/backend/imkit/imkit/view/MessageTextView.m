@@ -7,8 +7,7 @@
 //
 
 #import "MessageTextView.h"
-
-
+#import "Constants.h"
 
 
 @implementation MessageTextView

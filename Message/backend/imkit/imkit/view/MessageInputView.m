@@ -4,6 +4,7 @@
 #import "UIImage+JSMessagesView.h"
 
 #import "FBShimmeringView.h"
+#import "Constants.h"
 
 #define SEND_BUTTON_WIDTH 64.0f
 

@@ -14,5 +14,5 @@
 
 -(id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier;
 
-- (void) setMessage:(IMessage *)message;
+- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType;
 @end

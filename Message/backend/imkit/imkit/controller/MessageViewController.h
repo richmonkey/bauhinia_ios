@@ -10,14 +10,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import <imsdk/IMService.h>
 #import "IMessage.h"
-#import "MessageListViewController.h"
-#import "user.h"
-
-#import "MessageViewCell.h"
 
 #import "JSMessageSoundEffect.h"
 #import "MBProgressHUD.h"
-
 
 #import "MessageInputView.h"
 #import "OutBox.h"
@@ -42,7 +37,7 @@ typedef enum {
 
 @property (nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
 @property (nonatomic) int  inputTimestamp;
-@property (nonatomic) IMUser *remoteUser;
+
 //对方是否在线
 @property(nonatomic, assign)UserOnlineStateType onlineState;
 
@@ -51,7 +46,10 @@ typedef enum {
 @property (strong, nonatomic) MessageInputView *inputToolBarView;
 @property (assign, nonatomic, readonly) UIEdgeInsets originalTableViewContentInset;
 
--(id) initWithRemoteUser:(IMUser*) rmtUser;
+@property(nonatomic, assign) int64_t currentUID;
+@property(nonatomic, assign) int64_t peerUID;
+@property(nonatomic, copy) NSString *peerName;
+@property(nonatomic, assign) int64_t peerLastUpTimestamp;
 
 - (void)setup;
 

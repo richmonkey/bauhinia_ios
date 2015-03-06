@@ -7,9 +7,9 @@
 //
 
 #import "MessageListViewController.h"
-#import "MessageViewController.h"
-#import "PeerMessageDB.h"
-#import "IMessage.h"
+#import <imkit/MessageViewController.h>
+#import <imkit/PeerMessageDB.h>
+#import <imkit/IMessage.h>
 #import "pinyin.h"
 #import "MessageGroupConversationCell.h"
 #import "UserDB.h"
@@ -262,7 +262,16 @@
     Conversation *con = [self.conversations objectAtIndex:indexPath.row];
     IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
     
-    MessageViewController* msgController = [[MessageViewController alloc] initWithRemoteUser: rmtUser];
+    MessageViewController* msgController = [[MessageViewController alloc] init];
+    msgController.peerUID = rmtUser.uid;
+    if ([rmtUser.contact.contactName length] == 0) {
+        msgController.peerName = rmtUser.displayName;
+    }else{
+        msgController.peerName = rmtUser.contact.contactName;
+        
+    }
+    msgController.peerLastUpTimestamp = rmtUser.lastUpTimestamp;
+    msgController.currentUID = [UserPresent instance].uid;
     
     msgController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:msgController animated: YES];

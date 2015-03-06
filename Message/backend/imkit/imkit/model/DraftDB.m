@@ -7,7 +7,9 @@
 //
 
 #import "DraftDB.h"
-#import "LevelDB.h"
+@interface DraftDB()
+@property(nonatomic) NSMutableDictionary *dict;
+@end
 
 @implementation DraftDB
 +(DraftDB*)instance {
@@ -20,16 +22,22 @@
     });
     return db;
 }
+-(id)init {
+    self = [super init];
+    if (self) {
+        self.dict = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
 -(NSString*)getDraft:(int64_t)uid {
-    LevelDB *db = [LevelDB defaultLevelDB];
     NSString *key = [NSString stringWithFormat:@"draft_%lld", uid];
-    return [db stringForKey:key];
+    return [self.dict objectForKey:key];
 }
 
 -(void)setDraft:(int64_t)uid draft:(NSString*)draft {
-    LevelDB *db = [LevelDB defaultLevelDB];
     NSString *key = [NSString stringWithFormat:@"draft_%lld", uid];
-    [db setString:draft forKey:key];
+    [self.dict setObject:draft forKey:key];
 }
 
 @end

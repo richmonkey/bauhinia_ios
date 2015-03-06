@@ -6,7 +6,7 @@
 #import "MessageTextView.h"
 #import "MessageImageView.h"
 #import "MessageAudioView.h"
-#import "UserPresent.h"
+
 
 @implementation MessageViewCell
 
@@ -77,13 +77,8 @@
 
 #pragma mark - Message Cell
 
-- (void) setMessage:(IMessage *)message{
-    BubbleMessageType msgType;
-    if(message.sender == [UserPresent instance].uid){
-        msgType = BubbleMessageTypeOutgoing;
-    }else{
-        msgType = BubbleMessageTypeIncoming;
-    }
+- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType {
+
     
     BubbleMessageReceiveStateType state;
     if(message.isACK){

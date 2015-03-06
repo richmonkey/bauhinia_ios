@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
 #import "IMessage.h"
 
 @protocol OutboxObserver <NSObject>

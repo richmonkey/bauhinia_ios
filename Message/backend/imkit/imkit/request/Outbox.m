@@ -7,11 +7,9 @@
 //
 
 #import "Outbox.h"
-#import "APIRequest.h"
-#import "FileCache.h"
-#import "SDImageCache.h"
+#import "IMHttpAPI.h"
+#import "../model/FileCache.h"
 #import <imsdk/IMService.h>
-#import "LevelDB.h"
 #import "PeerMessageDB.h"
 #import "wav_amr.h"
 
@@ -74,7 +72,6 @@
         [observer onImageUploadSuccess:msg URL:url];
     }
 
-    [[LevelDB defaultLevelDB] setString:url forKey:msg.content.imageURL];
     
     MessageContent *content = [[MessageContent alloc] init];
     NSDictionary *dic = @{@"image":url};
@@ -98,7 +95,6 @@
         [observer onAudioUploadSuccess:msg URL:url];
     }
     
-    [[LevelDB defaultLevelDB] setString:url forKey:msg.content.audio.url];
     
     MessageContent *old = msg.content;
     NSNumber *d = [NSNumber numberWithInt:old.audio.duration];
@@ -120,7 +116,7 @@
 
 -(BOOL)uploadImage:(IMessage*)msg image:(UIImage*)image{
     [self.messages addObject:msg];
-    [APIRequest uploadImage:image
+    [IMHttpAPI uploadImage:image
                     success:^(NSString *url) {
                         [self.messages removeObject:msg];
                         if([url length] > 0){
@@ -162,7 +158,7 @@
     }
     
     [self.messages addObject:msg];
-    [APIRequest uploadAudio:data
+    [IMHttpAPI uploadAudio:data
                     success:^(NSString *url) {
                         [self.messages removeObject:msg];
                         if ([url length] > 0) {
