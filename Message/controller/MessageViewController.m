@@ -6,7 +6,7 @@
 
 #import "MessageViewController.h"
 #import "IMessage.h"
-#import "IMService.h"
+#import <imsdk/IMService.h>
 #import "UserPresent.h"
 #import "MessageDB.h"
 #import "ConversationHeadButtonView.h"

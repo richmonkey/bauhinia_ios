@@ -12,7 +12,7 @@
 #import "MessageListViewController.h"
 #import "ContactListTableViewController.h"
 #import "Token.h"
-#import "IMService.h"
+#import <imsdk/IMService.h>
 #import "UserPresent.h"
 #import "Reachability.h"
 #import "APIRequest.h"

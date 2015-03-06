@@ -10,7 +10,7 @@
 #import "APIRequest.h"
 #import "FileCache.h"
 #import "SDImageCache.h"
-#import "IMService.h"
+#import <imsdk/IMService.h>
 #import "LevelDB.h"
 #import "PeerMessageDB.h"
 #import "wav_amr.h"

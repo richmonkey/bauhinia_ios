@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "IMService.h"
+#import <imsdk/IMService.h>
 #import "IMessage.h"
 #import "MessageListViewController.h"
 #import "user.h"

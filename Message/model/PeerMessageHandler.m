@@ -8,7 +8,7 @@
 
 #import "PeerMessageHandler.h"
 #import "MessageDB.h"
-#import "Message.h"
+#import <imsdk/Message.h>
 #import "PeerMessageDB.h"
 
 @implementation PeerMessageHandler

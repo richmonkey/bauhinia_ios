@@ -12,6 +12,8 @@
 		6D032F461AA99456004AA39F /* IMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032F401AA99456004AA39F /* IMService.m */; };
 		6D032F471AA99456004AA39F /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032F421AA99456004AA39F /* Message.m */; };
 		6D032F481AA99456004AA39F /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D032F431AA99456004AA39F /* util.c */; };
+		6D032F871AA9AEB3004AA39F /* IMService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F3F1AA99456004AA39F /* IMService.h */; };
+		6D032F881AA9AF2C004AA39F /* Message.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F411AA99456004AA39F /* Message.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +33,8 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				6D032F881AA9AF2C004AA39F /* Message.h in CopyFiles */,
+				6D032F871AA9AEB3004AA39F /* IMService.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +376,7 @@
 				6D032F2E1AA993C0004AA39F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6D032F2F1AA993C0004AA39F /* Build configuration list for PBXNativeTarget "imsdkTests" */ = {
 			isa = XCConfigurationList;
@@ -380,6 +385,7 @@
 				6D032F311AA993C0004AA39F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

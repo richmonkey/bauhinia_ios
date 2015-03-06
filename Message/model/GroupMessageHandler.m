@@ -8,7 +8,7 @@
 
 #import "GroupMessageHandler.h"
 #import "IMessage.h"
-#import "Message.h"
+#import <imsdk/IMService.h>
 #import "GroupMessageDB.h"
 
 @implementation GroupMessageHandler

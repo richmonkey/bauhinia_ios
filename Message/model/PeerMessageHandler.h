@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "IMService.h"
+#import <imsdk/IMService.h>
 
 @interface PeerMessageHandler : NSObject<IMPeerMessageHandler>
 +(PeerMessageHandler*)instance;

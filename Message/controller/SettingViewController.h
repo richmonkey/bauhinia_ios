@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "IMService.h"
+#import <imsdk/IMService.h>
 #import "ZBarReaderViewController.h"
 
 

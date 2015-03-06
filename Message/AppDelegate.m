@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-#import "IMService.h"
+#import <imsdk/IMService.h>
 #import "IMessage.h"
 #import "Token.h"
 #import "UserPresent.h"

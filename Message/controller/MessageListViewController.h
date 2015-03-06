@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "MessageConversationCell.h"
-#import "IMService.h"
+#import <imsdk/IMService.h>
 #import "PublicFunc.h"
 #import "ContactDB.h"
 
