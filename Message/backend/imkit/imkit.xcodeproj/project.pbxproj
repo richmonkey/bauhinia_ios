@@ -40,6 +40,12 @@
 		6D0331411AAA3BFD004AA39F /* Outbox.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D0330041AA9BBC7004AA39F /* Outbox.h */; };
 		6D0331421AAA3BFD004AA39F /* MessageInputView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D0331281AA9E734004AA39F /* MessageInputView.h */; };
 		6D0331491AAA42C6004AA39F /* IMHttpAPI.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D0330021AA9BBC7004AA39F /* IMHttpAPI.h */; };
+		6D0331501AAB53C3004AA39F /* MessageDB.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032FE81AA9B41C004AA39F /* MessageDB.h */; };
+		6D0331511AAB53C3004AA39F /* PeerMessageDB.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032FEA1AA9B41C004AA39F /* PeerMessageDB.h */; };
+		6D0331521AAB53C3004AA39F /* PeerMessageHandler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032FEC1AA9B41C004AA39F /* PeerMessageHandler.h */; };
+		6D0331541AAB53D3004AA39F /* GroupMessageDB.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032FE21AA9B41C004AA39F /* GroupMessageDB.h */; };
+		6D0331551AAB53D3004AA39F /* GroupMessageHandler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032FE41AA9B41C004AA39F /* GroupMessageHandler.h */; };
+		6D0331561AAB53EC004AA39F /* IMessage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032FE61AA9B41C004AA39F /* IMessage.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +86,12 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				6D0331561AAB53EC004AA39F /* IMessage.h in CopyFiles */,
+				6D0331541AAB53D3004AA39F /* GroupMessageDB.h in CopyFiles */,
+				6D0331551AAB53D3004AA39F /* GroupMessageHandler.h in CopyFiles */,
+				6D0331501AAB53C3004AA39F /* MessageDB.h in CopyFiles */,
+				6D0331511AAB53C3004AA39F /* PeerMessageDB.h in CopyFiles */,
+				6D0331521AAB53C3004AA39F /* PeerMessageHandler.h in CopyFiles */,
 				6D0331491AAA42C6004AA39F /* IMHttpAPI.h in CopyFiles */,
 				6D0331401AAA3BFD004AA39F /* AudioDownloader.h in CopyFiles */,
 				6D0331411AAA3BFD004AA39F /* Outbox.h in CopyFiles */,

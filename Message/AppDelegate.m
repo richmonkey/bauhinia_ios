@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 
 #import <imsdk/IMService.h>
-#import <imkit/IMessage.h>
 #import <imkit/PeerMessageHandler.h>
 #import <imkit/GroupMessageHandler.h>
 #import "Token.h"
