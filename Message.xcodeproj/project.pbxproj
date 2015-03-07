@@ -136,6 +136,7 @@
 		6D032FE01AA9B31D004AA39F /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032FDE1AA9B31D004AA39F /* GroupDB.m */; };
 		6D0331471AAA3E34004AA39F /* ConversationHeadButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D0331451AAA3E34004AA39F /* ConversationHeadButtonView.xib */; };
 		6D0331481AAA3E34004AA39F /* MessageTableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D0331461AAA3E34004AA39F /* MessageTableSectionHeaderView.xib */; };
+		6D0331691AAB6920004AA39F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331681AAB6920004AA39F /* MBProgressHUD.m */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
 		6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D11C72E19BB3D3F00E67389 /* APITests.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
@@ -143,7 +144,6 @@
 		6D41B3831A2A0B3F00DC79FF /* HPTextViewInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D41B3811A2A0B3F00DC79FF /* HPTextViewInternal.m */; };
 		6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D76214F197ECA9300B690D7 /* LevelDB.mm */; };
 		6D7621651981626900B690D7 /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7621641981626900B690D7 /* libleveldb.a */; };
-		6D76216819834DA100B690D7 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76216719834DA100B690D7 /* MBProgressHUD.m */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
 		6DB0AA3319BF6B710027A658 /* UIImage+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3219BF6B710027A658 /* UIImage+JSMessagesView.m */; };
 		6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3619C0A5D50027A658 /* Reachability.m */; };
@@ -430,6 +430,8 @@
 		6D032FDE1AA9B31D004AA39F /* GroupDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupDB.m; sourceTree = "<group>"; };
 		6D0331451AAA3E34004AA39F /* ConversationHeadButtonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationHeadButtonView.xib; sourceTree = "<group>"; };
 		6D0331461AAA3E34004AA39F /* MessageTableSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableSectionHeaderView.xib; sourceTree = "<group>"; };
+		6D0331671AAB6920004AA39F /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		6D0331681AAB6920004AA39F /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		6D0D76891967C1430058DECF /* c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = c.h; sourceTree = "<group>"; };
 		6D0D768A1967C1430058DECF /* cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cache.h; sourceTree = "<group>"; };
 		6D0D768B1967C1430058DECF /* comparator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comparator.h; sourceTree = "<group>"; };
@@ -454,8 +456,6 @@
 		6D76214E197ECA9300B690D7 /* LevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelDB.h; sourceTree = "<group>"; };
 		6D76214F197ECA9300B690D7 /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
 		6D7621641981626900B690D7 /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = Message/backend/leveldb/libleveldb.a; sourceTree = "<group>"; };
-		6D76216619834DA100B690D7 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
-		6D76216719834DA100B690D7 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		6DB0AA3119BF6B710027A658 /* UIImage+JSMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+JSMessagesView.h"; sourceTree = "<group>"; };
@@ -537,6 +537,7 @@
 		2105647A19695FC0008D3A83 /* third-party */ = {
 			isa = PBXGroup;
 			children = (
+				6D0331661AAB6920004AA39F /* MBProgressHUD */,
 				48C2D94C1A8D8BEA00F7A7E2 /* ZBarSDK */,
 				6D41B37D1A2A0B3F00DC79FF /* HPGrowingTextView */,
 				48A4D2DC19D453FE00DE9AD2 /* JSBadgeView */,
@@ -553,8 +554,6 @@
 				6DB0AA3419C0A5D50027A658 /* Reachability */,
 				2173C5D8197385C8004A88A5 /* SDWebImage */,
 				2105647B19695FC0008D3A83 /* JSMessge */,
-				6D76216619834DA100B690D7 /* MBProgressHUD.h */,
-				6D76216719834DA100B690D7 /* MBProgressHUD.m */,
 				21150CAC196F79AA009DE9DE /* TAHttpOperation.h */,
 				21150CAD196F79AA009DE9DE /* TAHttpOperation.m */,
 				210564C319695FC1008D3A83 /* UIView+AnimationOptionsForCurve.h */,
@@ -1045,6 +1044,15 @@
 			path = backend/imkit/imkit/xib;
 			sourceTree = "<group>";
 		};
+		6D0331661AAB6920004AA39F /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				6D0331671AAB6920004AA39F /* MBProgressHUD.h */,
+				6D0331681AAB6920004AA39F /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		6D0D76881967C1430058DECF /* leveldb */ = {
 			isa = PBXGroup;
 			children = (
@@ -1315,7 +1323,6 @@
 				2173C66A19738745004A88A5 /* UIButton+WebCache.m in Sources */,
 				2173C66719738745004A88A5 /* SDWebImageDownloaderOperation.m in Sources */,
 				489933D819C44E3300C56F2D /* CotactMeViewController.m in Sources */,
-				6D76216819834DA100B690D7 /* MBProgressHUD.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
 				2173C66319738745004A88A5 /* SDImageCache.m in Sources */,
 				2173C66119738745004A88A5 /* MKAnnotationView+WebCache.m in Sources */,
@@ -1325,6 +1332,7 @@
 				6D41B3831A2A0B3F00DC79FF /* HPTextViewInternal.m in Sources */,
 				48C20EEC19BFE81C009494A1 /* ESModalImageViewAnimationController.m in Sources */,
 				489933C819C436ED00C56F2D /* FBShimmeringLayer.m in Sources */,
+				6D0331691AAB6920004AA39F /* MBProgressHUD.m in Sources */,
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				2173C66519738745004A88A5 /* SDWebImageDecoder.m in Sources */,
 				6D41B3821A2A0B3F00DC79FF /* HPGrowingTextView.m in Sources */,

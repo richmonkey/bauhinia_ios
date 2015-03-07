@@ -68,15 +68,15 @@
     }
 }
 
--(TAHttpOperation*)downloadAudio:(NSString*)url success:(void (^)(NSData *data))success fail:(void (^)())fail {
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+-(IMHttpOperation*)downloadAudio:(NSString*)url success:(void (^)(NSData *data))success fail:(void (^)())fail {
+    IMHttpOperation *request = [IMHttpOperation httpOperationWithTimeoutInterval:60];
     request.targetURL = url;
     request.method = @"GET";
     
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+    request.successCB = ^(IMHttpOperation*commObj, NSURLResponse *response, NSData *data) {
         success(data);
     };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+    request.failCB = ^(IMHttpOperation*commObj, IMHttpOperationError error) {
         fail();
     };
     [[NSOperationQueue mainQueue] addOperation:request];

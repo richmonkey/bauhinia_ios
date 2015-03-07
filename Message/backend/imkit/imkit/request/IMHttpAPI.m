@@ -16,9 +16,9 @@
     return nil;
 }
 
-+(TAHttpOperation*)uploadImage:(UIImage*)image success:(void (^)(NSString *url))success fail:(void (^)())fail {
++(NSOperation*)uploadImage:(UIImage*)image success:(void (^)(NSString *url))success fail:(void (^)())fail {
     NSData *data = UIImagePNGRepresentation(image);
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+    IMHttpOperation *request = [IMHttpOperation httpOperationWithTimeoutInterval:60];
     request.targetURL = [API_URL stringByAppendingString:@"/images"];
     request.method = @"POST";
     request.postBody = data;
@@ -28,12 +28,12 @@
     [headers setObject:auth forKey:@"Authorization"];
     request.headers = headers;
     
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+    request.successCB = ^(IMHttpOperation*commObj, NSURLResponse *response, NSData *data) {
         NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
         NSString *src_url = [resp objectForKey:@"src_url"];
         success(src_url);
     };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+    request.failCB = ^(IMHttpOperation*commObj, IMHttpOperationError error) {
         fail();
     };
     [[NSOperationQueue mainQueue] addOperation:request];
@@ -42,8 +42,8 @@
 }
 
 
-+(TAHttpOperation*)uploadAudio:(NSData*)data success:(void (^)(NSString *url))success fail:(void (^)())fail {
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
++(NSOperation*)uploadAudio:(NSData*)data success:(void (^)(NSString *url))success fail:(void (^)())fail {
+    IMHttpOperation *request = [IMHttpOperation httpOperationWithTimeoutInterval:60];
     request.targetURL = [API_URL stringByAppendingString:@"/audios"];
     request.method = @"POST";
     request.postBody = data;
@@ -53,20 +53,20 @@
     [headers setObject:auth forKey:@"Authorization"];
     request.headers = headers;
 
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+    request.successCB = ^(IMHttpOperation*commObj, NSURLResponse *response, NSData *data) {
         NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
         NSString *src_url = [resp objectForKey:@"src_url"];
         success(src_url);
     };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+    request.failCB = ^(IMHttpOperation*commObj, IMHttpOperationError error) {
         fail();
     };
     [[NSOperationQueue mainQueue] addOperation:request];
     return request;
 }
 
-+(TAHttpOperation*)bindDeviceToken:(NSString*)deviceToken success:(void (^)())success fail:(void (^)())fail {
-    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
++(NSOperation*)bindDeviceToken:(NSString*)deviceToken success:(void (^)())success fail:(void (^)())fail {
+    IMHttpOperation *request = [IMHttpOperation httpOperationWithTimeoutInterval:60];
     request.targetURL = [API_URL stringByAppendingString:@"/device/bind"];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:deviceToken forKey:@"apns_device_token"];
@@ -78,17 +78,17 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     request.postBody = data;
     request.method = @"POST";
-    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+    request.successCB = ^(IMHttpOperation*commObj, NSURLResponse *response, NSData *data) {
         int statusCode = [(NSHTTPURLResponse*)response statusCode];
         if (statusCode != 200) {
-//            IMLog(@"bind device token fail");
+            NSLog(@"bind device token fail");
             fail();
             return;
         }
         success();
     };
-    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
-//        IMLog(@"bind device token fail");
+    request.failCB = ^(IMHttpOperation*commObj, IMHttpOperationError error) {
+        NSLog(@"bind device token fail");
         fail();
     };
     [[NSOperationQueue mainQueue] addOperation:request];

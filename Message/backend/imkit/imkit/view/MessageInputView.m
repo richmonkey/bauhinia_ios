@@ -1,7 +1,7 @@
 
 #import "MessageInputView.h"
 #import "NSString+JSMessagesView.h"
-#import "UIImage+JSMessagesView.h"
+//#import "UIImage+JSMessagesView.h"
 
 #import "FBShimmeringView.h"
 #import "Constants.h"

@@ -8,7 +8,7 @@
 //
 
 #import "MessageImageView.h"
-#import "ESImageViewController.h"
+//#import "ESImageViewController.h"
 
 #define kImageWidth  100
 #define kImageHeight 100

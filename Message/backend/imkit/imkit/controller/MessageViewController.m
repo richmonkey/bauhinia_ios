@@ -7,20 +7,25 @@
 #import "MessageViewController.h"
 #import <imsdk/IMService.h>
 #import "IMessage.h"
-#import "MessageDB.h"
-#import "ConversationHeadButtonView.h"
-#import "MessageTableSectionHeaderView.h"
-
 #import "PeerMessageDB.h"
 
 #import "FileCache.h"
-#import "IMHttpAPI.h"
-
-#import "MessageAudioView.h"
-#import "MessageImageView.h"
 #import "Outbox.h"
 #import "AudioDownloader.h"
 #import "DraftDB.h"
+
+#import "IMHttpAPI.h"
+
+#import "ConversationHeadButtonView.h"
+#import "MessageTableSectionHeaderView.h"
+
+#import "MessageInputView.h"
+
+#import "MessageTextView.h"
+#import "MessageAudioView.h"
+#import "MessageImageView.h"
+#import "MessageViewCell.h"
+#import "BubbleView.h"
 
 #import "MEESImageViewController.h"
 
@@ -28,10 +33,6 @@
 #import "UIImage+Resize.h"
 #import "UIView+Toast.h"
 
-#import "MessageViewCell.h"
-#import "MessageTextView.h"
-#import "MessageImageView.h"
-#import "BubbleView.h"
 #import "PublicFunc.h"
 #import "Constants.h"
 
@@ -45,7 +46,21 @@
 
 
 
-@interface MessageViewController()
+@interface MessageViewController()<MessageInputRecordDelegate, AudioDownloaderObserver, OutboxObserver>
+
+@property (nonatomic) NSTimer  *inputStatusTimer;
+@property (strong, nonatomic) UITableView *tableView;
+@property (strong, nonatomic) MessageInputView *inputToolBarView;
+@property (assign, nonatomic, readonly) UIEdgeInsets originalTableViewContentInset;
+
+@property (strong, nonatomic) NSMutableArray *messageArray;
+@property (strong, nonatomic) NSMutableArray *timestamps;
+@property (strong, nonatomic) NSMutableArray *messages;
+
+@property (nonatomic,strong) UIImage *willSendImage;
+
+@property (nonatomic) ConversationHeadButtonView *navigationBarButtonsView;
+@property (nonatomic) int  inputTimestamp;
 
 @property(nonatomic) AVAudioPlayer *player;
 @property(nonatomic) NSIndexPath *playingIndexPath;
@@ -60,6 +75,18 @@
 
 @property(nonatomic) IMessage *selectedMessage;
 @property(nonatomic, weak) MessageViewCell *selectedCell;
+
+- (void)setup;
+
+#pragma mark - Actions
+- (void)sendPressed:(UIButton *)sender;
+
+#pragma mark - Messages view controller
+- (void)scrollToBottomAnimated:(BOOL)animated;
+
+#pragma mark - Keyboard notifications
+- (void)handleWillShowKeyboard:(NSNotification *)notification;
+- (void)handleWillHideKeyboard:(NSNotification *)notification;
 @end
 
 @implementation MessageViewController
@@ -410,39 +437,6 @@
     self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
 }
 
-- (void)recordTouchDown:(UIButton *)sender
-{
-    if (self.recorder.recording) {
-        return;
-    }
-
-    if (self.player && [self.player isPlaying]) {
-        [self.player stop];
-        if ([self.playTimer isValid]) {
-            [self.playTimer invalidate];
-            self.playTimer = nil;
-        }
-        
-        MessageViewCell *cell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:self.playingIndexPath];
-        if (cell != nil) {
-            MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
-            [audioView.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
-            [audioView.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
-            audioView.progressView.progress = 0.0f;
-        }
-        self.playingIndexPath = nil;
-    }
-    
-
-    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-        if (granted) {
-            [self startRecord];
-        } else {
-            [self.view makeToast:@"无法录音,请到设置-隐私-麦克风,允许程序访问"];
-        }
-    }];
-}
-
 -(void)stopRecord {
     [self.recorder stop];
     [self.recordingTimer invalidate];
@@ -629,7 +623,7 @@
     
     [[Outbox instance] uploadAudio:msg];
     
-    [JSMessageSoundEffect playMessageSentSound];
+    [[self class] playMessageSentSound];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
     
@@ -644,7 +638,7 @@
     if (im.sender != self.peerUID) {
         return;
     }
-    [JSMessageSoundEffect playMessageReceivedSound];
+    [[self class] playMessageReceivedSound];
     NSLog(@"receive msg:%@",im);
     
     IMessage *m = [[IMessage alloc] init];
@@ -715,13 +709,9 @@
     
     [self.inputStatusTimer invalidate];
     self.inputStatusTimer = nil;
-    if (self.onlineState == UserOnlineStateOnline) {
-        [self.navigationBarButtonsView.conectInformationLabel setText:@"对方在线"];
-        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(self.onlineState == UserOnlineStateOffline){
-        [self.navigationBarButtonsView.conectInformationLabel setText:[self getRemoteUserLastOnlineTimestamp]];
-        [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
-    }
+
+    [self.navigationBarButtonsView.conectInformationLabel setText:[self getRemoteUserLastOnlineTimestamp]];
+    [self.navigationBarButtonsView.conectInformationLabel setFont:[UIFont systemFontOfSize:11.0f]];
 }
 
 
@@ -1266,7 +1256,7 @@
     
     [[Outbox instance] uploadImage:msg image:image];
     
-    [JSMessageSoundEffect playMessageSentSound];
+    [[self class] playMessageSentSound];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
@@ -1297,7 +1287,7 @@
     m.body = im;
     [[IMService instance] sendPeerMessage:im];
     
-    [JSMessageSoundEffect playMessageSentSound];
+    [[self class] playMessageSentSound];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:SEND_FIRST_MESSAGE_OK object: msg userInfo:nil];
     
@@ -1763,5 +1753,26 @@
     [menu setMenuVisible:YES animated:YES];
 }
 
+
++ (void)playSoundWithName:(NSString *)name type:(NSString *)type {
+    NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:type];
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        SystemSoundID sound;
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:path], &sound);
+        AudioServicesPlaySystemSound(sound);
+    }
+    else {
+        NSLog(@"Error: audio file not found at path: %@", path);
+    }
+}
+
++ (void)playMessageReceivedSound {
+    [self playSoundWithName:@"messageReceived" type:@"aiff"];
+}
+
++ (void)playMessageSentSound {
+    [self playSoundWithName:@"messageSent" type:@"aiff"];
+}
 
 @end
