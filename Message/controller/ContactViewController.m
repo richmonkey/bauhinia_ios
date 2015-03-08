@@ -300,7 +300,7 @@
     if (smsClass != nil){
         // We must always check whether the current device is configured for sending emails
         if ([smsClass canSendText]){
-            [self displaySMSComposeSheet];//调用发送邮件的方法
+            [self displaySMSComposeSheet];
         }
     }
 }
@@ -310,7 +310,7 @@
     picker.messageComposeDelegate = self;
     
     Config *config = [Config instance];
-    picker.body = [NSString stringWithFormat:@"我正在使用“羊蹄甲”。 %@ 可以给您的联系人发送消息，分享图片和音频。", config.downloadURL];
+    picker.body = [NSString stringWithFormat:@"我正在使用“羊蹄甲”。 %@ 可以给我发送消息，分享图片和音频。", config.downloadURL];
     [self presentViewController:picker
                        animated:YES
                      completion:NULL];

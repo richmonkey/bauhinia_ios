@@ -77,7 +77,7 @@
     if (smsClass != nil){
         // We must always check whether the current device is configured for sending emails
         if ([smsClass canSendText]){
-            [self displaySMSComposeSheet];//调用发送邮件的方法
+            [self displaySMSComposeSheet];
         }
     }
 }
