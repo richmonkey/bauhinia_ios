@@ -13,6 +13,34 @@
 #import "PhoneNumber.h"
 
 @implementation APIRequest
+
+
+
++(TAHttpOperation*)checkVersion:(NSString*)platform success:(void (^)(NSDictionary *resp))success fail:(void (^)())fail{
+    TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];
+    request.targetURL = [[Config instance].URL stringByAppendingString:@"/version/ios"];
+
+    request.method = @"GET";
+    request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
+        int statusCode = [(NSHTTPURLResponse*)response statusCode];
+        if (statusCode != 200) {
+            IMLog(@"check version fail:%d",statusCode);
+            fail();
+            return;
+        }
+        NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        success(resp);
+        
+    };
+    request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
+        IMLog(@"check version fail");
+        fail();
+    };
+    [[NSOperationQueue mainQueue] addOperation:request];
+    return request;
+    
+}
+
 +(TAHttpOperation*)updateState:(NSString*)state success:(void (^)())success fail:(void (^)())fail {
 
     TAHttpOperation *request = [TAHttpOperation httpOperationWithTimeoutInterval:60];

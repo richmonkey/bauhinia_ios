@@ -17,13 +17,19 @@
 #import "UserPresent.h"
 #import "JSBadgeView.h"
 
+#import "APIRequest.h"
+
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
 
 #define kActionSheetContact           0
 #define kActionSheetSendHistory       1
 
+#define kNewVersionTag 100
+
 @interface MessageListViewController ()
+
+@property (strong , nonatomic) NSString *versionUrl;
 
 @end
 
@@ -108,6 +114,28 @@
     
     
     [self updateEmputyContentView];
+    
+    [APIRequest checkVersion:@"ios"
+                    success:^(NSDictionary *resp){
+                        
+                        self.versionUrl = [resp objectForKey:@"url"];
+                        NSString *majorVersion = [resp objectForKey:@"major"];
+                        NSString *minorVersion = [resp objectForKey:@"minor"];
+                        
+                        NSString *newVersion = [NSString stringWithFormat:@"%@.%@",majorVersion,minorVersion];
+                        
+                       NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+                       NSString *currentVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
+                        
+                        if ([newVersion floatValue] > [currentVersion floatValue] ) {
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"是否更新羊蹄甲?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
+                            alertView.tag = kNewVersionTag;
+                            [alertView show];
+                        }
+                    }
+                   fail:^{
+                       
+                   }];
     
 }
 
@@ -529,6 +557,20 @@
     if (shouldClearNewCount) {
         NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_TAB_BAR_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+/**
+ *  新版本检测回调
+ *  @return
+ */
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+
+    if (buttonIndex == 1){
+        if (self.versionUrl) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: self.versionUrl]];
+        }
     }
 }
 
