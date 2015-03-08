@@ -362,11 +362,11 @@
         return nil;
     }
     NSString *ip = nil;
-    for (rp = result; rp != NULL; rp = rp->ai_next) {
+    if (result != NULL) {
+        rp = result;
         struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
         const char *str = inet_ntoa(addr->sin_addr);
         ip = [NSString stringWithUTF8String:str];
-        break;
     }
     
     freeaddrinfo(result);

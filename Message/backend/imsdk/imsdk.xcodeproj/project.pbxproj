@@ -14,6 +14,7 @@
 		6D032F481AA99456004AA39F /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D032F431AA99456004AA39F /* util.c */; };
 		6D032F871AA9AEB3004AA39F /* IMService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F3F1AA99456004AA39F /* IMService.h */; };
 		6D032F881AA9AF2C004AA39F /* Message.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F411AA99456004AA39F /* Message.h */; };
+		6D401C161AAC840F0041ABC6 /* util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F441AA99456004AA39F /* util.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				6D401C161AAC840F0041ABC6 /* util.h in CopyFiles */,
 				6D032F881AA9AF2C004AA39F /* Message.h in CopyFiles */,
 				6D032F871AA9AEB3004AA39F /* IMService.h in CopyFiles */,
 			);
