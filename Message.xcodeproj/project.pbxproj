@@ -158,7 +158,6 @@
 		489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DB19C47F5200C56F2D /* UIImage+Resize.m */; };
 		489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DD19C47F5200C56F2D /* UIImage+UKImage.m */; };
 		489949AC19C5A9FB00A3A576 /* SWParallaxScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 489949AB19C5A9FB00A3A576 /* SWParallaxScrollView.mm */; };
-		489AED491A8F97CA007DD9B4 /* MEESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 489AED481A8F97CA007DD9B4 /* MEESImageViewController.m */; };
 		48A4D2DF19D453FE00DE9AD2 /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A4D2DE19D453FE00DE9AD2 /* JSBadgeView.m */; };
 		48AED77A19CB2A3900DB447F /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 48AED77519CB2A3900DB447F /* NSData+ImageContentType.m */; };
 		48AED77B19CB2A3900DB447F /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 48AED77719CB2A3900DB447F /* UIImageView+HighlightedWebCache.m */; };
@@ -462,8 +461,6 @@
 		489933DD19C47F5200C56F2D /* UIImage+UKImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UKImage.m"; sourceTree = "<group>"; };
 		489949AA19C5A9FB00A3A576 /* SWParallaxScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWParallaxScrollView.h; sourceTree = "<group>"; };
 		489949AB19C5A9FB00A3A576 /* SWParallaxScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SWParallaxScrollView.mm; sourceTree = "<group>"; };
-		489AED471A8F97CA007DD9B4 /* MEESImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEESImageViewController.h; sourceTree = "<group>"; };
-		489AED481A8F97CA007DD9B4 /* MEESImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEESImageViewController.m; sourceTree = "<group>"; };
 		48A4D2DD19D453FE00DE9AD2 /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
 		48A4D2DE19D453FE00DE9AD2 /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
 		48AED77419CB2A3900DB447F /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -613,8 +610,6 @@
 				217F2C2F196D62680064F478 /* MessageShowThePotraitViewController.m */,
 				6D776313197B6D6B0090D511 /* MainTabBarController.h */,
 				6D776314197B6D6B0090D511 /* MainTabBarController.m */,
-				489AED471A8F97CA007DD9B4 /* MEESImageViewController.h */,
-				489AED481A8F97CA007DD9B4 /* MEESImageViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -1476,7 +1471,6 @@
 				21050A3819741B1900F26E43 /* PublicFunc.m in Sources */,
 				2173C66B19738745004A88A5 /* UIImage+GIF.m in Sources */,
 				48AED77A19CB2A3900DB447F /* NSData+ImageContentType.m in Sources */,
-				489AED491A8F97CA007DD9B4 /* MEESImageViewController.m in Sources */,
 				48338B4419C5938A00BA2392 /* MYIntroductionPanel.m in Sources */,
 				6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */,
 				489933D319C44C4D00C56F2D /* ProfileViewController.m in Sources */,

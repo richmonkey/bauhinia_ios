@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4875B1231AAC9362001D1435 /* MEESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4875B1221AAC9362001D1435 /* MEESImageViewController.m */; };
 		6D032F9E1AA9B0F5004AA39F /* libimkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D032F921AA9B0F5004AA39F /* libimkit.a */; };
 		6D032FF01AA9B41C004AA39F /* GroupMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032FE31AA9B41C004AA39F /* GroupMessageDB.m */; };
 		6D032FF11AA9B41C004AA39F /* GroupMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032FE51AA9B41C004AA39F /* GroupMessageHandler.m */; };
@@ -101,6 +102,8 @@
 
 /* Begin PBXFileReference section */
 		4875ABA81AAC784E001D1435 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4875B1211AAC9362001D1435 /* MEESImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEESImageViewController.h; path = controller/MEESImageViewController.h; sourceTree = "<group>"; };
+		4875B1221AAC9362001D1435 /* MEESImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEESImageViewController.m; path = controller/MEESImageViewController.m; sourceTree = "<group>"; };
 		6D032F921AA9B0F5004AA39F /* libimkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libimkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D032F9D1AA9B0F5004AA39F /* imkitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = imkitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D032FA31AA9B0F5004AA39F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -308,6 +311,8 @@
 		6D032FF81AA9B499004AA39F /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				4875B1211AAC9362001D1435 /* MEESImageViewController.h */,
+				4875B1221AAC9362001D1435 /* MEESImageViewController.m */,
 				6D032FFC1AA9B4D2004AA39F /* MessageViewController.h */,
 				6D032FFD1AA9B4D2004AA39F /* MessageViewController.m */,
 			);
@@ -508,6 +513,7 @@
 				6D0331321AA9E734004AA39F /* ConversationHeadButtonView.m in Sources */,
 				6D03311E1AA9E534004AA39F /* PublicFunc.m in Sources */,
 				6D0330071AA9BBC7004AA39F /* IMHttpAPI.m in Sources */,
+				4875B1231AAC9362001D1435 /* MEESImageViewController.m in Sources */,
 				6D0330081AA9BBC7004AA39F /* Outbox.m in Sources */,
 				6D03315F1AAB6626004AA39F /* NSString+JSMessagesView.m in Sources */,
 				6D0331371AA9E734004AA39F /* MessageTextView.m in Sources */,
