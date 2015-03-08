@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "IMContact.h"
+#import <MessageUI/MessageUI.h>
 
-@interface ContactViewController : UIViewController <UITableViewDataSource,UITableViewDelegate, UIActionSheetDelegate>
+@interface ContactViewController : UIViewController <UITableViewDataSource,UITableViewDelegate, UIActionSheetDelegate,MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic)IMContact *contact;
 @property (nonatomic)UITableView *tableview;
