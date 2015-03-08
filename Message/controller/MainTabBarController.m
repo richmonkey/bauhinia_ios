@@ -96,9 +96,6 @@
     [IMService instance].token = [Token instance].accessToken;
     self.reach = [Reachability reachabilityForInternetConnection];
 
-    if ([self.reach isReachable]) {
-        [[IMService instance] start];
-    }
     self.reach.reachableBlock = ^(Reachability*reach) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"reachable");
@@ -115,6 +112,8 @@
     };
     
     [self.reach startNotifier];
+    
+    [[IMService instance] start];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
@@ -141,9 +140,7 @@
 }
 
 -(void)appWillEnterForeground {
-    if ([self.reach isReachable]) {
-        [[IMService instance] start];
-    }
+    [[IMService instance] start];
 }
 
 
