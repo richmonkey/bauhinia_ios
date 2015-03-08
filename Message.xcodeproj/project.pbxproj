@@ -116,7 +116,6 @@
 		48AED77B19CB2A3900DB447F /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 48AED77719CB2A3900DB447F /* UIImageView+HighlightedWebCache.m */; };
 		48AED77C19CB2A3900DB447F /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 48AED77919CB2A3900DB447F /* UIView+WebCacheOperation.m */; };
 		48B30F7A1AA4A89B00A34B0C /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48B30F731AA4A89A00A34B0C /* libzbar.a */; };
-		48B30F7B1AA4A89B00A34B0C /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 48B30F741AA4A89A00A34B0C /* README.md */; };
 		48B30F7C1AA4A89B00A34B0C /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 48B30F761AA4A89B00A34B0C /* zbar-back.png */; };
 		48B30F7D1AA4A89B00A34B0C /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = 48B30F771AA4A89B00A34B0C /* zbar-help.html */; };
 		48B30F7E1AA4A89B00A34B0C /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = 48B30F781AA4A89B00A34B0C /* zbar-helpicons.png */; };
@@ -403,7 +402,6 @@
 		48B30F711AA4A89A00A34B0C /* ZBarSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBarSDK.h; sourceTree = "<group>"; };
 		48B30F721AA4A89A00A34B0C /* ZBarSymbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBarSymbol.h; sourceTree = "<group>"; };
 		48B30F731AA4A89A00A34B0C /* libzbar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzbar.a; sourceTree = "<group>"; };
-		48B30F741AA4A89A00A34B0C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		48B30F761AA4A89B00A34B0C /* zbar-back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-back.png"; sourceTree = "<group>"; };
 		48B30F771AA4A89B00A34B0C /* zbar-help.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "zbar-help.html"; sourceTree = "<group>"; };
 		48B30F781AA4A89B00A34B0C /* zbar-helpicons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-helpicons.png"; sourceTree = "<group>"; };
@@ -983,7 +981,6 @@
 			children = (
 				48B30F5C1AA4A89A00A34B0C /* Headers */,
 				48B30F731AA4A89A00A34B0C /* libzbar.a */,
-				48B30F741AA4A89A00A34B0C /* README.md */,
 				48B30F751AA4A89B00A34B0C /* Resources */,
 			);
 			path = ZBarSDK;
@@ -1309,7 +1306,6 @@
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
 				48D5AB2519CDD07100A288F9 /* UIView+Toast.m in Sources */,
 				21050A3819741B1900F26E43 /* PublicFunc.m in Sources */,
-				48B30F7B1AA4A89B00A34B0C /* README.md in Sources */,
 				2173C66B19738745004A88A5 /* UIImage+GIF.m in Sources */,
 				48AED77A19CB2A3900DB447F /* NSData+ImageContentType.m in Sources */,
 				489AED491A8F97CA007DD9B4 /* MEESImageViewController.m in Sources */,

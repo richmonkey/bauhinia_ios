@@ -9,7 +9,7 @@
 #import "MessageDB.h"
 #include <sys/stat.h>
 #include <dirent.h>
-#import "util.h"
+#import <imsdk/util.h>
 #import "ReverseFile.h"
 
 #define HEADER_SIZE 32

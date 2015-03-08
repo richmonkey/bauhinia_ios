@@ -84,10 +84,9 @@ int lookupAddr(const char *host, int port, struct sockaddr_in *addr) {
     if (s != 0) {
         return -1;
     }
-    
-    for (rp = result; rp != NULL; rp = rp->ai_next) {
+    if (result != NULL) {
+        rp = result;
         memcpy(addr, rp->ai_addr, rp->ai_addrlen);
-        break;
     }
     
     freeaddrinfo(result);
