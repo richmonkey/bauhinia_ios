@@ -10,16 +10,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <imsdk/IMService.h>
 
-
-#import "MBProgressHUD.h"
-#import "HPGrowingTextView.h"
-
-
-@class ConversationHeadButtonView;
-
-
 @interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
-    MessageObserver,  UIActionSheetDelegate, HPGrowingTextViewDelegate>
+    MessageObserver,  UIActionSheetDelegate>
 
 @property(nonatomic, assign) int64_t currentUID;
 @property(nonatomic, assign) int64_t peerUID;

@@ -6,6 +6,9 @@
 
 #import "MessageViewController.h"
 #import <imsdk/IMService.h>
+#import "MBProgressHUD.h"
+#import "HPGrowingTextView.h"
+
 #import "IMessage.h"
 #import "PeerMessageDB.h"
 
@@ -44,8 +47,7 @@
 #define kTakePicActionSheetTag  101
 
 
-
-@interface MessageViewController()<MessageInputRecordDelegate, AudioDownloaderObserver, OutboxObserver>
+@interface MessageViewController()<MessageInputRecordDelegate, AudioDownloaderObserver, OutboxObserver, HPGrowingTextViewDelegate>
 
 @property (nonatomic) NSTimer  *inputStatusTimer;
 @property (strong, nonatomic) UITableView *tableView;
