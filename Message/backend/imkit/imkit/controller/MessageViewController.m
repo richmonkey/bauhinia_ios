@@ -1389,6 +1389,10 @@
 
 #pragma mark - function
 -(NSDateComponents*) getComponentOfDate:(NSDate *)date {
+    if (date == nil) {
+        return nil;
+    }
+    
 	NSCalendar *calendar = [NSCalendar currentCalendar];
 	[calendar setTimeZone:[NSTimeZone systemTimeZone]];
 	NSDateComponents *comps = [[NSDateComponents alloc] init];

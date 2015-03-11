@@ -65,6 +65,8 @@
 @property(nonatomic, weak)id<IMGroupMessageHandler> groupMessageHandler;
 +(IMService*)instance;
 
+-(void)startRechabilityNotifier;
+
 -(void)start;
 -(void)stop;
 

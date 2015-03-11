@@ -12,7 +12,7 @@
 #import "AsyncTCP.h"
 #import "Message.h"
 #import "util.h"
-
+#import "GOReachability.h"
 
 #define HEARTBEAT (180ull*NSEC_PER_SEC)
 
@@ -21,6 +21,7 @@
 @property(atomic, assign) time_t timestmap;
 
 @property(nonatomic, assign)BOOL stopped;
+@property(nonatomic, assign)BOOL suspended;
 @property(nonatomic)AsyncTCP *tcp;
 @property(nonatomic, strong)dispatch_source_t connectTimer;
 
@@ -33,6 +34,9 @@
 @property(nonatomic)NSMutableData *data;
 @property(nonatomic)NSMutableDictionary *peerMessages;
 @property(nonatomic)NSMutableDictionary *groupMessages;
+
+@property(nonatomic)GOReachability *reach;
+@property(nonatomic)BOOL reachable;
 @end
 
 @implementation IMService
@@ -66,8 +70,37 @@
         self.groupMessages = [NSMutableDictionary dictionary];
         self.connectState = STATE_UNCONNECTED;
         self.stopped = YES;
+        self.suspended = YES;
+        self.reachable = YES;
     }
     return self;
+}
+
+-(void)startRechabilityNotifier {
+    IMService *wself = self;
+    self.reach = [GOReachability reachabilityForInternetConnection];
+    
+    self.reach.reachableBlock = ^(GOReachability*reach) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"internet reachable");
+            wself.reachable = YES;
+            if (wself != nil && !wself.stopped) {
+                [wself resume];
+            }
+        });
+    };
+    
+    self.reach.unreachableBlock = ^(GOReachability*reach) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"internet unreachable");
+            wself.reachable = NO;
+            if (wself != nil && !wself.stopped) {
+                [wself suspend];
+            }
+        });
+    };
+    
+    [self.reach startNotifier];
 }
 
 -(void)start {
@@ -79,8 +112,45 @@
         return;
     }
     NSLog(@"start im service");
-
     self.stopped = NO;
+    if (self.reachable) {
+        [self resume];
+    }
+}
+
+-(void)stop {
+    if (self.stopped) {
+        return;
+    }
+    NSLog(@"stop im service");
+    self.stopped = YES;
+    
+    [self suspend];
+}
+
+-(void)suspend {
+    if (self.suspended) {
+        return;
+    }
+    
+    NSLog(@"suspend im service");
+    self.suspended = YES;
+    
+    dispatch_suspend(self.connectTimer);
+    dispatch_suspend(self.heartbeatTimer);
+    
+    self.connectState = STATE_UNCONNECTED;
+    [self publishConnectState:STATE_UNCONNECTED];
+    [self close];
+}
+
+-(void)resume {
+    if (!self.suspended) {
+        return;
+    }
+    NSLog(@"resume im service");
+    self.suspended = NO;
+    
     dispatch_time_t w = dispatch_walltime(NULL, 0);
     dispatch_source_set_timer(self.connectTimer, w, DISPATCH_TIME_FOREVER, 0);
     dispatch_resume(self.connectTimer);
@@ -90,21 +160,6 @@
     dispatch_resume(self.heartbeatTimer);
     
     [self refreshHostIP];
-}
-
--(void)stop {
-    if (self.stopped) {
-        return;
-    }
-    
-    NSLog(@"stop im service");
-    self.stopped = YES;
-    dispatch_suspend(self.connectTimer);
-    dispatch_suspend(self.heartbeatTimer);
-    
-    self.connectState = STATE_UNCONNECTED;
-    [self publishConnectState:STATE_UNCONNECTED];
-    [self close];
 }
 
 -(void)close {

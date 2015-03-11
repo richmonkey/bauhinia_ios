@@ -20,7 +20,6 @@
 #import <imkit/IMHttpAPI.h>
 
 @interface MainTabBarController ()
-@property(atomic) Reachability *reach;
 @property(nonatomic)dispatch_source_t refreshTimer;
 @property(nonatomic)int refreshFailCount;
 @end
@@ -94,25 +93,6 @@
     [self startRefreshTimer];
 
     [IMService instance].token = [Token instance].accessToken;
-    self.reach = [Reachability reachabilityForInternetConnection];
-
-    self.reach.reachableBlock = ^(Reachability*reach) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"reachable");
-            [[IMService instance] stop];
-            [[IMService instance] start];
-        });
-    };
-    
-    self.reach.unreachableBlock = ^(Reachability*reach) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"unreachable");
-            [[IMService instance] stop];
-        });
-    };
-    
-    [self.reach startNotifier];
-    
     [[IMService instance] start];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];

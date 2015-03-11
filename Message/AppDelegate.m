@@ -28,6 +28,7 @@
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
+    [[IMService instance] startRechabilityNotifier];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     application.statusBarHidden = NO;
