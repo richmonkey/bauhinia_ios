@@ -22,6 +22,8 @@
 
 @property(nonatomic, assign)BOOL stopped;
 @property(nonatomic, assign)BOOL suspended;
+@property(nonatomic, assign)BOOL isBackground;
+
 @property(nonatomic)AsyncTCP *tcp;
 @property(nonatomic, strong)dispatch_source_t connectTimer;
 
@@ -72,6 +74,7 @@
         self.stopped = YES;
         self.suspended = YES;
         self.reachable = YES;
+        self.isBackground = NO;
     }
     return self;
 }
@@ -84,7 +87,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"internet reachable");
             wself.reachable = YES;
-            if (wself != nil && !wself.stopped) {
+            if (wself != nil && !wself.stopped && !wself.isBackground) {
                 [wself resume];
             }
         });
@@ -105,13 +108,15 @@
 
 -(void)enterForeground {
     NSLog(@"im service enter foreground");
-    if (!self.stopped) {
+    self.isBackground = NO;
+    if (!self.stopped && self.reachable) {
         [self resume];
     }
 }
 
 -(void)enterBackground {
     NSLog(@"im service enter background");
+    self.isBackground = YES;
     if (!self.stopped) {
         [self suspend];
     }
