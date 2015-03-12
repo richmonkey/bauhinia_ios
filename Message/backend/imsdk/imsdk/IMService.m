@@ -103,6 +103,20 @@
     [self.reach startNotifier];
 }
 
+-(void)enterForeground {
+    NSLog(@"im service enter foreground");
+    if (!self.stopped) {
+        [self resume];
+    }
+}
+
+-(void)enterBackground {
+    NSLog(@"im service enter background");
+    if (!self.stopped) {
+        [self suspend];
+    }
+}
+
 -(void)start {
     if (!self.host || !self.port) {
         NSLog(@"should init im server host and port");

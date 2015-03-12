@@ -116,11 +116,11 @@
 }
 
 -(void)appDidEnterBackground {
-    [[IMService instance] stop];
+    [[IMService instance] enterBackground];
 }
 
 -(void)appWillEnterForeground {
-    [[IMService instance] start];
+    [[IMService instance] enterForeground];
 }
 
 

@@ -69,6 +69,8 @@
 
 -(void)start;
 -(void)stop;
+-(void)enterForeground;
+-(void)enterBackground;
 
 -(void)sendPeerMessage:(IMMessage*)msg;
 
