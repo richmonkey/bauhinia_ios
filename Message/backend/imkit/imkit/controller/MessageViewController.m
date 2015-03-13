@@ -955,57 +955,53 @@
     if (message == nil) {
         return nil;
     }
+    BubbleMessageType bubbleMessageType;
+    if(message.sender == self.currentUID) {
+        bubbleMessageType = BubbleMessageTypeOutgoing;
+    }else{
+        bubbleMessageType = BubbleMessageTypeIncoming;
+    }
     
-    NSString *CellID = [self getMessageViewCellId:message];
-    MessageViewCell *cell = (MessageViewCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
+    NSString *cellID = [self getMessageViewCellId:message];
+    MessageViewCell *cell = (MessageViewCell *)[tableView dequeueReusableCellWithIdentifier:cellID];
     
     if(!cell) {
-        cell = [[MessageViewCell alloc] initWithType:message.content.type reuseIdentifier:CellID];
+        cell = [[MessageViewCell alloc] initWithMessage:message withBubbleMessageType: bubbleMessageType reuseIdentifier:cellID];
+        
         if (message.content.type == MESSAGE_AUDIO) {
             MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
             [audioView.microPhoneBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
             [audioView.playBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
+            
+            audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
+            audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
+            
+            if (self.playingIndexPath != nil &&
+                self.playingIndexPath.section == indexPath.section &&
+                self.playingIndexPath.row == indexPath.row) {
+                [audioView setPlaying:YES];
+                audioView.progressView.progress = self.player.currentTime/self.player.duration;
+            } else {
+                [audioView setPlaying:NO];
+            }
+            
+            [audioView setUploading:[[Outbox instance] isUploading:message]];
+            [audioView setDownloading:[[AudioDownloader instance] isDownloading:message]];
+            
         } else if(message.content.type == MESSAGE_IMAGE) {
             UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapImageView:)];
             [tap setNumberOfTouchesRequired: 1];
             MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
             [imageView.imageView addGestureRecognizer:tap];
+            
+            imageView.imageView.tag = indexPath.section<<16 | indexPath.row;
+            [imageView setUploading:[[Outbox instance] isUploading:message]];
+            
         } else if(message.content.type == MESSAGE_TEXT){
             
         }
     }
-    BubbleMessageType msgType;
 
-    if(message.sender == self.currentUID) {
-        msgType = BubbleMessageTypeOutgoing;
-    }else{
-        msgType = BubbleMessageTypeIncoming;
-    }
-
-    [cell setMessage:message msgType:msgType];
-    
-    
-    if (message.content.type == MESSAGE_AUDIO) {
-        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
-        audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
-        audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
-        
-        if (self.playingIndexPath != nil &&
-            self.playingIndexPath.section == indexPath.section &&
-            self.playingIndexPath.row == indexPath.row) {
-            [audioView setPlaying:YES];
-            audioView.progressView.progress = self.player.currentTime/self.player.duration;
-        } else {
-            [audioView setPlaying:NO];
-        }
-        
-        [audioView setUploading:[[Outbox instance] isUploading:message]];
-        [audioView setDownloading:[[AudioDownloader instance] isDownloading:message]];
-    } else if (message.content.type == MESSAGE_IMAGE) {
-        MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
-        imageView.imageView.tag = indexPath.section<<16 | indexPath.row;
-        [imageView setUploading:[[Outbox instance] isUploading:message]];
-    }
     cell.tag = indexPath.section<<16 | indexPath.row;
     
     UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self

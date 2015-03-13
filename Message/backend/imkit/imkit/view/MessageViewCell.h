@@ -12,7 +12,6 @@
 @property (strong, nonatomic) BubbleView *bubbleView;
 @property (weak, nonatomic) UIViewController *dgtController;
 
--(id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier;
+-(id)initWithMessage:(IMessage *)message withBubbleMessageType: (BubbleMessageType)bubbleMessageType reuseIdentifier:(NSString *)reuseIdentifier;
 
-- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType;
 @end

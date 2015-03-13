@@ -11,7 +11,7 @@
 @implementation MessageViewCell
 
 #pragma mark - Setup
-- (void)setup
+- (void)cleanBK
 {
     self.backgroundColor = [UIColor clearColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -27,10 +27,11 @@
 }
 
 
--(id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier {
+-(id)initWithMessage:(IMessage *)message withBubbleMessageType: (BubbleMessageType)bubbleMessageType reuseIdentifier:(NSString *)reuseIdentifier{
     self =  [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setup];
+        
+        [self cleanBK];
         
         CGFloat bubbleY = 0.0f;
         CGFloat bubbleX = 0.0f;
@@ -42,22 +43,40 @@
                                   self.contentView.frame.size.width - bubbleX,
                                   self.contentView.frame.size.height);
         
-        switch (type) {
+        BubbleMessageReceiveStateType receiveStateType;
+        if(message.isACK){
+            if (message.isPeerACK) {
+                receiveStateType =  BubbleMessageReceiveStateClient;
+            }else{
+                receiveStateType =  BubbleMessageReceiveStateServer;
+            }
+        }else{
+            receiveStateType =  BubbleMessageReceiveStateNone;
+        }
+        
+        switch (message.content.type) {
             case MESSAGE_AUDIO:
             {
                 MessageAudioView *audioView = [[MessageAudioView alloc] initWithFrame:frame];
+                [audioView initializeWithMsg:message withType:bubbleMessageType withMsgStateType:receiveStateType];
                 self.bubbleView = audioView;
             }
                 break;
             case MESSAGE_TEXT:
             {
                 MessageTextView *textView = [[MessageTextView alloc] initWithFrame:frame];
+                textView.text = message.content.text;
+                textView.type = bubbleMessageType;
+                textView.msgStateType = receiveStateType;
                 self.bubbleView = textView;
             }
                 break;
             case MESSAGE_IMAGE:
             {
                 MessageImageView *imageView = [[MessageImageView alloc] initWithFrame:frame];
+                imageView.data = message.content.imageURL;
+                imageView.type = bubbleMessageType;
+                imageView.msgStateType = receiveStateType;
                 self.bubbleView = imageView;
             }
                 break;
@@ -66,63 +85,20 @@
                 break;
         }
         
+        if (message.flags&MESSAGE_FLAG_FAILURE) {
+            [self.bubbleView showSendErrorBtn:YES];
+        }else{
+            [self.bubbleView showSendErrorBtn:NO];
+        }
+        
         if (self.bubbleView != nil) {
             [self.contentView addSubview:self.bubbleView];
             [self.contentView sendSubviewToBack:self.bubbleView];
             [self setBackgroundColor:[UIColor clearColor]];
         }
+
     }
     return self;
-}
-
-#pragma mark - Message Cell
-
-- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType {
-
-    
-    BubbleMessageReceiveStateType state;
-    if(message.isACK){
-        if (message.isPeerACK) {
-            state =  BubbleMessageReceiveStateClient;
-        }else{
-            state =  BubbleMessageReceiveStateServer;
-        }
-    }else{
-        state =  BubbleMessageReceiveStateNone;
-    }
-    
-    switch (message.content.type) {
-        case MESSAGE_TEXT:
-        {
-            MessageTextView *textView = (MessageTextView*)self.bubbleView;
-            textView.text = message.content.text;
-            textView.type = msgType;
-            textView.msgStateType = state;
-        }
-            break;
-        case MESSAGE_IMAGE:
-        {
-            MessageImageView *msgImageView = (MessageImageView*)self.bubbleView;
-            msgImageView.data = message.content.imageURL;
-            msgImageView.type = msgType;
-            msgImageView.msgStateType = state;
-        }
-            break;
-        case MESSAGE_AUDIO:
-        {
-            MessageAudioView *audioView = (MessageAudioView*)self.bubbleView;
-            [audioView initializeWithMsg:message withType:msgType withMsgStateType:state];
-        }
-            break;
-        default:
-            break;
-    }
-    if (message.flags&MESSAGE_FLAG_FAILURE) {
-        [self.bubbleView showSendErrorBtn:YES];
-    }else{
-        [self.bubbleView showSendErrorBtn:NO];
-    }
-
 }
 
 
