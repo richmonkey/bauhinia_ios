@@ -58,8 +58,6 @@
 @interface IMService : NSObject
 @property(nonatomic, copy) NSString *deviceID;
 @property(nonatomic, copy) NSString *token;
-@property(nonatomic)NSString *host;
-@property(nonatomic)int port;
 @property(nonatomic, assign)int connectState;
 @property(nonatomic, weak)id<IMPeerMessageHandler> peerMessageHandler;
 @property(nonatomic, weak)id<IMGroupMessageHandler> groupMessageHandler;

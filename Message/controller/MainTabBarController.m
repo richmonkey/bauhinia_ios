@@ -92,7 +92,9 @@
     
     [self startRefreshTimer];
 
+    [IMHttpAPI instance].accessToken = [Token instance].accessToken;
     [IMService instance].token = [Token instance].accessToken;
+    NSLog(@"access token:%@", [Token instance].accessToken);
     [[IMService instance] start];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];

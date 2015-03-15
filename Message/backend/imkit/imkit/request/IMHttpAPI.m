@@ -8,12 +8,19 @@
 
 #import "IMHttpAPI.h"
 
-#define API_URL @"http://gobelieve.io"
+#define API_URL @"http://api.gobelieve.io"
 @implementation IMHttpAPI
 
 
 +(IMHttpAPI*)instance {
-    return nil;
+    static IMHttpAPI *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!instance) {
+            instance = [[IMHttpAPI alloc] init];
+        }
+    });
+    return instance;
 }
 
 +(NSOperation*)uploadImage:(UIImage*)image success:(void (^)(NSString *url))success fail:(void (^)())fail {

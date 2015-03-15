@@ -16,7 +16,12 @@
 
 #define HEARTBEAT (180ull*NSEC_PER_SEC)
 
+#define HOST  @"imnode.gobelieve.io"
+#define PORT 23000
+
 @interface IMService()
+@property(nonatomic)NSString *host;
+@property(nonatomic)int port;
 @property(atomic, copy) NSString *hostIP;
 @property(atomic, assign) time_t timestmap;
 
@@ -75,6 +80,8 @@
         self.suspended = YES;
         self.reachable = YES;
         self.isBackground = NO;
+        self.host = HOST;
+        self.port = PORT;
     }
     return self;
 }
