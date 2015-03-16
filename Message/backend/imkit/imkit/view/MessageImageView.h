@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BubbleView.h"
+#import "IMessage.h"
 
 #define  kMessageImagViewHeight 120
 
@@ -18,6 +19,8 @@
 
 @property (nonatomic) id data;
 
+- (id)initWithFrame:(CGRect)frame withType:(BubbleMessageType)type;
+-(void)initializeWithMsg:(IMessage *)msg withMsgStateType:(BubbleMessageReceiveStateType)stateType;
 -(void) setUploading:(BOOL)uploading;
 
 @end

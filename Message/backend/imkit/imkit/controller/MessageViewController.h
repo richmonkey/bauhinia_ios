@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <imsdk/IMService.h>
+#import "BCTextView.h"
 
 @interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
-    MessageObserver,  UIActionSheetDelegate>
+    MessageObserver,  UIActionSheetDelegate,BCTextViewDelegate>
 
 @property(nonatomic, assign) int64_t currentUID;
 @property(nonatomic, assign) int64_t peerUID;

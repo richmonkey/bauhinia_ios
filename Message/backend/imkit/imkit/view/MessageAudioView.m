@@ -30,9 +30,9 @@
 
 @implementation MessageAudioView
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame withType:(BubbleMessageType)type
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:frame withType:type];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         CGRect rect = CGRectMake(kMargin, 0, kPlayBtnWidth, kPlayBtnHeight);
@@ -75,8 +75,8 @@
     return self;
 }
 
--(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType{
-    [super setType:type];
+-(void)initializeWithMsg:(IMessage *)msg withMsgStateType:(BubbleMessageReceiveStateType)stateType{
+
     [super setMsgStateType:stateType];
     _msg = msg;
     [self updatePosition];
@@ -156,10 +156,6 @@
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
-    UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
-    CGRect bubbleFrame = [self bubbleFrame];
-	[image drawInRect:bubbleFrame];
-    [self drawMsgStateSign: rect];
 }
 
 -(void)setDownloading:(BOOL)downloading {

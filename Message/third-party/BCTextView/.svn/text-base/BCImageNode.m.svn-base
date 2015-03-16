@@ -1,0 +1,82 @@
+#import "BCImageNode.h"
+
+
+@implementation BCImageNode
+@synthesize image;
+@synthesize imageWidth, imageHeight;
+
+- (id)initWithImage:(UIImage *)img link:(BOOL)isLink {
+	if ((self = [super init])) {
+		self.image = img;
+		self.link = isLink;
+        imageWidth = img.size.width;
+        imageHeight = img.size.height;
+	}
+	return self;
+}
+
+- (void)dealloc {
+	self.image = nil;
+	[super dealloc];
+}
+
+- (CGFloat)width {
+	return imageWidth;
+}
+
+- (CGFloat)height {
+	return imageHeight;
+}
+
+- (void)drawAtPoint:(CGPoint)point {
+    CGRect rect = CGRectMake(point.x, point.y, imageWidth, imageHeight);
+    [self.image drawInRect:rect];
+    
+//	[self.image drawAtPoint:point];
+}
+
+
+
+@end
+
+
+@implementation BCCustomImageNode
+//@synthesize image;
+@synthesize imageWidth, imageHeight;
+@synthesize chatPic;
+
+- (id)initWithChatPic:(ChatPic *)_chatPic link:(BOOL)isLink {
+	if ((self = [super init])) {
+		self.chatPic = _chatPic;
+		self.link = isLink;
+        imageWidth = self.chatPic.ivPic.image.size.width;
+        imageHeight = self.chatPic.ivPic.image.size.height;
+	}
+	return self;
+}
+
+- (void)dealloc {
+//	self.image = nil;
+	self.chatPic = nil;
+    [super dealloc];
+}
+
+- (CGFloat)width {
+	return self.chatPic.ivPic.image.size.width;
+}
+
+- (CGFloat)height {
+	return self.chatPic.ivPic.image.size.height;
+}
+
+- (void)drawAtPoint:(CGPoint)point {
+//    CGRect rect = CGRectMake(point.x, point.y, imageWidth, imageHeight);
+//    [self.chatPic drawInRect:rect];
+    
+    [self.chatPic drawRect:CGRectMake(point.x, point.y, self.chatPic.ivPic.image.size.width, self.chatPic.ivPic.image.size.height)];
+//    [self.chatPic drawAtPoint:point];
+}
+
+
+
+@end

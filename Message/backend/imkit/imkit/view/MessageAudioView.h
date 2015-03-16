@@ -23,7 +23,8 @@
 
 @property (nonatomic ,strong) IMessage *msg;
 
--(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType;
+- (id)initWithFrame:(CGRect)frame withType:(BubbleMessageType)type;
+-(void)initializeWithMsg:(IMessage *)msg withMsgStateType:(BubbleMessageReceiveStateType)stateType;
 
 -(void)setPlaying:(BOOL)playing;
 -(void)setDownloading:(BOOL)downloading;

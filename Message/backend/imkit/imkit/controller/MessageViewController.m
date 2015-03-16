@@ -75,6 +75,7 @@
 @property(nonatomic) UIRefreshControl *refreshControl;
 
 @property(nonatomic) IMessage *selectedMessage;
+@property(nonatomic) NSString *selectedUrlStr;
 @property(nonatomic, weak) MessageViewCell *selectedCell;
 
 - (void)setup;
@@ -109,7 +110,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
- 
+    
     [self setup];
 
     [self setNormalNavigationButtons];
@@ -967,48 +968,55 @@
     
     if(!cell) {
         cell = [[MessageViewCell alloc] initWithMessage:message withBubbleMessageType: bubbleMessageType reuseIdentifier:cellID];
-        
-        if (message.content.type == MESSAGE_AUDIO) {
-            MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
-            [audioView.microPhoneBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
-            [audioView.playBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
-            
-            audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
-            audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
-            
-            if (self.playingIndexPath != nil &&
-                self.playingIndexPath.section == indexPath.section &&
-                self.playingIndexPath.row == indexPath.row) {
-                [audioView setPlaying:YES];
-                audioView.progressView.progress = self.player.currentTime/self.player.duration;
-            } else {
-                [audioView setPlaying:NO];
-            }
-            
-            [audioView setUploading:[[Outbox instance] isUploading:message]];
-            [audioView setDownloading:[[AudioDownloader instance] isDownloading:message]];
-            
-        } else if(message.content.type == MESSAGE_IMAGE) {
-            UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapImageView:)];
-            [tap setNumberOfTouchesRequired: 1];
-            MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
-            [imageView.imageView addGestureRecognizer:tap];
-            
-            imageView.imageView.tag = indexPath.section<<16 | indexPath.row;
-            [imageView setUploading:[[Outbox instance] isUploading:message]];
-            
-        } else if(message.content.type == MESSAGE_TEXT){
-            
-        }
+    }else{
+        [cell initializeWithMessage:message withBubbleMessageType:bubbleMessageType];
     }
-
-    cell.tag = indexPath.section<<16 | indexPath.row;
     
-    UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                                             action:@selector(handleLongPress:)];
-    [recognizer setMinimumPressDuration:0.4];
-    [cell addGestureRecognizer:recognizer];
-    
+    if (message.content.type == MESSAGE_AUDIO) {
+        MessageAudioView *audioView = (MessageAudioView*)cell.bubbleView;
+        [audioView.microPhoneBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
+        [audioView.playBtn addTarget:self action:@selector(AudioAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        audioView.microPhoneBtn.tag = indexPath.section<<16 | indexPath.row;
+        audioView.playBtn.tag = indexPath.section<<16 | indexPath.row;
+        
+        if (self.playingIndexPath != nil &&
+            self.playingIndexPath.section == indexPath.section &&
+            self.playingIndexPath.row == indexPath.row) {
+            [audioView setPlaying:YES];
+            audioView.progressView.progress = self.player.currentTime/self.player.duration;
+        } else {
+            [audioView setPlaying:NO];
+        }
+        
+        [audioView setUploading:[[Outbox instance] isUploading:message]];
+        [audioView setDownloading:[[AudioDownloader instance] isDownloading:message]];
+        
+    } else if(message.content.type == MESSAGE_IMAGE) {
+        UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapImageView:)];
+        [tap setNumberOfTouchesRequired: 1];
+        MessageImageView *imageView = (MessageImageView*)cell.bubbleView;
+        [imageView.imageView addGestureRecognizer:tap];
+        
+        imageView.imageView.tag = indexPath.section<<16 | indexPath.row;
+        [imageView setUploading:[[Outbox instance] isUploading:message]];
+       
+        cell.tag = indexPath.section<<16 | indexPath.row;
+        
+        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                 action:@selector(handleLongPress:)];
+        [recognizer setMinimumPressDuration:0.4];
+        [cell addGestureRecognizer:recognizer];
+        
+    } else if(message.content.type == MESSAGE_TEXT){
+        MessageTextView* textView = (MessageTextView*)cell.bubbleView;
+        textView.bcTextView.delegate = self;
+       
+        cell.tag = indexPath.section<<16 | indexPath.row;
+        textView.bcTextView.tag  = cell.tag;
+        
+    }
+   
     return cell;
 }
 
@@ -1042,7 +1050,7 @@
     }
     switch (msg.content.type) {
         case MESSAGE_TEXT:
-            return [BubbleView cellHeightForText:msg.content.text];
+            return [MessageTextView cellHeightForText:msg.content.text];
         case  MESSAGE_IMAGE:
             return kMessageImagViewHeight;
             break;
@@ -1768,6 +1776,33 @@
     [self resignFirstResponder];
 }
 
+/**
+ *  copy URL
+ *
+ *  @param sender
+ */
+-(void)copyURL:(id)sender{
+    if (self.selectedUrlStr== nil) {
+        return;
+    }
+    NSLog(@"copy url...");
+    [[UIPasteboard generalPasteboard] setString:self.selectedUrlStr];
+    [self resignFirstResponder];
+}
+
+/**
+ *  jump the url
+ *
+ *  @param sender
+ */
+- (void)jumpTo:(id)sender{
+    if (self.selectedUrlStr == nil) {
+        return;
+    }
+    NSLog(@"url jump");
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.selectedUrlStr]];
+}
+
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
@@ -1837,6 +1872,94 @@
 
 + (void)playMessageSentSound {
     [self playSoundWithName:@"messageSent" type:@"aiff"];
+}
+
+#pragma mark - BCTextViewDelegate
+- (void)didClickAtLink:(NSString*)url{
+    
+}
+- (void)didClickAtImageLink:(NSString*)url{
+    
+}
+- (void)didClickAtURLLink:(NSString*)urlString inBCTextView:(BCTextView *)bcTextView{
+    NSLog(@"URL Click");
+    int row = bcTextView.tag & 0xffff;
+    int section = (int)(bcTextView.tag >> 16);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    MessageViewCell *fatherCell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+    if (fatherCell==nil) {
+        return;
+    }
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return;
+    }
+    
+    NSMutableArray *menuItems = [NSMutableArray array];
+    
+    
+    UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"拷贝" action:@selector(copyURL:)];
+    [menuItems addObject:item];
+    
+    UIMenuItem *urlItem = [[UIMenuItem alloc] initWithTitle:@"跳转" action:@selector(jumpTo:)];
+    [menuItems addObject:urlItem];
+    
+    if ([menuItems count] == 0) {
+        return;
+    }
+
+    self.selectedUrlStr = urlString;
+    self.selectedCell = fatherCell;
+    
+    UIMenuController *menu = [UIMenuController sharedMenuController];
+    menu.menuItems = menuItems;
+    CGRect targetRect = [fatherCell convertRect:[fatherCell.bubbleView bubbleFrame]
+                                       fromView:fatherCell.bubbleView];
+    [menu setTargetRect:CGRectInset(targetRect, 0.0f, 4.0f) inView:fatherCell];
+    
+    [menu setMenuVisible:YES animated:YES];
+}
+
+- (void)didClickAtNotLinkAreaInBCTextView:(BCTextView*)_bcTxtView{
+    
+    int row = _bcTxtView.tag & 0xffff;
+    int section = (int)(_bcTxtView.tag >> 16);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    MessageViewCell *fatherCell = (MessageViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+    if (fatherCell==nil) {
+        return;
+    }
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return;
+    }
+    
+    NSMutableArray *menuItems = [NSMutableArray array];
+    
+    
+    if (message.content.type == MESSAGE_TEXT) {
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"拷贝" action:@selector(copyText:)];
+        [menuItems addObject:item];
+    }
+    if (message.isFailure) {
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"重发" action:@selector(resend:)];
+        [menuItems addObject:item];
+    }
+    if ([menuItems count] == 0) {
+        return;
+    }
+    
+    
+    self.selectedMessage = message;
+    self.selectedCell = fatherCell;
+    
+    UIMenuController *menu = [UIMenuController sharedMenuController];
+    menu.menuItems = menuItems;
+    CGRect targetRect = [fatherCell convertRect:[fatherCell.bubbleView bubbleFrame]
+                                       fromView:fatherCell.bubbleView];
+    [menu setTargetRect:CGRectInset(targetRect, 0.0f, 4.0f) inView:fatherCell];
+    
+    [menu setMenuVisible:YES animated:YES];
 }
 
 @end

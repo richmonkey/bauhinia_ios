@@ -8,81 +8,85 @@
 
 #import "MessageTextView.h"
 #import "Constants.h"
-
+#import "StringUtil.h"
 
 @implementation MessageTextView
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame withType:(BubbleMessageType)type
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:frame withType:type];
     if (self) {
-      
+
     }
     return self;
 }
 
-- (void)setText:(NSString *)newText
-{
-    _text = newText;
-    [self setNeedsDisplay];
+-(void)initializeWithMsg:(IMessage *)msg withMsgStateType:(BubbleMessageReceiveStateType)stateType{
+    _text = [StringUtil runsForString:msg.content.text];
+    
+    CGSize textSize = [BubbleView textSizeForText:msg.content.text];
+    
+    BCTextFrame* textFrame = [[BCTextFrame alloc] initWithHTML:msg.content.text];
+    textFrame.fontSize = 14.0;
+    textFrame.width = textSize.width;
+    
+    CGFloat textX =  (self.type == BubbleMessageTypeOutgoing ? super.bubleBKView.frame.origin.x : 0.0f);
+    CGRect textRect = CGRectMake(textX,
+                                   0,
+                                  textSize.width,
+                                  textFrame.height + kMarginBottom);
+    
+    self.bcTextView = [[BCTextView alloc] initWithHTML:_text];
+    self.bcTextView.backgroundColor = RGBACOLOR(100, 100, 100, 0);
+    self.bcTextView.fontSize = 14.0f;
+    self.bcTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    [self addSubview:self.bcTextView];
+    [self.bcTextView setFrame:textRect];
+    
+    CGSize bubbleSize =
+    CGSizeMake(self.bcTextView.frame.size.width + kBubblePaddingRight,
+               self.bcTextView.frame.size.height);
+    
+    [self.bubleBKView setFrame:  CGRectMake(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f,
+                                            0,
+                                            bubbleSize.width,
+                                             kPaddingTop+bubbleSize.height+kPaddingBottom+kMarginBottom)];
+    
+    textX = super.bubleBKView.image.leftCapWidth  + (self.type == BubbleMessageTypeOutgoing ? super.bubleBKView.frame.origin.x : 0.0f);
+    
+     textRect = CGRectMake(textX,
+                              kPaddingTop,
+                           textSize.width,
+                           textSize.height+kPaddingTop);
+    [self.bcTextView setFrame:textRect];
+   
+    
+    [self setMsgStateType:stateType];
 }
 
 #pragma mark - Drawing
 - (CGRect)bubbleFrame{
 
-    CGSize bubbleSize = [BubbleView bubbleSizeForText:self.text];
-    return CGRectMake(floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
-                      floorf(kMarginTop),
-                      floorf(bubbleSize.width),
-                      floorf(bubbleSize.height));
+    CGSize bubbleSize =
+    CGSizeMake(self.bcTextView.frame.size.width + kBubblePaddingRight,
+               self.bcTextView.frame.size.height);
+    return CGRectMake(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f,
+                      0,
+                      bubbleSize.width,
+                      kPaddingTop+bubbleSize.height+ kMarginBottom + kPaddingBottom);
     
 }
 
-- (void)drawRect:(CGRect)frame{
-    [super drawRect:frame];
++(float) cellHeightForText:(NSString*)txt{
     
-    UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
+    CGSize textSize = [BubbleView textSizeForText:txt];
     
-    CGRect bubbleFrame = [self bubbleFrame];
-	[image drawInRect:bubbleFrame];
+    BCTextFrame* textFrame = [[BCTextFrame alloc] initWithHTML:txt];
+    textFrame.fontSize = 14.0;
+    textFrame.width = textSize.width;
     
-    [self drawMsgStateSign: frame];
-    
-    CGSize textSize = [BubbleView textSizeForText:self.text];
-    
-    CGFloat textX = image.leftCapWidth  + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
-    
-    CGRect textFrame = CGRectMake(textX,
-                                  kPaddingTop + kMarginTop - 2,
-                                  textSize.width,
-                                  textSize.height);
-    
-    if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending){
-        UIColor* textColor = RGBACOLOR(31.0f, 31.0f, 31.0f, 1.0f);
-        if (self.selectedToShowCopyMenu){
-            textColor = RGBACOLOR(91.0f, 91.0f, 91.0f, 1.0f);
-        }
-        
-        NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        [paragraphStyle setAlignment:NSTextAlignmentLeft];
-        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-        
-        NSDictionary* attributes = @{NSFontAttributeName: [BubbleView font],
-                                     NSParagraphStyleAttributeName: paragraphStyle};
-        
-        
-        NSMutableDictionary* dict = [attributes mutableCopy];
-        [dict setObject:textColor forKey:NSForegroundColorAttributeName];
-        attributes = [NSDictionary dictionaryWithDictionary:dict];
-        
-        [self.text drawInRect:textFrame
-               withAttributes:attributes];
-    }else{
-        [self.text drawInRect:textFrame
-                     withFont:[BubbleView font]
-                lineBreakMode:NSLineBreakByWordWrapping
-                    alignment:NSTextAlignmentLeft];
-    }
+    return kPaddingTop+textFrame.height+ kMarginBottom + kPaddingBottom;
 }
 
 

@@ -14,60 +14,40 @@ CGFloat const kJSAvatarSize = 50.0f;
 @implementation BubbleView
 
 #pragma mark - Initialization
-- (id)initWithFrame:(CGRect)rect
+- (id)initWithFrame:(CGRect)frame withType:(BubbleMessageType)type
 {
-    self = [super initWithFrame:rect];
+    self = [super initWithFrame:frame];
     if(self) {
+        
+        self.type = type;
+        
         self.backgroundColor = [UIColor clearColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        
+        CGRect bubbleFrame = [self bubbleFrame];
+        self.bubleBKView = [[UIImageView alloc] initWithFrame:bubbleFrame];
+        [self.bubleBKView setImage:(self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage]];
+        [self addSubview:self.bubleBKView];
+        
         self.msgSendErrorBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
         [self.msgSendErrorBtn setImage:[UIImage imageNamed:@"MessageSendError"] forState:UIControlStateNormal];
         [self.msgSendErrorBtn setImage:[UIImage imageNamed:@"MessageSendError"]  forState: UIControlStateHighlighted];
         self.msgSendErrorBtn.hidden = YES;
         [self addSubview:self.msgSendErrorBtn];
+        
+        self.msgSignImgView = [[UIImageView alloc] init];
+        [self addSubview:self.msgSignImgView];
+        
     }
     return self;
 }
 
 #pragma mark - Setters
-- (void)setType:(BubbleMessageType)newType
-{
-    _type = newType;
-    [self setNeedsDisplay];
-}
 
 - (void) setMsgStateType:(BubbleMessageReceiveStateType)type{
     _msgStateType = type;
-    [self setNeedsDisplay];
-}
-
-- (void)setSelectedToShowCopyMenu:(BOOL)isSelected{
-    _selectedToShowCopyMenu = isSelected;
-    [self setNeedsDisplay];
-}
-
-#pragma mark - Drawing
-- (CGRect)bubbleFrame{
-    NSLog(@"act对象消息");
-    return CGRectMake(0, 0, 0, 0);
-}
-
-- (UIImage *)bubbleImage{
-    return [BubbleView bubbleImageForType:self.type];
-}
-
-- (UIImage *)bubbleImageHighlighted{
-    return (self.type == BubbleMessageTypeIncoming) ? [UIImage bubbleDefaultIncomingSelected] : [UIImage bubbleDefaultOutgoingSelected];
-}
-
--(void) showSendErrorBtn:(BOOL)show{
-    if (self.type == BubbleMessageTypeOutgoing) {
-        [self.msgSendErrorBtn setHidden:!show];
-    }
-
-}
-
--(void) drawMsgStateSign:(CGRect) frame{
+    
     if (self.type == BubbleMessageTypeOutgoing) {
         UIImage *msgSignImg = nil;
         switch (_msgStateType) {
@@ -95,18 +75,45 @@ CGFloat const kJSAvatarSize = 50.0f;
         CGFloat imgX = bubbleFrame.origin.x + bubbleFrame.size.width - msgSignImg.size.width;
         imgX = self.type == BubbleMessageTypeOutgoing ?(imgX - 15):(imgX - 5);
         
-        CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
+        CGRect msgStateSignRect = CGRectMake(imgX, bubbleFrame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
+
+        [self.msgSignImgView setFrame:msgStateSignRect];
+        [self.msgSignImgView setImage:msgSignImg];
+    }
+}
+
+- (void)setSelectedToShowCopyMenu:(BOOL)isSelected{
+    _selectedToShowCopyMenu = isSelected;
+    [self setNeedsDisplay];
+}
+
+#pragma mark - Drawing
+- (CGRect)bubbleFrame{
+    NSLog(@"act对象消息");
+    return CGRectMake(0, 0, 0, 0);
+}
+
+- (UIImage *)bubbleImage{
+    return [BubbleView bubbleImageForType:self.type];
+}
+
+- (UIImage *)bubbleImageHighlighted{
+    return (self.type == BubbleMessageTypeIncoming) ? [UIImage bubbleDefaultIncomingSelected] : [UIImage bubbleDefaultOutgoingSelected];
+}
+
+-(void) showSendErrorBtn:(BOOL)show{
+    if (self.type == BubbleMessageTypeOutgoing) {
+        [self.msgSendErrorBtn setHidden:!show];
         
-        [msgSignImg drawInRect:msgStateSignRect];
-        
-        
-        imgX = bubbleFrame.origin.x;
+        CGRect bubbleFrame = [self bubbleFrame];
+        CGFloat imgX = bubbleFrame.origin.x;
         CGRect rect = self.msgSendErrorBtn.frame;
         rect.origin.x = imgX - self.msgSendErrorBtn.frame.size.width + 2;
         rect.origin.y = bubbleFrame.origin.y + bubbleFrame.size.height  - self.msgSendErrorBtn.frame.size.height - kMarginBottom;
         [self.msgSendErrorBtn setFrame:rect];
         [self bringSubviewToFront:self.msgSendErrorBtn];
     }
+
 }
 
 #pragma mark - Bubble view
@@ -167,14 +174,11 @@ CGFloat const kJSAvatarSize = 50.0f;
     
 }
 
-+ (CGFloat)cellHeightForText:(NSString *)txt
-{
-    return [BubbleView bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
-}
+//+ (CGFloat)cellHeightForText:(NSString *)txt
+//{
+//    return [BubbleView bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
+//}
 
-+ (CGFloat)cellHeightForImage:(UIImage *)image{
-    return [BubbleView bubbleSizeForImage:image].height + kMarginTop + kMarginBottom;
-}
 
 + (int)maxCharactersPerLine
 {
