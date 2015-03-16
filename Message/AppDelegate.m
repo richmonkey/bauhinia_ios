@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import <imsdk/IMService.h>
+#import <imkit/IMHttpAPI.h>
 #import <imkit/PeerMessageHandler.h>
 #import <imkit/GroupMessageHandler.h>
 #import "Token.h"
@@ -23,8 +24,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //配置im server地址
-    [IMService instance].host = [Config instance].host;
-    [IMService instance].port = [Config instance].port;
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
@@ -36,6 +35,9 @@
     
     Token *token = [Token instance];
     if (token.accessToken) {
+        [IMHttpAPI instance].accessToken = [Token instance].accessToken;
+        [IMService instance].token = [Token instance].accessToken;
+        NSLog(@"access token:%@", [Token instance].accessToken);
         UITabBarController *tabController = [[MainTabBarController alloc] init];
         self.tabBarController = tabController;
         self.window.rootViewController = tabController;
@@ -61,7 +63,7 @@
     
     Token *token = [Token instance];
     if (token.uid > 0) {
-        [APIRequest bindDeviceToken:self.deviceToken
+        [IMHttpAPI bindDeviceToken:self.deviceToken
                             success:^{
                                 NSLog(@"bind device token success");
                             }

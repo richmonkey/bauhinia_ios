@@ -23,8 +23,6 @@
 -(id)init {
     self = [super init];
     if (self) {
-        self.host = @"gobelieve.io";
-        self.port = 23000;
     }
     return self;
 }
