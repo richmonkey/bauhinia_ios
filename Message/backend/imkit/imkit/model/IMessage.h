@@ -14,6 +14,7 @@
 #define MESSAGE_IMAGE 2
 #define MESSAGE_AUDIO 3
 #define MESSAGE_LOCATION 4
+#define MESSAGE_NOTIFICATION 5 //群通知
 
 
 #define MESSAGE_FLAG_DELETE 1
@@ -30,6 +31,11 @@
 @end
 
 @interface MessageContent : NSObject
+
+- (id)initWithText:(NSString*)text;
+- (id)initWithImageURL:(NSString*)imageURL;
+- (id)initWithAudio:(Audio*)audio;
+
 @property(nonatomic)int type;
 @property(nonatomic)NSString *raw;
 
@@ -37,6 +43,7 @@
 @property(nonatomic, readonly)NSString *imageURL;
 @property(nonatomic, readonly)Audio *audio;
 @property(nonatomic, readonly)CLLocationCoordinate2D location;
+@property(nonatomic, readonly)NSString *notification;
 
 -(NSString*) littleImageURL;
 

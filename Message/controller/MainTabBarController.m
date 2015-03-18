@@ -101,13 +101,9 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onNewMessage:) name:ON_NEW_MESSAGE_NOTIFY object:nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearNewMessage:) name:CLEAR_TAB_BAR_NEW_MESSAGE_NOTIFY object:nil];
-
-    [[self tabBar] setTintColor: RGBACOLOR(48,176,87, 1)];
-    [[self tabBar] setBarTintColor: RGBACOLOR(245, 245, 246, 1)];
-    
+    [[self tabBar] setTintColor:RGBACOLOR(48,176,87, 1)];
+    [[self tabBar] setBarTintColor:RGBACOLOR(245, 245, 246, 1)];
 }
 
 
@@ -166,18 +162,6 @@
         dispatch_time_t w = dispatch_walltime(NULL, (token.expireTimestamp - now - 1)*NSEC_PER_SEC);
         dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);
     }
-}
-
--(void) onNewMessage:(NSNotification*)ntf{
-    UITabBar *tabBar = self.tabBar;
-    UITabBarItem * cc =  [tabBar.items objectAtIndex: 2];
-    [cc setBadgeValue:@""];
-}
-
--(void) clearNewMessage:(NSNotification*)ntf{
-    UITabBar *tabBar = self.tabBar;
-    UITabBarItem * cc =  [tabBar.items objectAtIndex: 2];
-    [cc setBadgeValue:nil];
 }
 
 -(void)startRefreshTimer {

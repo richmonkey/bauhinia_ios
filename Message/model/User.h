@@ -22,12 +22,8 @@
 //最后上线时间
 @property(nonatomic, assign)int64_t lastUpTimestamp;
 
-@end
-
-@interface IMUser : User
-
-@property(nonatomic)ABContact *contact;
-
+@property(nonatomic) NSString *contactName;
 -(NSString*) displayName;
 
 @end
+

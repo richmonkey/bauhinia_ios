@@ -53,6 +53,7 @@
 -(void)onGroupMessage:(IMMessage*)msg;
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid;
 -(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid;
+-(void)onGroupNotification:(NSString*)notification;
 @end
 
 @interface IMService : NSObject
@@ -70,7 +71,8 @@
 -(void)enterForeground;
 -(void)enterBackground;
 
--(void)sendPeerMessage:(IMMessage*)msg;
+-(BOOL)sendPeerMessage:(IMMessage*)msg;
+-(BOOL)sendGroupMessage:(IMMessage*)msg;
 
 //正在输入
 -(void)sendInputing:(MessageInputing*)inputing;

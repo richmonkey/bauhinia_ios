@@ -199,6 +199,9 @@
 		6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3619C0A5D50027A658 /* Reachability.m */; };
 		6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4419C4BE1D0027A658 /* Token.m */; };
 		6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4719C4BF340027A658 /* APIRequest.m */; };
+		6DFDA0311AB98EF600EF553A /* NewGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DFDA02F1AB98EF600EF553A /* NewGroupViewController.m */; };
+		6DFDA0321AB98EF600EF553A /* NewGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */; };
+		6DFDA0351AB991E200EF553A /* AddGroupMemberTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -568,6 +571,11 @@
 		6DB0AA4419C4BE1D0027A658 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6DB0AA4619C4BF340027A658 /* APIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIRequest.h; sourceTree = "<group>"; };
 		6DB0AA4719C4BF340027A658 /* APIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIRequest.m; sourceTree = "<group>"; };
+		6DFDA02E1AB98EF600EF553A /* NewGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewGroupViewController.h; sourceTree = "<group>"; };
+		6DFDA02F1AB98EF600EF553A /* NewGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewGroupViewController.m; sourceTree = "<group>"; };
+		6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewGroupViewController.xib; sourceTree = "<group>"; };
+		6DFDA0331AB991E200EF553A /* AddGroupMemberTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGroupMemberTableViewController.h; sourceTree = "<group>"; };
+		6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddGroupMemberTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -631,6 +639,11 @@
 				217F2C2F196D62680064F478 /* MessageShowThePotraitViewController.m */,
 				6D776313197B6D6B0090D511 /* MainTabBarController.h */,
 				6D776314197B6D6B0090D511 /* MainTabBarController.m */,
+				6DFDA02E1AB98EF600EF553A /* NewGroupViewController.h */,
+				6DFDA02F1AB98EF600EF553A /* NewGroupViewController.m */,
+				6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */,
+				6DFDA0331AB991E200EF553A /* AddGroupMemberTableViewController.h */,
+				6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -1422,6 +1435,7 @@
 				4875B0DC1AAC91CA001D1435 /* BrdtDoubleCheck@2x.png in Resources */,
 				4875B0DE1AAC91CA001D1435 /* BubbleIncomingSelected@2x.png in Resources */,
 				4875B11A1AAC91CA001D1435 /* MessageTableSectionHeaderView.xib in Resources */,
+				6DFDA0321AB98EF600EF553A /* NewGroupViewController.xib in Resources */,
 				4875B0FE1AAC91CA001D1435 /* MicNewIncoming.png in Resources */,
 				48731E2019C5F17900FF8A7C /* CheckVerifyCodeController.xib in Resources */,
 				4875B0EE1AAC91CA001D1435 /* GroupChatRound.png in Resources */,
@@ -1495,6 +1509,7 @@
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
 				489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */,
 				489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */,
+				6DFDA0311AB98EF600EF553A /* NewGroupViewController.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
@@ -1550,6 +1565,7 @@
 				2173C66D19738745004A88A5 /* UIImage+WebP.m in Sources */,
 				21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */,
 				48860CA019CFC8FF00DF7466 /* UIApplication+Util.m in Sources */,
+				6DFDA0351AB991E200EF553A /* AddGroupMemberTableViewController.m in Sources */,
 				21798FA3194E9C4600B67C1F /* main.m in Sources */,
 				2157372919850AEE0071C2EF /* ContactHeaderView.m in Sources */,
 				21150CA1196F78A5009DE9DE /* UserDB.m in Sources */,

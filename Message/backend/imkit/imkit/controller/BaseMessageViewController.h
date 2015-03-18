@@ -25,6 +25,7 @@
 - (BOOL)markMesageListened:(IMessage*)msg;
 - (BOOL)eraseMessageFailure:(IMessage*)msg;
 
+- (void)sendMessage:(IMessage*)msg;
 
 //protected
 @property(nonatomic) NSMutableArray *messageArray;

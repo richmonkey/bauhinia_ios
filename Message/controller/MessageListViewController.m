@@ -9,17 +9,20 @@
 #import "MessageListViewController.h"
 #import <imkit/MessageViewController.h>
 #import <imkit/PeerMessageDB.h>
+#import <imkit/GroupMessageDB.h>
 #import <imkit/IMessage.h>
 #import <imkit/PeerMessageViewController.h>
 
 #import "pinyin.h"
 #import "MessageGroupConversationCell.h"
+#import "NewGroupViewController.h"
 #import "UserDB.h"
 #import "UIImageView+WebCache.h"
 #import "UserPresent.h"
 #import "JSBadgeView.h"
 
 #import "APIRequest.h"
+#import "LevelDB.h"
 
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
@@ -64,6 +67,14 @@
     self.title = @"对话";
 
     
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"新增群组"
+                                                             style:UIBarButtonItemStyleDone
+                                                            target:self
+                                                            action:@selector(newGroup)];
+    
+    self.navigationItem.rightBarButtonItem = item;
+    
+    
     self.tableview = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	self.tableview.delegate = self;
 	self.tableview.dataSource = self;
@@ -92,30 +103,46 @@
     
     [[IMService instance] addMessageObserver:self];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:SEND_FIRST_MESSAGE_OK object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newGroup:) name:CREATE_NEW_GROUP object:nil];
     
-   [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearAllConversation:) name:CLEAR_ALL_CONVESATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newGroupMessage:) name:LATEST_GROUP_MESSAGE object:nil];
     
-   [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSingleConvNewState:) name:CLEAR_SINGLE_CONV_NEW_MESSAGE_NOTIFY object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:LATEST_PEER_MESSAGE object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearAllConversation:) name:CLEAR_ALL_CONVESATION object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSingleConvNewState:) name:CLEAR_PEER_NEW_MESSAGE object:nil];
     
     UserDB *db = [UserDB instance];
     id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
     
     Conversation * conversation = [iterator next];
     while (conversation) {
-        IMUser *user = [db loadUser:conversation.cid];
+        User *user = [db loadUser:conversation.cid];
         conversation.name = [user displayName];
         conversation.avatarURL = user.avatarURL;
         [self.conversations addObject:conversation];
         conversation = [iterator next];
     }
     
+    iterator = [[GroupMessageDB instance] newConversationIterator];
+    conversation = [iterator next];
+    while (conversation) {
+        NSString *key = [NSString stringWithFormat:@"groups_%lld", conversation.cid];
+        NSString *name = [[LevelDB defaultLevelDB] stringForKey:key];
+        conversation.name = name;
+        conversation.avatarURL = @"";
+        [self.conversations addObject:conversation];
+        conversation = [iterator next];
+    }
+    
+    
     if ([[IMService instance] connectState] == STATE_CONNECTING) {
         [self showConectingState];
     }
     
     
-    [self updateEmputyContentView];
+    [self updateEmptyContentView];
     
     [APIRequest checkVersion:@"ios"
                     success:^(NSDictionary *resp){
@@ -154,11 +181,16 @@
 -(void)onExternalChange {
     UserDB *db = [UserDB instance];
     for (Conversation *conv in self.conversations) {
-        IMUser *user = [db loadUser:conv.cid];
+        User *user = [db loadUser:conv.cid];
         conv.name = user.displayName;
         conv.avatarURL = user.avatarURL;
     }
     [self.tableview reloadData];
+}
+
+- (void)newGroup {
+    NewGroupViewController *ctl = [[NewGroupViewController alloc] initWithNibName:@"NewGroupViewController" bundle:nil];
+    [self.navigationController pushViewController:ctl animated:YES];
 }
 
 #pragma mark - Table view data source
@@ -168,22 +200,19 @@
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (tableView == self.tableview) {
-        
         return [self.conversations count];
     }else{
         return self.filteredArray.count;
     }
-    
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return kPeerConversationCellHeight;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //peer
     MessageConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageConversationCell"];
     
@@ -192,18 +221,12 @@
     }
     Conversation * conv = nil;
     if (tableView == self.tableview) {
-        
-         conv =   (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
-    
-    }else{
-        
-        conv =   (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
+        conv = (Conversation*)[self.conversations objectAtIndex:(indexPath.row)];
+    } else {
+        conv = (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
     }
     
-
-    
     [cell.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
-    
 
     if (conv.message.content.type == MESSAGE_IMAGE) {
         cell.messageContent.text = @"一张图片";
@@ -213,6 +236,8 @@
         cell.messageContent.text = @"一个地理位置";
     }else if (conv.message.content.type == MESSAGE_AUDIO){
        cell.messageContent.text = @"一个音频";
+    } else if (conv.message.content.type == MESSAGE_NOTIFICATION) {
+        cell.messageContent.text = conv.message.content.notification;
     }
     
     
@@ -276,7 +301,7 @@
                 [self.tableview reloadData];
             });
             
-            [self updateEmputyContentView];
+            [self updateEmptyContentView];
         }
     }
 }
@@ -290,41 +315,60 @@
     }
     
     Conversation *con = [self.conversations objectAtIndex:indexPath.row];
-    IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
-    
-    PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
-    msgController.peerUID = rmtUser.uid;
-    if ([rmtUser.contact.contactName length] == 0) {
-        msgController.peerName = rmtUser.displayName;
-    }else{
-        msgController.peerName = rmtUser.contact.contactName;
+    if (con.type == CONVERSATION_PEER) {
+        User *rmtUser = [[UserDB instance] loadUser: con.cid];
         
+        PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
+        msgController.peerUID = rmtUser.uid;
+        
+        msgController.peerName = rmtUser.displayName;
+        
+        msgController.currentUID = [UserPresent instance].uid;
+        
+        msgController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:msgController animated: YES];
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    } else {
+        NSLog(@"group conversation");
     }
-    msgController.currentUID = [UserPresent instance].uid;
-    
-    msgController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:msgController animated: YES];
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-	[super setEditing:editing animated:animated];
-	
+- (void)newGroup:(NSNotification*)notification {
+    IMessage *msg = notification.object;
+
+    NSString *groupName = [notification.userInfo objectForKey:@"group_name"];
+    int64_t groupID = [[notification.userInfo objectForKey:@"group_id"] longLongValue];
+    
+    Conversation *con = [[Conversation alloc] init];
+    con.message = msg;
+
+    con.type = CONVERSATION_GROUP;
+    con.cid = groupID;
+    con.name = groupName;
+ 
+    [self.conversations insertObject:con atIndex:0];
+    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+    NSArray *array = [NSArray arrayWithObject:path];
+    [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
--(void) newMessage:(NSNotification*) notification{
+- (void)newGroupMessage:(NSNotification*)notification {
+    
+}
+
+- (void)newMessage:(NSNotification*) notification {
     IMessage *m = notification.object;
     NSLog(@"new message:%lld, %lld", m.sender, m.receiver);
     [self onNewMessage:m cid:m.receiver];
 }
 
--(void) clearAllConversation:(NSNotification*) notification{
+- (void)clearAllConversation:(NSNotification*) notification{
     [self reloadTheConversation];
-    [self updateEmputyContentView];
+    [self updateEmptyContentView];
 }
 
--(void) clearSingleConvNewState:(NSNotification*) notification{
+- (void)clearSingleConvNewState:(NSNotification*) notification{
     int64_t usrid = [(NSNumber*)notification.object longLongValue];
     for (int index = 0 ; index < [self.conversations count] ; index++) {
         Conversation *conv = [self.conversations objectAtIndex:index];
@@ -337,9 +381,7 @@
                 [self resetConversationsViewControllerNewState];
             }
         }
-
     }
-    
 }
 
 #pragma mark - UISearchBarDelegate
@@ -414,8 +456,7 @@
         con.message = msg;
         if ([UserPresent instance].uid == msg.receiver) {
             con.newMsgCount += 1;
-            NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
-                [[NSNotificationCenter defaultCenter] postNotification:notification];
+            [self setNewOnTabBar];
         }
         NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
         [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
@@ -425,15 +466,14 @@
        
         if ([UserPresent instance].uid == msg.receiver) {
             con.newMsgCount += 1;
-            NSNotification* notification = [[NSNotification alloc] initWithName:ON_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
+            [self setNewOnTabBar];
         }
         
         con.type = CONVERSATION_PEER;
         con.cid = cid;
         
         UserDB *db = [UserDB instance];
-        IMUser *user = [db loadUser:con.cid];
+        User *user = [db loadUser:con.cid];
         con.name = [user displayName];
         con.avatarURL = user.avatarURL;
         [self.conversations insertObject:con atIndex:0];
@@ -442,8 +482,7 @@
         [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
     }
     
-     [self updateEmputyContentView];
-    
+    [self updateEmptyContentView];
 }
 
 -(void)onPeerMessage:(IMMessage*)im {
@@ -501,7 +540,7 @@
     self.navigationItem.titleView = titleview;
 }
 
-- (void) updateEmputyContentView{
+- (void) updateEmptyContentView{
     if ([self.conversations count] == 0) {
         self.emputyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
         [self.emputyLabel setFont:[UIFont systemFontOfSize:14.0f]];
@@ -535,7 +574,7 @@
     
     Conversation * conversation = [iterator next];
     while (conversation) {
-        IMUser *user = [db loadUser:conversation.cid];
+        User *user = [db loadUser:conversation.cid];
         conversation.name = [user displayName];
         conversation.avatarURL = user.avatarURL;
         [self.conversations addObject:conversation];
@@ -556,9 +595,20 @@
     }
     
     if (shouldClearNewCount) {
-        NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_TAB_BAR_NEW_MESSAGE_NOTIFY object: nil userInfo:nil];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
+        [self clearNewOnTarBar];
     }
+}
+
+- (void)setNewOnTabBar {
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    UITabBarItem * cc =  [tabBar.items objectAtIndex: 2];
+    [cc setBadgeValue:@""];
+}
+
+- (void)clearNewOnTarBar {
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    UITabBarItem * cc =  [tabBar.items objectAtIndex: 2];
+    [cc setBadgeValue:nil];
 }
 
 #pragma mark - UIAlertViewDelegate

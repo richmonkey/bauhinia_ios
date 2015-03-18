@@ -27,6 +27,8 @@
         "latitude":"纬度(浮点数)",
         "latitude":"经度(浮点数)"
     }
+    "notification":"通知内容"
+ 
 }*/
 
 @implementation Audio
@@ -34,6 +36,37 @@
 @end
 
 @implementation MessageContent
+-(id)initWithText:(NSString*)text {
+    self = [super init];
+    if (self) {
+        NSDictionary *dic = @{@"text":text};
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
+        NSString* newStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        self.raw =  newStr;
+    }
+    return self;
+}
+
+- (id)initWithImageURL:(NSString*)imageURL {
+    self = [super init];
+    if (self) {
+        NSDictionary *dic = @{@"image":imageURL};
+        NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+        self.raw = newStr;
+    }
+    return self;
+}
+
+- (id)initWithAudio:(Audio*)audio {
+    self = [super init];
+    if (self) {
+        NSNumber *d = [NSNumber numberWithInteger:audio.duration];
+        NSDictionary *dic = @{@"audio":@{@"url":audio.url, @"duration":d}};
+        NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+        self.raw =  newStr;
+    }
+    return self;
+}
 
 -(NSString*)text {
     return [self.dict objectForKey:@"text"];
@@ -65,6 +98,10 @@
     return lc;
 }
 
+-(NSString*)notification {
+    return [self.dict objectForKey:@"notification"];
+}
+
 -(void)setRaw:(NSString *)raw {
     self._raw = raw;
     const char *utf8 = [raw UTF8String];
@@ -80,6 +117,8 @@
         self.type = MESSAGE_AUDIO;
     } else if ([self.dict objectForKey:@"location"] != nil) {
         self.type = MESSAGE_LOCATION;
+    } else if ([self.dict objectForKey:@"notification"] != nil) {
+        self.type = MESSAGE_NOTIFICATION;
     } else {
         self.type = MESSAGE_UNKNOWN;
     }

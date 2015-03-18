@@ -62,14 +62,14 @@
     return YES;
 }
 
--(IMUser*)loadUser:(int64_t)uid {
+-(User*)loadUser:(int64_t)uid {
     LevelDB *db = [LevelDB defaultLevelDB];
     NSString *key = [self userKey:uid];
     NSString *k1 = [key stringByAppendingString:@"_avatar"];
     NSString *k2 = [key stringByAppendingString:@"_state"];
     NSString *k3 = [key stringByAppendingString:@"_number"];
     NSString *k4 = [key stringByAppendingString:@"_up"];
-    IMUser *u = [[IMUser alloc] init];
+    User *u = [[User alloc] init];
     u.uid = uid;
     u.avatarURL = [db stringForKey:k1];
     u.state = [db stringForKey:k2];
@@ -99,7 +99,8 @@
 
     ContactDB *cdb = [ContactDB instance];
     if (u.phoneNumber.isValid) {
-        u.contact = [cdb loadContactWithNumber:u.phoneNumber];
+        ABContact *contact = [cdb loadContactWithNumber:u.phoneNumber];
+        u.contactName = contact.contactName;
     }
     return u;
 }

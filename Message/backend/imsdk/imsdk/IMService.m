@@ -310,6 +310,15 @@
     self.pingTimestamp = 0;
 }
 
+-(void)handleGroupNotification:(Message*)msg {
+    NSString *notification = (NSString*)msg.body;
+    for (id<MessageObserver> ob in self.observers) {
+        if ([ob respondsToSelector:@selector(onGroupNotification:)]) {
+            [ob onGroupNotification:notification];
+        }
+    }
+}
+
 -(void)publishPeerMessage:(IMMessage*)msg {
     for (id<MessageObserver> ob in self.observers) {
         if ([ob respondsToSelector:@selector(onPeerMessage:)]) {
@@ -379,6 +388,8 @@
         [self handlePeerACK:msg];
     } else if (msg.cmd == MSG_PONG) {
         [self handlePong:msg];
+    } else if (msg.cmd == MSG_GROUP_NOTIFICATION) {
+        [self handleGroupNotification:msg];
     }
 }
 
@@ -525,24 +536,22 @@
 -(void)addMessageObserver:(id<MessageObserver>)ob {
     [self.observers addObject:ob];
 }
+
 -(void)removeMessageObserver:(id<MessageObserver>)ob {
     [self.observers removeObject:ob];
 }
 
--(void)sendPeerMessage:(IMMessage *)im {
+-(BOOL)sendPeerMessage:(IMMessage *)im {
     Message *m = [[Message alloc] init];
     m.cmd = MSG_IM;
     m.body = im;
     BOOL r = [self sendMessage:m];
 
     if (!r) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.peerMessageHandler handleMessageFailure:im.msgLocalID uid:im.receiver];
-            [self publishPeerMessageFailure:im];
-        });
-    } else {
-        [self.peerMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
+        return r;
     }
+    [self.peerMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
+    return r;
 }
 
 -(BOOL)sendGroupMessage:(IMMessage *)im {

@@ -172,12 +172,9 @@
 -(void)presentMessageViewController:(IMUser*)user {
     PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
     msgController.peerUID = user.uid;
-    if ([user.contact.contactName length] == 0) {
-        msgController.peerName = user.displayName;
-    }else{
-        msgController.peerName = user.contact.contactName;
-        
-    }
+
+    msgController.peerName = user.displayName;
+
     msgController.currentUID = [UserPresent instance].uid;
     
     [self.navigationController pushViewController:msgController animated:YES];
@@ -192,12 +189,7 @@
         IMUser *mu = [[UserDB instance] loadUser:u.uid];
         PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
         msgController.peerUID = mu.uid;
-        if ([mu.contact.contactName length] == 0) {
-            msgController.peerName = mu.displayName;
-        }else{
-            msgController.peerName = mu.contact.contactName;
-            
-        }
+        msgController.peerName = mu.displayName;
         msgController.currentUID = [UserPresent instance].uid;
         
         [self.navigationController pushViewController:msgController animated:YES];
@@ -253,12 +245,9 @@
     IMUser *mu = [[UserDB instance] loadUser:u.uid];
     PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
     msgController.peerUID = mu.uid;
-    if ([mu.contact.contactName length] == 0) {
-        msgController.peerName = mu.displayName;
-    }else{
-        msgController.peerName = mu.contact.contactName;
-        
-    }
+
+    msgController.peerName = mu.displayName;
+
     msgController.currentUID = [UserPresent instance].uid;
     
     [self.navigationController pushViewController:msgController animated:YES];
