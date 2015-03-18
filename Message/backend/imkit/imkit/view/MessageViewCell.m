@@ -6,7 +6,7 @@
 #import "MessageTextView.h"
 #import "MessageImageView.h"
 #import "MessageAudioView.h"
-
+#import "MessageNotificationView.h"
 
 @implementation MessageViewCell
 
@@ -61,6 +61,12 @@
                 self.bubbleView = imageView;
             }
                 break;
+            case MESSAGE_NOTIFICATION:
+            {
+                MessageNotificationView *notificationView = [[MessageNotificationView alloc] initWithFrame:frame];
+                self.bubbleView = notificationView;
+            }
+                break;
             default:
                 self.bubbleView = nil;
                 break;
@@ -111,6 +117,12 @@
         {
             MessageAudioView *audioView = (MessageAudioView*)self.bubbleView;
             [audioView initializeWithMsg:message withType:msgType withMsgStateType:state];
+        }
+            break;
+        case MESSAGE_NOTIFICATION:
+        {
+            MessageNotificationView *notificationView = (MessageNotificationView*)self.bubbleView;
+            notificationView.label.text = message.content.notification;
         }
             break;
         default:

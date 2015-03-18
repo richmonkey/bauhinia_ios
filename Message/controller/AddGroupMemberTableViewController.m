@@ -116,15 +116,10 @@
                        msg.receiver = groupID;
                        msg.timestamp = time(NULL);
                        NSString *n = [NSString stringWithFormat:@"您创建了\"%@\"群组", self.groupName];
-                       NSDictionary *dic = @{@"notification":n};
-                       NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
-                       NSString* newStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                       
-                       MessageContent *content = [[MessageContent alloc] init];
-                       content.raw = newStr;
+                       MessageContent *content = [[MessageContent alloc] initWithNotification:n];
                        msg.content = content;
                        
-                       [[GroupMessageDB instance] insertGroupMessage:msg];
+                       [[GroupMessageDB instance] insertMessage:msg];
                        
                        NSNotification *notification = [[NSNotification alloc] initWithName:CREATE_NEW_GROUP
                                                                                     object:msg userInfo:dict];

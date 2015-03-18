@@ -35,6 +35,8 @@
 - (id)initWithText:(NSString*)text;
 - (id)initWithImageURL:(NSString*)imageURL;
 - (id)initWithAudio:(Audio*)audio;
+- (id)initWithNotification:(NSString*)notification;
+- (id)initWithRaw:(NSString*)raw;
 
 @property(nonatomic)int type;
 @property(nonatomic)NSString *raw;

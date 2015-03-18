@@ -136,7 +136,7 @@
             cell = [[[NSBundle mainBundle]loadNibNamed:@"ContactIMUserTableViewCell" owner:self options:nil] lastObject];
         }
         
-        IMUser *u = [self.contact.users objectAtIndex:indexPath.row];
+        User *u = [self.contact.users objectAtIndex:indexPath.row];
         [cell.phoneNumberLabel setText:u.phoneNumber.number];
         if (u.state.length > 0) {
             [cell.personnalStatusLabel setText:u.state];
@@ -169,7 +169,7 @@
     return [self.contact.users count];
 }
 
--(void)presentMessageViewController:(IMUser*)user {
+-(void)presentMessageViewController:(User*)user {
     PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
     msgController.peerUID = user.uid;
 
@@ -186,7 +186,7 @@
     if ([self.contact.users count] == 1) {
         NSLog(@"send message");
         User *u = [self.contact.users objectAtIndex:0];
-        IMUser *mu = [[UserDB instance] loadUser:u.uid];
+        User *mu = [[UserDB instance] loadUser:u.uid];
         PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
         msgController.peerUID = mu.uid;
         msgController.peerName = mu.displayName;
@@ -242,7 +242,7 @@
     NSAssert(buttonIndex < self.contact.users.count, @"");
         
     User *u = [self.contact.users objectAtIndex:buttonIndex];
-    IMUser *mu = [[UserDB instance] loadUser:u.uid];
+    User *mu = [[UserDB instance] loadUser:u.uid];
     PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
     msgController.peerUID = mu.uid;
 
@@ -261,7 +261,7 @@
 
 -(void) handleHeadViewImage:(ContactHeaderView *)headerView{
     if ([self.contact.users count] > 0) {
-        for(IMUser* usr in self.contact.users) {
+        for(User* usr in self.contact.users) {
             if (usr.avatarURL.length > 0) {
                [headerView.headView sd_setImageWithURL:[[NSURL alloc] initWithString:usr.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
             }

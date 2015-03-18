@@ -12,7 +12,7 @@
 #import <imkit/GroupMessageDB.h>
 #import <imkit/IMessage.h>
 #import <imkit/PeerMessageViewController.h>
-
+#import <imkit/GroupMessageViewController.h>
 #import "pinyin.h"
 #import "MessageGroupConversationCell.h"
 #import "NewGroupViewController.h"
@@ -128,9 +128,7 @@
     iterator = [[GroupMessageDB instance] newConversationIterator];
     conversation = [iterator next];
     while (conversation) {
-        NSString *key = [NSString stringWithFormat:@"groups_%lld", conversation.cid];
-        NSString *name = [[LevelDB defaultLevelDB] stringForKey:key];
-        conversation.name = name;
+        conversation.name = [self getGroupName:conversation.cid];;
         conversation.avatarURL = @"";
         [self.conversations addObject:conversation];
         conversation = [iterator next];
@@ -168,6 +166,14 @@
     
 }
 
+- (NSString*) getGroupName:(int64_t)groupID {
+    NSString *key = [NSString stringWithFormat:@"groups_%lld", groupID];
+    NSString *name = [[LevelDB defaultLevelDB] stringForKey:key];
+    if (!name) {
+        name = @"";
+    }
+    return name;
+}
 -(void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 }
@@ -271,7 +277,11 @@
         if ([self.searchDC isActive]) {
             Conversation *con = [self.filteredArray objectAtIndex:indexPath.row];
             
-            [[PeerMessageDB instance] clearConversation:con.cid];
+            if (con.type == CONVERSATION_PEER) {
+                [[PeerMessageDB instance] clearConversation:con.cid];
+            } else {
+                [[GroupMessageDB instance] clearConversation:con.cid];
+            }
             
             [self.filteredArray removeObject:con];
             [self.conversations removeObject:con];
@@ -291,7 +301,11 @@
             
         }else{
             Conversation *con = [self.conversations objectAtIndex:indexPath.row];
-            [[PeerMessageDB instance] clearConversation:con.cid];
+            if (con.type == CONVERSATION_PEER) {
+                [[PeerMessageDB instance] clearConversation:con.cid];
+            } else {
+                [[GroupMessageDB instance] clearConversation:con.cid];
+            }
             [self.conversations removeObject:con];
             
             /*IOS8中删除最后一个cell的时，报一个错误
@@ -328,10 +342,22 @@
         msgController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:msgController animated: YES];
         
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
     } else {
-        NSLog(@"group conversation");
+        
+        GroupMessageViewController* msgController = [[GroupMessageViewController alloc] init];
+        msgController.groupID = con.cid;
+        
+        msgController.groupName = con.name;
+        
+        msgController.currentUID = [UserPresent instance].uid;
+        
+        msgController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:msgController animated: YES];
+
     }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)newGroup:(NSNotification*)notification {
@@ -354,7 +380,9 @@
 }
 
 - (void)newGroupMessage:(NSNotification*)notification {
-    
+    IMessage *m = notification.object;
+    NSLog(@"new message:%lld, %lld", m.sender, m.receiver);
+    [self onNewGroupMessage:m cid:m.receiver];
 }
 
 - (void)newMessage:(NSNotification*) notification {
@@ -440,6 +468,49 @@
 	[self.searchBar setText:@""];
 }
 
+-(void)onNewGroupMessage:(IMessage*)msg cid:(int64_t)cid{
+    int index = -1;
+    for (int i = 0; i < [self.conversations count]; i++) {
+        Conversation *con = [self.conversations objectAtIndex:i];
+        if (con.type == CONVERSATION_GROUP && con.cid == cid) {
+            con.message = msg;
+            index = i;
+            break;
+        }
+    }
+    
+    if (index != -1) {
+        Conversation *con = [self.conversations objectAtIndex:index];
+        con.message = msg;
+        if ([UserPresent instance].uid != msg.sender) {
+            con.newMsgCount += 1;
+            [self setNewOnTabBar];
+        }
+        NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+        [self.tableview reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+    } else {
+        Conversation *con = [[Conversation alloc] init];
+        con.message = msg;
+        
+        if ([UserPresent instance].uid != msg.sender) {
+            con.newMsgCount += 1;
+            [self setNewOnTabBar];
+        }
+        
+        con.type = CONVERSATION_GROUP;
+        con.cid = cid;
+        con.name = [self getGroupName:cid];
+        con.avatarURL = @"";
+        [self.conversations insertObject:con atIndex:0];
+        NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+        NSArray *array = [NSArray arrayWithObject:path];
+        [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
+    }
+    
+    [self updateEmptyContentView];
+}
+
+
 -(void)onNewMessage:(IMessage*)msg cid:(int64_t)cid{
     int index = -1;
     for (int i = 0; i < [self.conversations count]; i++) {
@@ -486,7 +557,6 @@
 }
 
 -(void)onPeerMessage:(IMMessage*)im {
-    
     IMessage *m = [[IMessage alloc] init];
     m.sender = im.sender;
     m.receiver = im.receiver;
@@ -503,6 +573,27 @@
     [self onNewMessage:m cid:m.sender];
     
     
+}
+
+-(void)onGroupMessage:(IMMessage *)im {
+    IMessage *m = [[IMessage alloc] init];
+    m.sender = im.sender;
+    m.receiver = im.receiver;
+    m.msgLocalID = im.msgLocalID;
+    MessageContent *content = [[MessageContent alloc] init];
+    content.raw = im.content;
+    m.content = content;
+    m.timestamp = time(NULL);
+    
+    MessageContent *c = m.content;
+    if (c.type == MESSAGE_TEXT) {
+        IMLog(@"message:%@", c.text);
+    }
+    [self onNewGroupMessage:m cid:m.receiver];
+}
+
+-(void)onGroupNotification:(NSString*)notification {
+    NSLog(@"group notification:%@", notification);
 }
 
 

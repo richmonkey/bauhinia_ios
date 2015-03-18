@@ -68,6 +68,24 @@
     return self;
 }
 
+- (id)initWithNotification:(NSString*)notification {
+    self = [super init];
+    if (self) {
+        NSDictionary *dic = @{@"notification":notification};
+        NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+        self.raw =  newStr;
+    }
+    return self;
+}
+
+- (id)initWithRaw:(NSString*)raw {
+    self = [super init];
+    if (self) {
+        self.raw = raw;
+    }
+    return self;
+}
+
 -(NSString*)text {
     return [self.dict objectForKey:@"text"];
 }

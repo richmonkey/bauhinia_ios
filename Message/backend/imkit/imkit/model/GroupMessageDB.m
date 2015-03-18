@@ -121,7 +121,7 @@
     return [NSString stringWithFormat:@"%@/group/g_%lld", s, gid];
 }
 
--(BOOL)clearGroupConversation:(int64_t)gid {
+-(BOOL)clearConversation:(int64_t)gid {
     NSString *path = [self getGroupPath:gid];
     int r = unlink([path UTF8String]);
     if (r == -1) {
@@ -131,24 +131,29 @@
     return YES;
 }
 
--(BOOL)insertGroupMessage:(IMessage*)msg {
+-(BOOL)insertMessage:(IMessage*)msg {
     NSString *path = [self getGroupPath:msg.receiver];
     return [MessageDB insertIMessage:msg path:path];
 }
 
--(BOOL)removeGroupMessage:(int)msgLocalID gid:(int64_t)gid{
+-(BOOL)removeMessage:(int)msgLocalID gid:(int64_t)gid{
     NSString *path = [self getGroupPath:gid];
     return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_DELETE];
 }
 
--(BOOL)acknowledgeGroupMessage:(int)msgLocalID gid:(int64_t)gid {
+-(BOOL)acknowledgeMessage:(int)msgLocalID gid:(int64_t)gid {
     NSString *path = [self getGroupPath:gid];
     return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_ACK];
 }
 
--(BOOL)markGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid {
+-(BOOL)markMessageFailure:(int)msgLocalID gid:(int64_t)gid {
     NSString *path = [self getGroupPath:gid];
     return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_FAILURE];
+}
+
+-(BOOL)markMesageListened:(int)msgLocalID gid:(int64_t)gid{
+    NSString *path = [self getGroupPath:gid];
+    return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_LISTENED];
 }
 
 @end

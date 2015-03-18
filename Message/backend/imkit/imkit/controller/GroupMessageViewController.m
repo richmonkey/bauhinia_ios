@@ -1,49 +1,42 @@
 //
-//  PeerMessageViewController.m
+//  GroupMessageViewController.m
 //  imkit
 //
-//  Created by houxh on 15/3/18.
+//  Created by houxh on 15/3/19.
 //  Copyright (c) 2015年 beetle. All rights reserved.
 //
 
-#import "PeerMessageViewController.h"
-
-
-
+#import "GroupMessageViewController.h"
 
 #import "FileCache.h"
 #import "Outbox.h"
 #import "AudioDownloader.h"
 #import "DraftDB.h"
 #import "IMessage.h"
-#import "PeerMessageDB.h"
+#import "GroupMessageDB.h"
 #import "DraftDB.h"
 #import "Constants.h"
 
 #define PAGE_COUNT 10
 
-@interface PeerMessageViewController ()
+@interface GroupMessageViewController ()
 
 @end
 
-@implementation PeerMessageViewController
-
-- (void)dealloc {
-    NSLog(@"peermessageviewcontroller dealloc");
-}
+@implementation GroupMessageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     [self setNormalNavigationButtons];
-    self.navigationItem.title = self.peerName;
+    self.navigationItem.title = self.groupName;
     
     DraftDB *db = [DraftDB instance];
-    NSString *draft = [db getDraft:self.receiver];
+    NSString *draft = [db getGroupDraft:self.groupID];
     [self setDraft:draft];
     
     [self addObserver];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -56,64 +49,36 @@
 }
 
 - (int64_t)receiver {
-    return self.peerUID;
+    return self.groupID;
 }
 
 - (BOOL)isInConversation:(IMessage*)msg {
-   BOOL r =  (msg.sender == self.currentUID && msg.receiver == self.peerUID) ||
-                (msg.receiver == self.currentUID && msg.sender == self.peerUID);
+    BOOL r = (msg.receiver == self.groupID);
     return r;
 }
 
-
 -(BOOL)saveMessage:(IMessage*)msg {
-    int64_t cid = 0;
-    if (msg.sender == self.currentUID) {
-        cid = msg.receiver;
-    } else {
-        cid = msg.sender;
-    }
-    return [[PeerMessageDB instance] insertMessage:msg uid:cid];
+    return [[GroupMessageDB instance] insertMessage:msg];
 }
 
 -(BOOL)removeMessage:(IMessage*)msg {
-    int64_t cid = 0;
-    if (msg.sender == self.currentUID) {
-        cid = msg.receiver;
-    } else {
-        cid = msg.sender;
-    }
-    return [[PeerMessageDB instance] removeMessage:msg.msgLocalID uid:cid];
-
+    int64_t cid = msg.receiver;
+    return [[GroupMessageDB instance] removeMessage:msg.msgLocalID gid:cid];
+    
 }
 -(BOOL)markMessageFailure:(IMessage*)msg {
-    int64_t cid = 0;
-    if (msg.sender == self.currentUID) {
-        cid = msg.receiver;
-    } else {
-        cid = msg.sender;
-    }
-    return [[PeerMessageDB instance] markMessageFailure:msg.msgLocalID uid:cid];
+    int64_t cid = msg.receiver;
+    return [[GroupMessageDB instance] markMessageFailure:msg.msgLocalID gid:cid];
 }
 
 -(BOOL)markMesageListened:(IMessage*)msg {
-    int64_t cid = 0;
-    if (msg.sender == self.currentUID) {
-        cid = msg.receiver;
-    } else {
-        cid = msg.sender;
-    }
-    return [[PeerMessageDB instance] markMesageListened:msg.msgLocalID uid:cid];
+    int64_t cid = msg.receiver;
+    return [[GroupMessageDB instance] markMesageListened:msg.msgLocalID gid:cid];
 }
 
 -(BOOL)eraseMessageFailure:(IMessage*)msg {
-    int64_t cid = 0;
-    if (msg.sender == self.currentUID) {
-        cid = msg.receiver;
-    } else {
-        cid = msg.sender;
-    }
-    return [[PeerMessageDB instance] markMessageFailure:msg.msgLocalID uid:cid];
+    int64_t cid = msg.receiver;
+    return [[GroupMessageDB instance] markMessageFailure:msg.msgLocalID gid:cid];
 }
 
 -(void) setNormalNavigationButtons{
@@ -128,22 +93,20 @@
 
 - (void)returnMainTableViewController {
     DraftDB *db = [DraftDB instance];
-    [db setDraft:self.peerUID draft:[self getDraft]];
+    [db setGroupDraft:self.groupID draft:[self getDraft]];
     
     [self removeObserver];
     
-    NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_PEER_NEW_MESSAGE
-                                                                 object:[NSNumber numberWithLongLong:self.peerUID]
+    NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_GROUP_NEW_MESSAGE
+                                                                 object:[NSNumber numberWithLongLong:self.groupID]
                                                                userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     
     if (self.messages.count > 0) {
-    
         IMessage *msg = [self.messages lastObject];
-
         if (msg.sender == self.currentUID) {
-            NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_PEER_MESSAGE object: msg userInfo:nil];
-    
+            NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_GROUP_MESSAGE object: msg userInfo:nil];
+            
             [[NSNotificationCenter defaultCenter] postNotification:notification];
         }
     }
@@ -151,9 +114,10 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+
 #pragma mark - MessageObserver
-- (void)onPeerMessage:(IMMessage*)im {
-    if (im.sender != self.peerUID) {
+-(void)onGroupMessage:(IMMessage*)im {
+    if (im.receiver != self.groupID) {
         return;
     }
     [[self class] playMessageReceivedSound];
@@ -164,8 +128,7 @@
     m.sender = im.sender;
     m.receiver = im.receiver;
     m.msgLocalID = im.msgLocalID;
-    MessageContent *content = [[MessageContent alloc] init];
-    content.raw = im.content;
+    MessageContent *content = [[MessageContent alloc] initWithRaw:im.content];
     m.content = content;
     m.timestamp = (int)time(NULL);
     
@@ -181,9 +144,8 @@
     [self insertMessage:m];
 }
 
-//服务器ack
-- (void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid {
-    if (uid != self.peerUID) {
+-(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid {
+    if (gid != self.groupID) {
         return;
     }
     IMessage *msg = [self getMessageWithID:msgLocalID];
@@ -191,18 +153,8 @@
     [self reloadMessage:msgLocalID];
 }
 
-//接受方ack
-- (void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid {
-    if (uid != self.peerUID) {
-        return;
-    }
-    IMessage *msg = [self getMessageWithID:msgLocalID];
-    msg.flags = msg.flags|MESSAGE_FLAG_PEER_ACK;
-    [self reloadMessage:msgLocalID];
-}
-
-- (void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid {
-    if (uid != self.peerUID) {
+-(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid {
+    if (gid != self.groupID) {
         return;
     }
     IMessage *msg = [self getMessageWithID:msgLocalID];
@@ -210,27 +162,14 @@
     [self reloadMessage:msgLocalID];
 }
 
-//对方正在输入
-- (void)onPeerInputing:(int64_t)uid {
-    if (uid != self.peerUID) {
-        return;
-    }
-}
-
-
-//同IM服务器连接的状态变更通知
--(void)onConnectState:(int)state{
-    if(state == STATE_CONNECTED){
-        [self enableSend];
-    } else {
-        [self disableSend];
-    }
+-(void)onGroupNotification:(NSString*)notification {
+    NSLog(@"group notification:%@", notification);
 }
 
 
 - (void)loadConversationData {
     int count = 0;
-    id<IMessageIterator> iterator =  [[PeerMessageDB instance] newMessageIterator: self.peerUID];
+    id<IMessageIterator> iterator =  [[GroupMessageDB instance] newMessageIterator: self.groupID];
     IMessage *msg = [iterator next];
     while (msg) {
         if (self.textMode) {
@@ -259,7 +198,7 @@
     if (last == nil) {
         return;
     }
-    id<IMessageIterator> iterator =  [[PeerMessageDB instance] newMessageIterator:self.peerUID last:last.msgLocalID];
+    id<IMessageIterator> iterator =  [[GroupMessageDB instance] newMessageIterator:self.groupID last:last.msgLocalID];
     
     int count = 0;
     IMessage *msg = [iterator next];
@@ -300,7 +239,7 @@
     im.receiver = msg.receiver;
     im.msgLocalID = msg.msgLocalID;
     im.content = msg.content.raw;
-    [[IMService instance] sendPeerMessage:im];
+    [[IMService instance] sendGroupMessage:im];
 }
 
 

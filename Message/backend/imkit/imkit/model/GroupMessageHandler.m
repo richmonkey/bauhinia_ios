@@ -31,7 +31,7 @@
     content.raw = im.content;
     m.content = content;
     m.timestamp = time(NULL);
-    BOOL r = [[GroupMessageDB instance] insertGroupMessage:m];
+    BOOL r = [[GroupMessageDB instance] insertMessage:m];
     if (r) {
         im.msgLocalID = m.msgLocalID;
     }
@@ -39,9 +39,9 @@
 }
 
 -(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid {
-    return [[GroupMessageDB instance] acknowledgeGroupMessage:msgLocalID gid:uid];
+    return [[GroupMessageDB instance] acknowledgeMessage:msgLocalID gid:uid];
 }
 -(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid {
-    return [[GroupMessageDB instance] markGroupMessageFailure:msgLocalID gid:uid];
+    return [[GroupMessageDB instance] markMessageFailure:msgLocalID gid:uid];
 }
 @end

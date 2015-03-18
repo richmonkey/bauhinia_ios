@@ -26,10 +26,10 @@
 -(id<IMessageIterator>)newMessageIterator:(int64_t)uid last:(int)lastMsgID;
 -(id<ConversationIterator>)newConversationIterator;
 
--(BOOL)insertGroupMessage:(IMessage*)msg;
--(BOOL)removeGroupMessage:(int)msgLocalID gid:(int64_t)gid;
--(BOOL)clearGroupConversation:(int64_t)gid;
--(BOOL)acknowledgeGroupMessage:(int)msgLocalID gid:(int64_t)gid;
--(BOOL)markGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid;
-
+-(BOOL)insertMessage:(IMessage*)msg;
+-(BOOL)removeMessage:(int)msgLocalID gid:(int64_t)gid;
+-(BOOL)clearConversation:(int64_t)gid;
+-(BOOL)acknowledgeMessage:(int)msgLocalID gid:(int64_t)gid;
+-(BOOL)markMessageFailure:(int)msgLocalID gid:(int64_t)gid;
+-(BOOL)markMesageListened:(int)msgLocalID gid:(int64_t)gid;
 @end

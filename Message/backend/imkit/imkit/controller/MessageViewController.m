@@ -797,6 +797,8 @@
             break;
         case MESSAGE_LOCATION:
             return 40;
+        case MESSAGE_NOTIFICATION:
+            return 40;
         default:
             return 0;
     }

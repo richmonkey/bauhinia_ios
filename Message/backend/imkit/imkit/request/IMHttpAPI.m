@@ -123,7 +123,7 @@
         }
         
         NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        int64_t groupID = [[resp objectForKey:@"group_id"] longLongValue];
+        int64_t groupID = [[[resp objectForKey:@"data"] objectForKey:@"group_id"] longLongValue];
         success(groupID);
     };
     request.failCB = ^(IMHttpOperation*commObj, IMHttpOperationError error) {
