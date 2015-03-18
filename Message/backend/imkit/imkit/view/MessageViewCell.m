@@ -7,10 +7,11 @@
 #import "MessageImageView.h"
 #import "MessageAudioView.h"
 
+
 @implementation MessageViewCell
 
 #pragma mark - Setup
-- (void)cleanBK
+- (void)setup
 {
     self.backgroundColor = [UIColor clearColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -23,90 +24,104 @@
     self.textLabel.hidden = YES;
     self.detailTextLabel.text = nil;
     self.detailTextLabel.hidden = YES;
-    
-    [self.bubbleView removeFromSuperview];
-    self.bubbleView.bcTextView = nil;
-    self.bubbleView = nil;
-    
 }
 
 
--(id)initWithMessage:(IMessage *)message withBubbleMessageType: (BubbleMessageType)bubbleMessageType reuseIdentifier:(NSString *)reuseIdentifier{
+-(id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier {
     self =  [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self initializeWithMessage:message withBubbleMessageType:bubbleMessageType];
+        [self setup];
+        
+        CGFloat bubbleY = 0.0f;
+        CGFloat bubbleX = 0.0f;
+        
+        CGFloat offsetX = 0.0f;
+        
+        CGRect frame = CGRectMake(bubbleX - offsetX,
+                                  bubbleY,
+                                  self.contentView.frame.size.width - bubbleX,
+                                  self.contentView.frame.size.height);
+        
+        switch (type) {
+            case MESSAGE_AUDIO:
+            {
+                MessageAudioView *audioView = [[MessageAudioView alloc] initWithFrame:frame];
+                self.bubbleView = audioView;
+            }
+                break;
+            case MESSAGE_TEXT:
+            {
+                MessageTextView *textView = [[MessageTextView alloc] initWithFrame:frame];
+                self.bubbleView = textView;
+            }
+                break;
+            case MESSAGE_IMAGE:
+            {
+                MessageImageView *imageView = [[MessageImageView alloc] initWithFrame:frame];
+                self.bubbleView = imageView;
+            }
+                break;
+            default:
+                self.bubbleView = nil;
+                break;
+        }
+        
+        if (self.bubbleView != nil) {
+            [self.contentView addSubview:self.bubbleView];
+            [self.contentView sendSubviewToBack:self.bubbleView];
+            [self setBackgroundColor:[UIColor clearColor]];
+        }
     }
     return self;
 }
 
--(void)initializeWithMessage:(IMessage *)message withBubbleMessageType: (BubbleMessageType)bubbleMessageType{
-    [self cleanBK];
+#pragma mark - Message Cell
+
+- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType {
     
-    CGFloat bubbleY = 0.0f;
-    CGFloat bubbleX = 0.0f;
-    
-    CGFloat offsetX = 0.0f;
-    
-    CGRect frame = CGRectMake(bubbleX - offsetX,
-                              bubbleY,
-                              self.contentView.frame.size.width - bubbleX,
-                              self.contentView.frame.size.height);
-    
-    BubbleMessageReceiveStateType receiveStateType;
+    BubbleMessageReceiveStateType state;
     if(message.isACK){
         if (message.isPeerACK) {
-            receiveStateType =  BubbleMessageReceiveStateClient;
+            state =  BubbleMessageReceiveStateClient;
         }else{
-            receiveStateType =  BubbleMessageReceiveStateServer;
+            state =  BubbleMessageReceiveStateServer;
         }
     }else{
-        receiveStateType =  BubbleMessageReceiveStateNone;
+        state =  BubbleMessageReceiveStateNone;
     }
     
     switch (message.content.type) {
-        case MESSAGE_AUDIO:
-        {
-            MessageAudioView *audioView = [[MessageAudioView alloc] initWithFrame:frame withType:bubbleMessageType];
-            [audioView initializeWithMsg:message withMsgStateType:receiveStateType];
-            self.bubbleView = audioView;
-        }
-            break;
         case MESSAGE_TEXT:
         {
-            MessageTextView *textView = [[MessageTextView alloc] initWithFrame:frame withType:bubbleMessageType];
-            [textView initializeWithMsg:message withMsgStateType:receiveStateType];
-            self.bubbleView = textView;
+            MessageTextView *textView = (MessageTextView*)self.bubbleView;
+            textView.text = message.content.text;
+            textView.type = msgType;
+            textView.msgStateType = state;
         }
             break;
         case MESSAGE_IMAGE:
         {
-            MessageImageView *imageView = [[MessageImageView alloc] initWithFrame:frame withType:bubbleMessageType];
-            [imageView initializeWithMsg:message withMsgStateType:receiveStateType];
-            self.bubbleView = imageView;
+            MessageImageView *msgImageView = (MessageImageView*)self.bubbleView;
+            msgImageView.data = message.content.imageURL;
+            msgImageView.type = msgType;
+            msgImageView.msgStateType = state;
+        }
+            break;
+        case MESSAGE_AUDIO:
+        {
+            MessageAudioView *audioView = (MessageAudioView*)self.bubbleView;
+            [audioView initializeWithMsg:message withType:msgType withMsgStateType:state];
         }
             break;
         default:
-            self.bubbleView = nil;
             break;
     }
-    
     if (message.flags&MESSAGE_FLAG_FAILURE) {
         [self.bubbleView showSendErrorBtn:YES];
     }else{
         [self.bubbleView showSendErrorBtn:NO];
     }
-    
-    if (self.bubbleView != nil) {
-        [self.contentView addSubview:self.bubbleView];
-        [self.contentView sendSubviewToBack:self.bubbleView];
-        [self setBackgroundColor:[UIColor clearColor]];
-    }
-}
 
-#pragma mark - Touch events
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [super touchesEnded:touches withEvent:event];
 }
 
 @end

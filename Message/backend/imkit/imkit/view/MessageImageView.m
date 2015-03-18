@@ -8,6 +8,7 @@
 //
 
 #import "MessageImageView.h"
+//#import "ESImageViewController.h"
 
 #define kImageWidth  100
 #define kImageHeight 100
@@ -17,9 +18,9 @@
 
 @implementation MessageImageView
 
-- (id)initWithFrame:(CGRect)frame withType:(BubbleMessageType)type
+- (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame withType:type];
+    self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         self.imageView = [[UIImageView alloc] init];
@@ -29,9 +30,8 @@
     return self;
 }
 
--(void)initializeWithMsg:(IMessage *)msg withMsgStateType:(BubbleMessageReceiveStateType)stateType{
-    [super setMsgStateType:stateType];
-    _data = msg.content.imageURL;
+- (void)setData:(id)newData{
+    _data = newData;
     if (_data) {
         //在原图URL后面添加"@{width}w_{heigth}h_{1|0}c", 支持128x128, 256x256
         NSString *url = [NSString stringWithFormat:@"%@@128w_128h_0c", _data];
@@ -42,7 +42,7 @@
             [self.downloadIndicatorView startAnimating];
             [self addSubview: self.downloadIndicatorView];
         }
-        
+
         [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:url] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (self.downloadIndicatorView&&[self.downloadIndicatorView isAnimating]) {
                 [self.downloadIndicatorView stopAnimating];
@@ -57,10 +57,17 @@
 - (void)drawRect:(CGRect)frame{
     [super drawRect:frame];
     
+	UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
+    
+    CGRect bubbleFrame = [self bubbleFrame];
+	[image drawInRect:bubbleFrame];
+    
+    [self drawMsgStateSign: frame];
+    
     if (self.imageView) {
         
         CGSize imageSize = CGSizeMake(kImageWidth, kImageHeight);
-        CGFloat imgX = super.bubleBKView.image.leftCapWidth + (self.type == BubbleMessageTypeOutgoing ? super.bubleBKView.frame.origin.x + kOuttingMoveRight: KInComingMoveRight);
+        CGFloat imgX = image.leftCapWidth + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x + kOuttingMoveRight: KInComingMoveRight);
         
         CGRect imageFrame = CGRectMake(imgX,
                                        kPaddingTop + kMarginTop,

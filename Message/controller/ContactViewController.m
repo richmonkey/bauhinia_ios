@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 #import "User.h"
 #import "UserDB.h"
-#import <imkit/MessageViewController.h>
+#import <imkit/PeerMessageViewController.h>
 #import "ContactIMUserTableViewCell.h"
 #import "ContactHeaderView.h"
 #import "ContactPhoneTableViewCell.h"
@@ -170,7 +170,7 @@
 }
 
 -(void)presentMessageViewController:(IMUser*)user {
-    MessageViewController* msgController = [[MessageViewController alloc] init];
+    PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
     msgController.peerUID = user.uid;
     if ([user.contact.contactName length] == 0) {
         msgController.peerName = user.displayName;
@@ -178,7 +178,6 @@
         msgController.peerName = user.contact.contactName;
         
     }
-    msgController.peerLastUpTimestamp = user.lastUpTimestamp;
     msgController.currentUID = [UserPresent instance].uid;
     
     [self.navigationController pushViewController:msgController animated:YES];
@@ -191,7 +190,7 @@
         NSLog(@"send message");
         User *u = [self.contact.users objectAtIndex:0];
         IMUser *mu = [[UserDB instance] loadUser:u.uid];
-        MessageViewController* msgController = [[MessageViewController alloc] init];
+        PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
         msgController.peerUID = mu.uid;
         if ([mu.contact.contactName length] == 0) {
             msgController.peerName = mu.displayName;
@@ -199,7 +198,6 @@
             msgController.peerName = mu.contact.contactName;
             
         }
-        msgController.peerLastUpTimestamp = mu.lastUpTimestamp;
         msgController.currentUID = [UserPresent instance].uid;
         
         [self.navigationController pushViewController:msgController animated:YES];
@@ -253,7 +251,7 @@
         
     User *u = [self.contact.users objectAtIndex:buttonIndex];
     IMUser *mu = [[UserDB instance] loadUser:u.uid];
-    MessageViewController* msgController = [[MessageViewController alloc] init];
+    PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
     msgController.peerUID = mu.uid;
     if ([mu.contact.contactName length] == 0) {
         msgController.peerName = mu.displayName;
@@ -261,7 +259,6 @@
         msgController.peerName = mu.contact.contactName;
         
     }
-    msgController.peerLastUpTimestamp = mu.lastUpTimestamp;
     msgController.currentUID = [UserPresent instance].uid;
     
     [self.navigationController pushViewController:msgController animated:YES];

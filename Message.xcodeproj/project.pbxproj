@@ -145,7 +145,6 @@
 		4875B1161AAC91CA001D1435 /* save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4875B0D21AAC91CA001D1435 /* save@2x.png */; };
 		4875B1171AAC91CA001D1435 /* messageReceived.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 4875B0D41AAC91CA001D1435 /* messageReceived.aiff */; };
 		4875B1181AAC91CA001D1435 /* messageSent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 4875B0D51AAC91CA001D1435 /* messageSent.aiff */; };
-		4875B1191AAC91CA001D1435 /* ConversationHeadButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4875B0D71AAC91CA001D1435 /* ConversationHeadButtonView.xib */; };
 		4875B11A1AAC91CA001D1435 /* MessageTableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4875B0D81AAC91CA001D1435 /* MessageTableSectionHeaderView.xib */; };
 		48860CA019CFC8FF00DF7466 /* UIApplication+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 48860C9F19CFC8FF00DF7466 /* UIApplication+Util.m */; };
 		489933C819C436ED00C56F2D /* FBShimmeringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933C519C436ED00C56F2D /* FBShimmeringLayer.m */; };
@@ -444,7 +443,6 @@
 		4875B0D21AAC91CA001D1435 /* save@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "save@2x.png"; sourceTree = "<group>"; };
 		4875B0D41AAC91CA001D1435 /* messageReceived.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = messageReceived.aiff; sourceTree = "<group>"; };
 		4875B0D51AAC91CA001D1435 /* messageSent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = messageSent.aiff; sourceTree = "<group>"; };
-		4875B0D71AAC91CA001D1435 /* ConversationHeadButtonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationHeadButtonView.xib; sourceTree = "<group>"; };
 		4875B0D81AAC91CA001D1435 /* MessageTableSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableSectionHeaderView.xib; sourceTree = "<group>"; };
 		48860C9E19CFC8FF00DF7466 /* UIApplication+Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Util.h"; sourceTree = "<group>"; };
 		48860C9F19CFC8FF00DF7466 /* UIApplication+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Util.m"; sourceTree = "<group>"; };
@@ -1001,7 +999,6 @@
 		4875B0D61AAC91CA001D1435 /* xibs */ = {
 			isa = PBXGroup;
 			children = (
-				4875B0D71AAC91CA001D1435 /* ConversationHeadButtonView.xib */,
 				4875B0D81AAC91CA001D1435 /* MessageTableSectionHeaderView.xib */,
 			);
 			path = xibs;
@@ -1440,7 +1437,6 @@
 				4875B1031AAC91CA001D1435 /* MicRecBtn@2x.png in Resources */,
 				4875B0F41AAC91CA001D1435 /* MicBlueSent.png in Resources */,
 				2157372B19850B100071C2EF /* ContactHeaderView.xib in Resources */,
-				4875B1191AAC91CA001D1435 /* ConversationHeadButtonView.xib in Resources */,
 				48338B3A19C52A1C00BA2392 /* setting.plist in Resources */,
 				4875B1071AAC91CA001D1435 /* MicRecRed2X.png in Resources */,
 				4875B1101AAC91CA001D1435 /* PausePressed.png in Resources */,

@@ -1,6 +1,5 @@
 #import <UIKit/UIKit.h>
 #import "UIImageView+WebCache.h"
-#import "BCTextView.h"
 
 extern CGFloat const kJSAvatarSize;
 
@@ -33,18 +32,15 @@ typedef enum {
 @property (nonatomic) UIActivityIndicatorView *uploadIndicatorView;
 @property (nonatomic) CGRect contentFrame;
 @property (strong, nonatomic) UIButton *msgSendErrorBtn;
-@property (strong, nonatomic) UIImageView *msgSignImgView;
-@property  (strong,nonatomic) UIImageView *bubleBKView;
-@property (nonatomic, strong) BCTextView *bcTextView;
 
-
-- (id)initWithFrame:(CGRect)frame withType:(BubbleMessageType)type;
 #pragma mark - Drawing
 - (CGRect)bubbleFrame;
 - (UIImage *)bubbleImage;
 - (UIImage *)bubbleImageHighlighted;
 
 -(void) showSendErrorBtn:(BOOL)show;
+
+-(void) drawMsgStateSign:(CGRect) frame;
 
 #pragma mark - Bubble view
 + (UIImage *)bubbleImageForType:(BubbleMessageType)aType;
@@ -56,6 +52,7 @@ typedef enum {
 + (CGSize)bubbleSizeForImage:(UIImage *)image;
 + (CGSize)imageSizeForImage;
 + (CGFloat)cellHeightForText:(NSString *)txt;
++ (CGFloat)cellHeightForImage:(UIImage *)image;
 
 + (int)maxCharactersPerLine;
 + (int)numberOfLinesForMessage:(NSString *)txt;

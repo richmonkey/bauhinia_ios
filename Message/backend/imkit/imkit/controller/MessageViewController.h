@@ -9,14 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <imsdk/IMService.h>
-#import "BCTextView.h"
+#import "BaseMessageViewController.h"
 
-@interface MessageViewController : UIViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate,
-    MessageObserver,  UIActionSheetDelegate,BCTextViewDelegate>
+@interface MessageViewController : BaseMessageViewController < UIImagePickerControllerDelegate, UINavigationControllerDelegate,  UITextViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate, UIActionSheetDelegate, UITableViewDataSource, UITableViewDelegate>
 
-@property(nonatomic, assign) int64_t currentUID;
-@property(nonatomic, assign) int64_t peerUID;
-@property(nonatomic, copy) NSString *peerName;
-@property(nonatomic, assign) int64_t peerLastUpTimestamp;
-
+- (void)setDraft:(NSString*)text;
+- (NSString*)getDraft;
+- (void)disableSend;
+- (void)enableSend;
 @end

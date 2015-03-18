@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4875B1231AAC9362001D1435 /* MEESImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4875B1221AAC9362001D1435 /* MEESImageViewController.m */; };
-		489BB2611AB5BED200AAAE69 /* StringUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 489BB2601AB5BED200AAAE69 /* StringUtil.m */; };
 		6D032F9E1AA9B0F5004AA39F /* libimkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D032F921AA9B0F5004AA39F /* libimkit.a */; };
 		6D032FF01AA9B41C004AA39F /* GroupMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032FE31AA9B41C004AA39F /* GroupMessageDB.m */; };
 		6D032FF11AA9B41C004AA39F /* GroupMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032FE51AA9B41C004AA39F /* GroupMessageHandler.m */; };
@@ -28,7 +27,6 @@
 		6D03310B1AA9BDB8004AA39F /* wavreader.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331051AA9BDB8004AA39F /* wavreader.c */; };
 		6D03310C1AA9BDB8004AA39F /* wavwriter.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331071AA9BDB8004AA39F /* wavwriter.c */; };
 		6D0331311AA9E734004AA39F /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331201AA9E734004AA39F /* BubbleView.m */; };
-		6D0331321AA9E734004AA39F /* ConversationHeadButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331221AA9E734004AA39F /* ConversationHeadButtonView.m */; };
 		6D0331331AA9E734004AA39F /* MessageAudioView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331251AA9E734004AA39F /* MessageAudioView.m */; };
 		6D0331341AA9E734004AA39F /* MessageImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331271AA9E734004AA39F /* MessageImageView.m */; };
 		6D0331351AA9E734004AA39F /* MessageInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331291AA9E734004AA39F /* MessageInputView.m */; };
@@ -47,6 +45,12 @@
 		6D03315F1AAB6626004AA39F /* NSString+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D03315E1AAB6626004AA39F /* NSString+JSMessagesView.m */; };
 		6D0331621AAB6702004AA39F /* TAHttpOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331611AAB6702004AA39F /* TAHttpOperation.m */; };
 		6D0331651AAB6781004AA39F /* UIImage+JSMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0331641AAB6781004AA39F /* UIImage+JSMessagesView.m */; };
+		6DF54F181AB6EECA00197EBC /* TextMessageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6DF54F151AB6E58800197EBC /* TextMessageViewController.h */; };
+		6DF54F261AB816FB00197EBC /* BaseMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF54F251AB816FB00197EBC /* BaseMessageViewController.m */; };
+		6DF54F281AB82E0000197EBC /* BaseMessageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6DF54F241AB816FB00197EBC /* BaseMessageViewController.h */; };
+		6DFDA0241AB95B9800EF553A /* PeerMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DFDA0231AB95B9800EF553A /* PeerMessageViewController.m */; };
+		6DFDA0261AB95E7F00EF553A /* PeerMessageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6DFDA0221AB95B9800EF553A /* PeerMessageViewController.h */; };
+		6DFDA0271AB9797500EF553A /* TextMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF54F161AB6E58800197EBC /* TextMessageViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +91,9 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				6DFDA0261AB95E7F00EF553A /* PeerMessageViewController.h in CopyFiles */,
+				6DF54F281AB82E0000197EBC /* BaseMessageViewController.h in CopyFiles */,
+				6DF54F181AB6EECA00197EBC /* TextMessageViewController.h in CopyFiles */,
 				6D0331561AAB53EC004AA39F /* IMessage.h in CopyFiles */,
 				6D0331541AAB53D3004AA39F /* GroupMessageDB.h in CopyFiles */,
 				6D0331551AAB53D3004AA39F /* GroupMessageHandler.h in CopyFiles */,
@@ -104,8 +111,6 @@
 		4875ABA81AAC784E001D1435 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4875B1211AAC9362001D1435 /* MEESImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEESImageViewController.h; path = controller/MEESImageViewController.h; sourceTree = "<group>"; };
 		4875B1221AAC9362001D1435 /* MEESImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEESImageViewController.m; path = controller/MEESImageViewController.m; sourceTree = "<group>"; };
-		489BB2601AB5BED200AAAE69 /* StringUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StringUtil.m; path = imkit/StringUtil.m; sourceTree = SOURCE_ROOT; };
-		489BB2631AB5BEFE00AAAE69 /* StringUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringUtil.h; sourceTree = "<group>"; };
 		6D032F921AA9B0F5004AA39F /* libimkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libimkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D032F9D1AA9B0F5004AA39F /* imkitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = imkitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D032FA31AA9B0F5004AA39F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -148,8 +153,6 @@
 		6D03311B1AA9E534004AA39F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		6D03311F1AA9E734004AA39F /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BubbleView.h; path = view/BubbleView.h; sourceTree = "<group>"; };
 		6D0331201AA9E734004AA39F /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BubbleView.m; path = view/BubbleView.m; sourceTree = "<group>"; };
-		6D0331211AA9E734004AA39F /* ConversationHeadButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversationHeadButtonView.h; path = view/ConversationHeadButtonView.h; sourceTree = "<group>"; };
-		6D0331221AA9E734004AA39F /* ConversationHeadButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversationHeadButtonView.m; path = view/ConversationHeadButtonView.m; sourceTree = "<group>"; };
 		6D0331241AA9E734004AA39F /* MessageAudioView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageAudioView.h; path = view/MessageAudioView.h; sourceTree = "<group>"; };
 		6D0331251AA9E734004AA39F /* MessageAudioView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageAudioView.m; path = view/MessageAudioView.m; sourceTree = "<group>"; };
 		6D0331261AA9E734004AA39F /* MessageImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageImageView.h; path = view/MessageImageView.h; sourceTree = "<group>"; };
@@ -170,6 +173,12 @@
 		6D0331611AAB6702004AA39F /* TAHttpOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TAHttpOperation.m; sourceTree = "<group>"; };
 		6D0331631AAB6781004AA39F /* UIImage+JSMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+JSMessagesView.h"; sourceTree = "<group>"; };
 		6D0331641AAB6781004AA39F /* UIImage+JSMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JSMessagesView.m"; sourceTree = "<group>"; };
+		6DF54F151AB6E58800197EBC /* TextMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextMessageViewController.h; path = controller/TextMessageViewController.h; sourceTree = "<group>"; };
+		6DF54F161AB6E58800197EBC /* TextMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextMessageViewController.m; path = controller/TextMessageViewController.m; sourceTree = "<group>"; };
+		6DF54F241AB816FB00197EBC /* BaseMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseMessageViewController.h; path = controller/BaseMessageViewController.h; sourceTree = "<group>"; };
+		6DF54F251AB816FB00197EBC /* BaseMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseMessageViewController.m; path = controller/BaseMessageViewController.m; sourceTree = "<group>"; };
+		6DFDA0221AB95B9800EF553A /* PeerMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PeerMessageViewController.h; path = controller/PeerMessageViewController.h; sourceTree = "<group>"; };
+		6DFDA0231AB95B9800EF553A /* PeerMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PeerMessageViewController.m; path = controller/PeerMessageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,8 +297,6 @@
 			children = (
 				6D03311F1AA9E734004AA39F /* BubbleView.h */,
 				6D0331201AA9E734004AA39F /* BubbleView.m */,
-				6D0331211AA9E734004AA39F /* ConversationHeadButtonView.h */,
-				6D0331221AA9E734004AA39F /* ConversationHeadButtonView.m */,
 				6D0331241AA9E734004AA39F /* MessageAudioView.h */,
 				6D0331251AA9E734004AA39F /* MessageAudioView.m */,
 				6D0331261AA9E734004AA39F /* MessageImageView.h */,
@@ -313,6 +320,12 @@
 				4875B1221AAC9362001D1435 /* MEESImageViewController.m */,
 				6D032FFC1AA9B4D2004AA39F /* MessageViewController.h */,
 				6D032FFD1AA9B4D2004AA39F /* MessageViewController.m */,
+				6DF54F151AB6E58800197EBC /* TextMessageViewController.h */,
+				6DF54F161AB6E58800197EBC /* TextMessageViewController.m */,
+				6DF54F241AB816FB00197EBC /* BaseMessageViewController.h */,
+				6DF54F251AB816FB00197EBC /* BaseMessageViewController.m */,
+				6DFDA0221AB95B9800EF553A /* PeerMessageViewController.h */,
+				6DFDA0231AB95B9800EF553A /* PeerMessageViewController.m */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -374,8 +387,6 @@
 				6D03315E1AAB6626004AA39F /* NSString+JSMessagesView.m */,
 				6D03315A1AAB64B1004AA39F /* UIImage+Resize.h */,
 				6D03315B1AAB64B1004AA39F /* UIImage+Resize.m */,
-				489BB2601AB5BED200AAAE69 /* StringUtil.m */,
-				489BB2631AB5BEFE00AAAE69 /* StringUtil.h */,
 			);
 			name = category;
 			path = imkit/category;
@@ -497,8 +508,8 @@
 				6D0331651AAB6781004AA39F /* UIImage+JSMessagesView.m in Sources */,
 				6D032FF41AA9B41C004AA39F /* PeerMessageDB.m in Sources */,
 				6D0331311AA9E734004AA39F /* BubbleView.m in Sources */,
+				6DFDA0271AB9797500EF553A /* TextMessageViewController.m in Sources */,
 				6D032FF11AA9B41C004AA39F /* GroupMessageHandler.m in Sources */,
-				489BB2611AB5BED200AAAE69 /* StringUtil.m in Sources */,
 				6D0331331AA9E734004AA39F /* MessageAudioView.m in Sources */,
 				6D03301B1AA9BCD8004AA39F /* DraftDB.m in Sources */,
 				6D0331381AA9E734004AA39F /* MessageViewCell.m in Sources */,
@@ -508,14 +519,15 @@
 				6D0330061AA9BBC7004AA39F /* AudioDownloader.m in Sources */,
 				6D032FF01AA9B41C004AA39F /* GroupMessageDB.m in Sources */,
 				6D0331341AA9E734004AA39F /* MessageImageView.m in Sources */,
+				6DF54F261AB816FB00197EBC /* BaseMessageViewController.m in Sources */,
 				6D032FF61AA9B41C004AA39F /* ReverseFile.m in Sources */,
 				6D032FFE1AA9B4D2004AA39F /* MessageViewController.m in Sources */,
 				6D0331351AA9E734004AA39F /* MessageInputView.m in Sources */,
-				6D0331321AA9E734004AA39F /* ConversationHeadButtonView.m in Sources */,
 				6D0330071AA9BBC7004AA39F /* IMHttpAPI.m in Sources */,
 				4875B1231AAC9362001D1435 /* MEESImageViewController.m in Sources */,
 				6D0330081AA9BBC7004AA39F /* Outbox.m in Sources */,
 				6D03315F1AAB6626004AA39F /* NSString+JSMessagesView.m in Sources */,
+				6DFDA0241AB95B9800EF553A /* PeerMessageViewController.m in Sources */,
 				6D0331371AA9E734004AA39F /* MessageTextView.m in Sources */,
 				6D032FF21AA9B41C004AA39F /* IMessage.m in Sources */,
 				6D03310A1AA9BDB8004AA39F /* wav_amr.c in Sources */,
@@ -626,11 +638,6 @@
 		6D032FA71AA9B0F5004AA39F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$SDKROOT/usr/include/libxml2,
-				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/imkit/amr",
@@ -657,11 +664,6 @@
 		6D032FA81AA9B0F5004AA39F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					$SDKROOT/usr/include/libxml2,
-				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/imkit/amr",

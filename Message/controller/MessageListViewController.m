@@ -10,6 +10,8 @@
 #import <imkit/MessageViewController.h>
 #import <imkit/PeerMessageDB.h>
 #import <imkit/IMessage.h>
+#import <imkit/PeerMessageViewController.h>
+
 #import "pinyin.h"
 #import "MessageGroupConversationCell.h"
 #import "UserDB.h"
@@ -290,7 +292,7 @@
     Conversation *con = [self.conversations objectAtIndex:indexPath.row];
     IMUser *rmtUser = [[UserDB instance] loadUser: con.cid];
     
-    MessageViewController* msgController = [[MessageViewController alloc] init];
+    PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
     msgController.peerUID = rmtUser.uid;
     if ([rmtUser.contact.contactName length] == 0) {
         msgController.peerName = rmtUser.displayName;
@@ -298,7 +300,6 @@
         msgController.peerName = rmtUser.contact.contactName;
         
     }
-    msgController.peerLastUpTimestamp = rmtUser.lastUpTimestamp;
     msgController.currentUID = [UserPresent instance].uid;
     
     msgController.hidesBottomBarWhenPushed = YES;

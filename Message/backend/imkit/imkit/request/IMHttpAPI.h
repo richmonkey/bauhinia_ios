@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TAHttpOperation.h"
 #import <UIKit/UIKit.h>
 
 @interface IMHttpAPI : NSObject
