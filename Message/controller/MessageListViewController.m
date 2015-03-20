@@ -132,6 +132,9 @@
     while (conversation) {
         conversation.name = [self getGroupName:conversation.cid];;
         conversation.avatarURL = @"";
+        if (conversation.message.content.type == MESSAGE_GROUP_NOTIFICATION) {
+            [self updateNotificationDesc:conversation.message];
+        }
         [self.conversations addObject:conversation];
         conversation = [iterator next];
     }
@@ -143,29 +146,58 @@
     
     
     [self updateEmptyContentView];
-    
+
+    [self checkVersion];
+}
+
+-(void)checkVersion {
     [APIRequest checkVersion:@"ios"
-                    success:^(NSDictionary *resp){
-                        
-                        self.versionUrl = [resp objectForKey:@"url"];
-                        NSString *majorVersion = [resp objectForKey:@"major"];
-                        NSString *minorVersion = [resp objectForKey:@"minor"];
-                        
-                        NSString *newVersion = [NSString stringWithFormat:@"%@.%@",majorVersion,minorVersion];
-                        
-                       NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-                       NSString *currentVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
-                        
-                        if ([newVersion floatValue] > [currentVersion floatValue] ) {
-                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"是否更新羊蹄甲?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
-                            alertView.tag = kNewVersionTag;
-                            [alertView show];
-                        }
-                    }
-                   fail:^{
-                       
-                   }];
-    
+                     success:^(NSDictionary *resp){
+                         
+                         self.versionUrl = [resp objectForKey:@"url"];
+                         NSString *majorVersion = [resp objectForKey:@"major"];
+                         NSString *minorVersion = [resp objectForKey:@"minor"];
+                         
+                         NSString *newVersion = [NSString stringWithFormat:@"%@.%@",majorVersion,minorVersion];
+                         
+                         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+                         NSString *currentVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
+                         
+                         if ([newVersion floatValue] > [currentVersion floatValue] ) {
+                             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"是否更新羊蹄甲?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
+                             alertView.tag = kNewVersionTag;
+                             [alertView show];
+                         }
+                     }
+                        fail:^{
+                            
+                        }];
+}
+
+- (void)updateNotificationDesc:(IMessage*)message {
+    if (message.content.type == MESSAGE_GROUP_NOTIFICATION) {
+        GroupNotification *notification = message.content.notification;
+        int type = notification.type;
+        if (type == NOTIFICATION_GROUP_CREATED) {
+            if ([UserPresent instance].uid == notification.master) {
+                NSString *desc = [NSString stringWithFormat:@"您创建了\"%@\"群组", notification.groupName];
+                message.content.notificationDesc = desc;
+            } else {
+                NSString *desc = [NSString stringWithFormat:@"您加入了\"%@\"群组", notification.groupName];
+                message.content.notificationDesc = desc;
+            }
+        } else if (type == NOTIFICATION_GROUP_DISBANDED) {
+            message.content.notificationDesc = @"群组已解散";
+        } else if (type == NOTIFICATION_GROUP_MEMBER_ADDED) {
+            User *u = [[UserDB instance] loadUser:notification.member];
+            NSString *desc = [NSString stringWithFormat:@"%@加入群", u.displayName];
+            message.content.notificationDesc = desc;
+        } else if (type == NOTIFICATION_GROUP_MEMBER_LEAVED) {
+            User *u = [[UserDB instance] loadUser:notification.member];
+            NSString *desc = [NSString stringWithFormat:@"%@离开群", u.displayName];
+            message.content.notificationDesc = desc;
+        }
+    }
 }
 
 - (NSString*) getGroupName:(int64_t)groupID {
@@ -628,29 +660,15 @@
     
     [[GroupDB instance] addGroup:group];
     
-    if (master == [UserPresent instance].uid) {
-        IMessage *msg = [[IMessage alloc] init];
-        msg.sender = master;
-        msg.receiver = groupID;
-        msg.timestamp = (int)time(NULL);
-        NSString *n = [NSString stringWithFormat:@"您创建了\"%@\"群组", groupName];
-        MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-        content.notificationDesc = n;
-        msg.content = content;
-
-        [self onNewGroupMessage:msg cid:msg.receiver];
-    } else {
-        IMessage *msg = [[IMessage alloc] init];
-        msg.sender = master;
-        msg.receiver = groupID;
-        msg.timestamp = (int)time(NULL);
-        NSString *n = [NSString stringWithFormat:@"您加入了\"%@\"群组", groupName];
-        MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-        content.notificationDesc = n;
-        msg.content = content;
-
-        [self onNewGroupMessage:msg cid:msg.receiver];
-    }
+    IMessage *msg = [[IMessage alloc] init];
+    msg.sender = 0;
+    msg.receiver = groupID;
+    msg.timestamp = (int)time(NULL);
+    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+    msg.content = content;
+    
+    [self updateNotificationDesc:msg];
+    [self onNewGroupMessage:msg cid:msg.receiver];
 }
 
 -(void)onGroupDisband:(GroupNotification*)notification {
@@ -662,10 +680,10 @@
     msg.sender = 0;
     msg.receiver = groupID;
     msg.timestamp = (int)time(NULL);
-    NSString *n = @"群组已解散";
     MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-    content.notificationDesc = n;
     msg.content = content;
+    
+    [self updateNotificationDesc:msg];
     
     [self onNewGroupMessage:msg cid:msg.receiver];
 }
@@ -680,14 +698,10 @@
     msg.sender = 0;
     msg.receiver = groupID;
     msg.timestamp = (int)time(NULL);
-    
-    User *u = [[UserDB instance] loadUser:member];
-    
-    NSString *n = [NSString stringWithFormat:@"%@加入群", u.displayName];
-    
     MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-    content.notificationDesc = n;
     msg.content = content;
+    
+    [self updateNotificationDesc:msg];
     
     [self onNewGroupMessage:msg cid:msg.receiver];
 }
@@ -702,14 +716,10 @@
     msg.sender = 0;
     msg.receiver = groupID;
     msg.timestamp = (int)time(NULL);
-    
-    User *u = [[UserDB instance] loadUser:member];
-    
-    NSString *n = [NSString stringWithFormat:@"%@离开群", u.displayName];
-    
     MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-    content.notificationDesc = n;
     msg.content = content;
+    
+    [self updateNotificationDesc:msg];
     
     [self onNewGroupMessage:msg cid:msg.receiver];
 }
