@@ -23,6 +23,7 @@
 
 #import "APIRequest.h"
 #import "LevelDB.h"
+#import "GroupDB.h"
 
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
@@ -103,16 +104,17 @@
     
     [[IMService instance] addMessageObserver:self];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newGroup:) name:CREATE_NEW_GROUP object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newGroupMessage:) name:LATEST_GROUP_MESSAGE object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:LATEST_PEER_MESSAGE object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearAllConversation:) name:CLEAR_ALL_CONVESATION object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSingleConvNewState:) name:CLEAR_PEER_NEW_MESSAGE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSinglePeerNewState:) name:CLEAR_PEER_NEW_MESSAGE object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSingleGroupNewState:) name:CLEAR_GROUP_NEW_MESSAGE object:nil];
+
     UserDB *db = [UserDB instance];
     id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
     
@@ -167,13 +169,13 @@
 }
 
 - (NSString*) getGroupName:(int64_t)groupID {
-    NSString *key = [NSString stringWithFormat:@"groups_%lld", groupID];
-    NSString *name = [[LevelDB defaultLevelDB] stringForKey:key];
+    NSString *name = [[GroupDB instance] getGroupTopic:groupID];
     if (!name) {
         name = @"";
     }
     return name;
 }
+
 -(void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 }
@@ -242,8 +244,8 @@
         cell.messageContent.text = @"一个地理位置";
     }else if (conv.message.content.type == MESSAGE_AUDIO){
        cell.messageContent.text = @"一个音频";
-    } else if (conv.message.content.type == MESSAGE_NOTIFICATION) {
-        cell.messageContent.text = conv.message.content.notification;
+    } else if (conv.message.content.type == MESSAGE_GROUP_NOTIFICATION) {
+        cell.messageContent.text = conv.message.content.notificationDesc;
     }
     
     
@@ -346,6 +348,15 @@
     } else {
         
         GroupMessageViewController* msgController = [[GroupMessageViewController alloc] init];
+        msgController.isShowUserName = YES;
+        msgController.getUserName = ^ NSString*(int64_t uid) {
+            if (uid == 0) {
+                return nil;
+            }
+            User *u = [[UserDB instance] loadUser:uid];
+            return u.displayName;
+        };
+        
         msgController.groupID = con.cid;
         
         msgController.groupName = con.name;
@@ -360,24 +371,6 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (void)newGroup:(NSNotification*)notification {
-    IMessage *msg = notification.object;
-
-    NSString *groupName = [notification.userInfo objectForKey:@"group_name"];
-    int64_t groupID = [[notification.userInfo objectForKey:@"group_id"] longLongValue];
-    
-    Conversation *con = [[Conversation alloc] init];
-    con.message = msg;
-
-    con.type = CONVERSATION_GROUP;
-    con.cid = groupID;
-    con.name = groupName;
- 
-    [self.conversations insertObject:con atIndex:0];
-    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-    NSArray *array = [NSArray arrayWithObject:path];
-    [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
-}
 
 - (void)newGroupMessage:(NSNotification*)notification {
     IMessage *m = notification.object;
@@ -396,11 +389,27 @@
     [self updateEmptyContentView];
 }
 
-- (void)clearSingleConvNewState:(NSNotification*) notification{
+- (void)clearSinglePeerNewState:(NSNotification*) notification {
     int64_t usrid = [(NSNumber*)notification.object longLongValue];
     for (int index = 0 ; index < [self.conversations count] ; index++) {
         Conversation *conv = [self.conversations objectAtIndex:index];
-        if (conv.cid == usrid) {
+        if (conv.type == CONVERSATION_PEER && conv.cid == usrid) {
+            if (conv.newMsgCount > 0) {
+                conv.newMsgCount = 0;
+                NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+                MessageConversationCell *cell = (MessageConversationCell*)[self.tableview cellForRowAtIndexPath:path];
+                [cell clearNewMessage];
+                [self resetConversationsViewControllerNewState];
+            }
+        }
+    }
+}
+
+- (void)clearSingleGroupNewState:(NSNotification*) notification{
+    int64_t groupID = [(NSNumber*)notification.object longLongValue];
+    for (int index = 0 ; index < [self.conversations count] ; index++) {
+        Conversation *conv = [self.conversations objectAtIndex:index];
+        if (conv.type == CONVERSATION_GROUP && conv.cid == groupID) {
             if (conv.newMsgCount > 0) {
                 conv.newMsgCount = 0;
                  NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
@@ -564,15 +573,13 @@
     MessageContent *content = [[MessageContent alloc] init];
     content.raw = im.content;
     m.content = content;
-    m.timestamp = time(NULL);
+    m.timestamp = (int)time(NULL);
     
     MessageContent *c = m.content;
     if (c.type == MESSAGE_TEXT) {
         IMLog(@"message:%@", c.text);
     }
     [self onNewMessage:m cid:m.sender];
-    
-    
 }
 
 -(void)onGroupMessage:(IMMessage *)im {
@@ -583,7 +590,7 @@
     MessageContent *content = [[MessageContent alloc] init];
     content.raw = im.content;
     m.content = content;
-    m.timestamp = time(NULL);
+    m.timestamp = (int)time(NULL);
     
     MessageContent *c = m.content;
     if (c.type == MESSAGE_TEXT) {
@@ -592,8 +599,119 @@
     [self onNewGroupMessage:m cid:m.receiver];
 }
 
--(void)onGroupNotification:(NSString*)notification {
-    NSLog(@"group notification:%@", notification);
+-(void)onGroupNotification:(NSString*)text {
+    GroupNotification *notification = [[GroupNotification alloc] initWithRaw:text];
+    if (notification.type == NOTIFICATION_GROUP_CREATED) {
+        [self onGroupCreated:notification];
+    } else if (notification.type == NOTIFICATION_GROUP_DISBANDED) {
+        [self onGroupDisband:notification];
+    } else if (notification.type == NOTIFICATION_GROUP_MEMBER_ADDED) {
+        [self onGroupMemberAdd:notification];
+    } else if (notification.type == NOTIFICATION_GROUP_MEMBER_LEAVED) {
+        [self onGroupMemberLeave:notification];
+    }
+}
+-(void)onGroupCreated:(GroupNotification*)notification {
+    int64_t groupID = notification.groupID;
+    NSString *groupName = notification.groupName;
+    int64_t master = notification.master;
+    NSArray *members = notification.members;
+    
+    Group *group = [[Group alloc] init];
+    group.groupID = groupID;
+    group.topic = groupName;
+
+    group.masterID = master;
+    for (NSNumber *n in members) {
+        [group addMember:[n longLongValue]];
+    }
+    
+    [[GroupDB instance] addGroup:group];
+    
+    if (master == [UserPresent instance].uid) {
+        IMessage *msg = [[IMessage alloc] init];
+        msg.sender = master;
+        msg.receiver = groupID;
+        msg.timestamp = (int)time(NULL);
+        NSString *n = [NSString stringWithFormat:@"您创建了\"%@\"群组", groupName];
+        MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+        content.notificationDesc = n;
+        msg.content = content;
+
+        [self onNewGroupMessage:msg cid:msg.receiver];
+    } else {
+        IMessage *msg = [[IMessage alloc] init];
+        msg.sender = master;
+        msg.receiver = groupID;
+        msg.timestamp = (int)time(NULL);
+        NSString *n = [NSString stringWithFormat:@"您加入了\"%@\"群组", groupName];
+        MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+        content.notificationDesc = n;
+        msg.content = content;
+
+        [self onNewGroupMessage:msg cid:msg.receiver];
+    }
+}
+
+-(void)onGroupDisband:(GroupNotification*)notification {
+    int64_t groupID = notification.groupID;
+    
+    [[GroupDB instance] disbandGroup:groupID];
+    
+    IMessage *msg = [[IMessage alloc] init];
+    msg.sender = 0;
+    msg.receiver = groupID;
+    msg.timestamp = (int)time(NULL);
+    NSString *n = @"群组已解散";
+    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+    content.notificationDesc = n;
+    msg.content = content;
+    
+    [self onNewGroupMessage:msg cid:msg.receiver];
+}
+
+-(void)onGroupMemberAdd:(GroupNotification*)notification {
+    int64_t member = notification.member;
+    int64_t groupID = notification.groupID;
+    
+    [[GroupDB instance] addGroupMember:groupID member:member];
+    
+    IMessage *msg = [[IMessage alloc] init];
+    msg.sender = 0;
+    msg.receiver = groupID;
+    msg.timestamp = (int)time(NULL);
+    
+    User *u = [[UserDB instance] loadUser:member];
+    
+    NSString *n = [NSString stringWithFormat:@"%@加入群", u.displayName];
+    
+    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+    content.notificationDesc = n;
+    msg.content = content;
+    
+    [self onNewGroupMessage:msg cid:msg.receiver];
+}
+
+-(void)onGroupMemberLeave:(GroupNotification*)notification {
+    int64_t member = notification.member;
+    int64_t groupID = notification.groupID;
+    
+    [[GroupDB instance] removeGroupMember:groupID member:member];
+    
+    IMessage *msg = [[IMessage alloc] init];
+    msg.sender = 0;
+    msg.receiver = groupID;
+    msg.timestamp = (int)time(NULL);
+    
+    User *u = [[UserDB instance] loadUser:member];
+    
+    NSString *n = [NSString stringWithFormat:@"%@离开群", u.displayName];
+    
+    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+    content.notificationDesc = n;
+    msg.content = content;
+    
+    [self onNewGroupMessage:msg cid:msg.receiver];
 }
 
 

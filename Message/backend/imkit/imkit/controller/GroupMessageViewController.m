@@ -97,19 +97,20 @@
     
     [self removeObserver];
     
-    NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_GROUP_NEW_MESSAGE
-                                                                 object:[NSNumber numberWithLongLong:self.groupID]
-                                                               userInfo:nil];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
     if (self.messages.count > 0) {
         IMessage *msg = [self.messages lastObject];
-        if (msg.sender == self.currentUID) {
+        if (msg.sender == self.currentUID || msg.content.type == MESSAGE_GROUP_NOTIFICATION) {
             NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_GROUP_MESSAGE object: msg userInfo:nil];
             
             [[NSNotificationCenter defaultCenter] postNotification:notification];
         }
     }
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_GROUP_NEW_MESSAGE
+                                                                 object:[NSNumber numberWithLongLong:self.groupID]
+                                                               userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+
     
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
@@ -123,6 +124,8 @@
     [[self class] playMessageReceivedSound];
     
     NSLog(@"receive msg:%@",im);
+    //加载第三方应用的用户名到缓存中
+    [self getUserName:im.sender];
     
     IMessage *m = [[IMessage alloc] init];
     m.sender = im.sender;
@@ -132,7 +135,7 @@
     m.content = content;
     m.timestamp = (int)time(NULL);
     
-    if (self.textMode && m.content.type != MESSAGE_TEXT) {
+    if (self.textMode && m.content.type != MESSAGE_TEXT && m.content.type != MESSAGE_GROUP_NOTIFICATION) {
         return;
     }
     
@@ -162,10 +165,99 @@
     [self reloadMessage:msgLocalID];
 }
 
--(void)onGroupNotification:(NSString*)notification {
-    NSLog(@"group notification:%@", notification);
+
+-(void)onGroupNotification:(NSString *)text {
+    GroupNotification *notification = [[GroupNotification alloc] initWithRaw:text];
+    
+    if (notification.type == NOTIFICATION_GROUP_CREATED) {
+
+    } else if (notification.type == NOTIFICATION_GROUP_DISBANDED) {
+        [self onGroupDisband:notification];
+    } else if (notification.type == NOTIFICATION_GROUP_MEMBER_ADDED) {
+        [self onGroupMemberAdd:notification];
+    } else if (notification.type == NOTIFICATION_GROUP_MEMBER_LEAVED) {
+        [self onGroupMemberLeave:notification];
+    }
 }
 
+-(void)onGroupDisband:(GroupNotification*)notification {
+    int64_t groupID = notification.groupID;
+    if (groupID != self.groupID) {
+        return;
+    }
+    
+    IMessage *msg = [[IMessage alloc] init];
+    msg.sender = 0;
+    msg.receiver = groupID;
+    msg.timestamp = (int)time(NULL);
+    NSString *n = [NSString stringWithFormat:@"群组已经被解散"];
+    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+    content.notificationDesc = n;
+    msg.content = content;
+    [self insertMessage:msg];
+}
+
+-(void)onGroupMemberAdd:(GroupNotification*)notification {
+    int64_t groupID = notification.groupID;
+    int64_t member = notification.member;
+    if (groupID != self.groupID) {
+        return;
+    }
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = 0;
+    msg.receiver = groupID;
+    msg.timestamp = (int)time(NULL);
+    NSString *n;
+
+    if (member != self.currentUID) {
+        NSString *name = [self getUserName:member];
+        n = [NSString stringWithFormat:@"%@ 被加入到群组", name];
+    } else {
+        n = [NSString stringWithFormat:@"您被加到群组"];
+    }
+    
+    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+    content.notificationDesc = n;
+    msg.content = content;
+    
+
+    [self insertMessage:msg];
+}
+
+-(void)onGroupMemberLeave:(GroupNotification*)notification {
+    int64_t groupID = notification.groupID;
+    int64_t member = notification.member;
+
+    if (groupID != self.groupID) {
+        return;
+    }
+    
+    IMessage *msg = [[IMessage alloc] init];
+    msg.sender = 0;
+    msg.receiver = groupID;
+    msg.timestamp = (int)time(NULL);
+    NSString *name = [self getUserName:member];
+    NSString *n = [NSString stringWithFormat:@"%@ 离开了", name];
+    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
+    content.notificationDesc = n;
+    msg.content = content;
+    [self insertMessage:msg];
+}
+
+-(NSString*)getUserName:(int64_t)uid {
+    NSNumber *key = [NSNumber numberWithLongLong:uid];
+    
+    if ([self.names objectForKey:key]) {
+        return [self.names objectForKey:key];
+    }
+
+    NSString *name = self.getUserName(uid);
+    if (name.length > 0) {
+        [self.names setObject:name forKey:key];
+    }
+    return name;
+}
 
 - (void)loadConversationData {
     int count = 0;
@@ -173,13 +265,15 @@
     IMessage *msg = [iterator next];
     while (msg) {
         if (self.textMode) {
-            if (msg.content.type == MESSAGE_TEXT) {
+            if (msg.content.type == MESSAGE_TEXT || msg.content.type == MESSAGE_GROUP_NOTIFICATION) {
+                [self getUserName:msg.sender];
                 [self.messages insertObject:msg atIndex:0];
                 if (++count >= PAGE_COUNT) {
                     break;
                 }
             }
         } else {
+            [self getUserName:msg.sender];
             [self.messages insertObject:msg atIndex:0];
             if (++count >= PAGE_COUNT) {
                 break;
@@ -203,9 +297,20 @@
     int count = 0;
     IMessage *msg = [iterator next];
     while (msg) {
-        [self.messages insertObject:msg atIndex:0];
-        if (++count >= PAGE_COUNT) {
-            break;
+        if (self.textMode) {
+            if (msg.content.type == MESSAGE_TEXT || msg.content.type == MESSAGE_GROUP_NOTIFICATION) {
+                [self getUserName:msg.sender];
+                [self.messages insertObject:msg atIndex:0];
+                if (++count >= PAGE_COUNT) {
+                    break;
+                }
+            }
+        } else {
+            [self getUserName:msg.sender];
+            [self.messages insertObject:msg atIndex:0];
+            if (++count >= PAGE_COUNT) {
+                break;
+            }
         }
         msg = [iterator next];
     }

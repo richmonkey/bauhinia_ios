@@ -14,7 +14,14 @@
 
 
 +(IMHttpAPI*)instance {
-    return nil;
+    static IMHttpAPI *im;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!im) {
+            im = [[IMHttpAPI alloc] init];
+        }
+    });
+    return im;
 }
 
 +(NSOperation*)uploadImage:(UIImage*)image success:(void (^)(NSString *url))success fail:(void (^)())fail {

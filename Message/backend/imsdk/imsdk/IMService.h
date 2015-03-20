@@ -26,8 +26,10 @@
 @protocol IMGroupMessageHandler <NSObject>
 
 -(BOOL)handleMessage:(IMMessage*)msg;
--(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid;
--(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid;
+-(BOOL)handleMessageACK:(int)msgLocalID gid:(int64_t)gid;
+-(BOOL)handleMessageFailure:(int)msgLocalID gid:(int64_t)gid;
+
+-(BOOL)handleGroupNotification:(NSString*)notification;
 
 @end
 
@@ -53,7 +55,10 @@
 -(void)onGroupMessage:(IMMessage*)msg;
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid;
 -(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid;
+
+
 -(void)onGroupNotification:(NSString*)notification;
+
 @end
 
 @interface IMService : NSObject

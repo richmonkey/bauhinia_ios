@@ -132,22 +132,23 @@
     
     [self removeObserver];
     
+    if (self.messages.count > 0) {
+        
+        IMessage *msg = [self.messages lastObject];
+        
+        if (msg.sender == self.currentUID) {
+            NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_PEER_MESSAGE object: msg userInfo:nil];
+            
+            [[NSNotificationCenter defaultCenter] postNotification:notification];
+        }
+    }
+    
     NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_PEER_NEW_MESSAGE
                                                                  object:[NSNumber numberWithLongLong:self.peerUID]
                                                                userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     
-    if (self.messages.count > 0) {
-    
-        IMessage *msg = [self.messages lastObject];
 
-        if (msg.sender == self.currentUID) {
-            NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_PEER_MESSAGE object: msg userInfo:nil];
-    
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
-        }
-    }
-    
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 

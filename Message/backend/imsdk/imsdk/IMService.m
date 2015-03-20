@@ -223,7 +223,7 @@
     
     for (NSNumber *seq in self.groupMessages) {
         IMMessage *msg = [self.peerMessages objectForKey:seq];
-        [self.groupMessageHandler handleMessageFailure:msg.msgLocalID uid:msg.receiver];
+        [self.groupMessageHandler handleMessageFailure:msg.msgLocalID gid:msg.receiver];
         [self publishGroupMessageFailure:msg];
     }
     [self.peerMessages removeAllObjects];
@@ -244,7 +244,7 @@
         [self.peerMessages removeObjectForKey:seq];
         [self publishPeerMessageACK:m.msgLocalID uid:m.receiver];
     } else if (m2) {
-        [self.groupMessageHandler handleMessageACK:m2.msgLocalID uid:m2.receiver];
+        [self.groupMessageHandler handleMessageACK:m2.msgLocalID gid:m2.receiver];
         [self.groupMessages removeObjectForKey:seq];
         [self publishGroupMessageACK:m2.msgLocalID gid:m2.receiver];
     }
@@ -312,11 +312,18 @@
 
 -(void)handleGroupNotification:(Message*)msg {
     NSString *notification = (NSString*)msg.body;
+    NSLog(@"group notification:%@", notification);
+    [self.groupMessageHandler handleGroupNotification:notification];
     for (id<MessageObserver> ob in self.observers) {
         if ([ob respondsToSelector:@selector(onGroupNotification:)]) {
             [ob onGroupNotification:notification];
         }
     }
+    
+    Message *ack = [[Message alloc] init];
+    ack.cmd = MSG_ACK;
+    ack.body = [NSNumber numberWithInt:msg.seq];
+    [self sendMessage:ack];
 }
 
 -(void)publishPeerMessage:(IMMessage*)msg {

@@ -155,6 +155,7 @@
         return YES;
     } else if (self.cmd == MSG_GROUP_NOTIFICATION) {
         self.body = [[NSString alloc] initWithBytes:p length:data.length-HEAD_SIZE encoding:NSUTF8StringEncoding];
+        return YES;
     } else {
         self.body = [NSData dataWithBytes:p length:data.length-8];
         return YES;

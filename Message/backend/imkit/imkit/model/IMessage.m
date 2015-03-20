@@ -35,6 +35,48 @@
 
 @end
 
+@implementation GroupNotification
+
+-(id)initWithRaw:(NSString*)raw {
+    self = [super init];
+    if (self) {
+        self.raw = raw;
+        
+        const char *utf8 = [raw UTF8String];
+        if (utf8 == nil) {
+            utf8 = "";
+        }
+        
+        NSData *data = [NSData dataWithBytes:utf8 length:strlen(utf8)];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        
+        if ([dict objectForKey:@"create"]) {
+            self.type = NOTIFICATION_GROUP_CREATED;
+            NSDictionary *d = [dict objectForKey:@"create"];
+            self.master = [[d objectForKey:@"master"] longLongValue];
+            self.groupName = [d objectForKey:@"name"];
+            self.groupID = [[d objectForKey:@"group_id"] longLongValue];
+            self.members = [d objectForKey:@"members"];
+        } else if ([dict objectForKey:@"disband"]) {
+            self.type = NOTIFICATION_GROUP_DISBANDED;
+            NSDictionary *obj = [dict objectForKey:@"disband"];
+            self.groupID = [[obj objectForKey:@"group_id"] longLongValue];
+        } else if ([dict objectForKey:@"quit_group"]) {
+            self.type = NOTIFICATION_GROUP_MEMBER_LEAVED;
+            NSDictionary *obj = [dict objectForKey:@"quit_group"];
+            self.groupID = [[obj objectForKey:@"group_id"] longLongValue];
+            self.member =[[obj objectForKey:@"member_id"] longLongValue];
+        } else if ([dict objectForKey:@"add_member"]) {
+            self.type = NOTIFICATION_GROUP_MEMBER_ADDED;
+            NSDictionary *obj = [dict objectForKey:@"add_member"];
+            self.groupID = [[obj objectForKey:@"group_id"] longLongValue];
+            self.member =[[obj objectForKey:@"member_id"] longLongValue];
+        }
+    }
+    return self;
+}
+
+@end
 @implementation MessageContent
 -(id)initWithText:(NSString*)text {
     self = [super init];
@@ -68,10 +110,10 @@
     return self;
 }
 
-- (id)initWithNotification:(NSString*)notification {
+- (id)initWithNotification:(GroupNotification*)notification {
     self = [super init];
     if (self) {
-        NSDictionary *dic = @{@"notification":notification};
+        NSDictionary *dic = @{@"notification":notification.raw};
         NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
         self.raw =  newStr;
     }
@@ -104,7 +146,7 @@
     NSDictionary *obj = [self.dict objectForKey:@"audio"];
     Audio *audio = [[Audio alloc] init];
     audio.url = [obj objectForKey:@"url"];
-    audio.duration = [[obj objectForKey:@"duration"] integerValue];
+    audio.duration = [[obj objectForKey:@"duration"] intValue];
     return audio;
 }
 
@@ -116,8 +158,8 @@
     return lc;
 }
 
--(NSString*)notification {
-    return [self.dict objectForKey:@"notification"];
+-(GroupNotification*)notification {
+    return [[GroupNotification alloc] initWithRaw:[self.dict objectForKey:@"notification"]];
 }
 
 -(void)setRaw:(NSString *)raw {
@@ -136,7 +178,7 @@
     } else if ([self.dict objectForKey:@"location"] != nil) {
         self.type = MESSAGE_LOCATION;
     } else if ([self.dict objectForKey:@"notification"] != nil) {
-        self.type = MESSAGE_NOTIFICATION;
+        self.type = MESSAGE_GROUP_NOTIFICATION;
     } else {
         self.type = MESSAGE_UNKNOWN;
     }

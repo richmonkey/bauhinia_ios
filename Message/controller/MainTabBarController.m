@@ -133,7 +133,7 @@
                                [self prepareTimer];
                                [IMService instance].token = accessToken;
                                [IMHttpAPI instance].accessToken = accessToken;
-                               NSLog(@"refresh token success");
+                               NSLog(@"refresh token success:%@", accessToken);
                            }
                               fail:^{
                                   NSLog(@"refresh token fail");

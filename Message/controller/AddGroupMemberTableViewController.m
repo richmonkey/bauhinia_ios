@@ -17,7 +17,7 @@
 
 #import "UIApplication+Util.h"
 #import "UIView+Toast.h"
-#import "LevelDB.h"
+#import "GroupDB.h"
 
 @interface AddGroupMemberTableViewController ()
 @property(nonatomic, copy) NSString *groupName;
@@ -103,29 +103,6 @@
                    success:^(int64_t groupID) {
                        [hud hide:NO];
                        NSLog(@"new group id:%lld", groupID);
-                       
-                       NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-                       [dict setObject:self.groupName forKey:@"group_name"];
-                       [dict setObject:[NSNumber numberWithLongLong:groupID] forKey:@"group_id"];
-                       
-                       NSString *key = [NSString stringWithFormat:@"groups_%lld", groupID];
-                       [[LevelDB defaultLevelDB] setString:self.groupName forKey:key];
-                       
-                       IMessage *msg = [[IMessage alloc] init];
-                       msg.sender = uid;
-                       msg.receiver = groupID;
-                       msg.timestamp = time(NULL);
-                       NSString *n = [NSString stringWithFormat:@"您创建了\"%@\"群组", self.groupName];
-                       MessageContent *content = [[MessageContent alloc] initWithNotification:n];
-                       msg.content = content;
-                       
-                       [[GroupMessageDB instance] insertMessage:msg];
-                       
-                       NSNotification *notification = [[NSNotification alloc] initWithName:CREATE_NEW_GROUP
-                                                                                    object:msg userInfo:dict];
-
-                       [[NSNotificationCenter defaultCenter] postNotification:notification];
-                       
                        [self.navigationController popToRootViewControllerAnimated:YES];
                    }
                       fail:^ {

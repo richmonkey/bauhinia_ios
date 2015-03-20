@@ -23,24 +23,26 @@
 }
 
 -(NSString*)groupKeyFromGroupID:(int64_t)groupID {
-  NSString *key = [NSString stringWithFormat:@"groups_%lld", groupID];
-  return key;
+    NSString *key = [NSString stringWithFormat:@"groups_%lld", groupID];
+    return key;
 }
 
 -(BOOL)addGroup:(Group*)group {
-  LevelDB *db = [LevelDB defaultLevelDB];
-  NSString *key = [self groupKeyFromGroupID:group.groupID];
-
-  NSString *k1 = [key stringByAppendingString:@"_topic"];
-  NSString *k2 = [key stringByAppendingString:@"_master"];
-  
-  [db setString:group.topic forKey:k1];
-  [db setInt:group.masterID forKey:k2];
-  
-  for (NSNumber *uid in group.members) {
-    [self addGroupMember:group.groupID member:[uid longLongValue]];
-  }
-  return YES;
+    LevelDB *db = [LevelDB defaultLevelDB];
+    NSString *key = [self groupKeyFromGroupID:group.groupID];
+    
+    NSString *k1 = [key stringByAppendingString:@"_topic"];
+    NSString *k2 = [key stringByAppendingString:@"_master"];
+    NSString *k3 = [key stringByAppendingString:@"_disbanded"];
+    
+    [db setString:group.topic forKey:k1];
+    [db setInt:group.masterID forKey:k2];
+    [db setInt:group.disbanded forKey:k3];
+    
+    for (NSNumber *uid in group.members) {
+        [self addGroupMember:group.groupID member:[uid longLongValue]];
+    }
+    return YES;
 }
 
 -(BOOL)removeGroup:(int64_t)groupID {
@@ -63,6 +65,16 @@
     [self removeGroupMember:group.groupID member:[member longLongValue]];
   }
   return YES;
+}
+
+-(BOOL)disbandGroup:(int64_t)groupID {
+    LevelDB *db = [LevelDB defaultLevelDB];
+    NSString *key = [self groupKeyFromGroupID:groupID];
+    
+    NSString *k3 = [key stringByAppendingString:@"_disbanded"];
+    
+    [db setInt:1 forKey:k3];
+    return YES;
 }
 
 -(NSString*)groupMemberKey:(int64_t)groupID member:(int64_t)uid {
@@ -148,24 +160,34 @@
 }
 
 -(Group*)loadGroup:(int64_t)groupID {
-  LevelDB *db = [LevelDB defaultLevelDB];
-  NSString *key = [self groupKeyFromGroupID:groupID];
+    LevelDB *db = [LevelDB defaultLevelDB];
+    NSString *key = [self groupKeyFromGroupID:groupID];
+    
+    NSString *k1 = [key stringByAppendingString:@"_topic"];
+    NSString *k2 = [key stringByAppendingString:@"_master"];
+    NSString *k3 = [key stringByAppendingString:@"_disbanded"];
+    
+    
+    Group *group = [[Group alloc] init];
+    group.groupID = groupID;
+    group.topic = [db stringForKey:k1];
+    group.masterID = [db intForKey:k2];
+    group.disbanded = [db intForKey:k3];
+    if (group.groupID == 0 || group.masterID == 0 || group.topic == nil) {
+        return nil;
+    }
+    
+    [self loadGroupMember:group];
+    
+    return group;
+}
 
-  NSString *k1 = [key stringByAppendingString:@"_topic"];
-  NSString *k2 = [key stringByAppendingString:@"_master"];
-
-  Group *group = [[Group alloc] init];
-  group.groupID = groupID;
-  group.topic = [db stringForKey:k1];
-  group.masterID = [db intForKey:k2];
-  
-  if (group.groupID == 0 || group.masterID == 0 || group.topic == nil) {
-    return nil;
-  }
-  
-  [self loadGroupMember:group];
-  
-  return group;
+-(NSString*)getGroupTopic:(int64_t)groupID {
+    LevelDB *db = [LevelDB defaultLevelDB];
+    NSString *key = [self groupKeyFromGroupID:groupID];
+    
+    NSString *k1 = [key stringByAppendingString:@"_topic"];
+    return [db stringForKey:k1];
 }
 
 @end

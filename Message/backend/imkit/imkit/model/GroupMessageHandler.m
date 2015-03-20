@@ -30,7 +30,7 @@
     MessageContent *content = [[MessageContent alloc] init];
     content.raw = im.content;
     m.content = content;
-    m.timestamp = time(NULL);
+    m.timestamp = (int)time(NULL);
     BOOL r = [[GroupMessageDB instance] insertMessage:m];
     if (r) {
         im.msgLocalID = m.msgLocalID;
@@ -38,10 +38,23 @@
     return r;
 }
 
--(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid {
+-(BOOL)handleMessageACK:(int)msgLocalID gid:(int64_t)uid {
     return [[GroupMessageDB instance] acknowledgeMessage:msgLocalID gid:uid];
 }
--(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid {
+
+-(BOOL)handleMessageFailure:(int)msgLocalID gid:(int64_t)uid {
     return [[GroupMessageDB instance] markMessageFailure:msgLocalID gid:uid];
+}
+
+-(BOOL)handleGroupNotification:(NSString*)notification {
+    GroupNotification *obj = [[GroupNotification alloc] initWithRaw:notification];
+    IMessage *m = [[IMessage alloc] init];
+    m.sender = 0;
+    m.receiver = obj.groupID;
+    MessageContent *content = [[MessageContent alloc] initWithNotification:obj];
+    m.content = content;
+    m.timestamp = (int)time(NULL);
+    BOOL r = [[GroupMessageDB instance] insertMessage:m];
+    return r;
 }
 @end

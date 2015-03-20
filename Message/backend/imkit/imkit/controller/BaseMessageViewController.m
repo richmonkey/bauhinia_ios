@@ -31,6 +31,7 @@
     self = [super init];
     if (self) {
         self.messages = [NSMutableArray array];
+        self.names = [NSMutableDictionary dictionary];
     }
     return self;
 }

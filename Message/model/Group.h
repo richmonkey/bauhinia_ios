@@ -13,6 +13,7 @@
 @property(nonatomic, assign)int64_t masterID;
 @property(nonatomic, copy)NSString *topic;
 @property(nonatomic, readonly)NSArray *members;
+@property(nonatomic, assign)BOOL disbanded;
 
 -(void)addMember:(int64_t)uid;
 -(void)removeMember:(int64_t)uid;
