@@ -265,9 +265,11 @@
     } else {
         conv = (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
     }
-    
+    if(conv.type == CONVERSATION_PEER){
     [cell.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
-
+    }else if (conv.type == CONVERSATION_GROUP){
+        [cell.headView sd_setImageWithURL:[NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"GroupChat"]];
+    }
     if (conv.message.content.type == MESSAGE_IMAGE) {
         cell.messageContent.text = @"一张图片";
     }else if(conv.message.content.type == MESSAGE_TEXT){
