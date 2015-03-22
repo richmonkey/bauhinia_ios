@@ -10,5 +10,4 @@
 
 @interface NewGroupViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
-
 @end

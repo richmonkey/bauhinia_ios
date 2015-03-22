@@ -103,7 +103,7 @@
                    success:^(int64_t groupID) {
                        [hud hide:NO];
                        NSLog(@"new group id:%lld", groupID);
-                       [self.navigationController popToRootViewControllerAnimated:YES];
+                       [self dismissViewControllerAnimated:YES completion:nil];
                    }
                       fail:^ {
                           [hud hide:NO];

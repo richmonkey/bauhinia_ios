@@ -230,7 +230,8 @@
 
 - (void)newGroup {
     NewGroupViewController *ctl = [[NewGroupViewController alloc] initWithNibName:@"NewGroupViewController" bundle:nil];
-    [self.navigationController pushViewController:ctl animated:YES];
+    UINavigationController * navCtr = [[UINavigationController alloc] initWithRootViewController: ctl];
+    [self presentViewController:navCtr animated:YES completion:nil];
 }
 
 #pragma mark - Table view data source
@@ -266,7 +267,7 @@
         conv = (Conversation*)[self.filteredArray objectAtIndex:(indexPath.row)];
     }
     if(conv.type == CONVERSATION_PEER){
-    [cell.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+        [cell.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
     }else if (conv.type == CONVERSATION_GROUP){
         [cell.headView sd_setImageWithURL:[NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"GroupChat"]];
     }

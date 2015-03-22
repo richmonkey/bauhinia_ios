@@ -26,6 +26,13 @@
     
     self.navigationItem.rightBarButtonItem = item;
     
+    UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithTitle:@"取消"
+                                                             style:UIBarButtonItemStyleDone
+                                                            target:self
+                                                            action:@selector(cancel)];
+    
+    self.navigationItem.leftBarButtonItem = back;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -33,6 +40,12 @@
     
 }
 
+- (void)cancel{
+    if ([self.nameTextField isFirstResponder]) {
+        [self.nameTextField resignFirstResponder];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (void)next {
     NSString *nameGroup = self.nameTextField.text;
