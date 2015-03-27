@@ -31,6 +31,7 @@
 @interface IMMessage : NSObject
 @property(nonatomic, assign)int64_t sender;
 @property(nonatomic, assign)int64_t receiver;
+@property(nonatomic, assign)int32_t timestamp;
 @property(nonatomic, assign)int32_t msgLocalID;
 @property(nonatomic, copy)NSString *content;
 @end
@@ -40,10 +41,6 @@
 @property(nonatomic, assign)int64_t receiver;
 @end
 
-@interface MessageOnlineState : NSObject
-@property(nonatomic, assign)int64_t sender;
-@property(nonatomic, assign)int32_t online;
-@end
 
 @interface MessagePeerACK : NSObject
 @property(nonatomic, assign)int64_t sender;
@@ -51,9 +48,7 @@
 @property(nonatomic, assign)int32_t msgLocalID;
 @end
 
-@interface MessageSubsribe : NSObject
-@property(nonatomic)NSArray *uids;
-@end
+
 
 @interface AuthenticationToken : NSObject
 @property(nonatomic, copy) NSString *token;
