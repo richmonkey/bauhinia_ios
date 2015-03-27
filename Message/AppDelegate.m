@@ -12,6 +12,7 @@
 #import <imkit/IMHttpAPI.h>
 #import <imkit/PeerMessageHandler.h>
 #import <imkit/GroupMessageHandler.h>
+#import <imkit/MessageDB.h>
 #import "Token.h"
 #import "UserPresent.h"
 #import "Config.h"
@@ -21,9 +22,17 @@
 
 @implementation AppDelegate
 
+-(NSString*)getDocumentPath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return basePath;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //配置im server地址
+    NSString *path = [self getDocumentPath];
+    [MessageDB setDBPath:path];
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
