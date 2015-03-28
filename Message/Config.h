@@ -13,4 +13,6 @@
 
 @property(nonatomic, readonly)NSString *URL;
 @property(nonatomic, readonly)NSString *downloadURL;
+@property(nonatomic, readonly)NSString *sdkAPIURL;
+@property(nonatomic, readonly)NSString *sdkHost;
 @end

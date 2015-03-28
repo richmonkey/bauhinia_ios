@@ -33,6 +33,8 @@
     //配置im server地址
     NSString *path = [self getDocumentPath];
     [MessageDB setDBPath:path];
+    [IMHttpAPI instance].apiURL = [Config instance].sdkAPIURL;
+    [IMService instance].host = [Config instance].sdkHost;
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];

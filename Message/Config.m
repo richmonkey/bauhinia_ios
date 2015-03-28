@@ -26,10 +26,38 @@
     }
     return self;
 }
+#if 1
 -(NSString*)URL {
-    return @"http://gobelieve.io";
+    return @"http://bauhinia.gobelieve.io";
 }
+
 -(NSString*)downloadURL {
-    return @"http://gobelieve.io/download";
+    return [[self URL] stringByAppendingString:@"/download"];
 }
+
+-(NSString*)sdkAPIURL {
+    return @"http://api.gobelieve.io";
+}
+
+-(NSString*)sdkHost {
+    return @"imnode.gobelieve.io";
+}
+#else
+
+-(NSString*)URL {
+    return @"http://192.168.1.101";
+}
+
+-(NSString*)downloadURL {
+    return [[self URL] stringByAppendingString:@"/download"];
+}
+
+-(NSString*)sdkAPIURL {
+    return @"http://192.168.1.101:23002";
+}
+
+-(NSString*)sdkHost {
+    return @"192.168.1.101";
+}
+#endif
 @end
