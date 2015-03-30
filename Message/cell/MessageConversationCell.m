@@ -46,6 +46,7 @@
 
 -(void) showNewMessage:(int)count{
     JSBadgeView *badgeView = [[JSBadgeView alloc] initWithParentView:self.messageContent alignment:JSBadgeViewAlignmentCenterRight];
+    [badgeView setBadgeTextFont:[UIFont systemFontOfSize:14.0f]];
     [self.messageContent bringSubviewToFront:badgeView];
     if (count > 99) {
        badgeView.badgeText = @"99+";
