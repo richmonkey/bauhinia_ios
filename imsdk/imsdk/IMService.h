@@ -1,10 +1,11 @@
-//
-//  IMService.h
-//  im
-//
-//  Created by houxh on 14-6-26.
-//  Copyright (c) 2014年 potato. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import <Foundation/Foundation.h>
 #import "Message.h"
@@ -33,8 +34,17 @@
 
 @end
 
-@protocol MessageObserver <NSObject>
+@protocol IMConnectionObserver <NSObject>
+@optional
+//同IM服务器连接的状态变更通知
+-(void)onConnectState:(int)state;
 
+//用户在其他地方登陆
+-(void)onLoginPoint:(LoginPoint*)lp;
+
+@end
+
+@protocol PeerMessageObserver <NSObject>
 @optional
 -(void)onPeerMessage:(IMMessage*)msg;
 
@@ -43,23 +53,23 @@
 //接受方ack
 -(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid;
 
+//消息发送失败
 -(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
 
 //对方正在输入
 -(void)onPeerInputing:(int64_t)uid;
 
-//同IM服务器连接的状态变更通知
--(void)onConnectState:(int)state;
+@end
 
+@protocol GroupMessageObserver <NSObject>
 @optional
 -(void)onGroupMessage:(IMMessage*)msg;
 -(void)onGroupMessageACK:(int)msgLocalID gid:(int64_t)gid;
 -(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid;
 
-
 -(void)onGroupNotification:(NSString*)notification;
-
 @end
+
 
 @interface IMService : NSObject
 @property(nonatomic, copy) NSString *host;
@@ -83,7 +93,14 @@
 //正在输入
 -(void)sendInputing:(MessageInputing*)inputing;
 
--(void)addMessageObserver:(id<MessageObserver>)ob;
--(void)removeMessageObserver:(id<MessageObserver>)ob;
+-(void)addPeerMessageObserver:(id<PeerMessageObserver>)ob;
+-(void)removePeerMessageObserver:(id<PeerMessageObserver>)ob;
+
+-(void)addGroupMessageObserver:(id<GroupMessageObserver>)ob;
+-(void)removeGroupMessageObserver:(id<GroupMessageObserver>)ob;
+
+-(void)addConnectionObserver:(id<IMConnectionObserver>)ob;
+-(void)removeConnectionObserver:(id<IMConnectionObserver>)ob;
+
 @end
 

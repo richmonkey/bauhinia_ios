@@ -1,10 +1,11 @@
-//
-//  MainViewController.m
-//  NGChatSDK
-//
-//  Created by chisj on 14-10-17.
-//  Copyright (c) 2014年 NGDS. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import "MainViewController.h"
 
@@ -80,7 +81,7 @@
     
     self.chatButton = btn;
     
-    
+    self.navigationController.delegate = self;
 
 }
 
@@ -98,9 +99,9 @@
     [self.view endEditing:YES];
     
     self.chatButton.userInteractionEnabled = NO;
-    
+    long long sender = [tfSender.text longLongValue];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *token = [self login:[tfSender.text longLongValue]];
+        NSString *token = [self login:sender];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.chatButton.userInteractionEnabled = YES;
@@ -111,8 +112,6 @@
             }
             
             NSLog(@"login success");
-            
-
             PeerMessageViewController *msgController = [[PeerMessageViewController alloc] init];
             
             msgController.currentUID = [tfSender.text longLongValue];
@@ -178,5 +177,23 @@
     }
     NSDictionary *e = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
     return [e objectForKey:@"token"];
+}
+
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (viewController == self) {
+        [[IMService instance] stop];
+        
+        if (self.deviceToken.length > 0) {
+            
+            [IMHttpAPI unbindDeviceToken:self.deviceToken
+                               success:^{
+                                   NSLog(@"unbind device token success");
+                               }
+                                  fail:^{
+                                      NSLog(@"unbind device token fail");
+                                  }];
+        }
+    }
 }
 @end

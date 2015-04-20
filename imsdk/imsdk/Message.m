@@ -1,10 +1,11 @@
-//
-//  IM.m
-//  im
-//
-//  Created by houxh on 14-6-21.
-//  Copyright (c) 2014年 potato. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import "Message.h"
 #import "util.h"
@@ -26,6 +27,10 @@
 
 
 @implementation AuthenticationToken
+
+@end
+
+@implementation LoginPoint
 
 @end
 
@@ -138,6 +143,15 @@
         return YES;
     } else if (self.cmd == MSG_GROUP_NOTIFICATION) {
         self.body = [[NSString alloc] initWithBytes:p length:data.length-HEAD_SIZE encoding:NSUTF8StringEncoding];
+        return YES;
+    } else if (self.cmd == MSG_LOGIN_POINT) {
+        LoginPoint *lp = [[LoginPoint alloc] init];
+        lp.upTimestamp = readInt32(p);
+        p += 4;
+        lp.platformID = *p;
+        p++;
+        lp.deviceID = [[NSString alloc] initWithBytes:p length:data.length-13 encoding:NSUTF8StringEncoding];
+        self.body = lp;
         return YES;
     } else {
         self.body = [NSData dataWithBytes:p length:data.length-8];

@@ -1,10 +1,11 @@
-//
-//  MessageAudioView.m
-//  Message
-//
-//  Created by 杨朋亮 on 14-9-10.
-//  Copyright (c) 2014年 daozhu. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import "MessageAudioView.h"
 #import "FileCache.h"
@@ -79,7 +80,6 @@
     [super setType:type];
     [super setMsgStateType:stateType];
     _msg = msg;
-    [self updatePosition];
     
     int minute = self.msg.content.audio.duration/60;
     int second = self.msg.content.audio.duration%60;
@@ -107,7 +107,7 @@
     
     CGRect rect = self.playBtn.frame;
     rect.origin.x = image.leftCapWidth + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width  : 0.0f);
-     self.playBtn.frame = rect;
+    self.playBtn.frame = rect;
     
     rect = self.progressView.frame;
     rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
@@ -192,4 +192,7 @@
     }
 }
 
+-(void)layoutSubviews {
+    [self updatePosition];
+}
 @end

@@ -1,10 +1,11 @@
-//
-//  IMService.m
-//  im
-//
-//  Created by houxh on 14-6-26.
-//  Copyright (c) 2014年 potato. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -36,7 +37,11 @@
 
 @property(nonatomic)int connectFailCount;
 @property(nonatomic)int seq;
-@property(nonatomic)NSMutableArray *observers;
+
+@property(nonatomic)NSMutableArray *connectionObservers;
+@property(nonatomic)NSMutableArray *peerObservers;
+@property(nonatomic)NSMutableArray *groupObservers;
+
 @property(nonatomic)NSMutableData *data;
 @property(nonatomic)NSMutableDictionary *peerMessages;
 @property(nonatomic)NSMutableDictionary *groupMessages;
@@ -70,7 +75,10 @@
         dispatch_source_set_event_handler(self.heartbeatTimer, ^{
             [self sendHeartbeat];
         });
-        self.observers = [NSMutableArray array];
+        self.connectionObservers = [NSMutableArray array];
+        self.peerObservers = [NSMutableArray array];
+        self.groupObservers = [NSMutableArray array];
+        
         self.data = [NSMutableData data];
         self.peerMessages = [NSMutableDictionary dictionary];
         self.groupMessages = [NSMutableDictionary dictionary];
@@ -287,7 +295,7 @@
 
 -(void)handleInputing:(Message*)msg {
     MessageInputing *inputing = (MessageInputing*)msg.body;
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<PeerMessageObserver> ob in self.peerObservers) {
         if ([ob respondsToSelector:@selector(onPeerInputing:)]) {
             [ob onPeerInputing:inputing.sender];
         }
@@ -298,7 +306,7 @@
     MessagePeerACK *ack = (MessagePeerACK*)msg.body;
     [self.peerMessageHandler handleMessageRemoteACK:ack.msgLocalID uid:ack.sender];
     
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<PeerMessageObserver> ob in self.peerObservers) {
         if ([ob respondsToSelector:@selector(onPeerMessageRemoteACK:uid:)]) {
             [ob onPeerMessageRemoteACK:ack.msgLocalID uid:ack.sender];
         }
@@ -313,7 +321,7 @@
     NSString *notification = (NSString*)msg.body;
     NSLog(@"group notification:%@", notification);
     [self.groupMessageHandler handleGroupNotification:notification];
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<GroupMessageObserver> ob in self.groupObservers) {
         if ([ob respondsToSelector:@selector(onGroupNotification:)]) {
             [ob onGroupNotification:notification];
         }
@@ -325,8 +333,12 @@
     [self sendMessage:ack];
 }
 
+-(void)handleLoginPoint:(Message*)msg {
+    [self publishLoginPoint:(LoginPoint*)msg.body];
+}
+
 -(void)publishPeerMessage:(IMMessage*)msg {
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<PeerMessageObserver> ob in self.peerObservers) {
         if ([ob respondsToSelector:@selector(onPeerMessage:)]) {
             [ob onPeerMessage:msg];
         }
@@ -334,7 +346,7 @@
 }
 
 -(void)publishPeerMessageACK:(int)msgLocalID uid:(int64_t)uid {
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<PeerMessageObserver> ob in self.peerObservers) {
         if ([ob respondsToSelector:@selector(onPeerMessageACK:uid:)]) {
             [ob onPeerMessageACK:msgLocalID uid:uid];
         }
@@ -342,7 +354,7 @@
 }
 
 -(void)publishPeerMessageFailure:(IMMessage*)msg {
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<PeerMessageObserver> ob in self.peerObservers) {
         if ([ob respondsToSelector:@selector(onPeerMessageFailure:uid:)]) {
             [ob onPeerMessageFailure:msg.msgLocalID uid:msg.receiver];
         }
@@ -350,7 +362,7 @@
 }
 
 -(void)publishGroupMessage:(IMMessage*)msg {
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<GroupMessageObserver> ob in self.groupObservers) {
         if ([ob respondsToSelector:@selector(onGroupMessage:)]) {
             [ob onGroupMessage:msg];
         }
@@ -358,7 +370,7 @@
 }
 
 -(void)publishGroupMessageACK:(int)msgLocalID gid:(int64_t)gid {
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<GroupMessageObserver> ob in self.groupObservers) {
         if ([ob respondsToSelector:@selector(onGroupMessageACK:gid:)]) {
             [ob onGroupMessageACK:msgLocalID gid:gid];
         }
@@ -366,15 +378,23 @@
 }
 
 -(void)publishGroupMessageFailure:(IMMessage*)msg {
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<GroupMessageObserver> ob in self.groupObservers) {
         [ob onGroupMessageFailure:msg.msgLocalID gid:msg.receiver];
     }
 }
 
 -(void)publishConnectState:(int)state {
-    for (id<MessageObserver> ob in self.observers) {
+    for (id<IMConnectionObserver> ob in self.connectionObservers) {
         if ([ob respondsToSelector:@selector(onConnectState:)]) {
             [ob onConnectState:state];
+        }
+    }
+}
+
+-(void)publishLoginPoint:(LoginPoint*)lp {
+    for (id<IMConnectionObserver> ob in self.connectionObservers) {
+        if ([ob respondsToSelector:@selector(onLoginPoint:)]) {
+            [ob onLoginPoint:lp];
         }
     }
 }
@@ -396,6 +416,8 @@
         [self handlePong:msg];
     } else if (msg.cmd == MSG_GROUP_NOTIFICATION) {
         [self handleGroupNotification:msg];
+    } else if (msg.cmd == MSG_LOGIN_POINT) {
+        [self handleLoginPoint:msg];
     }
 }
 
@@ -441,6 +463,16 @@
     }
 }
 
+-(NSString*)IP2String:(struct in_addr)addr {
+    char buf[64] = {0};
+    const char *p = inet_ntop(AF_INET, &addr, buf, 64);
+    if (p) {
+        return [NSString stringWithUTF8String:p];
+    }
+    return nil;
+    
+}
+
 -(NSString*)resolveIP:(NSString*)host {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
@@ -457,16 +489,15 @@
     
     s = getaddrinfo([host UTF8String], buf, &hints, &result);
     if (s != 0) {
+        NSLog(@"get addr info error:%s", gai_strerror(s));
         return nil;
     }
     NSString *ip = nil;
-    if (result != NULL) {
-        rp = result;
+    rp = result;
+    if (rp != NULL) {
         struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
-        const char *str = inet_ntoa(addr->sin_addr);
-        ip = [NSString stringWithUTF8String:str];
+        ip = [self IP2String:addr->sin_addr];
     }
-    
     freeaddrinfo(result);
     return ip;
 }
@@ -539,12 +570,27 @@
     }
 }
 
--(void)addMessageObserver:(id<MessageObserver>)ob {
-    [self.observers addObject:ob];
+-(void)addPeerMessageObserver:(id<PeerMessageObserver>)ob {
+    [self.peerObservers addObject:ob];
 }
 
--(void)removeMessageObserver:(id<MessageObserver>)ob {
-    [self.observers removeObject:ob];
+-(void)removePeerMessageObserver:(id<PeerMessageObserver>)ob {
+    [self.peerObservers removeObject:ob];
+}
+
+-(void)addGroupMessageObserver:(id<GroupMessageObserver>)ob {
+    [self.groupObservers addObject:ob];
+}
+
+-(void)removeGroupMessageObserver:(id<GroupMessageObserver>)ob {
+    [self.groupObservers removeObject:ob];
+}
+
+-(void)addConnectionObserver:(id<IMConnectionObserver>)ob {
+    [self.connectionObservers addObject:ob];
+}
+-(void)removeConnectionObserver:(id<IMConnectionObserver>)ob {
+    [self.connectionObservers removeObject:ob];
 }
 
 -(BOOL)sendPeerMessage:(IMMessage *)im {
@@ -583,7 +629,7 @@
         return NO;
     }
     char b[4];
-    writeInt32(p.length-8, b);
+    writeInt32((int)(p.length)-8, b);
     [data appendBytes:(void*)b length:4];
     [data appendData:p];
     [self.tcp write:data];

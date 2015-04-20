@@ -1,12 +1,14 @@
-//
-//  MessageViewController
-//  Created by daozhu on 14-6-16.
-//  Copyright (c) 2014年 daozhu. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import "MessageViewController.h"
 #import <imsdk/IMService.h>
-#import "MBProgressHUD.h"
 #import "HPGrowingTextView.h"
 
 #import "MessageTableSectionHeaderView.h"
@@ -169,13 +171,11 @@
 
 
 -(void)addObserver {
-    [[IMService instance] addMessageObserver:self];
     [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
 }
 
 -(void)removeObserver {
-    [[IMService instance] removeMessageObserver:self];
     [[Outbox instance] removeBoxObserver:self];
     [[AudioDownloader instance] removeDownloaderObserver:self];
 }
@@ -234,23 +234,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - View rotation
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    [self.tableView reloadData];
-    [self.tableView setNeedsLayout];
-}
 
 #pragma mark -
 - (void) handlePanFrom:(UITapGestureRecognizer*)recognizer{
@@ -1007,15 +990,12 @@
 
 - (void)recordCancel:(CGFloat)xMove {
     NSLog(@"touch cancel");
-   
-     if (xMove < 0) {
-         [self.inputToolBarView slipLabelFrame:xMove];
-     }
-     if (xMove < -50 && self.recorder.recording) {
-         NSLog(@"cancel record...");
-         self.recordCanceled = YES;
-         [self stopRecord];
-     }
+    
+    if (self.recorder.recording) {
+        NSLog(@"cancel record...");
+        self.recordCanceled = YES;
+        [self stopRecord];
+    }
 }
 
 -(void)recordEnd {
@@ -1259,6 +1239,23 @@
     if ([self isInConversation:msg]) {
         [self reloadMessage:msg.msgLocalID];
     }
+}
+
+#pragma mark InterfaceOrientation
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
+    return YES;
+}
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self.tableView reloadData];
+    [self.tableView setNeedsLayout];
+    [self.inputToolBarView setNeedsLayout];
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    
 }
 
 @end

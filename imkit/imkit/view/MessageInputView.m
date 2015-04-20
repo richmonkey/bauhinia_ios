@@ -1,9 +1,16 @@
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import "MessageInputView.h"
 #import "NSString+JSMessagesView.h"
 //#import "UIImage+JSMessagesView.h"
 
-#import "FBShimmeringView.h"
 #import "Constants.h"
 
 #define SEND_BUTTON_WIDTH 64.0f
@@ -46,8 +53,7 @@
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     
-    UIImageView *bkview = [[UIImageView alloc] initWithFrame:self.frame];
-    [bkview setFrame:CGRectMake(0, 0, screenWidth, 44)];
+    UIImageView *bkview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, self.frame.size.height)];
     UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
     UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
     [bkview setImage:stretchImg];
@@ -119,9 +125,7 @@
         self.recordingView = [[UIView alloc] initWithFrame:viewFrame];
         [self.recordingView setBackgroundColor:[UIColor clearColor]];
         
-        CGRect labelFrame = CGRectMake(100, 0, 160, 26);
-        labelFrame.origin.x = (frame.size.width - labelFrame.size.width)/2;
-        labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
+        CGRect labelFrame = [self slipLabelFrame];
         self.slipLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [self.slipLabel setTextAlignment: NSTextAlignmentCenter];
         [self.slipLabel setFont: [UIFont systemFontOfSize:19.0f]];
@@ -129,13 +133,13 @@
         self.slipLabel.text = @"滑动取消 <";
         [self.recordingView addSubview: self.slipLabel];
         
-        FBShimmeringView *shimmeringView = [[FBShimmeringView alloc] initWithFrame:self.slipLabel.bounds];
-        shimmeringView.contentView = self.slipLabel;
-        shimmeringView.shimmering = YES;
+        self.shimmeringView = [[FBShimmeringView alloc] initWithFrame:self.slipLabel.bounds];
+        self.shimmeringView.contentView = self.slipLabel;
+        self.shimmeringView.shimmering = YES;
        
-        [self.recordingView addSubview:shimmeringView];
+        [self.recordingView addSubview:self.shimmeringView];
         
-        CGRect maskFrame = CGRectMake(0, 0, 70, frame.size.height);
+        CGRect maskFrame = CGRectMake(0, 0, 100, frame.size.height);
         UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
         UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
         UIImageView *maskView = [[UIImageView alloc] initWithFrame:maskFrame];
@@ -168,18 +172,32 @@
 }
 
 - (void)slipLabelFrame:(double)x {
+    CGRect frame = [self slipLabelFrame];
+    frame.origin.x += x;
+    self.slipLabel.frame = frame;
+}
+
+- (CGRect)slipLabelFrame {
     CGRect frame = self.frame;
-    CGRect labelFrame = CGRectMake(100, 0, 160, 26);
+    CGFloat startX = 100;
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    if (((screenWidth - 160 )/2) > 100) {
+        startX = (screenWidth - 160 )/2;
+    }
+    
+    CGFloat startY = (screenRect.size.height - 26)/2;
+    
+    CGRect labelFrame = CGRectMake(startX, startY, 160, 26);
+    labelFrame.origin.x = (frame.size.width - labelFrame.size.width)/2;
     labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
-    labelFrame.origin.x += x;
-    self.slipLabel.frame = labelFrame;
+    
+    return labelFrame;
+
 }
 
 - (void)resetLabelFrame {
-    CGRect frame = self.frame;
-    CGRect labelFrame = CGRectMake(100, 0, 160, 26);
-    labelFrame.origin.y = (frame.size.height - labelFrame.size.height)/2;
-    self.slipLabel.frame = labelFrame;
+    self.slipLabel.frame = [self slipLabelFrame];
 }
 
 - (void)setupTextView
@@ -212,9 +230,10 @@
 
 - (void) setNomarlShowing{
     [self.textView setText:nil];
+    self.textView.hidden = NO;
+    self.mediaButton.hidden = NO;
+    self.recordingView.hidden = YES;
     [self.textView resignFirstResponder];
-    self.sendButton.hidden = YES;
-    self.recordButton.hidden = NO;
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -239,6 +258,10 @@
     if (touch.tapCount == 1) {
         CGPoint newPoint = [touch locationInView:self];
         CGFloat xmove = newPoint.x - self.lastPoint.x;
+        if (xmove < 0) {
+            [self slipLabelFrame:xmove];
+        }
+        
         if (xmove < 0 && abs(xmove) > CANCEL_SEND_DISTANCE) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(recordCancel:)]){
                 [self.delegate recordCancel:xmove];
@@ -254,36 +277,8 @@
 }
 
 -(void)layoutSubviews {
-
-    self.bkView.frame = self.bounds;
-    
-    CGFloat x = 40.0;
-    CGFloat y = 8;
-    CGFloat w = self.bounds.size.width - SEND_BUTTON_WIDTH - 26;
-    CGFloat h = self.bounds.size.height - 16;
-    self.textView.frame = CGRectMake(x, y, w, h);
-    NSLog(@"text view heigth:%f", h);
-    x = self.bounds.size.width - 56.0;
-    y = (self.bounds.size.height - 26.0)/2;
-    w = 60.0;
-    h = 26.0;
-    
-    self.sendButton.frame = CGRectMake(x, y, w, h);
-    
-    x = self.bounds.size.width - 46.0;
-    y = (self.bounds.size.height - 26.0)/2;
-    w = 60.0;
-    h = 26.0;
-    
-    self.recordButton.frame = CGRectMake(x, y, w, h);
-
-    h = 19;
-    w = 26;
-    x = 8;
-    y = (self.bounds.size.height-h)/2 ;
-    self.mediaButton.frame = CGRectMake(x, y, w, h);
-
-    self.recordingView.frame = self.bounds;
+    [super layoutSubviews];
 }
+
 
 @end

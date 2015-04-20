@@ -1,16 +1,13 @@
-//
-//  PeerMessageViewController.m
-//  imkit
-//
-//  Created by houxh on 15/3/18.
-//  Copyright (c) 2015年 beetle. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import "PeerMessageViewController.h"
-
-
-
-
 #import "FileCache.h"
 #import "Outbox.h"
 #import "AudioDownloader.h"
@@ -49,6 +46,19 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+-(void)addObserver {
+    [super addObserver];
+    [[IMService instance] addConnectionObserver:self];
+    [[IMService instance] addPeerMessageObserver:self];
+}
+
+-(void)removeObserver {
+    [super removeObserver];
+    [[IMService instance] removeConnectionObserver:self];
+    [[IMService instance] removePeerMessageObserver:self];
 }
 
 - (int64_t)sender {
@@ -131,6 +141,8 @@
     [db setDraft:self.peerUID draft:[self getDraft]];
     
     [self removeObserver];
+    
+    
     
     if (self.messages.count > 0) {
         
@@ -228,6 +240,9 @@
     }
 }
 
+-(void)onLoginPoint:(LoginPoint*)lp {
+    NSLog(@"login point:%@, platform id:%d", lp.deviceID, lp.platformID);
+}
 
 - (void)loadConversationData {
     int count = 0;
