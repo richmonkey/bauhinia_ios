@@ -56,7 +56,7 @@
                                  @"网络状态",
                                  @"清除所有对话记录"
                                 ];
-        [[IMService instance] addMessageObserver:self];
+        [[IMService instance] addConnectionObserver:self];
     }
     return self;
 }

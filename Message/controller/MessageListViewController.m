@@ -102,8 +102,9 @@
 
     [[ContactDB instance] addObserver:self];
     
-    [[IMService instance] addMessageObserver:self];
-    
+    [[IMService instance] addPeerMessageObserver:self];
+    [[IMService instance] addGroupMessageObserver:self];
+    [[IMService instance] addConnectionObserver:self];
 
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newGroupMessage:) name:LATEST_GROUP_MESSAGE object:nil];
     
