@@ -1,18 +1,19 @@
-//
-//  PeerMessageViewController.h
-//  imkit
-//
-//  Created by houxh on 15/3/18.
-//  Copyright (c) 2015年 beetle. All rights reserved.
-//
+/*                                                                            
+  Copyright (c) 2014-2015, GoBelieve     
+    All rights reserved.		    				     			
+ 
+  This source code is licensed under the BSD-style license found in the
+  LICENSE file in the root directory of this source tree. An additional grant
+  of patent rights can be found in the PATENTS file in the same directory.
+*/
 
 #import "MessageViewController.h"
 #import "TextMessageViewController.h"
 #define TEXT_MODE1
 #ifdef TEXT_MODE
-@interface PeerMessageViewController : TextMessageViewController
+@interface PeerMessageViewController : TextMessageViewController<PeerMessageObserver,  IMConnectionObserver>
 #else
-@interface PeerMessageViewController : MessageViewController
+@interface PeerMessageViewController : MessageViewController<PeerMessageObserver,  IMConnectionObserver>
 #endif
 
 @property(nonatomic, assign) int64_t currentUID;
