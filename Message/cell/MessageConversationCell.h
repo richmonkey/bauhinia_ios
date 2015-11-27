@@ -9,10 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "UIImageView+WebCache.h"
 
-@class MessageConversationCell;
+@class Conversation;
 
-
-@interface MessageConversationCell : UITableViewCell
+@interface ConversationCell : UITableViewCell
 
 @property (weak, nonatomic)     IBOutlet UIImageView* headView;
 @property (weak, nonatomic)     IBOutlet UILabel* namelabel;
@@ -20,6 +19,8 @@
 @property (weak, nonatomic)     IBOutlet UILabel* timelabel;
 
 @property (weak,nonatomic) UIView *badgeFatherView;
+
+@property (nonatomic) Conversation *conversation;
 
 -(void) showNewMessage:(int)count;
 -(void) clearNewMessage;

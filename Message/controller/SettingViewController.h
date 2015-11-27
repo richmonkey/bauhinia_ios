@@ -11,7 +11,7 @@
 #import "ZBarReaderViewController.h"
 
 
-@interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,IMConnectionObserver,UIAlertViewDelegate,ZBarReaderDelegate>
+@interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,TCPConnectionObserver,UIAlertViewDelegate,ZBarReaderDelegate>
 
 @property (strong,nonatomic) IBOutlet UITableView *tableView;
 @property (strong,nonatomic) NSArray *cellTitleArray;

@@ -64,7 +64,7 @@
 
     UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:contactViewController];
     
-    MessageListViewController* msgController = [[MessageListViewController alloc] init];
+    ConversationViewController* msgController = [[ConversationViewController alloc] init];
     msgController.title = @"对话";
     msgController.tabBarItem.title = @"对话";
     msgController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChatsOn"];
