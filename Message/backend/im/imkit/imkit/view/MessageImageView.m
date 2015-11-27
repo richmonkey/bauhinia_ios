@@ -7,25 +7,19 @@
   of patent rights can be found in the PATENTS file in the same directory.
 */
 
-//
-//  MessageImageView.m
-//  Message
-//
-//  Created by houxh on 14-9-9.
-//  Copyright (c) 2014年 daozhu. All rights reserved.
-//
-
 #import "MessageImageView.h"
-//#import "ESImageViewController.h"
 
-#define kImageWidth  100
-#define kImageHeight 100
-
-#define KInComingMoveRight  8.0
+#define KInComingMoveRight  2.0
 #define kOuttingMoveRight   3.0
 
+@interface MessageImageView()
+@property(nonatomic) UIView *maskView;
+@end
 @implementation MessageImageView
 
+- (void)dealloc {
+    [self.msg removeObserver:self forKeyPath:@"uploading"];
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -34,62 +28,74 @@
         self.imageView = [[UIImageView alloc] init];
         [self.imageView setUserInteractionEnabled:YES];
         [self addSubview:self.imageView];
+        
+        self.maskView = [[UIView alloc] init];
+        self.maskView.backgroundColor = [UIColor blackColor];
+        self.maskView.alpha = 0.3;
+        self.maskView.hidden = YES;
+        [self addSubview:self.maskView];
+        
+        self.uploadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self addSubview:self.uploadIndicatorView];
+        
+        self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self addSubview:self.downloadIndicatorView];
     }
     return self;
 }
 
-- (void)setData:(id)newData{
-    _data = newData;
-    if (_data) {
+- (void)setMsg:(IMessage*)msg {
+    [self.msg removeObserver:self forKeyPath:@"uploading"];
+    
+    [super setMsg:msg];
+    
+    MessageImageContent *content = msg.imageContent;
+    NSString *originURL = content.imageURL;
+    if (originURL) {
         //在原图URL后面添加"@{width}w_{heigth}h_{1|0}c", 支持128x128, 256x256
-        NSString *url = [NSString stringWithFormat:@"%@@128w_128h_0c", _data];
+        NSString *url = [NSString stringWithFormat:@"%@@128w_128h_0c", originURL];
         if(![[SDImageCache sharedImageCache] diskImageExistsWithKey:url]){
-            self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            CGRect bubbleFrame = [self bubbleFrame];
-            [self.downloadIndicatorView setFrame: bubbleFrame];
             [self.downloadIndicatorView startAnimating];
-            [self addSubview: self.downloadIndicatorView];
         }
 
-        [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:url] placeholderImage:[UIImage imageNamed:@"GroupChatRound"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        UIImage *placehodler = [UIImage imageNamed:@"imageDownloadFail"];
+        [self.imageView sd_setImageWithURL: [[NSURL alloc] initWithString:url] placeholderImage:placehodler
+                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             if (self.downloadIndicatorView&&[self.downloadIndicatorView isAnimating]) {
                 [self.downloadIndicatorView stopAnimating];
-                [self.downloadIndicatorView removeFromSuperview];
             }
         }];
+    }
+    
+    [self.msg addObserver:self forKeyPath:@"uploading" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    
+    if (self.msg.uploading) {
+        self.maskView.hidden = NO;
+        [self.uploadIndicatorView startAnimating];
+    } else {
+        self.maskView.hidden = YES;
+        [self.uploadIndicatorView stopAnimating];
     }
     
     [self setNeedsDisplay];
 }
 
-- (void)drawRect:(CGRect)frame{
-    [super drawRect:frame];
-    
-	UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
-    
-    CGRect bubbleFrame = [self bubbleFrame];
-	[image drawInRect:bubbleFrame];
-    
-    [self drawMsgStateSign: frame];
-    
-    if (self.imageView) {
-        
-        CGSize imageSize = CGSizeMake(kImageWidth, kImageHeight);
-        CGFloat imgX = image.leftCapWidth + (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x + kOuttingMoveRight: KInComingMoveRight);
-        
-        CGRect imageFrame = CGRectMake(imgX,
-                                       kPaddingTop + kMarginTop,
-                                       imageSize.width - kPaddingTop - kMarginTop,
-                                       imageSize.height - kPaddingBottom + 2.f);
-        [self.imageView setFrame:imageFrame];
-        
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    if([keyPath isEqualToString:@"uploading"]) {
+        if (self.msg.uploading) {
+            self.maskView.hidden = NO;
+            [self.uploadIndicatorView startAnimating];
+        } else {
+            self.maskView.hidden = YES;
+            [self.uploadIndicatorView stopAnimating];
+        }
     }
 }
 
-
 #pragma mark - Drawing
 - (CGRect)bubbleFrame {
-    CGSize bubbleSize = CGSizeMake(kImageWidth + 35, kImageHeight + 15);
+    CGSize bubbleSize = CGSizeMake(kImageWidth + kBubblePaddingHead + kBubblePaddingTail + 8, kImageHeight + kPaddingTop + kPaddingBottom + 8);
     return CGRectMake(floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
                       floorf(kMarginTop),
                       floorf(bubbleSize.width),
@@ -97,22 +103,26 @@
     
 }
 
--(void) setUploading:(BOOL)uploading {
-    //uploading的动画
-    if (uploading) {
-        self.uploadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        CGRect bubbleFrame = [self bubbleFrame];
-        
-        UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
-        bubbleFrame.origin.x -= image.leftCapWidth;
-        
-        [self.uploadIndicatorView setFrame: bubbleFrame];
-        [self.uploadIndicatorView startAnimating];
-        [self addSubview: self.uploadIndicatorView];
-    }else{
-        if (self.uploadIndicatorView&&[self.uploadIndicatorView isAnimating]) {
-            [self.uploadIndicatorView stopAnimating];
-        }
-    }
+
+
+-(void)layoutSubviews {
+    [super layoutSubviews];
+
+    CGRect bubbleFrame = [self bubbleFrame];
+
+    CGSize imageSize = CGSizeMake(kImageWidth, kImageHeight);
+    CGFloat imgX = (self.type == BubbleMessageTypeOutgoing ? bubbleFrame.origin.x + kBubblePaddingTail + 4: kBubblePaddingHead + 4);
+    
+
+    CGRect imageFrame = CGRectMake(imgX,
+                                   kMarginTop + kPaddingTop + 4,
+                                   imageSize.width,
+                                   imageSize.height);
+    [self.imageView setFrame:imageFrame];
+    self.maskView.frame = imageFrame;
+    
+    [self.downloadIndicatorView setFrame:imageFrame];
+    [self.uploadIndicatorView setFrame:imageFrame];
+    
 }
 @end

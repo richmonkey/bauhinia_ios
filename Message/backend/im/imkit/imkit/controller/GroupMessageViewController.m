@@ -51,12 +51,14 @@
     [super addObserver];
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addGroupMessageObserver:self];
+    [[IMService instance] addLoginPointObserver:self];
 }
 
 -(void)removeObserver {
     [super removeObserver];
     [[IMService instance] removeGroupMessageObserver:self];
     [[IMService instance] removeConnectionObserver:self];
+    [[IMService instance] removeLoginPointObserver:self];
 }
 
 - (int64_t)sender {
@@ -65,6 +67,10 @@
 
 - (int64_t)receiver {
     return self.groupID;
+}
+
+- (BOOL)isMessageSending:(IMessage*)msg {
+    return [[IMService instance] isGroupMessageSending:msg.msgLocalID];
 }
 
 - (BOOL)isInConversation:(IMessage*)msg {
@@ -111,23 +117,28 @@
     [db setGroupDraft:self.groupID draft:[self getDraft]];
     
     [self removeObserver];
-    
-    if (self.messages.count > 0) {
-        IMessage *msg = [self.messages lastObject];
-        if (msg.sender == self.currentUID || msg.content.type == MESSAGE_GROUP_NOTIFICATION) {
-            NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_GROUP_MESSAGE object: msg userInfo:nil];
-            
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
-        }
-    }
+    [self stopPlayer];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_GROUP_NEW_MESSAGE
                                                                  object:[NSNumber numberWithLongLong:self.groupID]
                                                                userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 
-    
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+//同IM服务器连接的状态变更通知
+-(void)onConnectState:(int)state{
+    if(state == STATE_CONNECTED){
+        [self enableSend];
+    } else {
+        [self disableSend];
+    }
+}
+
+-(void)onLoginPoint:(LoginPoint*)lp {
+    NSLog(@"login point:%@, platform id:%d", lp.deviceID, lp.platformID);
 }
 
 
@@ -136,28 +147,26 @@
     if (im.receiver != self.groupID) {
         return;
     }
-    [[self class] playMessageReceivedSound];
+    int now = (int)time(NULL);
+    if (now - self.lastReceivedTimestamp > 1) {
+        [[self class] playMessageReceivedSound];
+        self.lastReceivedTimestamp = now;
+    }
     
     NSLog(@"receive msg:%@",im);
-    //加载第三方应用的用户名到缓存中
-    [self getUserName:im.sender];
     
     IMessage *m = [[IMessage alloc] init];
     m.sender = im.sender;
     m.receiver = im.receiver;
     m.msgLocalID = im.msgLocalID;
-    MessageContent *content = [[MessageContent alloc] initWithRaw:im.content];
-    m.content = content;
+    m.rawContent = im.content;
     m.timestamp = im.timestamp;
     
-    if (self.textMode && m.content.type != MESSAGE_TEXT && m.content.type != MESSAGE_GROUP_NOTIFICATION) {
+    if (self.textMode && m.type != MESSAGE_TEXT && m.type != MESSAGE_GROUP_NOTIFICATION) {
         return;
     }
     
-    if (m.content.type == MESSAGE_AUDIO) {
-        AudioDownloader *downloader = [AudioDownloader instance];
-        [downloader downloadAudio:m];
-    }
+    [self downloadMessageContent:m];
     
     [self insertMessage:m];
 }
@@ -182,20 +191,7 @@
 
 
 -(void)onGroupNotification:(NSString *)text {
-    GroupNotification *notification = [[GroupNotification alloc] initWithRaw:text];
-    
-    if (notification.type == NOTIFICATION_GROUP_CREATED) {
-
-    } else if (notification.type == NOTIFICATION_GROUP_DISBANDED) {
-        [self onGroupDisband:notification];
-    } else if (notification.type == NOTIFICATION_GROUP_MEMBER_ADDED) {
-        [self onGroupMemberAdd:notification];
-    } else if (notification.type == NOTIFICATION_GROUP_MEMBER_LEAVED) {
-        [self onGroupMemberLeave:notification];
-    }
-}
-
--(void)onGroupDisband:(GroupNotification*)notification {
+    MessageNotificationContent *notification = [[MessageNotificationContent alloc] initWithNotification:text];
     int64_t groupID = notification.groupID;
     if (groupID != self.groupID) {
         return;
@@ -204,86 +200,17 @@
     IMessage *msg = [[IMessage alloc] init];
     msg.sender = 0;
     msg.receiver = groupID;
-    msg.timestamp = (int)time(NULL);
-    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-    msg.content = content;
-    [self updateNotificationDesc:msg];
+    if (notification.timestamp > 0) {
+        msg.timestamp = notification.timestamp;
+    } else {
+        msg.timestamp = (int)time(NULL);
+    }
+    msg.rawContent = notification.raw;
+    
+    //update notification description
+    [self downloadMessageContent:msg];
+    
     [self insertMessage:msg];
-}
-
--(void)onGroupMemberAdd:(GroupNotification*)notification {
-    int64_t groupID = notification.groupID;
-    if (groupID != self.groupID) {
-        return;
-    }
-    IMessage *msg = [[IMessage alloc] init];
-    
-    msg.sender = 0;
-    msg.receiver = groupID;
-    msg.timestamp = (int)time(NULL);
-    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-    msg.content = content;
-    [self updateNotificationDesc:msg];
-
-    [self insertMessage:msg];
-}
-
--(void)onGroupMemberLeave:(GroupNotification*)notification {
-    int64_t groupID = notification.groupID;
-    if (groupID != self.groupID) {
-        return;
-    }
-    
-    IMessage *msg = [[IMessage alloc] init];
-    msg.sender = 0;
-    msg.receiver = groupID;
-    msg.timestamp = (int)time(NULL);
-    MessageContent *content = [[MessageContent alloc] initWithNotification:notification];
-    msg.content = content;
-    
-    [self updateNotificationDesc:msg];
-    [self insertMessage:msg];
-}
-
--(NSString*)getUserName:(int64_t)uid {
-    NSNumber *key = [NSNumber numberWithLongLong:uid];
-    
-    if ([self.names objectForKey:key]) {
-        return [self.names objectForKey:key];
-    }
-
-    NSString *name = self.getUserName(uid);
-    if (name.length > 0) {
-        [self.names setObject:name forKey:key];
-    }
-    return name;
-}
-
-
-- (void)updateNotificationDesc:(IMessage*)message {
-    if (message.content.type == MESSAGE_GROUP_NOTIFICATION) {
-        GroupNotification *notification = message.content.notification;
-        int type = notification.type;
-        if (type == NOTIFICATION_GROUP_CREATED) {
-            if (self.currentUID == notification.master) {
-                NSString *desc = [NSString stringWithFormat:@"您创建了\"%@\"群组", notification.groupName];
-                message.content.notificationDesc = desc;
-            } else {
-                NSString *desc = [NSString stringWithFormat:@"您加入了\"%@\"群组", notification.groupName];
-                message.content.notificationDesc = desc;
-            }
-        } else if (type == NOTIFICATION_GROUP_DISBANDED) {
-            message.content.notificationDesc = @"群组已解散";
-        } else if (type == NOTIFICATION_GROUP_MEMBER_ADDED) {
-            NSString *name = [self getUserName:notification.member];
-            NSString *desc = [NSString stringWithFormat:@"%@加入群", name];
-            message.content.notificationDesc = desc;
-        } else if (type == NOTIFICATION_GROUP_MEMBER_LEAVED) {
-            NSString *name = [self getUserName:notification.member];
-            NSString *desc = [NSString stringWithFormat:@"%@离开群", name];
-            message.content.notificationDesc = desc;
-        }
-    }
 }
 
 
@@ -293,31 +220,36 @@
     IMessage *msg = [iterator next];
     while (msg) {
         if (self.textMode) {
-            if (msg.content.type == MESSAGE_TEXT || msg.content.type == MESSAGE_GROUP_NOTIFICATION) {
-                [self getUserName:msg.sender];
-                [self updateNotificationDesc:msg];
+            if (msg.type == MESSAGE_TEXT || msg.type == MESSAGE_GROUP_NOTIFICATION) {
                 [self.messages insertObject:msg atIndex:0];
                 if (++count >= PAGE_COUNT) {
                     break;
                 }
             }
         } else {
-            [self getUserName:msg.sender];
-            [self updateNotificationDesc:msg];
-            [self.messages insertObject:msg atIndex:0];
-            if (++count >= PAGE_COUNT) {
-                break;
+            if (msg.type == MESSAGE_ATTACHMENT) {
+                MessageAttachmentContent *att = msg.attachmentContent;
+                [self.attachments setObject:att
+                                     forKey:[NSNumber numberWithInt:att.msgLocalID]];
+                
+            } else {
+                [self.messages insertObject:msg atIndex:0];
+                if (++count >= PAGE_COUNT) {
+                    break;
+                }
             }
         }
         msg = [iterator next];
     }
+    
+    [self checkMessageFailureFlag:self.messages count:count];
+    [self downloadMessageContent:self.messages count:count];
     
     [self initTableViewData];
 }
 
 
 - (void)loadEarlierData {
-    
     IMessage *last = [self.messages firstObject];
     if (last == nil) {
         return;
@@ -328,18 +260,22 @@
     IMessage *msg = [iterator next];
     while (msg) {
         if (self.textMode) {
-            if (msg.content.type == MESSAGE_TEXT || msg.content.type == MESSAGE_GROUP_NOTIFICATION) {
-                [self getUserName:msg.sender];
+            if (msg.type == MESSAGE_TEXT || msg.type == MESSAGE_GROUP_NOTIFICATION) {
                 [self.messages insertObject:msg atIndex:0];
                 if (++count >= PAGE_COUNT) {
                     break;
                 }
             }
         } else {
-            [self getUserName:msg.sender];
-            [self.messages insertObject:msg atIndex:0];
-            if (++count >= PAGE_COUNT) {
-                break;
+            if (msg.type == MESSAGE_ATTACHMENT) {
+                MessageAttachmentContent *att = msg.attachmentContent;
+                [self.attachments setObject:att
+                                     forKey:[NSNumber numberWithInt:att.msgLocalID]];
+            } else {
+                [self.messages insertObject:msg atIndex:0];
+                if (++count >= PAGE_COUNT) {
+                    break;
+                }
             }
         }
         msg = [iterator next];
@@ -348,6 +284,8 @@
         return;
     }
     
+    [self checkMessageFailureFlag:self.messages count:count];
+    [self downloadMessageContent:self.messages count:count];
     [self initTableViewData];
     
     [self.tableView reloadData];
@@ -368,22 +306,37 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
-
 - (void)sendMessage:(IMessage*)message {
-    if (message.content.type == MESSAGE_AUDIO) {
+    if (message.type == MESSAGE_AUDIO) {
+        message.uploading = YES;
         [[Outbox instance] uploadGroupAudio:message];
-    } else if (message.content.type == MESSAGE_IMAGE) {
+    } else if (message.type == MESSAGE_IMAGE) {
+        message.uploading = YES;
         [[Outbox instance] uploadGroupImage:message];
     } else {
         IMMessage *im = [[IMMessage alloc] init];
         im.sender = message.sender;
         im.receiver = message.receiver;
         im.msgLocalID = message.msgLocalID;
-        im.content = message.content.raw;
+        im.content = message.rawContent;
         [[IMService instance] sendGroupMessage:im];
     }
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_GROUP_MESSAGE
+                                                                 object:message userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
+- (void)sendMessage:(IMessage *)msg withImage:(UIImage*)image {
+    msg.uploading = YES;
+    [[Outbox instance] uploadGroupImage:msg withImage:image];
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_GROUP_MESSAGE
+                                                                 object:msg userInfo:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+}
 
 
 @end

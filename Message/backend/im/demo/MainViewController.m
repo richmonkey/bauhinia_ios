@@ -14,9 +14,11 @@
 #import <imkit/MessageViewController.h>
 #import <imkit/IMHttpAPI.h>
 #import <imkit/PeerMessageViewController.h>
+#import <imkit/MessageListViewController.h>
+#import <imkit/MessageDB.h>
 
-
-@interface MainViewController (){
+@interface MainViewController ()<MessageViewControllerUserDelegate,
+    MessageListViewControllerGroupDelegate>{
     UITextField *tfSender;
     UITextField *tfReceiver;
 }
@@ -90,9 +92,14 @@
     self.navigationController.navigationBarHidden = YES;
 }
 
+-(NSString*)getDocumentPath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return basePath;
+}
 
 - (void)actionChat {
-    if (!tfSender.text.length || !tfReceiver.text.length) {
+    if (!tfSender.text.length) {
         NSLog(@"invalid input");
         return;
     }
@@ -112,15 +119,16 @@
             }
             
             NSLog(@"login success");
-            PeerMessageViewController *msgController = [[PeerMessageViewController alloc] init];
             
-            msgController.currentUID = [tfSender.text longLongValue];
-            msgController.peerUID = [tfReceiver.text longLongValue];
-
-            msgController.peerName = @"测试";
-
+            NSString *path = [self getDocumentPath];
+            NSString *dbPath = [NSString stringWithFormat:@"%@/%lld", path, [tfSender.text longLongValue]];
+            [MessageDB setDBPath:dbPath];
+            
+            
             [IMHttpAPI instance].accessToken = token;
-            [[IMService instance] setToken:token];
+            [IMService instance].token = token;
+            [IMService instance].uid = [tfSender.text longLongValue];
+            
             [[IMService instance] start];
             
             if (self.deviceToken.length > 0) {
@@ -133,9 +141,23 @@
                                           NSLog(@"bind device token fail");
                                       }];
             }
-            
-            self.navigationController.navigationBarHidden = NO;
-            [self.navigationController pushViewController:msgController animated:YES];
+
+            if (tfReceiver.text.length > 0) {
+                PeerMessageViewController *msgController = [[PeerMessageViewController alloc] init];
+                msgController.currentUID = [tfSender.text longLongValue];
+                msgController.peerUID = [tfReceiver.text longLongValue];
+                msgController.peerName = @"测试";
+                msgController.userDelegate = self;
+                self.navigationController.navigationBarHidden = NO;
+                [self.navigationController pushViewController:msgController animated:YES];
+            } else {
+                MessageListViewController *ctrl = [[MessageListViewController alloc] init];
+                ctrl.currentUID = [tfSender.text longLongValue];
+                ctrl.userDelegate = self;
+                ctrl.groupDelegate = self;
+                self.navigationController.navigationBarHidden = NO;
+                [self.navigationController pushViewController:ctrl animated:YES];
+            }
         });
     });
 }
@@ -195,5 +217,52 @@
                                   }];
         }
     }
+}
+
+#pragma mark - MessageViewControllerUserDelegate
+//从本地获取用户信息, IUser的name字段为空时，显示identifier字段
+- (IUser*)getUser:(int64_t)uid {
+    IUser *u = [[IUser alloc] init];
+    u.uid = uid;
+    u.name = @"";
+    u.avatarURL = @"";
+    u.identifier = [NSString stringWithFormat:@"uid:%lld", uid];
+    return u;
+}
+//从服务器获取用户信息
+- (void)asyncGetUser:(int64_t)uid cb:(void(^)(IUser*))cb {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        IUser *u = [[IUser alloc] init];
+        u.uid = uid;
+        u.name = [NSString stringWithFormat:@"name:%lld", uid];
+        u.avatarURL = @"";
+        u.identifier = [NSString stringWithFormat:@"uid:%lld", uid];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            cb(u);
+        });
+    });
+}
+#pragma mark - MessageListViewControllerGroupDelegate
+//从本地获取群组信息
+- (IGroup*)getGroup:(int64_t)gid {
+    IGroup *g = [[IGroup alloc] init];
+    g.gid = gid;
+    g.name = @"";
+    g.avatarURL = @"";
+    g.identifier = [NSString stringWithFormat:@"gid:%lld", gid];
+    return g;
+}
+//从服务器获取用户信息
+- (void)asyncGetGroup:(int64_t)gid cb:(void(^)(IGroup*))cb {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        IGroup *g = [[IGroup alloc] init];
+        g.gid = gid;
+        g.name = [NSString stringWithFormat:@"gname:%lld", gid];
+        g.avatarURL = @"";
+        g.identifier = [NSString stringWithFormat:@"gid:%lld", gid];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            cb(g);
+        });
+    });
 }
 @end
