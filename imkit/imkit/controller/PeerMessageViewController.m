@@ -34,7 +34,22 @@
     // Do any additional setup after loading the view.
     
     [self setNormalNavigationButtons];
-    self.navigationItem.title = self.peerName;
+    
+    if (self.peerName.length > 0) {
+        self.navigationItem.title = self.peerName;
+    } else {
+        IUser *u = [self.userDelegate getUser:self.peerUID];
+        if (u.name.length > 0) {
+            self.navigationItem.title = u.name;
+        } else {
+            self.navigationItem.title = u.identifier;
+            [self.userDelegate asyncGetUser:self.peerUID cb:^(IUser *u) {
+                if (u.name.length > 0) {
+                    self.navigationItem.title = u.name;
+                }
+            }];
+        }
+    }
     
     DraftDB *db = [DraftDB instance];
     NSString *draft = [db getDraft:self.receiver];
@@ -53,12 +68,14 @@
     [super addObserver];
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addPeerMessageObserver:self];
+    [[IMService instance] addLoginPointObserver:self];
 }
 
 -(void)removeObserver {
     [super removeObserver];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removePeerMessageObserver:self];
+    [[IMService instance] removeLoginPointObserver:self];
 }
 
 - (int64_t)sender {
@@ -67,6 +84,10 @@
 
 - (int64_t)receiver {
     return self.peerUID;
+}
+
+- (BOOL)isMessageSending:(IMessage*)msg {
+    return [[IMService instance] isPeerMessageSending:msg.msgLocalID];
 }
 
 - (BOOL)isInConversation:(IMessage*)msg {
@@ -141,35 +162,26 @@
     [db setDraft:self.peerUID draft:[self getDraft]];
     
     [self removeObserver];
-    
-    
-    
-    if (self.messages.count > 0) {
-        
-        IMessage *msg = [self.messages lastObject];
-        
-        if (msg.sender == self.currentUID) {
-            NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_PEER_MESSAGE object: msg userInfo:nil];
-            
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
-        }
-    }
+    [self stopPlayer];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_PEER_NEW_MESSAGE
                                                                  object:[NSNumber numberWithLongLong:self.peerUID]
                                                                userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
 
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - MessageObserver
 - (void)onPeerMessage:(IMMessage*)im {
-    if (im.sender != self.peerUID) {
+    if (im.sender != self.peerUID && im.receiver != self.peerUID) {
         return;
     }
-    [[self class] playMessageReceivedSound];
+    int now = (int)time(NULL);
+    if (now - self.lastReceivedTimestamp > 1) {
+        [[self class] playMessageReceivedSound];
+        self.lastReceivedTimestamp = now;
+    }
     
     NSLog(@"receive msg:%@",im);
     
@@ -177,19 +189,14 @@
     m.sender = im.sender;
     m.receiver = im.receiver;
     m.msgLocalID = im.msgLocalID;
-    MessageContent *content = [[MessageContent alloc] init];
-    content.raw = im.content;
-    m.content = content;
+    m.rawContent = im.content;
     m.timestamp = im.timestamp;
     
-    if (self.textMode && m.content.type != MESSAGE_TEXT) {
+    if (self.textMode && m.type != MESSAGE_TEXT) {
         return;
     }
     
-    if (m.content.type == MESSAGE_AUDIO) {
-        AudioDownloader *downloader = [AudioDownloader instance];
-        [downloader downloadAudio:m];
-    }
+    [self downloadMessageContent:m];
     
     [self insertMessage:m];
 }
@@ -201,16 +208,6 @@
     }
     IMessage *msg = [self getMessageWithID:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_ACK;
-    [self reloadMessage:msgLocalID];
-}
-
-//接受方ack
-- (void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid {
-    if (uid != self.peerUID) {
-        return;
-    }
-    IMessage *msg = [self getMessageWithID:msgLocalID];
-    msg.flags = msg.flags|MESSAGE_FLAG_PEER_ACK;
     [self reloadMessage:msgLocalID];
 }
 
@@ -250,20 +247,29 @@
     IMessage *msg = [iterator next];
     while (msg) {
         if (self.textMode) {
-            if (msg.content.type == MESSAGE_TEXT) {
+            if (msg.type == MESSAGE_TEXT) {
                 [self.messages insertObject:msg atIndex:0];
                 if (++count >= PAGE_COUNT) {
                     break;
                 }
             }
         } else {
-            [self.messages insertObject:msg atIndex:0];
-            if (++count >= PAGE_COUNT) {
-                break;
+            if (msg.type == MESSAGE_ATTACHMENT) {
+                MessageAttachmentContent *att = msg.attachmentContent;
+                [self.attachments setObject:att
+                                     forKey:[NSNumber numberWithInt:att.msgLocalID]];
+            } else {
+                [self.messages insertObject:msg atIndex:0];
+                if (++count >= PAGE_COUNT) {
+                    break;
+                }
             }
         }
         msg = [iterator next];
     }
+    
+    [self checkMessageFailureFlag:self.messages count:count];
+    [self downloadMessageContent:self.messages count:count];
     
     [self initTableViewData];
 }
@@ -280,15 +286,25 @@
     int count = 0;
     IMessage *msg = [iterator next];
     while (msg) {
-        [self.messages insertObject:msg atIndex:0];
-        if (++count >= PAGE_COUNT) {
-            break;
+        if (msg.type == MESSAGE_ATTACHMENT) {
+            MessageAttachmentContent *att = msg.attachmentContent;
+            [self.attachments setObject:att
+                                 forKey:[NSNumber numberWithInt:att.msgLocalID]];
+            
+        } else {
+            [self.messages insertObject:msg atIndex:0];
+            if (++count >= PAGE_COUNT) {
+                break;
+            }
         }
         msg = [iterator next];
     }
     if (count == 0) {
         return;
     }
+    
+    [self checkMessageFailureFlag:self.messages count:count];
+    [self downloadMessageContent:self.messages count:count];
     
     [self initTableViewData];
     
@@ -310,19 +326,31 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
+- (void)sendMessage:(IMessage *)msg withImage:(UIImage*)image {
+    msg.uploading = YES;
+    [[Outbox instance] uploadImage:msg withImage:image];
+    NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_PEER_MESSAGE object:msg userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+}
+
 - (void)sendMessage:(IMessage*)message {
-    if (message.content.type == MESSAGE_AUDIO) {
+    if (message.type == MESSAGE_AUDIO) {
+        message.uploading = YES;
         [[Outbox instance] uploadAudio:message];
-    } else if (message.content.type == MESSAGE_IMAGE) {
+    } else if (message.type == MESSAGE_IMAGE) {
+        message.uploading = YES;
         [[Outbox instance] uploadImage:message];
     } else {
         IMMessage *im = [[IMMessage alloc] init];
         im.sender = message.sender;
         im.receiver = message.receiver;
         im.msgLocalID = message.msgLocalID;
-        im.content = message.content.raw;
+        im.content = message.rawContent;
         [[IMService instance] sendPeerMessage:im];
     }
+    
+    NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_PEER_MESSAGE object:message userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 

@@ -10,13 +10,19 @@
 
 
 #import "MessageViewCell.h"
-#import "UIImage+JSMessagesView.h"
 #import "MessageTextView.h"
 #import "MessageImageView.h"
 #import "MessageAudioView.h"
 #import "MessageNotificationView.h"
+#import "MessageLocationView.h"
+#import "MessageLinkView.h"
 
-
+@interface MessageViewCell()
+@property(nonatomic) IMessage *msg;
+@property(nonatomic) BOOL showName;
+@property(nonatomic) BOOL showHead;
+@property(nonatomic) BubbleMessageType bubbleMessageType;
+@end
 
 @implementation MessageViewCell
 
@@ -52,6 +58,10 @@
 
         [self.contentView addSubview:self.nameLabel];
         
+        frame = CGRectMake(2, 0, 40, 40);
+        self.headView = [[UIImageView alloc] initWithFrame:frame];
+        [self.contentView addSubview:self.headView];
+        
         frame = CGRectMake(0,
                            NAME_LABEL_HEIGHT,
                            self.contentView.frame.size.width,
@@ -82,6 +92,18 @@
                 self.bubbleView = notificationView;
             }
                 break;
+            case MESSAGE_LOCATION:
+            {
+                MessageLocationView *locationView = [[MessageLocationView alloc] initWithFrame:frame];
+                self.bubbleView = locationView;
+            }
+                break;
+            case MESSAGE_LINK:
+            {
+                MessageLinkView *linkView = [[MessageLinkView alloc] initWithFrame:frame];
+                self.bubbleView = linkView;
+            }
+                break;
             default:
                 self.bubbleView = nil;
                 break;
@@ -96,85 +118,156 @@
     return self;
 }
 
-#pragma mark - Message Cell
 
-- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType {
-    [self setMessage:message userName:nil msgType:msgType];
+- (void)dealloc {
+    [self.msg removeObserver:self forKeyPath:@"senderInfo"];
 }
 
-- (void) setMessage:(IMessage *)message userName:(NSString*)name msgType:(BubbleMessageType)msgType {
-    if (name.length > 0) {
-        CGRect frame = CGRectMake(0,
-                           NAME_LABEL_HEIGHT,
-                           self.contentView.frame.size.width,
-                           self.contentView.frame.size.height - NAME_LABEL_HEIGHT);
-        self.bubbleView.frame = frame;
-        
-        self.nameLabel.hidden = NO;
-        self.nameLabel.text = name;
-    } else {
-        CGRect frame = CGRectMake(0,
-                                  0,
-                                  self.contentView.frame.size.width,
-                                  self.contentView.frame.size.height);
-        self.bubbleView.frame = frame;
-        
-        self.nameLabel.hidden = YES;
+#pragma mark - Message Cell
+- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType showName:(BOOL)showName {
+    
+    [self.msg removeObserver:self forKeyPath:@"senderInfo"];
+    
+    self.msg = message;
+    
+    [self.msg addObserver:self forKeyPath:@"senderInfo" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    
+
+    self.bubbleMessageType = msgType;
+    
+    NSString *name = self.msg.senderInfo.name;
+    if (name.length == 0) {
+        name = self.msg.senderInfo.identifier;
     }
+
+    self.nameLabel.text = name;
+
+    self.showName = showName;
+    if (self.msg.type == MESSAGE_TEXT || self.msg.type == MESSAGE_IMAGE ||
+        self.msg.type == MESSAGE_LOCATION || self.msg.type == MESSAGE_AUDIO ||
+        self.msg.type == MESSAGE_LINK) {
+        self.showHead = YES;
+    } else {
+        self.showHead = NO;
+    }
+    
     if (msgType == BubbleMessageTypeOutgoing) {
         self.nameLabel.textAlignment = NSTextAlignmentRight;
     } else {
         self.nameLabel.textAlignment = NSTextAlignmentLeft;
     }
     
-    BubbleMessageReceiveStateType state;
-    if(message.isACK){
-        if (message.isPeerACK) {
-            state =  BubbleMessageReceiveStateClient;
-        }else{
-            state =  BubbleMessageReceiveStateServer;
-        }
-    }else{
-        state =  BubbleMessageReceiveStateNone;
-    }
+    self.nameLabel.hidden = !showName;
+    self.headView.hidden = !self.showHead;
+
+    UIImage *placehodler = [UIImage imageNamed:@"PersonalChat"];
+    NSURL *url = [NSURL URLWithString:self.msg.senderInfo.avatarURL];
+    [self.headView sd_setImageWithURL: url placeholderImage:placehodler
+                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+
+                             }];
     
-    switch (message.content.type) {
+    
+    switch (message.type) {
         case MESSAGE_TEXT:
         {
             MessageTextView *textView = (MessageTextView*)self.bubbleView;
-            textView.text = message.content.text;
             textView.type = msgType;
-            textView.msgStateType = state;
+            textView.msg = message;
         }
             break;
         case MESSAGE_IMAGE:
         {
             MessageImageView *msgImageView = (MessageImageView*)self.bubbleView;
-            msgImageView.data = message.content.imageURL;
             msgImageView.type = msgType;
-            msgImageView.msgStateType = state;
+            msgImageView.msg = message;
         }
             break;
         case MESSAGE_AUDIO:
         {
             MessageAudioView *audioView = (MessageAudioView*)self.bubbleView;
-            [audioView initializeWithMsg:message withType:msgType withMsgStateType:state];
+            audioView.type = msgType;
+            audioView.msg = message;
         }
             break;
         case MESSAGE_GROUP_NOTIFICATION:
         {
             MessageNotificationView *notificationView = (MessageNotificationView*)self.bubbleView;
-            notificationView.label.text = message.content.notificationDesc;
+            notificationView.type = msgType;
+            notificationView.msg = message;
+        }
+            break;
+        case MESSAGE_LOCATION:
+        {
+            MessageLocationView *locationView = (MessageLocationView*)self.bubbleView;
+            locationView.type = msgType;
+            locationView.msg = message;
+        }
+            break;
+        case MESSAGE_LINK:
+        {
+            MessageLinkView *linkView = (MessageLinkView*)self.bubbleView;
+            linkView.type = msgType;
+            linkView.msg = message;
         }
             break;
         default:
             break;
     }
-    if (message.flags&MESSAGE_FLAG_FAILURE) {
-        [self.bubbleView showSendErrorBtn:YES];
-    }else{
-        [self.bubbleView showSendErrorBtn:NO];
-    }
+    [self setNeedsLayout];
+}
 
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if([keyPath isEqualToString:@"senderInfo"]) {
+        if (self.showName) {
+            if (self.msg.senderInfo.name.length > 0) {
+                self.nameLabel.text = self.msg.senderInfo.name;
+            } else {
+                self.nameLabel.text = self.msg.senderInfo.identifier;
+            }
+        }
+        
+        if (self.showHead) {
+            UIImage *placehodler = [UIImage imageNamed:@"PersonalChat"];
+            NSURL *url = [NSURL URLWithString:self.msg.senderInfo.avatarURL];
+            [self.headView sd_setImageWithURL: url placeholderImage:placehodler
+                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                        
+                                    }];
+        }
+    }
+}
+
+-(void)layoutSubviews {
+    [super layoutSubviews];
+    
+    CGRect bubbleFrame = CGRectMake(0,
+                                    0,
+                                    self.contentView.frame.size.width,
+                                    self.contentView.frame.size.height);
+    
+    CGRect headFrame = CGRectMake(2, kMarginTop+kPaddingTop, 40, 40);
+    
+    if (self.showName) {
+        bubbleFrame.origin.y = NAME_LABEL_HEIGHT;
+        bubbleFrame.size.height -= NAME_LABEL_HEIGHT;
+    }
+    
+    if (self.bubbleMessageType == BubbleMessageTypeOutgoing) {
+        if (self.showHead) {
+            bubbleFrame.size.width -= 44;
+        }
+        
+        headFrame.origin.x = self.bounds.size.width - 42;
+    } else {
+        if (self.showHead) {
+            bubbleFrame.origin.x = 44;
+            bubbleFrame.size.width -= 44;
+        }
+    }
+    
+    self.bubbleView.frame = bubbleFrame;
+    self.headView.frame = headFrame;
 }
 @end

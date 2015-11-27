@@ -9,18 +9,13 @@
 
 #import <Foundation/Foundation.h>
 #import "Message.h"
-
-#define STATE_UNCONNECTED 0
-#define STATE_CONNECTING 1
-#define STATE_CONNECTED 2
-#define STATE_CONNECTFAIL 3
+#import "TCPConnection.h"
 
 @class IMessage;
 
 @protocol IMPeerMessageHandler <NSObject>
--(BOOL)handleMessage:(IMMessage*)msg;
+-(BOOL)handleMessage:(IMMessage*)msg uid:(int64_t)uid;
 -(BOOL)handleMessageACK:(int)msgLocalID uid:(int64_t)uid;
--(BOOL)handleMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid;
 -(BOOL)handleMessageFailure:(int)msgLocalID uid:(int64_t)uid;
 @end
 
@@ -34,14 +29,10 @@
 
 @end
 
-@protocol IMConnectionObserver <NSObject>
-@optional
-//同IM服务器连接的状态变更通知
--(void)onConnectState:(int)state;
 
+@protocol LoginPointObserver <NSObject>
 //用户在其他地方登陆
 -(void)onLoginPoint:(LoginPoint*)lp;
-
 @end
 
 @protocol PeerMessageObserver <NSObject>
@@ -50,8 +41,6 @@
 
 //服务器ack
 -(void)onPeerMessageACK:(int)msgLocalID uid:(int64_t)uid;
-//接受方ack
--(void)onPeerMessageRemoteACK:(int)msgLocalID uid:(int64_t)uid;
 
 //消息发送失败
 -(void)onPeerMessageFailure:(int)msgLocalID uid:(int64_t)uid;
@@ -70,25 +59,38 @@
 -(void)onGroupNotification:(NSString*)notification;
 @end
 
+@protocol RoomMessageObserver <NSObject>
+@optional
+-(void)onRoomMessage:(RoomMessage*)rm;
+-(void)onRoomMessageACK:(RoomMessage*)rm;
+-(void)onRoomMessageFailure:(RoomMessage*)rm;
 
-@interface IMService : NSObject
-@property(nonatomic, copy) NSString *host;
+@end
+
+@protocol SystemMessageObserver <NSObject>
+@optional
+-(void)onSystemMessage:(NSString*)sm;
+
+@end
+
+@interface IMService : TCPConnection
 @property(nonatomic, copy) NSString *deviceID;
 @property(nonatomic, copy) NSString *token;
-@property(nonatomic, assign)int connectState;
+@property(nonatomic) int64_t uid;
+
 @property(nonatomic, weak)id<IMPeerMessageHandler> peerMessageHandler;
 @property(nonatomic, weak)id<IMGroupMessageHandler> groupMessageHandler;
 +(IMService*)instance;
 
--(void)startRechabilityNotifier;
-
--(void)start;
--(void)stop;
--(void)enterForeground;
--(void)enterBackground;
+-(BOOL)isPeerMessageSending:(int)msgLocalID;
+-(BOOL)isGroupMessageSending:(int)msgLocalID;
 
 -(BOOL)sendPeerMessage:(IMMessage*)msg;
 -(BOOL)sendGroupMessage:(IMMessage*)msg;
+-(BOOL)sendRoomMessage:(RoomMessage*)msg;
+
+-(void)enterRoom:(int64_t)roomID;
+-(void)leaveRoom:(int64_t)roomID;
 
 //正在输入
 -(void)sendInputing:(MessageInputing*)inputing;
@@ -99,8 +101,15 @@
 -(void)addGroupMessageObserver:(id<GroupMessageObserver>)ob;
 -(void)removeGroupMessageObserver:(id<GroupMessageObserver>)ob;
 
--(void)addConnectionObserver:(id<IMConnectionObserver>)ob;
--(void)removeConnectionObserver:(id<IMConnectionObserver>)ob;
+-(void)addLoginPointObserver:(id<LoginPointObserver>)ob;
+-(void)removeLoginPointObserver:(id<LoginPointObserver>)ob;
+
+-(void)addRoomMessageObserver:(id<RoomMessageObserver>)ob;
+-(void)removeRoomMessageObserver:(id<RoomMessageObserver>)ob;
+
+-(void)addSystemMessageObserver:(id<SystemMessageObserver>)ob;
+-(void)removeSystemMessageObserver:(id<SystemMessageObserver>)ob;
+
 
 @end
 

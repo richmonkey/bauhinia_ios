@@ -17,8 +17,9 @@
 
 @property (strong, nonatomic) BubbleView *bubbleView;
 @property (strong, nonatomic) UILabel *nameLabel;
--(id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier;
+@property (strong, nonatomic) UIImageView *headView;
 
-- (void) setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType;
-- (void) setMessage:(IMessage *)message userName:(NSString*)name msgType:(BubbleMessageType)msgType;
+- (id)initWithType:(int)type reuseIdentifier:(NSString *)reuseIdentifier;
+
+- (void)setMessage:(IMessage *)message msgType:(BubbleMessageType)msgType showName:(BOOL)showName;
 @end

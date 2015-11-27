@@ -23,6 +23,23 @@ static NSString *dbPath = nil;
 
 +(void)setDBPath:(NSString *)dir {
     dbPath = dir;
+
+    NSString *peerDir = [NSString stringWithFormat:@"%@/peer", dbPath];
+    [self mkdir:peerDir];
+    
+    NSString *groupDir = [NSString stringWithFormat:@"%@/group", dbPath];
+    [self mkdir:groupDir];
+}
+
++(BOOL)mkdir:(NSString*)path {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *err;
+    BOOL r = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&err];
+    
+    if (!r) {
+        NSLog(@"mkdir err:%@", err);
+    }
+    return r;
 }
 
 +(NSString*)getDBPath {
@@ -67,7 +84,7 @@ static NSString *dbPath = nil;
     char buf[64*1024];
     char *p = buf;
     
-    const char *raw = [msg.content.raw UTF8String];
+    const char *raw = [msg.rawContent UTF8String];
     size_t len = strlen(raw) + 8 + 8 + 4 + 4;
     
     if (4 + 4 + len + 4 + 4 > 64*1024) return NO;
@@ -219,9 +236,7 @@ static NSString *dbPath = nil;
     p += 8;
     msg.receiver = readInt64(p);
     p += 8;
-    MessageContent *content = [[MessageContent alloc] init];
-    content.raw = [[NSString alloc] initWithBytes:p length:len - 24 encoding:NSUTF8StringEncoding];
-    msg.content = content;
+    msg.rawContent = [[NSString alloc] initWithBytes:p length:len - 24 encoding:NSUTF8StringEncoding];
     return msg;
 }
 

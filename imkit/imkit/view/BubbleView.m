@@ -8,11 +8,12 @@
 */
 #import "BubbleView.h"
 #import "NSString+JSMessagesView.h"
-#import "UIImage+JSMessagesView.h"
 
 CGFloat const kJSAvatarSize = 50.0f;
 
 @interface BubbleView()
+
+@property (nonatomic) UIActivityIndicatorView *sendingIndicatorView;
 
 + (UIImage *)bubbleImageTypeIncoming;
 + (UIImage *)bubbleImageTypeOutgoing;
@@ -33,19 +34,47 @@ CGFloat const kJSAvatarSize = 50.0f;
         [self.msgSendErrorBtn setImage:[UIImage imageNamed:@"MessageSendError"]  forState: UIControlStateHighlighted];
         self.msgSendErrorBtn.hidden = YES;
         [self addSubview:self.msgSendErrorBtn];
+        
+        self.sendingIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self addSubview:self.sendingIndicatorView];
     }
     return self;
 }
 
+- (void)dealloc {
+    [self.msg removeObserver:self forKeyPath:@"flags"];
+}
+
 #pragma mark - Setters
+-(void)setMsg:(IMessage *)msg {
+    [self.msg removeObserver:self forKeyPath:@"flags"];
+    _msg = msg;
+    [self.msg addObserver:self forKeyPath:@"flags" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    
+    if (self.type == BubbleMessageTypeOutgoing) {
+        if (self.msg.isFailure) {
+            self.msgSendErrorBtn.hidden = NO;
+            [self.sendingIndicatorView stopAnimating];
+        } else if (self.msg.isACK) {
+            self.msgSendErrorBtn.hidden = YES;
+            [self.sendingIndicatorView stopAnimating];
+        } else if (self.msg.uploading) {
+            self.msgSendErrorBtn.hidden = YES;
+            [self.sendingIndicatorView stopAnimating];
+        } else {
+            self.msgSendErrorBtn.hidden = YES;
+            [self.sendingIndicatorView startAnimating];
+        }
+    } else {
+        self.msgSendErrorBtn.hidden = YES;
+        [self.sendingIndicatorView stopAnimating];
+    }
+    [self setNeedsLayout];
+}
+
 - (void)setType:(BubbleMessageType)newType
 {
     _type = newType;
-    [self setNeedsDisplay];
-}
-
-- (void) setMsgStateType:(BubbleMessageReceiveStateType)type{
-    _msgStateType = type;
     [self setNeedsDisplay];
 }
 
@@ -54,9 +83,59 @@ CGFloat const kJSAvatarSize = 50.0f;
     [self setNeedsDisplay];
 }
 
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if([keyPath isEqualToString:@"flags"] || [keyPath isEqualToString:@"uploading"]) {
+        if (self.type == BubbleMessageTypeOutgoing) {
+            if (self.msg.isFailure) {
+                self.msgSendErrorBtn.hidden = NO;
+                [self.sendingIndicatorView stopAnimating];
+            } else if (self.msg.isACK) {
+                self.msgSendErrorBtn.hidden = YES;
+                [self.sendingIndicatorView stopAnimating];
+            } else if (self.msg.uploading) {
+                self.msgSendErrorBtn.hidden = YES;
+                [self.sendingIndicatorView stopAnimating];
+            } else {
+                self.msgSendErrorBtn.hidden = YES;
+                [self.sendingIndicatorView startAnimating];
+            }
+        } else {
+            self.msgSendErrorBtn.hidden = YES;
+            [self.sendingIndicatorView stopAnimating];
+        }
+    }
+}
+
+
++ (UIImage *)bubbleDefaultIncoming{
+    UIImage *image = [UIImage imageNamed:@"ReceiverTextNodeBkg"];
+    return [image resizableImageWithCapInsets:UIEdgeInsetsMake(28.0f, 14.0f, 17.0f, 12.0f)
+                          resizingMode:UIImageResizingModeStretch];
+}
+
++ (UIImage *)bubbleDefaultIncomingSelected{
+    UIImage *image = [UIImage imageNamed:@"ReceiverTextNodeBkgHL"];
+    return [image resizableImageWithCapInsets:UIEdgeInsetsMake(28.0f, 14.0f, 17.0f, 12.0f)
+                                 resizingMode:UIImageResizingModeStretch];
+}
+
++ (UIImage *)bubbleDefaultOutgoing{
+    UIImage *image = [UIImage imageNamed:@"SenderTextNodeBkg"];
+    return [image resizableImageWithCapInsets:UIEdgeInsetsMake(28.0f, 11.0f, 15.0f, 12.0f)
+                                 resizingMode:UIImageResizingModeStretch];
+}
+
++ (UIImage *)bubbleDefaultOutgoingSelected{
+    UIImage *image = [UIImage imageNamed:@"SenderTextNodeBkgHL"];
+    return [image resizableImageWithCapInsets:UIEdgeInsetsMake(28.0f, 11.0f, 15.0f, 12.0f)
+                         resizingMode:UIImageResizingModeStretch];
+}
+
+
+
 #pragma mark - Drawing
 - (CGRect)bubbleFrame{
-    NSLog(@"act对象消息");
     return CGRectMake(0, 0, 0, 0);
 }
 
@@ -65,7 +144,7 @@ CGFloat const kJSAvatarSize = 50.0f;
 }
 
 - (UIImage *)bubbleImageHighlighted{
-    return (self.type == BubbleMessageTypeIncoming) ? [UIImage bubbleDefaultIncomingSelected] : [UIImage bubbleDefaultOutgoingSelected];
+    return (self.type == BubbleMessageTypeIncoming) ? [[self class] bubbleDefaultIncomingSelected] : [[self class] bubbleDefaultOutgoingSelected];
 }
 
 -(void) showSendErrorBtn:(BOOL)show{
@@ -75,46 +154,23 @@ CGFloat const kJSAvatarSize = 50.0f;
 
 }
 
--(void) drawMsgStateSign:(CGRect) frame{
-    if (self.type == BubbleMessageTypeOutgoing) {
-        UIImage *msgSignImg = nil;
-        switch (_msgStateType) {
-            case BubbleMessageReceiveStateNone:
-            {
-                msgSignImg = [UIImage imageNamed:@"CheckDoubleLight"];
-            }
-                break;
-            case BubbleMessageReceiveStateClient:
-            {
-                msgSignImg = [UIImage imageNamed:@"CheckDoubleGreen"];
-            }
-                break;
-            case BubbleMessageReceiveStateServer:
-            {
-                msgSignImg = [UIImage imageNamed:@"CheckSingleGreen"];
-            }
-                break;
-            default:
-                break;
-        }
-        
-        CGRect bubbleFrame = [self bubbleFrame];
-        
-        CGFloat imgX = bubbleFrame.origin.x + bubbleFrame.size.width - msgSignImg.size.width;
-        imgX = self.type == BubbleMessageTypeOutgoing ?(imgX - 15):(imgX - 5);
-        
-        CGRect msgStateSignRect = CGRectMake(imgX, frame.size.height -  kPaddingBottom - msgSignImg.size.height, msgSignImg.size.width , msgSignImg.size.height);
-        
-        [msgSignImg drawInRect:msgStateSignRect];
-        
-        
-        imgX = bubbleFrame.origin.x;
-        CGRect rect = self.msgSendErrorBtn.frame;
-        rect.origin.x = imgX - self.msgSendErrorBtn.frame.size.width + 2;
-        rect.origin.y = bubbleFrame.origin.y + bubbleFrame.size.height  - self.msgSendErrorBtn.frame.size.height - kMarginBottom;
-        [self.msgSendErrorBtn setFrame:rect];
-        [self bringSubviewToFront:self.msgSendErrorBtn];
-    }
+- (void)drawRect:(CGRect)frame{
+    [super drawRect:frame];
+    
+    UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
+    
+    CGRect bubbleFrame = [self bubbleFrame];
+    [image drawInRect:bubbleFrame];
+}
+
+-(void)layoutSubviews {
+    CGRect bubbleFrame = [self bubbleFrame];
+    CGFloat imgX = bubbleFrame.origin.x;
+    CGRect rect = self.msgSendErrorBtn.frame;
+    rect.origin.x = imgX - self.msgSendErrorBtn.frame.size.width + 2;
+    rect.origin.y = bubbleFrame.origin.y + bubbleFrame.size.height  - self.msgSendErrorBtn.frame.size.height - kPaddingBottom;
+    [self.msgSendErrorBtn setFrame:rect];
+    [self.sendingIndicatorView setFrame:rect];
 }
 
 #pragma mark - Bubble view
@@ -133,11 +189,11 @@ CGFloat const kJSAvatarSize = 50.0f;
 }
 
 + (UIImage *)bubbleImageTypeIncoming{
-    return [UIImage bubbleDefaultIncoming];
+    return [self bubbleDefaultIncoming];
 }
 
 + (UIImage *)bubbleImageTypeOutgoing{
-    return [UIImage bubbleDefaultOutgoing];
+    return [self bubbleDefaultOutgoing];
 }
 
 + (UIFont *)font{
@@ -159,17 +215,6 @@ CGFloat const kJSAvatarSize = 50.0f;
     return  [gettingSizeLabel sizeThatFits:maximumLabelSize];
 }
 
-+ (CGSize)bubbleSizeForText:(NSString *)txt withFont:(UIFont*)font
-{
-    CGSize textSize = [BubbleView textSizeForText:txt withFont:font];
-    return CGSizeMake(textSize.width + kBubblePaddingRight,
-                      textSize.height + kPaddingTop + kPaddingBottom);
-}
-
-+ (CGFloat)cellHeightForText:(NSString *)txt
-{
-    return [BubbleView bubbleSizeForText:txt withFont:[BubbleView font]].height + kMarginTop + kMarginBottom;
-}
 
 + (int)maxCharactersPerLine
 {

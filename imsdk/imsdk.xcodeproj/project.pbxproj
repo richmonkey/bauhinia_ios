@@ -28,7 +28,9 @@
 		6D032F481AA99456004AA39F /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D032F431AA99456004AA39F /* util.c */; };
 		6D032F871AA9AEB3004AA39F /* IMService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F3F1AA99456004AA39F /* IMService.h */; };
 		6D032F881AA9AF2C004AA39F /* Message.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F411AA99456004AA39F /* Message.h */; };
-		6D401C161AAC840F0041ABC6 /* util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F441AA99456004AA39F /* util.h */; };
+		6D69BCEB1B4433A4008EAA8A /* TCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D69BCEA1B4433A4008EAA8A /* TCPConnection.m */; };
+		6D69BCEC1B443D2A008EAA8A /* TCPConnection.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D69BCE91B4433A4008EAA8A /* TCPConnection.h */; };
+		6D6F14361BF8BE5400F33E7E /* util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6D032F441AA99456004AA39F /* util.h */; };
 		6DF0918E1AB0A21E0080AE67 /* GOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF0918D1AB0A21E0080AE67 /* GOReachability.m */; };
 /* End PBXBuildFile section */
 
@@ -49,7 +51,8 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				6D401C161AAC840F0041ABC6 /* util.h in CopyFiles */,
+				6D6F14361BF8BE5400F33E7E /* util.h in CopyFiles */,
+				6D69BCEC1B443D2A008EAA8A /* TCPConnection.h in CopyFiles */,
 				6D032F881AA9AF2C004AA39F /* Message.h in CopyFiles */,
 				6D032F871AA9AEB3004AA39F /* IMService.h in CopyFiles */,
 			);
@@ -69,6 +72,8 @@
 		6D032F421AA99456004AA39F /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		6D032F431AA99456004AA39F /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
 		6D032F441AA99456004AA39F /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		6D69BCE91B4433A4008EAA8A /* TCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPConnection.h; sourceTree = "<group>"; };
+		6D69BCEA1B4433A4008EAA8A /* TCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCPConnection.m; sourceTree = "<group>"; };
 		6DF0918C1AB0A21E0080AE67 /* GOReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GOReachability.h; sourceTree = "<group>"; };
 		6DF0918D1AB0A21E0080AE67 /* GOReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GOReachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,6 +124,8 @@
 				6D032F3E1AA99456004AA39F /* AsyncTCP.m */,
 				6D032F3F1AA99456004AA39F /* IMService.h */,
 				6D032F401AA99456004AA39F /* IMService.m */,
+				6D69BCE91B4433A4008EAA8A /* TCPConnection.h */,
+				6D69BCEA1B4433A4008EAA8A /* TCPConnection.m */,
 				6D032F411AA99456004AA39F /* Message.h */,
 				6D032F421AA99456004AA39F /* Message.m */,
 				6D032F431AA99456004AA39F /* util.c */,
@@ -254,6 +261,7 @@
 				6D032F451AA99456004AA39F /* AsyncTCP.m in Sources */,
 				6D032F481AA99456004AA39F /* util.c in Sources */,
 				6D032F471AA99456004AA39F /* Message.m in Sources */,
+				6D69BCEB1B4433A4008EAA8A /* TCPConnection.m in Sources */,
 				6D032F461AA99456004AA39F /* IMService.m in Sources */,
 				6DF0918E1AB0A21E0080AE67 /* GOReachability.m in Sources */,
 			);
@@ -310,7 +318,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -344,7 +352,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -354,6 +362,7 @@
 		6D032F2D1AA993C0004AA39F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_BITCODE = NO;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -364,6 +373,7 @@
 		6D032F2E1AA993C0004AA39F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_BITCODE = NO;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

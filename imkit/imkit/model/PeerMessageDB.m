@@ -88,23 +88,9 @@
 -(id)init {
     self = [super init];
     if (self) {
-        NSString *path = [self getMessagePath];
-        [self mkdir:path];
     }
     return self;
 }
-
--(BOOL)mkdir:(NSString*)path {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSError *err;
-    BOOL r = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&err];
-    
-    if (!r) {
-        NSLog(@"mkdir err:%@", err);
-    }
-    return r;
-}
-
 
 -(NSString*)getMessagePath {
     NSString *s = [MessageDB getDBPath];
@@ -161,10 +147,6 @@
     return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_ACK];
 }
 
--(BOOL)acknowledgeMessageFromRemote:(int)msgLocalID uid:(int64_t)uid {
-    NSString *path = [self getPeerPath:uid];
-    return [MessageDB addFlag:msgLocalID path:path flag:MESSAGE_FLAG_PEER_ACK];
-}
 
 -(BOOL)markMessageFailure:(int)msgLocalID uid:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];
@@ -229,7 +211,17 @@
 -(IMessage*)getLastPeerMessage:(int64_t)uid {
     id<IMessageIterator> iter = [[PeerMessageDB instance] newMessageIterator:uid];
     IMessage *msg;
-    msg = [iter next];
+    //返回第一条不是附件的消息
+    while (YES) {
+        msg = [iter next];
+        if (msg == nil) {
+            break;
+        }
+        if (msg.type != MESSAGE_ATTACHMENT) {
+            break;
+        }
+    }
+
     return msg;
 }
 

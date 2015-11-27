@@ -16,8 +16,6 @@
 #define kblank 5
 #define kMargin 20
 
-#define kAudioCellWidth 210
-
 #define kPlayBtnWidth    26
 #define kPlayBtnHeight   27
 #define kmicroBtnWidth   14
@@ -26,8 +24,6 @@
 #define ktimeLabelHeight 20
 
 #define kProgressViewHeight 3
-
-
 
 @implementation MessageAudioView
 
@@ -63,72 +59,69 @@
         [self.timeLengthLabel setFont:[UIFont systemFontOfSize:12.0f]];
         [self addSubview:self.timeLengthLabel];
         
-        rect.origin.x = kAudioCellWidth - kmicroBtnWidth  - kblank;
-        rect.origin.y = kAudioViewCellHeight - kmicroBtnHeight - kPaddingBottom;
-        rect.size.width = kmicroBtnWidth;
-        rect.size.height = kmicroBtnHeight;
-        self.microPhoneBtn = [[UIButton alloc] initWithFrame:rect ];
-
-        [self addSubview:self.microPhoneBtn];
-
+        self.unreadImageView = [[UIImageView alloc] init];
+        self.unreadImageView.hidden = YES;
+        [self.unreadImageView setImage:[UIImage imageNamed:@"VoiceNodeUnread"]];
+        [self addSubview:self.unreadImageView];
         
+        self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self addSubview:self.downloadIndicatorView];
+        self.uploadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self addSubview:self.uploadIndicatorView];
     }
     return self;
 }
 
--(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType{
-    [super setType:type];
-    [super setMsgStateType:stateType];
-    _msg = msg;
+-(void)dealloc {
+    [self.msg removeObserver:self forKeyPath:@"uploading"];
+    [self.msg removeObserver:self forKeyPath:@"downloading"];
+    [self.msg removeObserver:self forKeyPath:@"playing"];
+    [self.msg removeObserver:self forKeyPath:@"progress"];
+}
+
+-(void)setMsg:(IMessage *)msg {
+    [self.msg removeObserver:self forKeyPath:@"uploading"];
+    [self.msg removeObserver:self forKeyPath:@"downloading"];
+    [self.msg removeObserver:self forKeyPath:@"playing"];
+    [self.msg removeObserver:self forKeyPath:@"progress"];
+
+    [super setMsg:msg];
     
-    int minute = self.msg.content.audio.duration/60;
-    int second = self.msg.content.audio.duration%60;
+    MessageAudioContent *audio = self.msg.audioContent;
+    int minute = audio.duration/60;
+    int second = audio.duration%60;
     NSString *str = [NSString stringWithFormat:@"%02d:%02d",minute,second];
     [self.timeLengthLabel setText:str];
-   
+    
     if ([self.msg isListened]) {
-        [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicBlueIncoming"] forState:UIControlStateNormal];
-    }else{
-        [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicNewIncoming"] forState:UIControlStateNormal];
+        self.unreadImageView.hidden = YES;
+    } else if (self.type == BubbleMessageTypeIncoming){
+        self.unreadImageView.hidden = NO;
+    } else {
+        self.unreadImageView.hidden = YES;
     }
     
-    if(self.type == BubbleMessageTypeOutgoing){
-        [self.microPhoneBtn setHidden:YES];
-    }else{
-        [self.microPhoneBtn setHidden:NO];
+    [self.msg addObserver:self forKeyPath:@"uploading" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    [self.msg addObserver:self forKeyPath:@"downloading" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    [self.msg addObserver:self forKeyPath:@"playing" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    [self.msg addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    
+    if (self.msg.uploading) {
+        [self.uploadIndicatorView startAnimating];
+    } else {
+        [self.uploadIndicatorView stopAnimating];
     }
     
-}
-
-
--(void)updatePosition{
-    UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
-    CGSize bubbleSize = CGSizeMake(kAudioCellWidth, kAudioViewCellHeight);
+    if (self.msg.downloading) {
+        [self.downloadIndicatorView startAnimating];
+    } else {
+        [self.downloadIndicatorView stopAnimating];
+    }
     
-    CGRect rect = self.playBtn.frame;
-    rect.origin.x = image.leftCapWidth + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width  : 0.0f);
-    self.playBtn.frame = rect;
-    
-    rect = self.progressView.frame;
-    rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
-    rect.size.width = kAudioCellWidth - image.leftCapWidth - kPlayBtnWidth - 2*kblank   - (self.type == BubbleMessageTypeOutgoing ?  2*image.leftCapWidth  : 10);
-    self.progressView.frame = rect;
-    
-    rect = self.timeLengthLabel.frame;
-    rect.origin.x = self.progressView.frame.origin.x ;
-    self.timeLengthLabel.frame = rect;
-    
-    rect = self.microPhoneBtn.frame;
-    rect.origin.x = kAudioCellWidth - image.leftCapWidth - kmicroBtnWidth + floorf(self.type == BubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width - 20 : 0.0f);
-    self.microPhoneBtn.frame = rect;
-    
-}
-
--(void)setPlaying:(BOOL)playing {
-    if (playing) {
-        [self.playBtn setImage:[UIImage imageNamed:@"PauseOS7"] forState:UIControlStateNormal];
+    if (self.msg.playing) {
+        [self.playBtn setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
         [self.playBtn setImage:[UIImage imageNamed:@"PausePressed"] forState:UIControlStateSelected];
-        self.progressView.progress = 0;
+        self.progressView.progress = self.msg.progress/100.0;
     } else {
         [self.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
         [self.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
@@ -136,11 +129,41 @@
     }
 }
 
--(void)setListened{
-    
-    [self.microPhoneBtn setImage:[UIImage imageNamed:@"MicBlueIncoming"] forState:UIControlStateNormal];
-    
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    if([keyPath isEqualToString:@"uploading"]) {
+        if (self.msg.uploading) {
+            [self.uploadIndicatorView startAnimating];
+        } else {
+            [self.uploadIndicatorView stopAnimating];
+        }
+    } else if ([keyPath isEqualToString:@"downloading"]) {
+        if (self.msg.downloading) {
+            [self.downloadIndicatorView startAnimating];
+        } else {
+            [self.downloadIndicatorView stopAnimating];
+        }
+    } else if ([keyPath isEqualToString:@"playing"]) {
+        if (self.msg.playing) {
+            [self.playBtn setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
+            [self.playBtn setImage:[UIImage imageNamed:@"PausePressed"] forState:UIControlStateSelected];
+        } else {
+            [self.playBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+            [self.playBtn setImage:[UIImage imageNamed:@"PlayPressed"] forState:UIControlStateSelected];
+        }
+    } else if ([keyPath isEqualToString:@"progress"]) {
+        self.progressView.progress = self.msg.progress/100.0;
+    } else if([keyPath isEqualToString:@"flags"]) {
+        if ([self.msg isListened]) {
+            self.unreadImageView.hidden = YES;
+        } else if (self.type == BubbleMessageTypeIncoming){
+            self.unreadImageView.hidden = NO;
+        } else {
+            self.unreadImageView.hidden = YES;
+        }
+    }
 }
+
 
 #pragma mark - Drawing
 - (CGRect)bubbleFrame{
@@ -153,46 +176,36 @@
     
 }
 
-- (void)drawRect:(CGRect)rect
-{
-    [super drawRect:rect];
-    UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
-    CGRect bubbleFrame = [self bubbleFrame];
-	[image drawInRect:bubbleFrame];
-    [self drawMsgStateSign: rect];
-}
-
--(void)setDownloading:(BOOL)downloading {
-    //todo download的动画
-    if (downloading) {
-        self.downloadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        CGRect bubbleFrame = [self bubbleFrame];
-        [self.downloadIndicatorView setFrame: bubbleFrame];
-        [self.downloadIndicatorView startAnimating];
-        [self addSubview: self.downloadIndicatorView];
-    }else{
-        if (self.downloadIndicatorView&&[self.downloadIndicatorView isAnimating]) {
-            [self.downloadIndicatorView stopAnimating];
-        }
-    }
-}
-
--(void)setUploading:(BOOL)uploading {
-    //todo uploading的动画
-    if (uploading) {
-        self.uploadIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        CGRect bubbleFrame = [self bubbleFrame];
-        [self.uploadIndicatorView setFrame: bubbleFrame];
-        [self.uploadIndicatorView startAnimating];
-        [self addSubview: self.uploadIndicatorView];
-    }else{
-        if (self.uploadIndicatorView&&[self.uploadIndicatorView isAnimating]) {
-            [self.uploadIndicatorView stopAnimating];
-        }
-    }
-}
-
 -(void)layoutSubviews {
-    [self updatePosition];
+    [super layoutSubviews];
+    
+    CGRect bubbleFrame = [self bubbleFrame];
+    
+    CGRect rect = self.playBtn.frame;
+    rect.size.width = kPlayBtnWidth;
+    rect.size.height = kPlayBtnHeight;
+    rect.origin.x = (self.type == BubbleMessageTypeOutgoing) ? (bubbleFrame.origin.x + kBubblePaddingTail + 8) : (kBubblePaddingHead + 8);
+    self.playBtn.frame = rect;
+    
+    rect = self.progressView.frame;
+    rect.origin.x = self.playBtn.frame.origin.x + self.playBtn.frame.size.width;
+    rect.size.width = kAudioCellWidth - kBubblePaddingHead - kBubblePaddingTail - 8 - kPlayBtnWidth - 8  - (self.type == BubbleMessageTypeOutgoing ?  0  : 8);
+    self.progressView.frame = rect;
+    
+    rect = self.timeLengthLabel.frame;
+    rect.origin.x = self.progressView.frame.origin.x ;
+    self.timeLengthLabel.frame = rect;
+
+    //右上角
+    rect.origin.x = CGRectGetMaxX(bubbleFrame) - kBubblePaddingTail - 13;
+    rect.origin.y = bubbleFrame.origin.y + kPaddingTop + 2;
+    rect.size.width = 11;
+    rect.size.height = 11;
+    self.unreadImageView.frame = rect;
+    
+    self.uploadIndicatorView.frame = bubbleFrame;
+    self.downloadIndicatorView.frame = bubbleFrame;
+    
+
 }
 @end

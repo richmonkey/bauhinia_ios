@@ -9,26 +9,21 @@
 
 #import "BubbleView.h"
 #import <AVFoundation/AVFoundation.h>
-#import "IMessage.h"
+
 
 #define kAudioViewCellHeight 58 
+#define kAudioCellWidth 210
 
 @interface MessageAudioView : BubbleView <AVAudioPlayerDelegate>
 
 @property (nonatomic, strong) UIButton *playBtn;
-@property (nonatomic, strong) UIButton *microPhoneBtn;
+@property (nonatomic, strong) UIImageView *unreadImageView;
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UILabel *timeLengthLabel;
 @property (nonatomic, strong) UILabel *createTimeLabel;
 
+@property (nonatomic) UIActivityIndicatorView *downloadIndicatorView;
+@property (nonatomic) UIActivityIndicatorView *uploadIndicatorView;
 
-@property (nonatomic ,strong) IMessage *msg;
-
--(void)initializeWithMsg:(IMessage *)msg withType:(BubbleMessageType)type withMsgStateType:(BubbleMessageReceiveStateType)stateType;
-
--(void)setPlaying:(BOOL)playing;
--(void)setDownloading:(BOOL)downloading;
--(void)setUploading:(BOOL)uploading;
--(void)setListened;
 
 @end

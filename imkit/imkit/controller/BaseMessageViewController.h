@@ -20,6 +20,8 @@
 //receiver可能代表uid或者群组id
 @property(nonatomic, readonly) int64_t receiver;
 
+@property(nonatomic) IUser *senderInfo;
+
 - (BOOL)saveMessage:(IMessage*)msg;
 - (BOOL)removeMessage:(IMessage*)msg;
 - (BOOL)markMessageFailure:(IMessage*)msg;
@@ -27,16 +29,18 @@
 - (BOOL)eraseMessageFailure:(IMessage*)msg;
 
 - (void)sendMessage:(IMessage*)msg;
+- (void)sendMessage:(IMessage *)msg withImage:(UIImage*)image;
 
 //protected
 @property(nonatomic) NSMutableArray *messageArray;
 @property(nonatomic) NSMutableArray *timestamps;
 @property(nonatomic) NSMutableArray *messages;
-@property(nonatomic) NSMutableDictionary *names;
+@property(nonatomic) NSMutableDictionary *attachments;
 
 @property(nonatomic) UIRefreshControl *refreshControl;
 @property(nonatomic) UITableView *tableView;
 
+@property(nonatomic) int lastReceivedTimestamp;
 
 //是否只展示文本消息
 @property(nonatomic) BOOL textMode;
@@ -63,12 +67,14 @@
 
 - (NSString *)getWeekDayString:(NSInteger)iDay;
 - (BOOL)isSameDay:(NSDate*)date1 other:(NSDate*)date2 ;
-- (BOOL)isYestoday:(NSDate*)date1 today:(NSDate*)date2 ;
-- (BOOL)isBeforeYestoday:(NSDate*)date1 today:(NSDate*)date2;
-- (BOOL)isInWeek:(NSDate*)date1 today:(NSDate*)date2;
-- (BOOL)isInMonth:(NSDate*)date1 today:(NSDate*)date2;
+- (BOOL)isYestoday:(NSDate*)date;
+- (BOOL)isBeforeYestoday:(NSDate*)date;
+- (BOOL)isInWeek:(NSDate*)date;
+- (BOOL)isInMonth:(NSDate*)date;
+- (BOOL)isInYear:(NSDate*)date;
 - (NSDateComponents*)getComponentOfDate:(NSDate *)date ;
 - (NSString *)getConversationTimeString:(NSDate *)date;
+- (NSString*)formatSectionTime:(NSDate*)date;
 
 + (void)playMessageReceivedSound;
 + (void)playMessageSentSound;

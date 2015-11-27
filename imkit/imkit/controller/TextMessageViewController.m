@@ -15,6 +15,7 @@
 #import "MessageTableSectionHeaderView.h"
 #import "MessageViewCell.h"
 #import "Constants.h"
+#import "MessageTextView.h"
 
 #define INPUT_HEIGHT 52.0f
 
@@ -97,15 +98,7 @@
     
     UIView *inputBar = [[UIView alloc] initWithFrame:inputFrame];
     
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
-    
-    UIImageView *bkview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 44)];
-    UIImage *img = [UIImage imageNamed:@"input-bar-flat.png"];
-    UIImage *stretchImg = [img stretchableImageWithLeftCapWidth:1 topCapHeight:5];
-    [bkview setImage:stretchImg];
-    [self.inputBar addSubview:bkview];
-    
+
     inputBar.backgroundColor = [UIColor whiteColor];
     inputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
     inputBar.opaque = YES;
@@ -302,7 +295,7 @@
     MessageViewCell *cell = (MessageViewCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     
     if(!cell) {
-        cell = [[MessageViewCell alloc] initWithType:message.content.type reuseIdentifier:CellID];
+        cell = [[MessageViewCell alloc] initWithType:message.type reuseIdentifier:CellID];
     }
     BubbleMessageType msgType;
     
@@ -314,12 +307,10 @@
     
     if (message.sender == self.sender) {
         msgType = BubbleMessageTypeOutgoing;
-        [cell setMessage:message msgType:msgType];
+        [cell setMessage:message msgType:msgType showName:NO];
     } else {
         msgType = BubbleMessageTypeIncoming;
-        NSNumber *key = [NSNumber numberWithLongLong:message.sender];
-        NSString *name = [self.names objectForKey:key];
-        [cell setMessage:message userName:name msgType:msgType];
+        [cell setMessage:message msgType:msgType showName:self.isShowUserName];
     }
 
     return cell;
@@ -358,9 +349,12 @@
         nameHeight = NAME_LABEL_HEIGHT;
     }
     
-    switch (msg.content.type) {
+    switch (msg.type) {
         case MESSAGE_TEXT:
-            return [BubbleView cellHeightForText:msg.content.text] + nameHeight;
+        {
+            MessageTextContent *content = msg.textContent;
+            return [MessageTextView cellHeightForText:content.text] + nameHeight;
+        }
         case MESSAGE_GROUP_NOTIFICATION:
             return 40;
         default:
@@ -395,40 +389,16 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    MessageTableSectionHeaderView *sectionView = [[[NSBundle mainBundle]loadNibNamed:@"MessageTableSectionHeaderView" owner:self options:nil] lastObject];
-    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     
-    CGRect rect = sectionView.frame;
-    rect.size.width = screenWidth;
-    sectionView.frame = rect;
+    CGRect rect = CGRectMake(0, 0, screenWidth, 30);
+    MessageTableSectionHeaderView *sectionView = [[MessageTableSectionHeaderView alloc] initWithFrame:rect];
     
     NSDate *curtDate = [self.timestamps objectAtIndex: section];
-    NSDateComponents *components = [self getComponentOfDate:curtDate];
-    NSDate *todayDate = [NSDate date];
-    NSString *timeStr = nil;
-    if ([self isSameDay:curtDate other:todayDate]) {
-        timeStr = [NSString stringWithFormat:@"%02zd:%02zd",components.hour,components.minute];
-        sectionView.sectionHeader.text = timeStr;
-    } else if ([self isInWeek:curtDate today:todayDate]) {
-        timeStr = [self getWeekDayString: components.weekday];
-        sectionView.sectionHeader.text = timeStr;
-    }else{
-        timeStr = [self getConversationTimeString:curtDate];
-        sectionView.sectionHeader.text = timeStr;
-    }
+    NSString *timeStr = [self formatSectionTime:curtDate];
+    sectionView.sectionHeader.text = timeStr;
     
-    CGFloat width = [self widthOfString:timeStr withFont:[UIFont systemFontOfSize:MES_SECTION_TIMER_FONT_SIZE]] + 12;
-    if (width>(self.view.frame.size.width/2)) {
-        width = self.view.frame.size.width/2;
-    }
-    CGRect frame = sectionView.sectionHeader.frame;
-    frame.size.width = width;
-    frame.origin.x = (sectionView.frame.size.width - width)/2;
-    [sectionView.sectionHeader setFrame:frame];
-    
-    sectionView.alpha = 0.9;
     return sectionView;
 }
 
@@ -446,9 +416,9 @@
  */
 - (NSString*)getMessageViewCellId:(IMessage*)msg{
     if(msg.sender == self.sender){
-        return [NSString stringWithFormat:@"MessageCell_%d%d", msg.content.type,BubbleMessageTypeOutgoing];
+        return [NSString stringWithFormat:@"MessageCell_%d%d", msg.type,BubbleMessageTypeOutgoing];
     }else{
-        return [NSString stringWithFormat:@"MessageCell_%d%d", msg.content.type,BubbleMessageTypeIncoming];
+        return [NSString stringWithFormat:@"MessageCell_%d%d", msg.type,BubbleMessageTypeIncoming];
     }
 }
 
@@ -459,8 +429,8 @@
     msg.sender = self.sender;
     msg.receiver = self.receiver;
     
-    MessageContent *content = [[MessageContent alloc] initWithText:text];
-    msg.content = content;
+    MessageTextContent *content = [[MessageTextContent alloc] initWithText:text];
+    msg.rawContent = content.raw;
     msg.timestamp = (int)time(NULL);
     
     [self saveMessage:msg];
@@ -478,6 +448,14 @@
 
 -(void)removeObserver {
 
+}
+
+- (void)downloadMessageContent:(IMessage*)message {
+    
+}
+
+- (void)downloadMessageContent:(NSArray*)messages count:(int)count {
+    
 }
 
 @end

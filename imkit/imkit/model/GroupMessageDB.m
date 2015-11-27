@@ -88,24 +88,10 @@
 -(id)init {
     self = [super init];
     if (self) {
-        NSString *path = [self getMessagePath];
-        [self mkdir:path];
+
     }
     return self;
 }
-
-
--(BOOL)mkdir:(NSString*)path {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSError *err;
-    BOOL r = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&err];
-    
-    if (!r) {
-        NSLog(@"mkdir err:%@", err);
-    }
-    return r;
-}
-
 -(id<IMessageIterator>)newMessageIterator:(int64_t)gid {
     NSString *path = [self getGroupPath:gid];
     return [[GroupMessageIterator alloc] initWithPath:path];
@@ -200,7 +186,16 @@
 -(IMessage*)getLastGroupMessage:(int64_t)gid {
     id<IMessageIterator> iter = [[GroupMessageDB instance] newMessageIterator:gid];
     IMessage *msg;
-    msg = [iter next];
+    //返回第一条不是附件的消息
+    while (YES) {
+        msg = [iter next];
+        if (msg == nil) {
+            break;
+        }
+        if (msg.type != MESSAGE_ATTACHMENT) {
+            break;
+        }
+    }
     return msg;
 }
 

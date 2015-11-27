@@ -8,7 +8,14 @@
 */
 
 #import "AppDelegate.h"
+#ifdef TEST_ROOM
+#import "RoomLoginViewController.h"
+#elif defined TEST_GROUP
+#import "GroupLoginViewController.h"
+#else
 #import "MainViewController.h"
+#endif
+
 #import <imsdk/IMService.h>
 #import <imkit/PeerMessageHandler.h>
 #import <imkit/GroupMessageHandler.h>
@@ -22,7 +29,16 @@ green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 @interface AppDelegate ()
+
+#ifdef TEST_ROOM
+
+#elif defined TEST_GROUP
+@property(nonatomic) GroupLoginViewController *mainViewController;
+
+#else
 @property(nonatomic) MainViewController *mainViewController;
+#endif
+
 @end
 
 @implementation AppDelegate
@@ -36,10 +52,6 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"remote notification:%@", [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]);
-    //设置消息存放的路径，可以在路径中加入当前登录的uid
-    NSString *path = [self getDocumentPath];
-    NSString *dbPath = [NSString stringWithFormat:@"%@/current_uid", path];
-    [MessageDB setDBPath:dbPath];
     
     //app可以单独部署服务器，给予第三方应用更多的灵活性
     //在开发阶段也可以配置成测试环境的地址 "http://sandbox.api.gobelieve.io", "sandbox.imnode.gobelieve.io"
@@ -47,6 +59,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
     [IMService instance].host = @"imnode.gobelieve.io";
     
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSLog(@"device id:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]);
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
     [[IMService instance] startRechabilityNotifier];
@@ -57,10 +70,18 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
+#ifdef TEST_ROOM
+    RoomLoginViewController *mainViewController = [[RoomLoginViewController alloc] init];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
+#elif defined TEST_GROUP
+    GroupLoginViewController *mainViewController = [[GroupLoginViewController alloc] init];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
+    self.mainViewController = mainViewController;
+#else
     MainViewController *mainViewController = [[MainViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.mainViewController = mainViewController;
-    
+#endif
     if ([UIDevice currentDevice].systemVersion.floatValue >= 7.0) {
         [[UINavigationBar appearance] setBarTintColor:UIColorFromRGBHex(0x00abf1)];
         [[UINavigationBar appearance] setTitleTextAttributes:
@@ -80,7 +101,10 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
   
     NSLog(@"device token is: %@:%@", deviceToken, newToken);
     
+#ifndef TEST_ROOM
     self.mainViewController.deviceToken = newToken;
+#endif
+    
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
