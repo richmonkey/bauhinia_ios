@@ -96,8 +96,7 @@
     [foreWindow addSubview:backView];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:backView animated:YES];
     
-    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
-    [APIRequest requestAuthToken:self.verifyCodeTextField.text zone:@"86" number:self.phoneNumberStr deviceToken:delegate.deviceToken
+    [APIRequest requestAuthToken:self.verifyCodeTextField.text zone:@"86" number:self.phoneNumberStr deviceToken:@""
                          success:^(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp, NSString *state){
                              Token *token = [Token instance];
                              token.accessToken = accessToken;

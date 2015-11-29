@@ -61,21 +61,7 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-#ifdef __IPHONE_8_0
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert
-                                                                                             | UIUserNotificationTypeBadge
-                                                                                             | UIUserNotificationTypeSound) categories:nil];
-        [application registerUserNotificationSettings:settings];
 
-    } else {
-        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
-        [application registerForRemoteNotificationTypes:myTypes];
-    }
-#else
-    UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
-    [application registerForRemoteNotificationTypes:myTypes];
-#endif
     return YES;
 }
 
@@ -88,22 +74,10 @@
 #endif
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    NSString* newToken = [deviceToken description];
-	newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-	newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
-    self.deviceToken = newToken;
-    
-    Token *token = [Token instance];
-    if (token.uid > 0) {
-        [IMHttpAPI bindDeviceToken:self.deviceToken
-                            success:^{
-                                NSLog(@"bind device token success");
-                            }
-                               fail:^{
-                                   NSLog(@"bind device token fail");
-                               }];
-    }
-    NSLog(@"device token is: %@:%@", deviceToken, newToken);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterForRemoteNotificationsWithDeviceToken"
+                                                        object:deviceToken];
+
+
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -131,9 +105,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    // 清除图标数字
     application.applicationIconBadgeNumber = 0;
-    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

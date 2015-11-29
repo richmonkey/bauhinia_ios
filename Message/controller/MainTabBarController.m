@@ -94,6 +94,7 @@
 
     [IMHttpAPI instance].accessToken = [Token instance].accessToken;
     [IMService instance].token = [Token instance].accessToken;
+    [IMService instance].uid = [Token instance].uid;
     NSLog(@"access token:%@", [Token instance].accessToken);
     [[IMService instance] start];
     
@@ -104,6 +105,25 @@
 
     [[self tabBar] setTintColor:RGBACOLOR(48,176,87, 1)];
     [[self tabBar] setBarTintColor:RGBACOLOR(245, 245, 246, 1)];
+    
+    UIApplication *application = [UIApplication sharedApplication];
+#ifdef __IPHONE_8_0
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert
+                                                                                             | UIUserNotificationTypeBadge
+                                                                                             | UIUserNotificationTypeSound) categories:nil];
+        [application registerUserNotificationSettings:settings];
+        
+    } else {
+        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
+        [application registerForRemoteNotificationTypes:myTypes];
+    }
+#else
+    UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
+    [application registerForRemoteNotificationTypes:myTypes];
+#endif
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRegisterForRemoteNotificationsWithDeviceToken:) name:@"didRegisterForRemoteNotificationsWithDeviceToken" object:nil];
 }
 
 
@@ -121,6 +141,23 @@
     [[IMService instance] enterForeground];
 }
 
+-(void)didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification*)notification {
+    NSData *deviceToken = (NSData*)notification.object;
+    
+    NSString* newToken = [deviceToken description];
+    newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
+
+    [IMHttpAPI bindDeviceToken:newToken
+                       success:^{
+                           NSLog(@"bind device token success");
+                       }
+                          fail:^{
+                              NSLog(@"bind device token fail");
+                          }];
+    NSLog(@"device token is: %@:%@", deviceToken, newToken);
+    
+}
 
 -(void)refreshAccessToken {
     Token *token = [Token instance];
