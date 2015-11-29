@@ -1372,8 +1372,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development IOS Push Services: com.beetle.im.demo";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development IOS Push Services: com.beetle.im.demo";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "demo/im_demo-prefix.pch";
 				INFOPLIST_FILE = demo/Info.plist;
@@ -1381,7 +1381,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_NAME = im_demo;
-				PROVISIONING_PROFILE = "0c122de1-082f-4266-8987-8ab5bd626506";
+				PROVISIONING_PROFILE = "6447afee-e97c-42f1-8030-39c807777b65";
 			};
 			name = Debug;
 		};
@@ -1399,7 +1399,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = im_demo;
-				PROVISIONING_PROFILE = "0c122de1-082f-4266-8987-8ab5bd626506";
+				PROVISIONING_PROFILE = "78357e0e-4e88-45ff-b0d8-12a8565ed908";
 			};
 			name = Release;
 		};
