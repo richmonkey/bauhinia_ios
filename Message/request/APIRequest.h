@@ -13,6 +13,8 @@
 
 +(TAHttpOperation*)checkVersion:(NSString*)platform success:(void (^)(NSDictionary *resp))success fail:(void (^)())fail;
 
++(TAHttpOperation*)updateName:(NSString*)name success:(void (^)())success fail:(void (^)())fail;
+
 +(TAHttpOperation*)updateState:(NSString*)state success:(void (^)())success fail:(void (^)())fail;
 
 +(TAHttpOperation*)updateAvatar:(NSString*)avatar success:(void (^)())success fail:(void (^)())fail;

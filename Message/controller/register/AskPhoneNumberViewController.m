@@ -121,7 +121,7 @@
     //1[0-9]{10}
     //^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$
     //    NSString *regex = @"[0-9]{11}";
-    NSString *regex = @"^((13[0-9])|(147)|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
+    NSString *regex = @"^1\\d{10}$";
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
     BOOL isMatch = [pred evaluateWithObject:str];
     if (!isMatch) {

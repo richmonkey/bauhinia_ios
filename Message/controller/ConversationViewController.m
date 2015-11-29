@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 daozhu. All rights reserved.
 //
 
-#import "MessageListViewController.h"
+#import "ConversationViewController.h"
 #import <imkit/MessageViewController.h>
 #import <imkit/PeerMessageDB.h>
 #import <imkit/GroupMessageDB.h>
@@ -118,7 +118,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSingleGroupNewState:) name:CLEAR_GROUP_NEW_MESSAGE object:nil];
 
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+
     id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
     Conversation * conversation = [iterator next];
     while (conversation) {
@@ -812,6 +813,19 @@
     UITabBarItem * cc =  [tabBar.items objectAtIndex: 2];
     [cc setBadgeValue:nil];
 }
+
+
+- (void)appWillResignActive {
+    NSLog(@"app will resign active");
+    int c = 0;
+    for (Conversation *conv in self.conversations) {
+        c += conv.newMsgCount;
+    }
+    NSLog(@"unread count:%d", c);
+    [[IMService instance] sendUnreadCount:c];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:c];
+}
+
 
 #pragma mark - UIAlertViewDelegate
 /**

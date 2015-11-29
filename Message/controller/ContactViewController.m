@@ -7,7 +7,6 @@
 //
 
 #import "ContactViewController.h"
-#import "MessageListViewController.h"
 #import "AppDelegate.h"
 #import "User.h"
 #import "UserDB.h"

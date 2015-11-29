@@ -9,7 +9,7 @@
 #import "MainTabBarController.h"
 #import "SettingViewController.h"
 #import "CustomStatusViewController.h"
-#import "MessageListViewController.h"
+#import "ConversationViewController.h"
 #import "ContactListTableViewController.h"
 #import "Token.h"
 #import <imsdk/IMService.h>

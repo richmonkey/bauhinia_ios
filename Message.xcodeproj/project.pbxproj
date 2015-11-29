@@ -13,7 +13,7 @@
 		210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646B19695FC0008D3A83 /* ContactViewController.xib */; };
 		210564C819695FC1008D3A83 /* CustomStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646D19695FC0008D3A83 /* CustomStatusViewController.m */; };
 		210564C919695FC1008D3A83 /* CustomStatusViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646E19695FC0008D3A83 /* CustomStatusViewController.xib */; };
-		210564CC19695FC1008D3A83 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105647419695FC0008D3A83 /* MessageListViewController.m */; };
+		210564CC19695FC1008D3A83 /* ConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105647419695FC0008D3A83 /* ConversationViewController.m */; };
 		210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105647819695FC0008D3A83 /* SettingViewController.m */; };
 		210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105647919695FC0008D3A83 /* SettingViewController.xib */; };
 		2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 210564C419695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m */; };
@@ -201,8 +201,8 @@
 		2105646C19695FC0008D3A83 /* CustomStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomStatusViewController.h; sourceTree = "<group>"; };
 		2105646D19695FC0008D3A83 /* CustomStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomStatusViewController.m; sourceTree = "<group>"; };
 		2105646E19695FC0008D3A83 /* CustomStatusViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomStatusViewController.xib; sourceTree = "<group>"; };
-		2105647319695FC0008D3A83 /* MessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListViewController.h; sourceTree = "<group>"; };
-		2105647419695FC0008D3A83 /* MessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListViewController.m; sourceTree = "<group>"; };
+		2105647319695FC0008D3A83 /* ConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationViewController.h; sourceTree = "<group>"; };
+		2105647419695FC0008D3A83 /* ConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationViewController.m; sourceTree = "<group>"; };
 		2105647719695FC0008D3A83 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		2105647819695FC0008D3A83 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		2105647919695FC0008D3A83 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
@@ -478,8 +478,8 @@
 				2105646C19695FC0008D3A83 /* CustomStatusViewController.h */,
 				2105646D19695FC0008D3A83 /* CustomStatusViewController.m */,
 				2105646E19695FC0008D3A83 /* CustomStatusViewController.xib */,
-				2105647319695FC0008D3A83 /* MessageListViewController.h */,
-				2105647419695FC0008D3A83 /* MessageListViewController.m */,
+				2105647319695FC0008D3A83 /* ConversationViewController.h */,
+				2105647419695FC0008D3A83 /* ConversationViewController.m */,
 				2105647719695FC0008D3A83 /* SettingViewController.h */,
 				2105647819695FC0008D3A83 /* SettingViewController.m */,
 				2105647919695FC0008D3A83 /* SettingViewController.xib */,
@@ -1206,7 +1206,7 @@
 				6D032FE01AA9B31D004AA39F /* GroupDB.m in Sources */,
 				489933D819C44E3300C56F2D /* CotactMeViewController.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
-				210564CC19695FC1008D3A83 /* MessageListViewController.m in Sources */,
+				210564CC19695FC1008D3A83 /* ConversationViewController.m in Sources */,
 				217F2C30196D62680064F478 /* MessageShowThePotraitViewController.m in Sources */,
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				210564C619695FC1008D3A83 /* ContactViewController.m in Sources */,
@@ -1400,7 +1400,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d7ddc74e-8835-484d-887f-4fb80dd14a65";
+				PROVISIONING_PROFILE = "b5ae29cd-2967-497d-8e6d-6d5bd855a629";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				VALID_ARCHS = "armv7 arm64 armv7s";
@@ -1433,7 +1433,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ce19e7f3-8d25-45a2-9611-1e88a8416d68";
+				PROVISIONING_PROFILE = "304e325c-f292-4bf5-9449-8c6212679868";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = Message/backend/;
 				VALID_ARCHS = "armv7 arm64 armv7s";
