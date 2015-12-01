@@ -564,7 +564,11 @@
 	[self.searchBar setText:@""];
 }
 
--(void)onNewGroupMessage:(IMessage*)msg cid:(int64_t)cid{
+-(void)onNewGroupMessage:(IMessage*)msg cid:(int64_t)cid {
+    [self onNewGroupMessage:msg cid:cid name:nil];
+}
+
+-(void)onNewGroupMessage:(IMessage*)msg cid:(int64_t)cid name:(NSString*)name {
     int index = -1;
     for (int i = 0; i < [self.conversations count]; i++) {
         Conversation *con = [self.conversations objectAtIndex:i];
@@ -581,6 +585,9 @@
         if (self.currentUID != msg.sender) {
             con.newMsgCount += 1;
             [self setNewOnTabBar];
+        }
+        if (name.length > 0) {
+            con.name = name;
         }
         
         if (index != 0) {
@@ -608,7 +615,7 @@
         [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
     }
 
-        [self updateEmptyContentView];
+    [self updateEmptyContentView];
 }
 
 
@@ -688,6 +695,7 @@
     m.rawContent = im.content;
     m.timestamp = im.timestamp;
     
+    
     [self onNewGroupMessage:m cid:m.receiver];
 }
 
@@ -705,7 +713,30 @@
     }
     msg.rawContent = notification.raw;
     
-    [self onNewGroupMessage:msg cid:msg.receiver];
+    NSString *name = nil;
+    GroupDB *db = [GroupDB instance];
+    int type = notification.notificationType;
+    if (type == NOTIFICATION_GROUP_CREATED) {
+        Group *g = [[Group alloc] init];
+        g.groupID = notification.groupID;
+        g.topic = notification.groupName;
+        
+        for (NSNumber *member in notification.members) {
+            [g addMember:[member longLongValue]];
+        }
+        [db addGroup:g];
+    } else if (type == NOTIFICATION_GROUP_DISBANDED) {
+        [db disbandGroup:notification.groupID];
+    } else if (type == NOTIFICATION_GROUP_MEMBER_ADDED) {
+        [db addGroupMember:notification.groupID member:notification.member];
+    } else if (type == NOTIFICATION_GROUP_MEMBER_LEAVED) {
+        [db removeGroupMember:notification.groupID member:notification.member];
+    } else if (type == NOTIFICATION_GROUP_NAME_UPDATED) {
+        [db setGroupTopic:notification.groupID topic:notification.groupName];
+        name = notification.groupName;
+    }
+
+    [self onNewGroupMessage:msg cid:msg.receiver name:name];
 }
 
 

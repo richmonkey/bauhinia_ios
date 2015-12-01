@@ -190,4 +190,13 @@
     return [db stringForKey:k1];
 }
 
+-(void)setGroupTopic:(int64_t)groupID topic:(NSString*)topic {
+    LevelDB *db = [LevelDB defaultLevelDB];
+    NSString *key = [self groupKeyFromGroupID:groupID];
+    
+    NSString *k1 = [key stringByAppendingString:@"_topic"];
+    
+    [db setString:topic forKey:k1];
+}
+
 @end
