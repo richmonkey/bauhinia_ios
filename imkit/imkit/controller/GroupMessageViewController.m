@@ -10,7 +10,7 @@
 #import "GroupMessageViewController.h"
 
 #import "FileCache.h"
-#import "Outbox.h"
+#import "GroupOutbox.h"
 #import "AudioDownloader.h"
 #import "DraftDB.h"
 #import "IMessage.h"
@@ -20,7 +20,7 @@
 
 #define PAGE_COUNT 10
 
-@interface GroupMessageViewController ()
+@interface GroupMessageViewController ()<GroupOutboxObserver>
 
 @end
 
@@ -49,6 +49,7 @@
 
 -(void)addObserver {
     [super addObserver];
+    [[GroupOutbox instance] addBoxObserver:self];
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addGroupMessageObserver:self];
     [[IMService instance] addLoginPointObserver:self];
@@ -56,6 +57,7 @@
 
 -(void)removeObserver {
     [super removeObserver];
+    [[GroupOutbox instance] removeBoxObserver:self];
     [[IMService instance] removeGroupMessageObserver:self];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removeLoginPointObserver:self];
@@ -70,7 +72,7 @@
 }
 
 - (BOOL)isMessageSending:(IMessage*)msg {
-    return [[IMService instance] isGroupMessageSending:msg.msgLocalID];
+    return [[IMService instance] isGroupMessageSending:self.groupID id:msg.msgLocalID];
 }
 
 - (BOOL)isInConversation:(IMessage*)msg {
@@ -177,7 +179,6 @@
     }
     IMessage *msg = [self getMessageWithID:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_ACK;
-    [self reloadMessage:msgLocalID];
 }
 
 -(void)onGroupMessageFailure:(int)msgLocalID gid:(int64_t)gid {
@@ -186,7 +187,6 @@
     }
     IMessage *msg = [self getMessageWithID:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
-    [self reloadMessage:msgLocalID];
 }
 
 
@@ -241,19 +241,28 @@
         }
         msg = [iterator next];
     }
-    
-    [self checkMessageFailureFlag:self.messages count:count];
+
     [self downloadMessageContent:self.messages count:count];
+    [self checkMessageFailureFlag:self.messages count:count];
     
     [self initTableViewData];
 }
 
 
 - (void)loadEarlierData {
-    IMessage *last = [self.messages firstObject];
+    //找出第一条实体消息
+    IMessage *last = nil;
+    for (NSInteger i = 0; i < self.messages.count; i++) {
+        IMessage *m = [self.messages objectAtIndex:i];
+        if (m.type != MESSAGE_TIME_BASE) {
+            last = m;
+            break;
+        }
+    }
     if (last == nil) {
         return;
     }
+    
     id<IMessageIterator> iterator =  [[GroupMessageDB instance] newMessageIterator:self.groupID last:last.msgLocalID];
     
     int count = 0;
@@ -283,22 +292,26 @@
     if (count == 0) {
         return;
     }
-    
-    [self checkMessageFailureFlag:self.messages count:count];
+
     [self downloadMessageContent:self.messages count:count];
+    [self checkMessageFailureFlag:self.messages count:count];
     [self initTableViewData];
     
     [self.tableView reloadData];
     
+    int c = 0;
     int section = 0;
     int row = 0;
-    for (NSArray *block in self.messageArray) {
-        if (count < block.count) {
-            row = count;
+    for (NSInteger i = 0; i < self.messages.count; i++) {
+        row++;
+        IMessage *m = [self.messages objectAtIndex:i];
+        if (m.type == MESSAGE_TIME_BASE) {
+            continue;
+        }
+        c++;
+        if (c >= count) {
             break;
         }
-        count -= [block count];
-        section++;
     }
     NSLog(@"scroll to row:%d section:%d", row, section);
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
@@ -306,13 +319,38 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
+-(void)checkMessageFailureFlag:(IMessage*)msg {
+    if ([self isMessageOutgoing:msg]) {
+        if (msg.type == MESSAGE_AUDIO) {
+            msg.uploading = [[GroupOutbox instance] isUploading:msg];
+        } else if (msg.type == MESSAGE_IMAGE) {
+            msg.uploading = [[GroupOutbox instance] isUploading:msg];
+        }
+        
+        //消息发送过程中，程序异常关闭
+        if (!msg.isACK && !msg.uploading &&
+            !msg.isFailure && ![self isMessageSending:msg]) {
+            [self markMessageFailure:msg];
+            msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
+        }
+    }
+}
+
+-(void)checkMessageFailureFlag:(NSArray*)messages count:(int)count {
+    for (int i = 0; i < count; i++) {
+        IMessage *msg = [messages objectAtIndex:i];
+        [self checkMessageFailureFlag:msg];
+    }
+}
+
+
 - (void)sendMessage:(IMessage*)message {
     if (message.type == MESSAGE_AUDIO) {
         message.uploading = YES;
-        [[Outbox instance] uploadGroupAudio:message];
+        [[GroupOutbox instance] uploadGroupAudio:message];
     } else if (message.type == MESSAGE_IMAGE) {
         message.uploading = YES;
-        [[Outbox instance] uploadGroupImage:message];
+        [[GroupOutbox instance] uploadGroupImage:message];
     } else {
         IMMessage *im = [[IMMessage alloc] init];
         im.sender = message.sender;
@@ -330,12 +368,44 @@
 
 - (void)sendMessage:(IMessage *)msg withImage:(UIImage*)image {
     msg.uploading = YES;
-    [[Outbox instance] uploadGroupImage:msg withImage:image];
+    [[GroupOutbox instance] uploadGroupImage:msg withImage:image];
     
     NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_GROUP_MESSAGE
                                                                  object:msg userInfo:nil];
     
     [[NSNotificationCenter defaultCenter] postNotification:notification];
+}
+
+
+#pragma mark - Outbox Observer
+- (void)onAudioUploadSuccess:(IMessage*)msg URL:(NSString*)url {
+    if ([self isInConversation:msg]) {
+        IMessage *m = [self getMessageWithID:msg.msgLocalID];
+        m.uploading = NO;
+    }
+}
+
+-(void)onAudioUploadFail:(IMessage*)msg {
+    if ([self isInConversation:msg]) {
+        IMessage *m = [self getMessageWithID:msg.msgLocalID];
+        m.flags = m.flags|MESSAGE_FLAG_FAILURE;
+        m.uploading = NO;
+    }
+}
+
+- (void)onImageUploadSuccess:(IMessage*)msg URL:(NSString*)url {
+    if ([self isInConversation:msg]) {
+        IMessage *m = [self getMessageWithID:msg.msgLocalID];
+        m.uploading = NO;
+    }
+}
+
+- (void)onImageUploadFail:(IMessage*)msg {
+    if ([self isInConversation:msg]) {
+        IMessage *m = [self getMessageWithID:msg.msgLocalID];
+        m.flags = m.flags|MESSAGE_FLAG_FAILURE;
+        m.uploading = NO;
+    }
 }
 
 

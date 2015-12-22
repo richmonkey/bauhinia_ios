@@ -11,11 +11,8 @@
 #import <imsdk/IMService.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#import "MessageTableSectionHeaderView.h"
 #import "Constants.h"
-
 #import "FileCache.h"
-#import "Outbox.h"
 #import "AudioDownloader.h"
 
 #import "MessageTextView.h"
@@ -25,6 +22,7 @@
 #import "MessageLinkView.h"
 #import "MessageViewCell.h"
 #import "MessageNotificationView.h"
+#import "MessageTimeBaseView.h"
 
 #import "MEESImageViewController.h"
 
@@ -44,7 +42,7 @@
 #define kTakePicActionSheetTag  101
 
 
-@interface MessageViewController()<AudioDownloaderObserver, OutboxObserver,
+@interface MessageViewController()<AudioDownloaderObserver, 
     LocationPickerControllerDelegate, EMChatToolbarDelegate>
 
 @property(strong, nonatomic) EaseChatToolbar *chatToolbar;
@@ -194,12 +192,10 @@
 
 
 -(void)addObserver {
-    [[Outbox instance] addBoxObserver:self];
     [[AudioDownloader instance] addDownloaderObserver:self];
 }
 
 -(void)removeObserver {
-    [[Outbox instance] removeBoxObserver:self];
     [[AudioDownloader instance] removeDownloaderObserver:self];
 }
 
@@ -607,13 +603,19 @@
     }
     BubbleMessageType msgType;
     
+    if (message.type == MESSAGE_TIME_BASE) {
+        MessageTimeBaseContent *timeBase = message.timeBaseContent;
+        timeBase.timeDesc = [self formatSectionTime:[NSDate dateWithTimeIntervalSince1970:timeBase.timestamp]];
+        NSLog(@"time...:%@", timeBase.timeDesc);
+    }
+    
     if (message.sender == self.sender) {
         msgType = BubbleMessageTypeOutgoing;
         [cell setMessage:message msgType:msgType showName:NO];
     } else {
         msgType = BubbleMessageTypeIncoming;
         BOOL showName = self.isShowUserName;
-        if (message.type == MESSAGE_GROUP_NOTIFICATION) {
+        if (message.type == MESSAGE_GROUP_NOTIFICATION || message.type == MESSAGE_TIME_BASE) {
             showName = NO;
         }
         [cell setMessage:message msgType:msgType showName:showName];
@@ -639,23 +641,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (self.timestamps != nil) {
-        return [self.timestamps count];
-    }
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.messageArray != nil) {
-        
-        NSMutableArray *array = [self.messageArray objectAtIndex: section];
-        return [array count];
-    }
-    
-    return 1;
+    return self.messages.count;
 }
-
 
 
 #pragma mark -  UITableViewDelegate
@@ -691,6 +683,8 @@
             return kMessageNotificationViewHeight;
         case MESSAGE_LINK:
             return kMessageLinkViewHeight + nameHeight;
+        case MESSAGE_TIME_BASE:
+            return kMessageTimeBaseViewHeight;
         default:
             return 0;
     }
@@ -698,13 +692,6 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView == self.tableView) {
-        if (indexPath.section == 0 &&  indexPath.row == 0) {
-            return NO;
-        }else{
-            return YES;
-        }
-    }
     return NO;
 }
 
@@ -717,21 +704,11 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
-    
-    CGRect rect = CGRectMake(0, 0, screenWidth, 30);
-    MessageTableSectionHeaderView *sectionView = [[MessageTableSectionHeaderView alloc] initWithFrame:rect];
-
-    NSDate *curtDate = [self.timestamps objectAtIndex: section];
-    NSString *timeStr = [self formatSectionTime:curtDate];
-    sectionView.sectionHeader.text = timeStr;
-
-    return sectionView;
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 30;
+    return 0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -949,40 +926,18 @@
     return msg.sender == self.sender;
 }
 
--(BOOL)isMessageSending:(IMessage*)msg {
-    NSAssert(NO, @"not implement");
-    return NO;
-}
-
--(void)checkMessageFailureFlag:(IMessage*)msg {
-    if ([self isMessageOutgoing:msg]) {
-        //消息发送过程中，程序异常关闭
-        if (!msg.isACK && !msg.uploading &&
-            !msg.isFailure && ![self isMessageSending:msg]) {
-            [self markMessageFailure:msg];
-            msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
-        }
-    }
-}
-
--(void)checkMessageFailureFlag:(NSArray*)messages count:(int)count {
-    for (int i = 0; i < count; i++) {
-        IMessage *msg = [messages objectAtIndex:i];
-        [self checkMessageFailureFlag:msg];
-    }
-}
-
 - (void)downloadMessageContent:(IMessage*)msg {
     FileCache *cache = [FileCache instance];
     AudioDownloader *downloader = [AudioDownloader instance];
     if (msg.type == MESSAGE_AUDIO) {
         MessageAudioContent *content = msg.audioContent;
+
         NSString *path = [cache queryCacheForKey:content.url];
+        NSLog(@"url:%@, %@", content.url, path);
         if (!path && ![downloader isDownloading:msg]) {
             [downloader downloadAudio:msg];
         }
         msg.downloading = [downloader isDownloading:msg];
-        msg.uploading = [[Outbox instance] isUploading:msg];
     } else if (msg.type == MESSAGE_LOCATION) {
         MessageLocationContent *content = msg.locationContent;
         NSString *url = content.snapshotURL;
@@ -999,7 +954,6 @@
         }
     } else if (msg.type == MESSAGE_IMAGE) {
         NSLog(@"image url:%@", msg.imageContent.imageURL);
-        msg.uploading = [[Outbox instance] isUploading:msg];
     } else if (msg.type == MESSAGE_GROUP_NOTIFICATION) {
         [self updateNotificationDesc:msg];
     }
@@ -1221,36 +1175,6 @@
 }
 
 
-#pragma mark - Outbox Observer
-- (void)onAudioUploadSuccess:(IMessage*)msg URL:(NSString*)url {
-    if ([self isInConversation:msg]) {
-        IMessage *m = [self getMessageWithID:msg.msgLocalID];
-        m.uploading = NO;
-    }
-}
-
--(void)onAudioUploadFail:(IMessage*)msg {
-    if ([self isInConversation:msg]) {
-        IMessage *m = [self getMessageWithID:msg.msgLocalID];
-        m.flags = m.flags|MESSAGE_FLAG_FAILURE;
-        m.uploading = NO;
-    }
-}
-
-- (void)onImageUploadSuccess:(IMessage*)msg URL:(NSString*)url {
-    if ([self isInConversation:msg]) {
-        IMessage *m = [self getMessageWithID:msg.msgLocalID];
-        m.uploading = NO;
-    }
-}
-
-- (void)onImageUploadFail:(IMessage*)msg {
-    if ([self isInConversation:msg]) {
-        IMessage *m = [self getMessageWithID:msg.msgLocalID];
-        m.flags = m.flags|MESSAGE_FLAG_FAILURE;
-        m.uploading = NO;
-    }
-}
 
 #pragma mark - Audio Downloader Observer
 - (void)onAudioDownloadSuccess:(IMessage*)msg {
