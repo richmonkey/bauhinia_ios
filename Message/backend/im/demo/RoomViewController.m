@@ -89,9 +89,7 @@
     m.receiver = rm.receiver;
     self.msgID = self.msgID + 1;
     m.msgLocalID = self.msgID;
-    MessageContent *content = [[MessageContent alloc] init];
-    content.raw = rm.content;
-    m.content = content;
+    m.rawContent = rm.content;
     m.timestamp = [[NSDate date] timeIntervalSince1970];
     
     [self insertMessage:m];
@@ -104,7 +102,6 @@
     
     IMessage *msg = [self getMessageWithID:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_ACK;
-    [self reloadMessage:msgLocalID];
 }
 
 -(void)onRoomMessageFailure:(RoomMessage*)rm {
@@ -114,7 +111,6 @@
     
     IMessage *msg = [self getMessageWithID:msgLocalID];
     msg.flags = msg.flags|MESSAGE_FLAG_FAILURE;
-    [self reloadMessage:msgLocalID];
 }
 
 
@@ -147,7 +143,7 @@
     RoomMessage *im = [[RoomMessage alloc] init];
     im.sender = message.sender;
     im.receiver = message.receiver;
-    im.content = message.content.raw;
+    im.content = message.rawContent;
     [[IMService instance] sendRoomMessage:im];
     
     NSNumber *o = [NSNumber numberWithLongLong:message.msgLocalID];
