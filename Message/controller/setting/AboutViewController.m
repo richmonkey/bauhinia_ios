@@ -12,6 +12,7 @@
 
 @interface AboutViewController ()
 
+@property (weak, nonatomic) IBOutlet UILabel *versionLabel;
 @property (weak, nonatomic) IBOutlet UIButton *contactUsBtn;
 @property (weak,nonatomic) IBOutlet UIButton *recommendBtn;
 @property (strong, nonatomic) NSArray *reciver;
@@ -36,6 +37,14 @@
     [super viewDidLoad];
     [self setTitle:@"关于"];
     
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey: (NSString *)kCFBundleVersionKey];
+#ifdef DEBUG
+    NSString *ver = [NSString stringWithFormat:@"version %@ dev", version];
+#else
+    NSString *ver = [NSString stringWithFormat:@"version %@", version];
+#endif
+    
+    [self.versionLabel setText:ver];
     [self.contactUsBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.recommendBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     
