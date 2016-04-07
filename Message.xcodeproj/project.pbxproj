@@ -86,7 +86,6 @@
 		6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D11C72E19BB3D3F00E67389 /* APITests.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
 		6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D76214F197ECA9300B690D7 /* LevelDB.mm */; };
-		6D7621651981626900B690D7 /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7621641981626900B690D7 /* libleveldb.a */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
 		6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4419C4BE1D0027A658 /* Token.m */; };
 		6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4719C4BF340027A658 /* APIRequest.m */; };
@@ -265,7 +264,6 @@
 				48F02E1D19CE6C7E005E6D41 /* MessageUI.framework in Frameworks */,
 				2173C0A319668C4800BC3BDF /* libxml2.2.dylib in Frameworks */,
 				2119FE731962AD7700E23B4F /* libsqlite3.0.dylib in Frameworks */,
-				6D7621651981626900B690D7 /* libleveldb.a in Frameworks */,
 				2172619A1954155500F09E33 /* AddressBookUI.framework in Frameworks */,
 				217261981954155000F09E33 /* AddressBook.framework in Frameworks */,
 				21798F99194E9C4600B67C1F /* CoreGraphics.framework in Frameworks */,
@@ -931,12 +929,7 @@
 				);
 				INFOPLIST_FILE = "Message/Message-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Message/backend/leveldb",
-					"$(PROJECT_DIR)/Message/backend/amr",
-					"$(PROJECT_DIR)/Message/third-party/ZBarSDK",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -968,12 +961,7 @@
 				);
 				INFOPLIST_FILE = "Message/Message-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Message/backend/leveldb",
-					"$(PROJECT_DIR)/Message/backend/amr",
-					"$(PROJECT_DIR)/Message/third-party/ZBarSDK",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
