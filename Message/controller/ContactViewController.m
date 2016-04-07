@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "User.h"
 #import "UserDB.h"
-#import <imkit/PeerMessageViewController.h>
+#import <gobelieve/PeerMessageViewController.h>
 #import "ContactIMUserTableViewCell.h"
 #import "ContactHeaderView.h"
 #import "ContactPhoneTableViewCell.h"

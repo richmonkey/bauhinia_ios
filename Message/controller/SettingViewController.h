@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <imsdk/IMService.h>
+#import <gobelieve/IMService.h>
 #import "ZBarReaderViewController.h"
 
 

@@ -8,11 +8,12 @@
 
 #import "AppDelegate.h"
 
-#import <imsdk/IMService.h>
-#import <imkit/IMHttpAPI.h>
-#import <imkit/PeerMessageHandler.h>
-#import <imkit/GroupMessageHandler.h>
-#import <imkit/MessageDB.h>
+#import <gobelieve/IMService.h>
+#import <gobelieve/IMHttpAPI.h>
+#import <gobelieve/PeerMessageHandler.h>
+#import <gobelieve/GroupMessageHandler.h>
+#import <gobelieve/GroupMessageDB.h>
+#import <gobelieve/PeerMessageDB.h>
 #import "Token.h"
 #import "UserPresent.h"
 #import "Config.h"
@@ -32,7 +33,12 @@
 {
     //配置im server地址
     NSString *path = [self getDocumentPath];
-    [MessageDB setDBPath:path];
+    NSString *peerPath = [NSString stringWithFormat:@"%@/peer", path];
+    [[PeerMessageDB instance] setDbPath:peerPath];
+    
+    NSString *groupPath = [NSString stringWithFormat:@"%@/group", path];
+    [[GroupMessageDB instance] setDbPath:groupPath];
+    
     [IMHttpAPI instance].apiURL = [Config instance].sdkAPIURL;
     [IMService instance].host = [Config instance].sdkHost;
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -46,9 +52,7 @@
     
     Token *token = [Token instance];
     if (token.accessToken) {
-        [IMHttpAPI instance].accessToken = [Token instance].accessToken;
-        [IMService instance].token = [Token instance].accessToken;
-        NSLog(@"access token:%@", [Token instance].accessToken);
+   
         UITabBarController *tabController = [[MainTabBarController alloc] init];
         self.tabBarController = tabController;
         self.window.rootViewController = tabController;

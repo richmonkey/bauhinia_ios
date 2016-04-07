@@ -12,12 +12,12 @@
 #import "ConversationViewController.h"
 #import "ContactListTableViewController.h"
 #import "Token.h"
-#import <imsdk/IMService.h>
+#import <gobelieve/IMService.h>
 #import "UserPresent.h"
 #import "Reachability.h"
 #import "APIRequest.h"
 #import "JSBadgeView.h"
-#import <imkit/IMHttpAPI.h>
+#import <gobelieve/IMHttpAPI.h>
 
 @interface MainTabBarController ()
 @property(nonatomic)dispatch_source_t refreshTimer;
@@ -91,7 +91,7 @@
     });
     
     [self startRefreshTimer];
-
+    
     [IMHttpAPI instance].accessToken = [Token instance].accessToken;
     [IMService instance].token = [Token instance].accessToken;
     [IMService instance].uid = [Token instance].uid;

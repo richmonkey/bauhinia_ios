@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "MessageConversationCell.h"
-#import <imsdk/IMService.h>
+#import <gobelieve/IMService.h>
 #import "PublicFunc.h"
 #import "ContactDB.h"
 

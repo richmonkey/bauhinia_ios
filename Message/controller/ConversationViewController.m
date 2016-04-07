@@ -7,12 +7,12 @@
 //
 
 #import "ConversationViewController.h"
-#import <imkit/MessageViewController.h>
-#import <imkit/PeerMessageDB.h>
-#import <imkit/GroupMessageDB.h>
-#import <imkit/IMessage.h>
-#import <imkit/PeerMessageViewController.h>
-#import <imkit/GroupMessageViewController.h>
+#import <gobelieve/MessageViewController.h>
+#import <gobelieve/PeerMessageDB.h>
+#import <gobelieve/GroupMessageDB.h>
+#import <gobelieve/IMessage.h>
+#import <gobelieve/PeerMessageViewController.h>
+#import <gobelieve/GroupMessageViewController.h>
 #import "pinyin.h"
 #import "MessageGroupConversationCell.h"
 #import "NewGroupViewController.h"

@@ -11,9 +11,9 @@
 #import "ContactDB.h"
 #import "UserPresent.h"
 #import "MBProgressHUD.h"
-#import <imkit/IMHttpApi.h>
-#import <imkit/IMessage.h>
-#import <imkit/GroupMessageDB.h>
+#import <gobelieve/IMHttpApi.h>
+#import <gobelieve/IMessage.h>
+#import <gobelieve/GroupMessageDB.h>
 
 #import "UIApplication+Util.h"
 #import "UIView+Toast.h"

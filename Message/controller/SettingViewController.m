@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 daozhu. All rights reserved.
 //
 
-#import <imkit/PeerMessageDB.h>
+#import <gobelieve/PeerMessageDB.h>
 #import "SettingViewController.h"
 #import "AboutViewController.h"
 #import "ProfileViewController.h"
