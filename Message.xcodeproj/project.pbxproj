@@ -60,8 +60,6 @@
 		48338B3819C5266A00BA2392 /* DownLoadSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48338B3619C5266A00BA2392 /* DownLoadSettingViewController.xib */; };
 		48338B3A19C52A1C00BA2392 /* setting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48338B3919C52A1C00BA2392 /* setting.plist */; };
 		48338B3D19C56A8A00BA2392 /* SystemProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B3C19C56A8A00BA2392 /* SystemProperty.m */; };
-		48338B4319C5938A00BA2392 /* MYBlurIntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B4019C5938A00BA2392 /* MYBlurIntroductionView.m */; };
-		48338B4419C5938A00BA2392 /* MYIntroductionPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B4219C5938A00BA2392 /* MYIntroductionPanel.m */; };
 		486C869B1AB415CC0041B135 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2173C0A019668B8900BC3BDF /* libxml2.dylib */; };
 		48731E1A19C5E95400FF8A7C /* AskPhoneNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48731E1819C5E95400FF8A7C /* AskPhoneNumberViewController.m */; };
 		48731E1B19C5E95400FF8A7C /* AskPhoneNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48731E1919C5E95400FF8A7C /* AskPhoneNumberViewController.xib */; };
@@ -76,8 +74,6 @@
 		489933D919C44E3300C56F2D /* CotactMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 489933D719C44E3300C56F2D /* CotactMeViewController.xib */; };
 		489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DB19C47F5200C56F2D /* UIImage+Resize.m */; };
 		489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 489933DD19C47F5200C56F2D /* UIImage+UKImage.m */; };
-		489949AC19C5A9FB00A3A576 /* SWParallaxScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 489949AB19C5A9FB00A3A576 /* SWParallaxScrollView.mm */; };
-		48A4D2DF19D453FE00DE9AD2 /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A4D2DE19D453FE00DE9AD2 /* JSBadgeView.m */; };
 		48B30F7A1AA4A89B00A34B0C /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48B30F731AA4A89A00A34B0C /* libzbar.a */; };
 		48B30F7C1AA4A89B00A34B0C /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 48B30F761AA4A89B00A34B0C /* zbar-back.png */; };
 		48B30F7D1AA4A89B00A34B0C /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = 48B30F771AA4A89B00A34B0C /* zbar-help.html */; };
@@ -97,7 +93,6 @@
 		6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D76214F197ECA9300B690D7 /* LevelDB.mm */; };
 		6D7621651981626900B690D7 /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7621641981626900B690D7 /* libleveldb.a */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
-		6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA3619C0A5D50027A658 /* Reachability.m */; };
 		6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4419C4BE1D0027A658 /* Token.m */; };
 		6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4719C4BF340027A658 /* APIRequest.m */; };
 		6DB5B76C1C0858090057D55E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB5B76A1C0858090057D55E /* Localizable.strings */; };
@@ -202,10 +197,6 @@
 		48338B3919C52A1C00BA2392 /* setting.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = setting.plist; sourceTree = "<group>"; };
 		48338B3B19C56A8A00BA2392 /* SystemProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemProperty.h; sourceTree = "<group>"; };
 		48338B3C19C56A8A00BA2392 /* SystemProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemProperty.m; sourceTree = "<group>"; };
-		48338B3F19C5938A00BA2392 /* MYBlurIntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYBlurIntroductionView.h; sourceTree = "<group>"; };
-		48338B4019C5938A00BA2392 /* MYBlurIntroductionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYBlurIntroductionView.m; sourceTree = "<group>"; };
-		48338B4119C5938A00BA2392 /* MYIntroductionPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYIntroductionPanel.h; sourceTree = "<group>"; };
-		48338B4219C5938A00BA2392 /* MYIntroductionPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYIntroductionPanel.m; sourceTree = "<group>"; };
 		486FF44A19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		486FF44B19BB0ED60040AE10 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		48731E1719C5E95400FF8A7C /* AskPhoneNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AskPhoneNumberViewController.h; sourceTree = "<group>"; };
@@ -229,10 +220,6 @@
 		489933DB19C47F5200C56F2D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		489933DC19C47F5200C56F2D /* UIImage+UKImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+UKImage.h"; sourceTree = "<group>"; };
 		489933DD19C47F5200C56F2D /* UIImage+UKImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UKImage.m"; sourceTree = "<group>"; };
-		489949AA19C5A9FB00A3A576 /* SWParallaxScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWParallaxScrollView.h; sourceTree = "<group>"; };
-		489949AB19C5A9FB00A3A576 /* SWParallaxScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SWParallaxScrollView.mm; sourceTree = "<group>"; };
-		48A4D2DD19D453FE00DE9AD2 /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
-		48A4D2DE19D453FE00DE9AD2 /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
 		48B30F5F1AA4A89A00A34B0C /* Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decoder.h; sourceTree = "<group>"; };
 		48B30F601AA4A89A00A34B0C /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Exception.h; sourceTree = "<group>"; };
 		48B30F611AA4A89A00A34B0C /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
@@ -291,8 +278,6 @@
 		6D7621641981626900B690D7 /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = Message/backend/leveldb/libleveldb.a; sourceTree = "<group>"; };
 		6D776313197B6D6B0090D511 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
-		6DB0AA3519C0A5D50027A658 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		6DB0AA3619C0A5D50027A658 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		6DB0AA4319C4BE1D0027A658 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		6DB0AA4419C4BE1D0027A658 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6DB0AA4619C4BF340027A658 /* APIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIRequest.h; sourceTree = "<group>"; };
@@ -382,15 +367,11 @@
 			isa = PBXGroup;
 			children = (
 				48C2D94C1A8D8BEA00F7A7E2 /* ZBarSDK */,
-				48A4D2DC19D453FE00DE9AD2 /* JSBadgeView */,
 				48D83CD719D1CEFF009972B8 /* UIImageView+Letters */,
-				489949A919C5A9FB00A3A576 /* SWParallaxScrollView */,
-				48338B3E19C5938A00BA2392 /* MYBlurIntroductionView */,
 				489933DA19C47F5200C56F2D /* UIImage+Resize.h */,
 				489933DB19C47F5200C56F2D /* UIImage+Resize.m */,
 				489933DC19C47F5200C56F2D /* UIImage+UKImage.h */,
 				489933DD19C47F5200C56F2D /* UIImage+UKImage.m */,
-				6DB0AA3419C0A5D50027A658 /* Reachability */,
 				21150CAC196F79AA009DE9DE /* TAHttpOperation.h */,
 				21150CAD196F79AA009DE9DE /* TAHttpOperation.m */,
 				210564C319695FC1008D3A83 /* UIView+AnimationOptionsForCurve.h */,
@@ -571,17 +552,6 @@
 			path = cell;
 			sourceTree = "<group>";
 		};
-		48338B3E19C5938A00BA2392 /* MYBlurIntroductionView */ = {
-			isa = PBXGroup;
-			children = (
-				48338B3F19C5938A00BA2392 /* MYBlurIntroductionView.h */,
-				48338B4019C5938A00BA2392 /* MYBlurIntroductionView.m */,
-				48338B4119C5938A00BA2392 /* MYIntroductionPanel.h */,
-				48338B4219C5938A00BA2392 /* MYIntroductionPanel.m */,
-			);
-			path = MYBlurIntroductionView;
-			sourceTree = "<group>";
-		};
 		48731E1619C5E92E00FF8A7C /* register */ = {
 			isa = PBXGroup;
 			children = (
@@ -615,24 +585,6 @@
 				48338B3619C5266A00BA2392 /* DownLoadSettingViewController.xib */,
 			);
 			path = setting;
-			sourceTree = "<group>";
-		};
-		489949A919C5A9FB00A3A576 /* SWParallaxScrollView */ = {
-			isa = PBXGroup;
-			children = (
-				489949AA19C5A9FB00A3A576 /* SWParallaxScrollView.h */,
-				489949AB19C5A9FB00A3A576 /* SWParallaxScrollView.mm */,
-			);
-			path = SWParallaxScrollView;
-			sourceTree = "<group>";
-		};
-		48A4D2DC19D453FE00DE9AD2 /* JSBadgeView */ = {
-			isa = PBXGroup;
-			children = (
-				48A4D2DD19D453FE00DE9AD2 /* JSBadgeView.h */,
-				48A4D2DE19D453FE00DE9AD2 /* JSBadgeView.m */,
-			);
-			path = JSBadgeView;
 			sourceTree = "<group>";
 		};
 		48B30F5C1AA4A89A00A34B0C /* Headers */ = {
@@ -726,15 +678,6 @@
 				6D0D76961967C1430058DECF /* write_batch.h */,
 			);
 			path = leveldb;
-			sourceTree = "<group>";
-		};
-		6DB0AA3419C0A5D50027A658 /* Reachability */ = {
-			isa = PBXGroup;
-			children = (
-				6DB0AA3519C0A5D50027A658 /* Reachability.h */,
-				6DB0AA3619C0A5D50027A658 /* Reachability.m */,
-			);
-			path = Reachability;
 			sourceTree = "<group>";
 		};
 		6DB0AA4219C4BDF10027A658 /* request */ = {
@@ -943,12 +886,9 @@
 				48731E1A19C5E95400FF8A7C /* AskPhoneNumberViewController.m in Sources */,
 				48D83CDA19D1CEFF009972B8 /* UIImageView+Letters.m in Sources */,
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
-				489949AC19C5A9FB00A3A576 /* SWParallaxScrollView.mm in Sources */,
 				21573734198531A40071C2EF /* ContactPhoneTableViewCell.m in Sources */,
-				48A4D2DF19D453FE00DE9AD2 /* JSBadgeView.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
 				21050A3819741B1900F26E43 /* PublicFunc.m in Sources */,
-				48338B4419C5938A00BA2392 /* MYIntroductionPanel.m in Sources */,
 				6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */,
 				489933D319C44C4D00C56F2D /* ProfileViewController.m in Sources */,
 				21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */,
@@ -962,7 +902,6 @@
 				210564C619695FC1008D3A83 /* ContactViewController.m in Sources */,
 				48338B3219C521A600BA2392 /* ConversationSettingViewController.m in Sources */,
 				489933CE19C44C0F00C56F2D /* AboutViewController.m in Sources */,
-				6DB0AA3719C0A5D50027A658 /* Reachability.m in Sources */,
 				2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */,
 				21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */,
 				48860CA019CFC8FF00DF7466 /* UIApplication+Util.m in Sources */,
@@ -974,7 +913,6 @@
 				6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */,
 				6D032FDF1AA9B31D004AA39F /* Group.m in Sources */,
 				21150CAA196F7910009DE9DE /* Config.m in Sources */,
-				48338B4319C5938A00BA2392 /* MYBlurIntroductionView.m in Sources */,
 				48338B3D19C56A8A00BA2392 /* SystemProperty.m in Sources */,
 				210564C819695FC1008D3A83 /* CustomStatusViewController.m in Sources */,
 				210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */,

@@ -8,6 +8,7 @@ PODS:
     - SDWebImage (~> 3.7.1)
     - Toast (~> 2.4)
   - gobelieve/imsdk (0.1.0)
+  - JSBadgeView (1.4.1)
   - MBProgressHUD (0.9.2)
   - SDWebImage (3.7.5):
     - SDWebImage/Core (= 3.7.5)
@@ -16,6 +17,7 @@ PODS:
 
 DEPENDENCIES:
   - gobelieve (from `git@github.com:GoBelieveIO/im_ios.git`)
+  - JSBadgeView
 
 EXTERNAL SOURCES:
   gobelieve:
@@ -28,6 +30,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   gobelieve: aa79e9eb34240ad027b0c33e181d8a4f37743f38
+  JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
   Toast: 0773b8fc0e97352ca6054517bec7ebdd4110029d

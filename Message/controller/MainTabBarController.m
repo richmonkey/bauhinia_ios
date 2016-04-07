@@ -14,7 +14,6 @@
 #import "Token.h"
 #import <gobelieve/IMService.h>
 #import "UserPresent.h"
-#import "Reachability.h"
 #import "APIRequest.h"
 #import "JSBadgeView.h"
 #import <gobelieve/IMHttpAPI.h>
