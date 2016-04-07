@@ -1,8 +1,10 @@
 Message
 =======
+羊蹄甲的iOS客户端
 
-Message for IOS
-
+初始化工程
+========
+pod install
 
 TODO
 =======
