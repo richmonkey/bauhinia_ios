@@ -106,21 +106,11 @@
     [[self tabBar] setBarTintColor:RGBACOLOR(245, 245, 246, 1)];
     
     UIApplication *application = [UIApplication sharedApplication];
-#ifdef __IPHONE_8_0
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert
-                                                                                             | UIUserNotificationTypeBadge
-                                                                                             | UIUserNotificationTypeSound) categories:nil];
-        [application registerUserNotificationSettings:settings];
-        
-    } else {
-        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
-        [application registerForRemoteNotificationTypes:myTypes];
-    }
-#else
-    UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
-    [application registerForRemoteNotificationTypes:myTypes];
-#endif
+    
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert
+                                                                                         | UIUserNotificationTypeBadge
+                                                                                         | UIUserNotificationTypeSound) categories:nil];
+    [application registerUserNotificationSettings:settings];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRegisterForRemoteNotificationsWithDeviceToken:) name:@"didRegisterForRemoteNotificationsWithDeviceToken" object:nil];
 }
@@ -190,7 +180,7 @@
 
 -(void)prepareTimer {
     Token *token = [Token instance];
-    int now = time(NULL);
+    int now = (int)time(NULL);
     if (now >= token.expireTimestamp - 1) {
         dispatch_time_t w = dispatch_walltime(NULL, 0);
         dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);

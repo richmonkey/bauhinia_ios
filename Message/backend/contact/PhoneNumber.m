@@ -50,7 +50,7 @@
         src++;
     }
     
-    int len = dst - tmp;
+    long len = dst - tmp;
     if (len > 11) {
         self.number = [NSString stringWithUTF8String:dst - 11];
         self.zone = [[NSString alloc] initWithBytes:tmp length:len - 11 encoding:NSUTF8StringEncoding];

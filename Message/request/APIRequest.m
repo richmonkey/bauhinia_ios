@@ -22,9 +22,9 @@
 
     request.method = @"GET";
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        int statusCode = [(NSHTTPURLResponse*)response statusCode];
+        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
         if (statusCode != 200) {
-            IMLog(@"check version fail:%d",statusCode);
+            IMLog(@"check version fail:%zd",statusCode);
             fail();
             return;
         }
@@ -240,7 +240,7 @@
      
         NSString *accessToken = [resp objectForKey:@"access_token"];
         NSString *refreshToken = [resp objectForKey:@"refresh_token"];
-        int expireTimestamp = time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
+        int expireTimestamp = (int)time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
         int64_t uid = [[resp objectForKey:@"uid"] longLongValue];
         NSString *state = [resp objectForKey:@"state"];
         success(uid, accessToken, refreshToken, expireTimestamp, state);
@@ -292,7 +292,7 @@
     request.method = @"POST";
     request.headers = headers;
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        int statusCode = [(NSHTTPURLResponse*)response statusCode];
+        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
         if (statusCode != 200) {
             NSDictionary *d = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
             IMLog(@"request users fail:%@", d);
@@ -322,7 +322,7 @@
     request.postBody = data;
     request.method = @"POST";
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        int statusCode = [(NSHTTPURLResponse*)response statusCode];
+        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
         if (statusCode != 200) {
             NSDictionary *e = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
             IMLog(@"refresh token fail:%@", e);
@@ -332,7 +332,7 @@
         NSDictionary *resp = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
         NSString *accessToken = [resp objectForKey:@"access_token"];
         NSString *refreshToken = [resp objectForKey:@"refresh_token"];
-        int expireTimestamp = time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
+        int expireTimestamp = (int)time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
         success(accessToken, refreshToken, expireTimestamp);
     };
     request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
@@ -357,7 +357,7 @@
     request.postBody = data;
     request.method = @"POST";
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
-        int statusCode = [(NSHTTPURLResponse*)response statusCode];
+        NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
         if (statusCode != 200) {
             IMLog(@"web login fail:%d",statusCode);
             fail();

@@ -10,7 +10,6 @@
 
 #import "MessageConversationCell.h"
 #import <gobelieve/IMService.h>
-#import "PublicFunc.h"
 #import "ContactDB.h"
 
 @class Conversation;

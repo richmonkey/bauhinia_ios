@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		21050A3819741B1900F26E43 /* PublicFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = 21050A3719741B1900F26E43 /* PublicFunc.m */; };
 		210564C519695FC1008D3A83 /* ContactListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646819695FC0008D3A83 /* ContactListTableViewController.m */; };
 		210564C619695FC1008D3A83 /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105646A19695FC0008D3A83 /* ContactViewController.m */; };
 		210564C719695FC1008D3A83 /* ContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2105646B19695FC0008D3A83 /* ContactViewController.xib */; };
@@ -107,8 +106,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		21050A3619741B1900F26E43 /* PublicFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicFunc.h; sourceTree = "<group>"; };
-		21050A3719741B1900F26E43 /* PublicFunc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicFunc.m; sourceTree = "<group>"; };
 		2105646719695FC0008D3A83 /* ContactListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListTableViewController.h; sourceTree = "<group>"; };
 		2105646819695FC0008D3A83 /* ContactListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListTableViewController.m; sourceTree = "<group>"; };
 		2105646919695FC0008D3A83 /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
@@ -433,8 +430,6 @@
 				2119FE771962AEAA00E23B4F /* model */,
 				2142CB0C1962683E0002E4A9 /* backend */,
 				21798F9D194E9C4600B67C1F /* Supporting Files */,
-				21050A3619741B1900F26E43 /* PublicFunc.h */,
-				21050A3719741B1900F26E43 /* PublicFunc.m */,
 				21150CA6196F7910009DE9DE /* Config.h */,
 				21150CA7196F7910009DE9DE /* Config.m */,
 				217262CC1954318200F09E33 /* Constants.h */,
@@ -611,7 +606,7 @@
 		21798F8B194E9C4600B67C1F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = daozhu;
 				TargetAttributes = {
 					21798F92194E9C4600B67C1F = {
@@ -750,7 +745,6 @@
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
 				21573734198531A40071C2EF /* ContactPhoneTableViewCell.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
-				21050A3819741B1900F26E43 /* PublicFunc.m in Sources */,
 				6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */,
 				489933D319C44C4D00C56F2D /* ProfileViewController.m in Sources */,
 				21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */,
@@ -864,7 +858,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -900,7 +894,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -926,12 +920,13 @@
 					$SDKROOT/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "Message/Message-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.im;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "b5ae29cd-2967-497d-8e6d-6d5bd855a629";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -958,12 +953,13 @@
 					$SDKROOT/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "Message/Message-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.im;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "304e325c-f292-4bf5-9449-8c6212679868";
 				TARGETED_DEVICE_FAMILY = 1;

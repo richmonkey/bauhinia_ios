@@ -218,7 +218,7 @@ static void ABChangeCallback(ABAddressBookRef addressBook, CFDictionaryRef info,
 	NSArray *valueArray = [self arrayForProperty:aProperty record:record];
 	NSArray *labelArray = [self labelsForProperty:aProperty record:record];
 	
-	int num = MIN(valueArray.count, labelArray.count);
+	unsigned long num = MIN(valueArray.count, labelArray.count);
 	NSMutableArray *items = [NSMutableArray array];
 	for (int i = 0; i < num; i++)
 	{
