@@ -4,7 +4,9 @@ Message
 
 初始化工程
 ========
-pod install
+
+1.安装react native: npm install
+2.初始化workspace: cd ios && pod install
 
 TODO
 =======
