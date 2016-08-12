@@ -41,7 +41,14 @@
     
     [IMHttpAPI instance].apiURL = [Config instance].sdkAPIURL;
     [IMService instance].host = [Config instance].sdkHost;
+#if TARGET_IPHONE_SIMULATOR
+    [IMService instance].deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
+    NSLog(@"device id:%@", @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61");
+#else
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSLog(@"device id:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]);
+#endif
+
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
     [[IMService instance] startRechabilityNotifier];

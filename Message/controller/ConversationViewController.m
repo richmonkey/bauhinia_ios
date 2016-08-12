@@ -13,6 +13,7 @@
 #import <gobelieve/IMessage.h>
 #import <gobelieve/PeerMessageViewController.h>
 #import <gobelieve/GroupMessageViewController.h>
+#import "MGroupMessageViewController.h"
 #import "pinyin.h"
 #import "MessageGroupConversationCell.h"
 #import "NewGroupViewController.h"
@@ -447,7 +448,7 @@
 
     } else {
         
-        GroupMessageViewController* msgController = [[GroupMessageViewController alloc] init];
+        MGroupMessageViewController* msgController = [[MGroupMessageViewController alloc] init];
         msgController.isShowUserName = YES;
         msgController.userDelegate = self;
         
@@ -720,6 +721,7 @@
         Group *g = [[Group alloc] init];
         g.groupID = notification.groupID;
         g.topic = notification.groupName;
+        g.masterID = notification.master;
         
         for (NSNumber *member in notification.members) {
             [g addMember:[member longLongValue]];

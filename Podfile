@@ -4,4 +4,14 @@ target 'Message' do
     pod 'JSBadgeView'
     pod 'leveldb-library', '~> 1.18.2'
     pod 'ZBarSDK'
+    pod 'React', :path => '../node_modules/react-native', :subspecs => [
+      'Core',
+      'RCTText',
+      'RCTWebSocket', # needed for debugging
+      'RCTActionSheet',
+      'RCTImage',
+      'RCTNetwork',
+      'RCTVibration',
+      'RCTGeolocation',
+    ]
 end

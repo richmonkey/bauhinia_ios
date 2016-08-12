@@ -53,6 +53,7 @@
 		21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF2371968E6A500DFA0E5 /* MessageConversationCell.xib */; };
 		21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */; };
 		21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */; };
+		36FFA767B7D0D505DFD440AB /* libPods-Message.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ED661FB634FC12D0EDDBAA1 /* libPods-Message.a */; };
 		48338B3219C521A600BA2392 /* ConversationSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B3019C521A600BA2392 /* ConversationSettingViewController.m */; };
 		48338B3319C521A600BA2392 /* ConversationSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48338B3119C521A600BA2392 /* ConversationSettingViewController.xib */; };
 		48338B3719C5266A00BA2392 /* DownLoadSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B3519C5266A00BA2392 /* DownLoadSettingViewController.m */; };
@@ -83,6 +84,11 @@
 		6D032FE01AA9B31D004AA39F /* GroupDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D032FDE1AA9B31D004AA39F /* GroupDB.m */; };
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
 		6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D11C72E19BB3D3F00E67389 /* APITests.m */; };
+		6D2CA5751D58612B00AF929B /* GroupSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5741D58612B00AF929B /* GroupSettingViewController.m */; };
+		6D2CA5791D58634000AF929B /* MGroupMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */; };
+		6D2CA57D1D5A52E000AF929B /* GroupMemberAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA57C1D5A52E000AF929B /* GroupMemberAddViewController.m */; };
+		6D2CA5801D5B98AC00AF929B /* GroupMemberRemoveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA57F1D5B98AC00AF929B /* GroupMemberRemoveViewController.m */; };
+		6D2CA5831D5C80EE00AF929B /* ProgressHudBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
 		6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D76214F197ECA9300B690D7 /* LevelDB.mm */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
@@ -92,7 +98,6 @@
 		6DFDA0311AB98EF600EF553A /* NewGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DFDA02F1AB98EF600EF553A /* NewGroupViewController.m */; };
 		6DFDA0321AB98EF600EF553A /* NewGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */; };
 		6DFDA0351AB991E200EF553A /* AddGroupMemberTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */; };
-		790E889CEAD4DE6839A92B7D /* libPods-Message.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0A97EEAA06A31F5F357AF47 /* libPods-Message.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,6 +223,7 @@
 		48D83CD819D1CEFF009972B8 /* UIImageView+Letters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+Letters.h"; sourceTree = "<group>"; };
 		48D83CD919D1CEFF009972B8 /* UIImageView+Letters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+Letters.m"; sourceTree = "<group>"; };
 		48F02E1C19CE6C7E005E6D41 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		51DBC04D2C6C0AB14B313753 /* Pods-Message.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Message.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Message/Pods-Message.debug.xcconfig"; sourceTree = "<group>"; };
 		6D032FDB1AA9B31D004AA39F /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		6D032FDC1AA9B31D004AA39F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		6D032FDD1AA9B31D004AA39F /* GroupDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDB.h; sourceTree = "<group>"; };
@@ -225,6 +231,16 @@
 		6D0D76A7196910130058DECF /* IMContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMContact.h; sourceTree = "<group>"; };
 		6D0D76A8196910130058DECF /* IMContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMContact.m; sourceTree = "<group>"; };
 		6D11C72E19BB3D3F00E67389 /* APITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APITests.m; sourceTree = "<group>"; };
+		6D2CA5731D58612B00AF929B /* GroupSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupSettingViewController.h; path = group/GroupSettingViewController.h; sourceTree = "<group>"; };
+		6D2CA5741D58612B00AF929B /* GroupSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupSettingViewController.m; path = group/GroupSettingViewController.m; sourceTree = "<group>"; };
+		6D2CA5771D58634000AF929B /* MGroupMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGroupMessageViewController.h; path = group/MGroupMessageViewController.h; sourceTree = "<group>"; };
+		6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGroupMessageViewController.m; path = group/MGroupMessageViewController.m; sourceTree = "<group>"; };
+		6D2CA57B1D5A52E000AF929B /* GroupMemberAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupMemberAddViewController.h; path = group/GroupMemberAddViewController.h; sourceTree = "<group>"; };
+		6D2CA57C1D5A52E000AF929B /* GroupMemberAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupMemberAddViewController.m; path = group/GroupMemberAddViewController.m; sourceTree = "<group>"; };
+		6D2CA57E1D5B98AC00AF929B /* GroupMemberRemoveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupMemberRemoveViewController.h; path = group/GroupMemberRemoveViewController.h; sourceTree = "<group>"; };
+		6D2CA57F1D5B98AC00AF929B /* GroupMemberRemoveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupMemberRemoveViewController.m; path = group/GroupMemberRemoveViewController.m; sourceTree = "<group>"; };
+		6D2CA5811D5C80EE00AF929B /* ProgressHudBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressHudBridge.h; path = bridge/ProgressHudBridge.h; sourceTree = "<group>"; };
+		6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressHudBridge.m; path = bridge/ProgressHudBridge.m; sourceTree = "<group>"; };
 		6D32393B19BD79C7005A00B2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		6D76214E197ECA9300B690D7 /* LevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelDB.h; sourceTree = "<group>"; };
 		6D76214F197ECA9300B690D7 /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
@@ -241,9 +257,8 @@
 		6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewGroupViewController.xib; sourceTree = "<group>"; };
 		6DFDA0331AB991E200EF553A /* AddGroupMemberTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGroupMemberTableViewController.h; sourceTree = "<group>"; };
 		6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddGroupMemberTableViewController.m; sourceTree = "<group>"; };
-		6E5CD26149EA4D4796F9B06A /* Pods-Message.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Message.release.xcconfig"; path = "Pods/Target Support Files/Pods-Message/Pods-Message.release.xcconfig"; sourceTree = "<group>"; };
-		B0A97EEAA06A31F5F357AF47 /* libPods-Message.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Message.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CF4A4C78AA44AE37EA2DE39D /* Pods-Message.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Message.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Message/Pods-Message.debug.xcconfig"; sourceTree = "<group>"; };
+		8ED661FB634FC12D0EDDBAA1 /* libPods-Message.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Message.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E408BB9C86D8C815CFEE07F8 /* Pods-Message.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Message.release.xcconfig"; path = "Pods/Target Support Files/Pods-Message/Pods-Message.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,7 +280,7 @@
 				21798F99194E9C4600B67C1F /* CoreGraphics.framework in Frameworks */,
 				21798F9B194E9C4600B67C1F /* UIKit.framework in Frameworks */,
 				21798F97194E9C4600B67C1F /* Foundation.framework in Frameworks */,
-				790E889CEAD4DE6839A92B7D /* libPods-Message.a in Frameworks */,
+				36FFA767B7D0D505DFD440AB /* libPods-Message.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +300,7 @@
 		2105646619695FC0008D3A83 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				6D2CA5761D58613300AF929B /* group */,
 				48731E1619C5E92E00FF8A7C /* register */,
 				489933CA19C44BE500C56F2D /* setting */,
 				2105646719695FC0008D3A83 /* ContactListTableViewController.h */,
@@ -384,7 +400,7 @@
 				21798FB5194E9C4600B67C1F /* MessageTests */,
 				21798F95194E9C4600B67C1F /* Frameworks */,
 				21798F94194E9C4600B67C1F /* Products */,
-				CF3F5C13234F87F9158E6BEA /* Pods */,
+				2DBDED1FAE1FB51D3EBBABBB /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -415,7 +431,7 @@
 				21798F98194E9C4600B67C1F /* CoreGraphics.framework */,
 				21798F9A194E9C4600B67C1F /* UIKit.framework */,
 				21798FAF194E9C4600B67C1F /* XCTest.framework */,
-				B0A97EEAA06A31F5F357AF47 /* libPods-Message.a */,
+				8ED661FB634FC12D0EDDBAA1 /* libPods-Message.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -423,6 +439,7 @@
 		21798F9C194E9C4600B67C1F /* Message */ = {
 			isa = PBXGroup;
 			children = (
+				6D2CA5841D5C80F500AF929B /* bridge */,
 				6DB0AA4219C4BDF10027A658 /* request */,
 				2105646619695FC0008D3A83 /* controller */,
 				2105647A19695FC0008D3A83 /* third-party */,
@@ -497,6 +514,15 @@
 			path = cell;
 			sourceTree = "<group>";
 		};
+		2DBDED1FAE1FB51D3EBBABBB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				51DBC04D2C6C0AB14B313753 /* Pods-Message.debug.xcconfig */,
+				E408BB9C86D8C815CFEE07F8 /* Pods-Message.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		48731E1619C5E92E00FF8A7C /* register */ = {
 			isa = PBXGroup;
 			children = (
@@ -541,6 +567,30 @@
 			path = "UIImageView+Letters";
 			sourceTree = "<group>";
 		};
+		6D2CA5761D58613300AF929B /* group */ = {
+			isa = PBXGroup;
+			children = (
+				6D2CA5731D58612B00AF929B /* GroupSettingViewController.h */,
+				6D2CA5741D58612B00AF929B /* GroupSettingViewController.m */,
+				6D2CA5771D58634000AF929B /* MGroupMessageViewController.h */,
+				6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */,
+				6D2CA57B1D5A52E000AF929B /* GroupMemberAddViewController.h */,
+				6D2CA57C1D5A52E000AF929B /* GroupMemberAddViewController.m */,
+				6D2CA57E1D5B98AC00AF929B /* GroupMemberRemoveViewController.h */,
+				6D2CA57F1D5B98AC00AF929B /* GroupMemberRemoveViewController.m */,
+			);
+			name = group;
+			sourceTree = "<group>";
+		};
+		6D2CA5841D5C80F500AF929B /* bridge */ = {
+			isa = PBXGroup;
+			children = (
+				6D2CA5811D5C80EE00AF929B /* ProgressHudBridge.h */,
+				6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */,
+			);
+			name = bridge;
+			sourceTree = "<group>";
+		};
 		6DB0AA4219C4BDF10027A658 /* request */ = {
 			isa = PBXGroup;
 			children = (
@@ -550,15 +600,6 @@
 			path = request;
 			sourceTree = "<group>";
 		};
-		CF3F5C13234F87F9158E6BEA /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CF4A4C78AA44AE37EA2DE39D /* Pods-Message.debug.xcconfig */,
-				6E5CD26149EA4D4796F9B06A /* Pods-Message.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -566,12 +607,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 21798FBF194E9C4600B67C1F /* Build configuration list for PBXNativeTarget "Message" */;
 			buildPhases = (
-				716588C35FA998052FB69573 /* Check Pods Manifest.lock */,
+				6957A58C5B036F4D7AC1A4C6 /* [CP] Check Pods Manifest.lock */,
 				21798F8F194E9C4600B67C1F /* Sources */,
 				21798F90194E9C4600B67C1F /* Frameworks */,
 				21798F91194E9C4600B67C1F /* Resources */,
-				DF77444A358EE0EB2DAF86DE /* Embed Pods Frameworks */,
-				158B9E35893B461A535CA424 /* Copy Pods Resources */,
+				EDCAD79085A8578A0841C160 /* [CP] Embed Pods Frameworks */,
+				13BE86585B224D0F868B5CA3 /* [CP] Copy Pods Resources */,
+				6D2CA57A1D5A139F00AF929B /* Bundle React Native code and images */,
 			);
 			buildRules = (
 			);
@@ -676,14 +718,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		158B9E35893B461A535CA424 /* Copy Pods Resources */ = {
+		13BE86585B224D0F868B5CA3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -691,14 +733,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Message/Pods-Message-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		716588C35FA998052FB69573 /* Check Pods Manifest.lock */ = {
+		6957A58C5B036F4D7AC1A4C6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -706,14 +748,28 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		DF77444A358EE0EB2DAF86DE /* Embed Pods Frameworks */ = {
+		6D2CA57A1D5A139F00AF929B /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh\n\n\n";
+		};
+		EDCAD79085A8578A0841C160 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -738,12 +794,15 @@
 				489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */,
 				6DFDA0311AB98EF600EF553A /* NewGroupViewController.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
+				6D2CA5801D5B98AC00AF929B /* GroupMemberRemoveViewController.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
 				48731E1A19C5E95400FF8A7C /* AskPhoneNumberViewController.m in Sources */,
 				48D83CDA19D1CEFF009972B8 /* UIImageView+Letters.m in Sources */,
+				6D2CA5791D58634000AF929B /* MGroupMessageViewController.m in Sources */,
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
 				21573734198531A40071C2EF /* ContactPhoneTableViewCell.m in Sources */,
+				6D2CA5831D5C80EE00AF929B /* ProgressHudBridge.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
 				6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */,
 				489933D319C44C4D00C56F2D /* ProfileViewController.m in Sources */,
@@ -751,6 +810,7 @@
 				2142CB62196268860002E4A9 /* ABContact.m in Sources */,
 				6D032FE01AA9B31D004AA39F /* GroupDB.m in Sources */,
 				489933D819C44E3300C56F2D /* CotactMeViewController.m in Sources */,
+				6D2CA5751D58612B00AF929B /* GroupSettingViewController.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
 				210564CC19695FC1008D3A83 /* ConversationViewController.m in Sources */,
 				217F2C30196D62680064F478 /* MessageShowThePotraitViewController.m in Sources */,
@@ -765,6 +825,7 @@
 				21798FA3194E9C4600B67C1F /* main.m in Sources */,
 				2157372919850AEE0071C2EF /* ContactHeaderView.m in Sources */,
 				21150CA1196F78A5009DE9DE /* UserDB.m in Sources */,
+				6D2CA57D1D5A52E000AF929B /* GroupMemberAddViewController.m in Sources */,
 				48338B3719C5266A00BA2392 /* DownLoadSettingViewController.m in Sources */,
 				6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */,
 				6D032FDF1AA9B31D004AA39F /* Group.m in Sources */,
@@ -905,7 +966,7 @@
 		};
 		21798FC0194E9C4600B67C1F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CF4A4C78AA44AE37EA2DE39D /* Pods-Message.debug.xcconfig */;
+			baseConfigurationReference = 51DBC04D2C6C0AB14B313753 /* Pods-Message.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
@@ -938,7 +999,7 @@
 		};
 		21798FC1194E9C4600B67C1F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6E5CD26149EA4D4796F9B06A /* Pods-Message.release.xcconfig */;
+			baseConfigurationReference = E408BB9C86D8C815CFEE07F8 /* Pods-Message.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
