@@ -17,7 +17,6 @@ import NavigationBar from 'react-native-navbar';
 
 import { NativeModules } from 'react-native';
 
-//must constructor here
 var GroupMemberAddViewControllerBridge = NativeModules.GroupMemberAddViewControllerBridge;
 var ProgressHudBridge = NativeModules.ProgressHudBridge;
 

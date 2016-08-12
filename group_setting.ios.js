@@ -18,11 +18,14 @@ import {
 
 import { NativeModules, NativeAppEventEmitter } from 'react-native';
 
+var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
+var ProgressHudBridge = NativeModules.ProgressHudBridge;
 
 class GroupSetting extends Component {
   constructor(props) {
     super(props);
-    this.state = {members:this.props.members};
+    this.state = {members:this.props.members, 
+                  topic:this.props.topic};
   }
   
   componentDidMount() {
@@ -44,7 +47,19 @@ class GroupSetting extends Component {
       }
     );
 
-    this.setState({add_listener:add_listener, remove_listener:remove_listener});
+
+    var name_listener = NativeAppEventEmitter.addListener(
+      'name_updated',
+      (obj) => {
+        console.log(obj);
+        self.setState({topic:obj['name']});
+      }
+    );
+
+
+    this.setState({add_listener:add_listener, 
+                   remove_listener:remove_listener,
+                   name_listener:name_listener});
   }
 
   removeMember(id) {
@@ -122,7 +137,14 @@ class GroupSetting extends Component {
             <View style={styles.line}/>
 
             <TouchableHighlight underlayColor='ghostwhite' style={styles.item} onPress={this.handleName.bind(this)} >
-              <Text>群聊名称</Text>
+              <View style={styles.itemInternal}>
+                <Text>群聊名称</Text>
+                <View style={{flexDirection:'row', alignItems:"center", marginRight:8}}>
+                  <Text>{this.state.topic}</Text>
+                  <Image source={require('./img/TableViewArrow.png')}
+                         style={{marginLeft:4, width:20, height:20}} />
+                </View>
+              </View>
             </TouchableHighlight>
           </View>
 
@@ -136,8 +158,10 @@ class GroupSetting extends Component {
   }
 
   handleName(event) {
-    
+    var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
+    GroupSettingViewControllerBridge.handleName();
   }
+
   handleRemove(event) {
     var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
     GroupSettingViewControllerBridge.handleRemove();
@@ -155,12 +179,43 @@ class GroupSetting extends Component {
     GroupSettingViewControllerBridge.handleClickMember(i.member_id);
   }
 
+  quitGroup() {
+    console.log("remove member:", this.props.uid);
+    let url = this.props.url + "/groups/" + this.props.group_id + "/members/" + this.props.uid;
+    console.log("url:", url);
+
+    ProgressHudBridge.showHud();
+    fetch(url, {
+      method:"DELETE",  
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer " + this.props.token,
+      },
+    }).then((response) => {
+      console.log("status:", response.status);
+      if (response.status == 200) {
+        ProgressHudBridge.hideHud();
+        GroupSettingViewControllerBridge.quitGroup();  
+      } else {
+        return response.json().then((responseJson)=>{
+          console.log(responseJson.meta.message);
+          ProgressHudBridge.hideTextHud(responseJson.meta.message);
+        });
+      }
+    }).catch((error) => {
+      console.log("error:", error);
+      ProgressHudBridge.hideTextHud('' + error);
+    });
+  }
+
   handleQuit(event) {
     var BUTTONS = [
       '确定',
       '取消',
     ];
 
+    var self = this;
     ActionSheetIOS.showActionSheetWithOptions({
       options: BUTTONS,
       title:"退出后不会在接受此群聊消息",
@@ -169,8 +224,7 @@ class GroupSetting extends Component {
     }, function(buttonIndex) {
       console.log('button index:', buttonIndex);  
       if (buttonIndex == 0) {
-        var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
-        GroupSettingViewControllerBridge.quitGroup();  
+        self.quitGroup();
       }
     });
     console.log('Pressed!');
@@ -199,6 +253,11 @@ const styles = StyleSheet.create({
     paddingLeft:16,
     alignSelf:'stretch',
   },
+  itemInternal: {
+    flex:1,
+    flexDirection:'row',
+    justifyContent: 'space-between',
+  },
 
   headButton: {
     width:50,
@@ -215,7 +274,7 @@ const styles = StyleSheet.create({
   quit: {
     margin: 10,
     padding: 10,
-    backgroundColor: 'red',
+    backgroundColor: 'orangered',
     alignSelf: 'stretch',
     alignItems: 'center',
   },

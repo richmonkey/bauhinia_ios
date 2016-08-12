@@ -8,6 +8,8 @@
 
 #import "MGroupMessageViewController.h"
 #import "GroupSettingViewController.h"
+#import "GroupDB.h"
+#import "Token.h"
 
 @interface MGroupMessageViewController ()
 
@@ -19,6 +21,26 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    Group *group = [[GroupDB instance] loadGroup:self.groupID];
+    if (!group) {
+        return;
+    }
+    
+    //不是群组成员
+    if ([group.members indexOfObject:[NSNumber numberWithLongLong:self.currentUID]] == NSNotFound) {
+        CGFloat chatbarHeight = 5 * 2 + 36;
+        CGRect frame = CGRectMake(0, self.view.frame.size.height - chatbarHeight, self.view.frame.size.width, chatbarHeight);
+        UILabel *textView = [[UILabel alloc] initWithFrame:frame];
+        textView.text = @"您不是群组的成员。";
+        textView.font = [UIFont systemFontOfSize:15];
+        textView.textAlignment = NSTextAlignmentCenter;
+        textView.backgroundColor = RGBCOLOR(0xf5, 0xff, 0xfa);
+        textView.lineBreakMode = NSLineBreakByWordWrapping;
+        [self.view addSubview:textView];
+        self.inputBar.hidden = YES;
+        return;
+    }
+
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"设置"
                                                              style:UIBarButtonItemStyleDone
                                                             target:self
@@ -36,10 +58,7 @@
 - (void)groupSetting {
     GroupSettingViewController *ctrl = [[GroupSettingViewController alloc] init];
     ctrl.groupID = self.groupID;
-    
-//    [self presentViewController:ctrl animated:NO completion:^{
-//
-//    }];
+
     [self.navigationController pushViewController:ctrl animated:YES];
 }
 

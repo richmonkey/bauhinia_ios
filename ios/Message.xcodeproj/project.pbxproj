@@ -89,6 +89,7 @@
 		6D2CA57D1D5A52E000AF929B /* GroupMemberAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA57C1D5A52E000AF929B /* GroupMemberAddViewController.m */; };
 		6D2CA5801D5B98AC00AF929B /* GroupMemberRemoveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA57F1D5B98AC00AF929B /* GroupMemberRemoveViewController.m */; };
 		6D2CA5831D5C80EE00AF929B /* ProgressHudBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */; };
+		6D2CA5871D5DB1FD00AF929B /* GroupNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5861D5DB1FD00AF929B /* GroupNameViewController.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
 		6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D76214F197ECA9300B690D7 /* LevelDB.mm */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
@@ -241,6 +242,8 @@
 		6D2CA57F1D5B98AC00AF929B /* GroupMemberRemoveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupMemberRemoveViewController.m; path = group/GroupMemberRemoveViewController.m; sourceTree = "<group>"; };
 		6D2CA5811D5C80EE00AF929B /* ProgressHudBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressHudBridge.h; path = bridge/ProgressHudBridge.h; sourceTree = "<group>"; };
 		6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressHudBridge.m; path = bridge/ProgressHudBridge.m; sourceTree = "<group>"; };
+		6D2CA5851D5DB1FD00AF929B /* GroupNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupNameViewController.h; path = group/GroupNameViewController.h; sourceTree = "<group>"; };
+		6D2CA5861D5DB1FD00AF929B /* GroupNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupNameViewController.m; path = group/GroupNameViewController.m; sourceTree = "<group>"; };
 		6D32393B19BD79C7005A00B2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		6D76214E197ECA9300B690D7 /* LevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelDB.h; sourceTree = "<group>"; };
 		6D76214F197ECA9300B690D7 /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
@@ -578,6 +581,8 @@
 				6D2CA57C1D5A52E000AF929B /* GroupMemberAddViewController.m */,
 				6D2CA57E1D5B98AC00AF929B /* GroupMemberRemoveViewController.h */,
 				6D2CA57F1D5B98AC00AF929B /* GroupMemberRemoveViewController.m */,
+				6D2CA5851D5DB1FD00AF929B /* GroupNameViewController.h */,
+				6D2CA5861D5DB1FD00AF929B /* GroupNameViewController.m */,
 			);
 			name = group;
 			sourceTree = "<group>";
@@ -807,6 +812,7 @@
 				6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */,
 				489933D319C44C4D00C56F2D /* ProfileViewController.m in Sources */,
 				21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */,
+				6D2CA5871D5DB1FD00AF929B /* GroupNameViewController.m in Sources */,
 				2142CB62196268860002E4A9 /* ABContact.m in Sources */,
 				6D032FE01AA9B31D004AA39F /* GroupDB.m in Sources */,
 				489933D819C44E3300C56F2D /* CotactMeViewController.m in Sources */,

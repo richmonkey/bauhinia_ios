@@ -19,8 +19,13 @@
 #import "GroupMemberRemoveViewController.h"
 #import "UserPresent.h"
 #import "RCTEventDispatcher.h"
+#import "GroupNameViewController.h"
+#import "Token.h"
+#import "Config.h"
+#import "ProgressHudBridge.h"
 
-@interface GroupSettingViewController ()<GroupMemberAddViewControllerDelegate, GroupMemberRemoveViewControllerDelegate>
+@interface GroupSettingViewController ()<GroupMemberAddViewControllerDelegate,
+    GroupMemberRemoveViewControllerDelegate, GroupNameViewControllerDelegate>
 
 @property(nonatomic, weak) RCTRootView *rootView;
 
@@ -28,6 +33,7 @@
 - (void)handleAdd;
 - (void)handleRemove;
 - (void)handleClickMember:(NSNumber*)memberID;
+- (void)handleName;
 @end
 
 @interface GroupSettingViewControllerBridge : NSObject <RCTBridgeModule>
@@ -46,7 +52,7 @@
 }
 
 -(void)dealloc {
-    NSLog(@"CalendarManager dealloc");
+
 }
 
 RCT_EXPORT_MODULE();
@@ -71,19 +77,18 @@ RCT_EXPORT_METHOD(handleClickMember:(nonnull NSNumber*)memberID)
     [self.controller handleClickMember:memberID];
 }
 
+
+RCT_EXPORT_METHOD(handleName)
+{
+    [self.controller handleName];
+}
+
+
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
 }
 
-- (void)forwardInvocation:(NSInvocation *)anInvocation
-{
-    if ([self.controller respondsToSelector:
-         [anInvocation selector]])
-        [anInvocation invokeWithTarget:self.controller];
-    else
-        [super forwardInvocation:anInvocation];
-}
 
 @end
 
@@ -106,12 +111,17 @@ RCT_EXPORT_METHOD(handleClickMember:(nonnull NSNumber*)memberID)
     }
     
     
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
     [dict setObject:[NSString stringWithFormat:@"%lld", group.groupID] forKey:@"group_id"];
     [dict setObject:[NSNumber numberWithBool:group.disbanded] forKey:@"disbanded"];
     [dict setObject:[NSString stringWithFormat:@"%lld", group.masterID] forKey:@"master_id"];
     [dict setObject:group.topic forKey:@"topic"];
+    [dict setObject:[NSNumber numberWithLongLong:[Token instance].uid] forKey:@"uid"];
+    [dict setObject:[Token instance].accessToken forKey:@"token"];
+    [dict setObject:[Config instance].sdkAPIURL forKey:@"url"];
+
     
     NSMutableArray *members = [NSMutableArray array];
     for (int i = 0; i < group.members.count; i++) {
@@ -138,9 +148,12 @@ RCT_EXPORT_METHOD(handleClickMember:(nonnull NSNumber*)memberID)
     
     __weak GroupSettingViewController *wself = self;
     RCTBridgeModuleProviderBlock provider = ^NSArray<id<RCTBridgeModule>> *{
+        ProgressHudBridge *hud = [ProgressHudBridge new];
+        hud.view = wself.view;
+        
         GroupSettingViewControllerBridge *module = [GroupSettingViewControllerBridge new];
         module.controller = wself;
-        return @[module];
+        return @[module, hud];
     };
 
     RCTBridge *bridge = [[RCTBridge alloc] initWithBundleURL:jsCodeLocation
@@ -236,8 +249,27 @@ RCT_EXPORT_METHOD(handleClickMember:(nonnull NSNumber*)memberID)
     NSLog(@"group member deleted:%@", memberID);
     [self.rootView.bridge.eventDispatcher sendAppEventWithName:@"member_removed"
                                                           body:@{@"id": memberID}];
-    
 }
 
+- (void)groupNameChanged:(NSString*)name {
+    [self.rootView.bridge.eventDispatcher sendAppEventWithName:@"name_updated"
+                                                          body:@{@"name": name}];
+}
+
+
+- (void)handleName {
+    Group *group = [[GroupDB instance] loadGroup:self.groupID];
+    
+    if (!group) {
+        NSLog(@"group id is invalid");
+        return;
+    }
+    
+    GroupNameViewController *ctrl = [[GroupNameViewController alloc] init];
+    ctrl.groupID = self.groupID;
+    ctrl.topic = group.topic;
+    ctrl.delegate = self;
+    [self.navigationController pushViewController:ctrl animated:YES];
+}
 
 @end
