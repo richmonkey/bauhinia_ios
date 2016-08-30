@@ -38,6 +38,8 @@ var GroupMemberAdd = React.createClass({
   },
 
   addMember: function(users) {
+    var userIDs = users.map((u) => u.uid)
+
     var url = this.props.url + "/groups/" + this.props.group_id + "/members";
     ProgressHudBridge.showHud();
     fetch(url, {
@@ -47,13 +49,13 @@ var GroupMemberAdd = React.createClass({
         'Content-Type': 'application/json',
         "Authorization": "Bearer " + this.props.token,
       },
-      body:JSON.stringify(users),
+      body:JSON.stringify(userIDs),
     }).then((response) => {
       console.log("status:", response.status);
       if (response.status == 200) {
-        GroupMemberAddViewControllerBridge.groupMemberAdded(users);
+        this.props.eventEmitter.emit("member_added", {users:users});
         ProgressHudBridge.hideHud();
-        GroupMemberAddViewControllerBridge.handleDismiss();
+        this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
@@ -72,7 +74,7 @@ var GroupMemberAdd = React.createClass({
     for (var i = 0; i < data.length; i++) {
       let u = data[i];
       if (u.selected && !u.is_member) {
-        users.push(u.uid);
+        users.push(u);
       }
     }
     if (users.length == 0) {
@@ -82,7 +84,7 @@ var GroupMemberAdd = React.createClass({
   },
 
   handleCancel: function() {
-    GroupMemberAddViewControllerBridge.handleDismiss();
+    this.props.navigator.pop();
   },
 
   render: function() {
@@ -122,7 +124,7 @@ var GroupMemberAdd = React.createClass({
     };
 
     return (
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1, backgroundColor:"white" }}>
           <NavigationBar
               statusBar={{hidden:true}}
               style={{}}
@@ -163,5 +165,5 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('GroupMemberAdd', () => GroupMemberAdd);
+module.exports = GroupMemberAdd;
 

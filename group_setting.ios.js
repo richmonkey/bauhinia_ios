@@ -4,6 +4,10 @@
  * @flow
  */
 
+var reactMixin = require('react-mixin');
+var Subscribable = require('Subscribable');
+var EventEmitter = require('EventEmitter');
+
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -18,6 +22,15 @@ import {
 
 import { NativeModules, NativeAppEventEmitter } from 'react-native';
 
+
+import NavigationBar from 'react-native-navbar';
+
+import GroupMemberAdd from './group_member_add.ios';
+import GroupMemberRemove from './group_member_remove.ios';
+import GroupName from './group_name.ios';
+
+
+
 var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
 var ProgressHudBridge = NativeModules.ProgressHudBridge;
 
@@ -26,47 +39,47 @@ class GroupSetting extends Component {
     super(props);
     this.state = {members:this.props.members, 
                   topic:this.props.topic};
+
+    this.eventEmitter = new EventEmitter();
+
   }
   
   componentDidMount() {
     console.log("add listener");
-    var self = this;
-    var add_listener = NativeAppEventEmitter.addListener(
+    var add_listener = this.addListenerOn(
+      this.eventEmitter,
       'member_added',
       (obj) => {
         console.log(obj);
-        self.addNewMember(obj['users']);
+        this.addNewMember(obj['users']);
       }
     );
 
-    var remove_listener = NativeAppEventEmitter.addListener(
+    var remove_listener = this.addListenerOn(
+      this.eventEmitter,
       'member_removed',
       (obj) => {
         console.log(obj);
-        self.removeMember(obj['id']);
+        this.removeMember(obj['id']);
       }
     );
 
 
-    var name_listener = NativeAppEventEmitter.addListener(
+    var name_listener = this.addListenerOn(
+      this.eventEmitter,
       'name_updated',
       (obj) => {
         console.log(obj);
-        self.setState({topic:obj['name']});
+        this.setState({topic:obj['name']});
       }
     );
-
-
-    this.setState({add_listener:add_listener, 
-                   remove_listener:remove_listener,
-                   name_listener:name_listener});
   }
 
   removeMember(id) {
     var members = this.state.members;
     for (var i = 0; i < members.length; i++) {
       let m = members[i];
-      if (m.member_id == id) {
+      if (m.uid == id) {
         members.splice(i, 1);
         break;
       }
@@ -90,12 +103,16 @@ class GroupSetting extends Component {
     console.log("remove listener");
   }
 
+  handleBack() {
+    console.log("action back");
+    GroupSettingViewControllerBridge.handleBack();
+  }
+
   render() {
-    console.log("render props:", this.props);
     var self = this;
     var rows = this.state.members.map(function(i) {
       return (
-        <View key={i.member_id} style={{alignItems:'center'}}>
+        <View key={i.uid} style={{alignItems:'center'}}>
           <TouchableHighlight underlayColor='gray' style={styles.headButton} onPress={self.handleClickMember.bind(self, i)} >
             <Image
                 source={require('./img/PersonalChat.png')}
@@ -108,9 +125,32 @@ class GroupSetting extends Component {
       );
       
     });
+
+    
+    var leftButtonConfig = {
+      title: '取消',
+      handler: () => this.handleBack()
+    };
+
+    var rightButtonConfig = {
+      title: '确定',
+      handler: () => console.log("ok")
+    };
+
+    var titleConfig = {
+      title: '聊天信息',
+    };
+
     
     return (
       <View style={{flex:1}}>
+        <NavigationBar
+            statusBar={{hidden:true}}
+            style={{}}
+            title={titleConfig}
+            leftButton={leftButtonConfig} 
+            rightButton={rightButtonConfig} />
+
         <ScrollView style={styles.container}>
           <View style={styles.block}>
             <View style={{flex: 1, flexDirection:'row', flexWrap: 'wrap', marginLeft:10, marginBottom:10}}>
@@ -158,25 +198,45 @@ class GroupSetting extends Component {
   }
 
   handleName(event) {
-    var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
-    GroupSettingViewControllerBridge.handleName();
+    var route = {title: '名称', index: "name", topic:this.state.topic, eventEmitter:this.eventEmitter};
+    console.log("handle name...");
+    this.props.navigator.push(route);
   }
 
   handleRemove(event) {
-    var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
-    GroupSettingViewControllerBridge.handleRemove();
+    var users = this.props.members.slice();
+    for (var i = 0; i < users.length; i++) {
+      users[i].selected = false;
+    }
+    
+    var route = {title:'删除', index:"member_remove", users:users, eventEmitter:this.eventEmitter};
+    this.props.navigator.push(route);
   }
 
   handleAdd(event) {
-    var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
-    GroupSettingViewControllerBridge.handleAdd();
+    var self = this;
+    GroupSettingViewControllerBridge.loadUsers((users) => {
+      for (var i = 0; i < users.length; i++) {   
+        let u = users[i];
+
+        var index = self.state.members.findIndex((element, index, array) => {
+          return (element.uid == u.uid);
+        });
+        u.is_member = (index != -1);
+        u.selected = false;
+      }
+      console.log("users:", users, "length:", users.length);
+
+      var route = {title:'添加', index:"member_add", users:users, eventEmitter:this.eventEmitter};
+      self.props.navigator.push(route);
+    });
   }
 
   handleClickMember(i, event) {
     console.log("this.props:", this.props);
     console.log("i:", i);
     var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
-    GroupSettingViewControllerBridge.handleClickMember(i.member_id);
+    GroupSettingViewControllerBridge.handleClickMember(i.uid);
   }
 
   quitGroup() {
@@ -231,6 +291,10 @@ class GroupSetting extends Component {
   }
 }
 
+
+reactMixin(GroupSetting.prototype, Subscribable.Mixin);
+
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5FCFF',
@@ -280,4 +344,5 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('GroupSetting', () => GroupSetting);
+
+module.exports = GroupSetting;

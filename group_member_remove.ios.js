@@ -62,9 +62,9 @@ var GroupMemberRemove = React.createClass({
     }).then((response) => {
       console.log("status:", response.status);
       if (response.status == 200) {
-        GroupMemberRemoveViewControllerBridge.groupMemberDeleted(u.uid);
+        this.props.eventEmitter.emit("member_removed", {id:u.uid});
         ProgressHudBridge.hideHud();
-        GroupMemberRemoveViewControllerBridge.handleDismiss();
+        this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
@@ -129,8 +129,8 @@ var GroupMemberRemove = React.createClass({
 
     var leftButtonConfig = {
       title: '取消',
-      handler: function onNext() {
-        GroupMemberRemoveViewControllerBridge.handleDismiss();
+      handler: () => {
+        this.props.navigator.pop();
       }
     };
 
@@ -145,7 +145,7 @@ var GroupMemberRemove = React.createClass({
 
 
     return (
-      <View style={{ flex: 1, }}>
+      <View style={{ flex: 1, backgroundColor:"white" }}>
         <NavigationBar
             statusBar={{hidden:true}}
             style={{}}
@@ -191,6 +191,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-AppRegistry.registerComponent('GroupMemberRemove', () => GroupMemberRemove);
-
+module.exports = GroupMemberRemove;

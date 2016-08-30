@@ -15,25 +15,21 @@
 #import "UserDB.h"
 #import "ContactDB.h"
 #import "ContactViewController.h"
-#import "GroupMemberAddViewController.h"
-#import "GroupMemberRemoveViewController.h"
 #import "UserPresent.h"
 #import "RCTEventDispatcher.h"
-#import "GroupNameViewController.h"
 #import "Token.h"
 #import "Config.h"
 #import "ProgressHudBridge.h"
 
-@interface GroupSettingViewController ()<GroupMemberAddViewControllerDelegate,
-    GroupMemberRemoveViewControllerDelegate, GroupNameViewControllerDelegate>
+@interface GroupSettingViewController ()
 
 @property(nonatomic, weak) RCTRootView *rootView;
 
 - (void)quitGroup;
-- (void)handleAdd;
-- (void)handleRemove;
 - (void)handleClickMember:(NSNumber*)memberID;
-- (void)handleName;
+- (void)handleBack;
+- (void)loadUsers:(RCTResponseSenderBlock)callback;
+
 @end
 
 @interface GroupSettingViewControllerBridge : NSObject <RCTBridgeModule>
@@ -62,15 +58,7 @@ RCT_EXPORT_METHOD(quitGroup)
     [self.controller quitGroup];
 }
 
-RCT_EXPORT_METHOD(handleRemove)
-{
-    [self.controller handleRemove];
-}
 
-RCT_EXPORT_METHOD(handleAdd)
-{
-    [self.controller handleAdd];
-}
 
 RCT_EXPORT_METHOD(handleClickMember:(nonnull NSNumber*)memberID)
 {
@@ -78,9 +66,15 @@ RCT_EXPORT_METHOD(handleClickMember:(nonnull NSNumber*)memberID)
 }
 
 
-RCT_EXPORT_METHOD(handleName)
+RCT_EXPORT_METHOD(handleBack)
 {
-    [self.controller handleName];
+    [self.controller handleBack];
+}
+
+
+RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
+{
+    [self.controller loadUsers:callback];
 }
 
 
@@ -98,7 +92,12 @@ RCT_EXPORT_METHOD(handleName)
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
+    [[self navigationController] setNavigationBarHidden:YES animated:YES];
 
+
+    
     //!!!important must set when use scrollview/listview
     self.automaticallyAdjustsScrollViewInsets = NO;
 
@@ -109,8 +108,6 @@ RCT_EXPORT_METHOD(handleName)
         NSLog(@"group id is invalid");
         return;
     }
-    
-    
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
@@ -128,7 +125,7 @@ RCT_EXPORT_METHOD(handleName)
         NSNumber *memberID = [group.members objectAtIndex:i];
         
         NSMutableDictionary *member = [NSMutableDictionary dictionary];
-        [member setObject:memberID forKey:@"member_id"];
+        [member setObject:memberID forKey:@"uid"];
         User *u = [[UserDB instance] loadUser:[memberID longLongValue]];
         [member setObject:u.displayName forKey:@"name"];
         
@@ -159,10 +156,10 @@ RCT_EXPORT_METHOD(handleName)
     RCTBridge *bridge = [[RCTBridge alloc] initWithBundleURL:jsCodeLocation
                                               moduleProvider:provider                                             launchOptions:nil];
 
-    RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"GroupSetting" initialProperties:dict];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"GroupSettingIndex" initialProperties:dict];
 
-    
-    CGFloat y = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    //self.navigationController.navigationBar.frame.size.height +
+    CGFloat y = [UIApplication sharedApplication].statusBarFrame.size.height;
     CGFloat h = [UIScreen mainScreen].bounds.size.height - y;
     CGFloat w = [UIScreen mainScreen].bounds.size.width;
     rootView.frame = CGRectMake(0, y, w, h);
@@ -189,22 +186,6 @@ RCT_EXPORT_METHOD(handleName)
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)handleAdd {
-    GroupMemberAddViewController *ctrl = [[GroupMemberAddViewController alloc] init];
-    ctrl.groupID = self.groupID;
-    ctrl.delegate = self;
-    [self presentViewController:ctrl animated:YES completion:^{
-
-    }];
-}
-
-- (void)handleRemove {
-    GroupMemberRemoveViewController *ctrl = [[GroupMemberRemoveViewController alloc] init];
-    ctrl.groupID = self.groupID;
-    ctrl.delegate = self;
-    [self presentViewController:ctrl animated:YES completion:nil];
-}
-
 - (void)handleClickMember:(NSNumber*)memberID {
     NSLog(@"member:%@", memberID);
     
@@ -227,37 +208,35 @@ RCT_EXPORT_METHOD(handleName)
     [self.navigationController pushViewController:ctl animated:YES];
 }
 
-- (void)groupMemberAdded:(NSArray*)users {
-    NSLog(@"group member added:%@", users);
+
+- (void)handleBack {
+    [self.navigationController popViewControllerAnimated:YES];
     
-    NSMutableArray *groupUsers = [NSMutableArray array];
-    for (NSNumber *n in users) {
-        NSMutableDictionary *member = [NSMutableDictionary dictionary];
-        [member setObject:n forKey:@"member_id"];
-        User *u = [[UserDB instance] loadUser:[n longLongValue]];
-        [member setObject:u.displayName forKey:@"name"];
-        
-        [groupUsers addObject:member];
-        
+    [[self navigationController] setNavigationBarHidden:NO animated:YES];
+}
+
+- (void)loadUsers:(RCTResponseSenderBlock)callback {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    NSArray *contacts = [[ContactDB instance] contactsArray];
+    if([contacts count] == 0) {
+        return;
     }
-    [self.rootView.bridge.eventDispatcher sendAppEventWithName:@"member_added"
-                                                          body:@{@"users": groupUsers}];
     
-}
-
-- (void)groupMemberDeleted:(NSNumber*)memberID {
-    NSLog(@"group member deleted:%@", memberID);
-    [self.rootView.bridge.eventDispatcher sendAppEventWithName:@"member_removed"
-                                                          body:@{@"id": memberID}];
-}
-
-- (void)groupNameChanged:(NSString*)name {
-    [self.rootView.bridge.eventDispatcher sendAppEventWithName:@"name_updated"
-                                                          body:@{@"name": name}];
-}
-
-
-- (void)handleName {
+    for (IMContact *contact in contacts) {
+        NSString *string = contact.contactName;
+        if ([contact.users count] > 0) {
+            User *user = [contact.users objectAtIndex:0];
+            NSLog(@"name:%@ state:%@", string, user.state);
+        }
+        
+        for (User *u in contact.users) {
+            u.contactName = contact.contactName;
+            [dict setObject:u forKey:[NSNumber numberWithLongLong:u.uid]];
+        }
+    }
+    
+    NSArray *users = [dict allValues];
+    
     Group *group = [[GroupDB instance] loadGroup:self.groupID];
     
     if (!group) {
@@ -265,11 +244,27 @@ RCT_EXPORT_METHOD(handleName)
         return;
     }
     
-    GroupNameViewController *ctrl = [[GroupNameViewController alloc] init];
-    ctrl.groupID = self.groupID;
-    ctrl.topic = group.topic;
-    ctrl.delegate = self;
-    [self.navigationController pushViewController:ctrl animated:YES];
+    
+    
+    NSMutableArray *groupUsers = [NSMutableArray array];
+    for (User *u in users) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        
+        NSNumber *n = [NSNumber numberWithLongLong:u.uid];
+        [dict setObject:n forKey:@"uid"];
+        [dict setObject:u.displayName forKey:@"name"];
+        
+        if ([group.members indexOfObject:n] != NSNotFound) {
+            [dict setObject:@YES forKey:@"is_member"];
+            [dict setObject:@YES forKey:@"selected"];
+        } else {
+            [dict setObject:@NO forKey:@"is_member"];
+            [dict setObject:@NO forKey:@"selected"];
+        }
+        
+        [groupUsers addObject:dict];
+    }
+    callback(@[groupUsers]);
 }
 
 @end

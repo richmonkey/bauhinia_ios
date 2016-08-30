@@ -18,6 +18,7 @@ import {
 
 import { NativeModules, NativeAppEventEmitter } from 'react-native';
 
+import NavigationBar from 'react-native-navbar';
 var GroupNameViewControllerBridge = NativeModules.GroupNameViewControllerBridge;
 var ProgressHudBridge = NativeModules.ProgressHudBridge;
 
@@ -29,18 +30,14 @@ class GroupName extends Component {
   }
 
   componentDidMount() {
-    console.log("add listener");
-    var self = this;
-    var listener = NativeAppEventEmitter.addListener(
-      'update',
-      (obj) => {
-        console.log(obj);
-        self.updateName();
-      }
-    );
-
-    this.setState({istener:listener});
+ 
   }
+
+
+  componentWillUnmount() {
+
+  }
+
 
   updateName() {
     if (this.state.topic == this.props.topic) {
@@ -62,9 +59,9 @@ class GroupName extends Component {
     }).then((response) => {
       console.log("status:", response.status);
       if (response.status == 200) {
-        GroupNameViewControllerBridge.groupNameChanged(name);
+        this.props.eventEmitter.emit("name_updated", {name:name});
         ProgressHudBridge.hideHud();
-        GroupNameViewControllerBridge.popViewController();
+        this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
@@ -78,25 +75,49 @@ class GroupName extends Component {
 
   }
 
-  componentWillUnmount() {
-    var subscription = this.state.listener;
-    subscription.remove();
-    console.log("remove listener");
-  }
-
   render() {
     console.log("render props:", this.props);
+
+    var leftButtonConfig = {
+      title: '取消',
+      handler: () => {
+        this.props.navigator.pop();
+      }
+    };
+
+    var rightButtonConfig = {
+      title: '确定',
+      handler: () => {
+        this.updateName();
+      }
+    };
+    var titleConfig = {
+      title: '群聊名称',
+    };
+
+
+
     return (
-      <ScrollView style={{flex:1, backgroundColor:"#F5FCFF"}}>
-        <View style={{marginTop:12}}>
-          <Text style={{marginLeft:12, marginBottom:4}}>群聊名称</Text>
-          <TextInput
-              style={{paddingLeft:12, height: 40, backgroundColor:"white"}}
-              placeholder=""
-              onChangeText={(text) => this.setState({topic:text})}
-              value={this.state.topic}/>
-        </View>
-      </ScrollView>
+      <View style={{flex:1}}>
+        <NavigationBar
+            statusBar={{hidden:true}}
+            style={{}}
+            title={titleConfig}
+            leftButton={leftButtonConfig} 
+            rightButton={rightButtonConfig} />
+
+
+        <ScrollView style={{flex:1, backgroundColor:"#F5FCFF"}}>
+          <View style={{marginTop:12}}>
+            <Text style={{marginLeft:12, marginBottom:4}}>群聊名称</Text>
+            <TextInput
+                style={{paddingLeft:12, height: 40, backgroundColor:"white"}}
+                placeholder=""
+                onChangeText={(text) => this.setState({topic:text})}
+                value={this.state.topic}/>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
   
@@ -106,4 +127,5 @@ const styles = StyleSheet.create({
   
 });
 
-AppRegistry.registerComponent('GroupName', () => GroupName);
+
+module.exports = GroupName;
