@@ -22,9 +22,12 @@
 #import "UserPresent.h"
 #import "JSBadgeView.h"
 
+#import "Config.h"
 #import "APIRequest.h"
 #import "LevelDB.h"
 #import "GroupDB.h"
+#import "AFNetworking.h"
+#import "Token.h"
 
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
@@ -192,11 +195,73 @@
         conversation.name = [user displayName];
         conversation.avatarURL = user.avatarURL;
     } else if (conversation.type == CONVERSATION_GROUP) {
-        conversation.name = [self getGroupName:conversation.cid];
         conversation.avatarURL = @"";
+        
+        NSString *groupName = [self getGroupName:conversation.cid];
+        if (groupName.length > 0) {
+            conversation.name = groupName;
+        } else {
+            conversation.name = [NSString stringWithFormat:@"%lld", conversation.cid];
+            [self asyncGetGroup:conversation.cid cb:^(IGroup *group) {
+                if (group.name.length > 0) {
+                    conversation.name = group.name;
+          
+                }
+            }];
+        }
     }
 }
 
+-(void)asyncGetGroup:(int64_t)groupID cb:(void (^)(IGroup*))cb {
+    NSString *base = [NSString stringWithFormat:@"%@/", [Config instance].sdkAPIURL];
+    NSURL *baseURL = [NSURL URLWithString:base];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+
+    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
+    [manager.requestSerializer setValue:auth forHTTPHeaderField:@"Authorization"];
+    
+    NSString *path = [NSString stringWithFormat:@"groups/%lld", groupID];
+    [manager GET:path
+       parameters:nil
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              NSLog(@"response:%@", responseObject);
+              NSDictionary *dict = [responseObject objectForKey:@"data"];
+              NSString *name = [dict objectForKey:@"name"];
+              if (name.length > 0) {
+                  [[GroupDB instance] setGroupTopic:groupID topic:name];
+              }
+              
+              NSArray *members = [dict objectForKey:@"members"];
+              for (NSDictionary *d in members) {
+                  int64_t uid = [[d objectForKey:@"uid"] longLongValue];
+                  [[GroupDB instance] addGroupMember:groupID member:uid];
+              }
+              
+              if (name.length > 0) {
+                  IGroup *group = [[IGroup alloc] init];
+                  group.name = name;
+                  group.gid = groupID;
+                  cb(group);
+              }
+          }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              NSLog(@"get gropu error");
+              NSHTTPURLResponse* r = (NSHTTPURLResponse*)task.response;
+              NSData *errorData = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+              if (errorData) {
+                  NSDictionary *serializedData = [NSJSONSerialization JSONObjectWithData: errorData options:kNilOptions error:nil];
+                  NSLog(@"failure:%@ %@ %zd", error, [serializedData objectForKey:@"error"], r.statusCode);
+                  NSString *e = [serializedData objectForKey:@"error"];
+                  if (e.length > 0) {
+                      NSLog(@"get group error:%@", e);
+                  }
+              }
+          }
+     ];
+
+}
 
 -(void)checkVersion {
     [APIRequest checkVersion:@"ios"
@@ -293,9 +358,6 @@
 
 - (NSString*) getGroupName:(int64_t)groupID {
     NSString *name = [[GroupDB instance] getGroupTopic:groupID];
-    if (!name) {
-        name = @"";
-    }
     return name;
 }
 

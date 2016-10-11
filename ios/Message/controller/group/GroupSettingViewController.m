@@ -94,10 +94,6 @@ RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
     [super viewDidLoad];
     
     
-    [[self navigationController] setNavigationBarHidden:YES animated:YES];
-
-
-    
     //!!!important must set when use scrollview/listview
     self.automaticallyAdjustsScrollViewInsets = NO;
 
@@ -175,6 +171,14 @@ RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
     } else {
         self.navigationController.navigationBar.topItem.title = @"群聊";
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [[self navigationController] setNavigationBarHidden:YES animated:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [[self navigationController] setNavigationBarHidden:NO animated:animated];
 }
 
 - (void)didReceiveMemoryWarning {

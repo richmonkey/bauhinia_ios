@@ -138,7 +138,7 @@
   LevelDB *db = [LevelDB defaultLevelDB];
   LevelDBIterator *iter = [db newIterator];
   int64_t groupID = group.groupID;
-  NSString *t = @"group_member_";
+  NSString *t = [NSString stringWithFormat:@"group_member_%lld", groupID];
   for ([iter seek:t]; [iter isValid]; [iter next]) {
     NSString *key = [iter key];
     NSArray *ary = [key componentsSeparatedByString:@"_"];
