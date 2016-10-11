@@ -7,19 +7,33 @@
 //
 
 #import "NewCount.h"
-#import "AppDB.h"
+#import "LevelDB.h"
 @implementation NewCount
-+(int)getNewCount:(int64_t)uid appID:(int64_t)appID {
-    LevelDB *db = [AppDB instance].db;
++(int)getNewCount:(int64_t)uid {
+    LevelDB *db = [LevelDB defaultLevelDB];
     
-    NSString *key = [NSString stringWithFormat:@"news_%lld_%lld", appID, uid];
-    return [[db objectForKey:key] intValue];
+    NSString *key = [NSString stringWithFormat:@"news_peer_%lld", uid];
+    return (int)[db intForKey:key];
 }
 
-+(void)setNewCount:(int)count uid:(int64_t)uid appID:(int64_t)appID {
-    LevelDB *db = [AppDB instance].db;
++(void)setNewCount:(int)count uid:(int64_t)uid {
+    LevelDB *db = [LevelDB defaultLevelDB];
     
-    NSString *key = [NSString stringWithFormat:@"news_%lld_%lld", appID, uid];
-    [db setObject:[NSNumber numberWithInt:count] forKey:key];
+    NSString *key = [NSString stringWithFormat:@"news_peer_%lld", uid];
+    [db setInt:count forKey:key];
+}
+
++(int)getGroupNewCount:(int64_t)gid {
+    LevelDB *db = [LevelDB defaultLevelDB];
+    
+    NSString *key = [NSString stringWithFormat:@"news_group_%lld", gid];
+    return (int)[db intForKey:key];
+}
+
++(void)setGroupNewCount:(int)count gid:(int64_t)gid {
+    LevelDB *db = [LevelDB defaultLevelDB];
+    
+    NSString *key = [NSString stringWithFormat:@"news_group_%lld", gid];
+    [db setInt:count forKey:key];
 }
 @end

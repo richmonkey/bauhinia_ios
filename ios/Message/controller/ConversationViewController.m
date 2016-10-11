@@ -28,6 +28,7 @@
 #import "GroupDB.h"
 #import "AFNetworking.h"
 #import "Token.h"
+#import "NewCount.h"
 
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
@@ -141,6 +142,11 @@
     for (Conversation *conv in self.conversations) {
         [self updateConversationName:conv];
         [self updateConversationDetail:conv];
+        if (conv.type == CONVERSATION_PEER) {
+            conv.newMsgCount = [NewCount getNewCount:conv.cid];
+        } else if (conv.type == CONVERSATION_GROUP) {
+            conv.newMsgCount = [NewCount getGroupNewCount:conv.cid];
+        }
     }
     
     NSArray *sortedArray = [self.conversations sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
@@ -553,6 +559,7 @@
         if (conv.type == CONVERSATION_PEER && conv.cid == usrid) {
             if (conv.newMsgCount > 0) {
                 conv.newMsgCount = 0;
+                [NewCount setNewCount:0 uid:conv.cid];
                 NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
                 ConversationCell *cell = (ConversationCell*)[self.tableview cellForRowAtIndexPath:path];
                 [cell clearNewMessage];
@@ -569,6 +576,7 @@
         if (conv.type == CONVERSATION_GROUP && conv.cid == groupID) {
             if (conv.newMsgCount > 0) {
                 conv.newMsgCount = 0;
+                [NewCount setGroupNewCount:0 gid:conv.cid];
                 [self resetConversationsViewControllerNewState];
             }
         }
@@ -647,6 +655,7 @@
         [self updateConversationDetail:con];
         if (self.currentUID != msg.sender) {
             con.newMsgCount += 1;
+            [NewCount setGroupNewCount:con.newMsgCount gid:con.cid];
             [self setNewOnTabBar];
         }
         if (name.length > 0) {
@@ -666,6 +675,7 @@
         
         if (self.currentUID != msg.sender) {
             con.newMsgCount += 1;
+            [NewCount setGroupNewCount:con.newMsgCount gid:con.cid];
             [self setNewOnTabBar];
         }
         
@@ -700,6 +710,7 @@
         
         if (self.currentUID == msg.receiver) {
             con.newMsgCount += 1;
+            [NewCount setNewCount:con.newMsgCount uid:con.cid];
             [self setNewOnTabBar];
         }
         
@@ -720,6 +731,7 @@
         
         if (self.currentUID == msg.receiver) {
             con.newMsgCount += 1;
+            [NewCount setNewCount:con.newMsgCount uid:con.cid];
             [self setNewOnTabBar];
         }
         

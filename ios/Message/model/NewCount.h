@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface NewCount : NSObject
-+(int)getNewCount:(int64_t)uid appID:(int64_t)appID;
-+(void)setNewCount:(int)count uid:(int64_t)uid appID:(int64_t)appID;
++(int)getNewCount:(int64_t)uid;
++(void)setNewCount:(int)count uid:(int64_t)uid;
++(int)getGroupNewCount:(int64_t)gid;
++(void)setGroupNewCount:(int)count gid:(int64_t)gid;
 @end
