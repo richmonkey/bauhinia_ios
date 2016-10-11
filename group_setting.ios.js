@@ -233,8 +233,6 @@ class GroupSetting extends Component {
   }
 
   handleClickMember(i, event) {
-    console.log("this.props:", this.props);
-    console.log("i:", i);
     var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
     GroupSettingViewControllerBridge.handleClickMember(i.uid);
   }
