@@ -112,7 +112,7 @@ class GroupSetting extends Component {
     var self = this;
     var rows = this.state.members.map(function(i) {
       return (
-        <View key={i.uid} style={{alignItems:'center'}}>
+        <View key={i.uid} style={{alignItems:'center', height:78}}>
           <TouchableHighlight underlayColor='gray' style={styles.headButton} onPress={self.handleClickMember.bind(self, i)} >
             <Image
                 source={require('./img/PersonalChat.png')}
