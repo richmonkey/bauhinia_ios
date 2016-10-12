@@ -243,6 +243,7 @@
 		6D776314197B6D6B0090D511 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		6D8217081DACD72000E49821 /* NewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCount.h; sourceTree = "<group>"; };
 		6D8217091DACD72000E49821 /* NewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCount.m; sourceTree = "<group>"; };
+		6D82170B1DAE545F00E49821 /* Message.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Message.entitlements; sourceTree = "<group>"; };
 		6DB0AA4319C4BE1D0027A658 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		6DB0AA4419C4BE1D0027A658 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6DB0AA4619C4BF340027A658 /* APIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIRequest.h; sourceTree = "<group>"; };
@@ -438,6 +439,7 @@
 		21798F9C194E9C4600B67C1F /* Message */ = {
 			isa = PBXGroup;
 			children = (
+				6D82170B1DAE545F00E49821 /* Message.entitlements */,
 				6D2CA5841D5C80F500AF929B /* bridge */,
 				6DB0AA4219C4BDF10027A658 /* request */,
 				2105646619695FC0008D3A83 /* controller */,
@@ -648,6 +650,11 @@
 				TargetAttributes = {
 					21798F92194E9C4600B67C1F = {
 						DevelopmentTeam = 7BYWNXT9F3;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					21798FAD194E9C4600B67C1F = {
 						TestTargetID = 21798F92194E9C4600B67C1F;
@@ -964,6 +971,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CODE_SIGN_ENTITLEMENTS = Message/Message.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				ENABLE_BITCODE = NO;
@@ -997,6 +1005,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CODE_SIGN_ENTITLEMENTS = Message/Message.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
 				ENABLE_BITCODE = NO;
