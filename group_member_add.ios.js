@@ -13,9 +13,13 @@ import {
   View
 } from 'react-native';
 
+import {connect} from 'react-redux';
+
 import NavigationBar from 'react-native-navbar';
 
 import { NativeModules } from 'react-native';
+
+import {addGroupMembers} from "./actions";
 
 var GroupMemberAddViewControllerBridge = NativeModules.GroupMemberAddViewControllerBridge;
 var ProgressHudBridge = NativeModules.ProgressHudBridge;
@@ -53,9 +57,10 @@ var GroupMemberAdd = React.createClass({
     }).then((response) => {
       console.log("status:", response.status);
       if (response.status == 200) {
-        this.props.eventEmitter.emit("member_added", {users:users});
-        ProgressHudBridge.hideHud();
-        this.props.navigator.pop();
+          var e = addGroupMembers(users);
+          this.props.dispatch(e);
+          ProgressHudBridge.hideHud();
+          this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
@@ -165,5 +170,5 @@ const styles = StyleSheet.create({
 });
 
 
-module.exports = GroupMemberAdd;
 
+export default connect((state) => ({...state}))(GroupMemberAdd);

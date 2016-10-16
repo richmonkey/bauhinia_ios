@@ -24,8 +24,9 @@ import {
 import NavigationBar from 'react-native-navbar';
 
 import { NativeModules } from 'react-native';
+import {connect} from 'react-redux';
+import {removeGroupMembers} from "./actions";
 
-//must constructor here
 var GroupMemberRemoveViewControllerBridge = NativeModules.GroupMemberRemoveViewControllerBridge;
 var ProgressHudBridge = NativeModules.ProgressHudBridge;
 
@@ -35,10 +36,11 @@ var GroupMemberRemove = React.createClass({
       return r1 !== r2;
     }
     var ds = new ListView.DataSource({rowHasChanged: rowHasChanged});
-    var data = this.props.users.slice();
+    var data = this.props.members.slice();
 
     for (var i = 0; i < data.length; i++) {
-      data[i].id = i;
+        data[i].id = i;
+        data[i].selected = false;
     }
     return {
       data:data,
@@ -62,9 +64,10 @@ var GroupMemberRemove = React.createClass({
     }).then((response) => {
       console.log("status:", response.status);
       if (response.status == 200) {
-        this.props.eventEmitter.emit("member_removed", {id:u.uid});
-        ProgressHudBridge.hideHud();
-        this.props.navigator.pop();
+          var e = removeGroupMembers([u]);
+          this.props.dispatch(e);
+          ProgressHudBridge.hideHud();
+          this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
@@ -105,11 +108,10 @@ var GroupMemberRemove = React.createClass({
   },
 
   render: function() {
-    console.log("render....");
     var renderRow = (rowData) => {
       var selectImage = () => {
         if (rowData.selected) {
-          return  require('./img/CellBlueSelected.png');
+          return require('./img/CellBlueSelected.png');
         } else {
           return require('./img/CellNotSelected.png');
         }
@@ -191,4 +193,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = GroupMemberRemove;
+export default connect((state) => ({...state}))(GroupMemberRemove);

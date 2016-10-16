@@ -19,6 +19,10 @@ import {
 import { NativeModules, NativeAppEventEmitter } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
+
+import { connect } from 'react-redux';
+import {updateGroupName} from "./actions";
+
 var GroupNameViewControllerBridge = NativeModules.GroupNameViewControllerBridge;
 var ProgressHudBridge = NativeModules.ProgressHudBridge;
 
@@ -59,9 +63,9 @@ class GroupName extends Component {
     }).then((response) => {
       console.log("status:", response.status);
       if (response.status == 200) {
-        this.props.eventEmitter.emit("name_updated", {name:name});
-        ProgressHudBridge.hideHud();
-        this.props.navigator.pop();
+          this.props.dispatch(updateGroupName(name));
+          ProgressHudBridge.hideHud();
+          this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
@@ -76,8 +80,6 @@ class GroupName extends Component {
   }
 
   render() {
-    console.log("render props:", this.props);
-
     var leftButtonConfig = {
       title: '取消',
       handler: () => {
@@ -128,4 +130,5 @@ const styles = StyleSheet.create({
 });
 
 
-module.exports = GroupName;
+export default connect((state) => ({...state}))(GroupName);
+

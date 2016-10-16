@@ -17,18 +17,27 @@ import {
   View
 } from 'react-native';
 
+import { Provider } from 'react-redux';
+
 import { NativeModules, NativeAppEventEmitter } from 'react-native';
 
+import { createStore } from 'redux'
 
 import GroupMemberAdd from './group_member_add.ios';
 import GroupMemberRemove from './group_member_remove.ios';
 import GroupName from './group_name.ios';
 import GroupSetting from './group_setting.ios';
 
+import {groupApp} from "./actions";
+
 class GroupSettingIndex extends Component {
   constructor(props) {
     super(props);
-
+      var initState = {
+          topic:this.props.topic,
+          members:this.props.members
+      };
+      this.store = createStore(groupApp, initState);
   }
   
   componentDidMount() {
@@ -56,11 +65,13 @@ class GroupSettingIndex extends Component {
     }
 
     return (
-      <Navigator ref={(nav) => { self.navigator = nav; }} 
-                 initialRoute={routes[0]}
-                 renderScene={renderScene}
-                 configureScene={(route, routeStack) =>
-                   Navigator.SceneConfigs.FloatFromRight}/>
+        <Provider store={this.store}>
+            <Navigator ref={(nav) => { self.navigator = nav; }} 
+                       initialRoute={routes[0]}
+                       renderScene={renderScene}
+                       configureScene={(route, routeStack) =>
+                           Navigator.SceneConfigs.FloatFromRight}/>
+        </Provider>
     );
   }
 

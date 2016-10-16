@@ -1,12 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-var reactMixin = require('react-mixin');
-var Subscribable = require('Subscribable');
-var EventEmitter = require('EventEmitter');
 
 import React, { Component } from 'react';
 import {
@@ -20,16 +11,9 @@ import {
   View
 } from 'react-native';
 
-import { NativeModules, NativeAppEventEmitter } from 'react-native';
-
-
+import { NativeModules } from 'react-native';
 import NavigationBar from 'react-native-navbar';
-
-import GroupMemberAdd from './group_member_add.ios';
-import GroupMemberRemove from './group_member_remove.ios';
-import GroupName from './group_name.ios';
-
-
+import { connect } from 'react-redux';
 
 var GroupSettingViewControllerBridge = NativeModules.GroupSettingViewControllerBridge;
 var ProgressHudBridge = NativeModules.ProgressHudBridge;
@@ -37,80 +21,24 @@ var ProgressHudBridge = NativeModules.ProgressHudBridge;
 class GroupSetting extends Component {
   constructor(props) {
     super(props);
-    this.state = {members:this.props.members, 
-                  topic:this.props.topic};
-
-    this.eventEmitter = new EventEmitter();
-
   }
   
   componentDidMount() {
-    console.log("add listener");
-    var add_listener = this.addListenerOn(
-      this.eventEmitter,
-      'member_added',
-      (obj) => {
-        console.log(obj);
-        this.addNewMember(obj['users']);
-      }
-    );
 
-    var remove_listener = this.addListenerOn(
-      this.eventEmitter,
-      'member_removed',
-      (obj) => {
-        console.log(obj);
-        this.removeMember(obj['id']);
-      }
-    );
-
-
-    var name_listener = this.addListenerOn(
-      this.eventEmitter,
-      'name_updated',
-      (obj) => {
-        console.log(obj);
-        this.setState({topic:obj['name']});
-      }
-    );
   }
 
-  removeMember(id) {
-    var members = this.state.members;
-    for (var i = 0; i < members.length; i++) {
-      let m = members[i];
-      if (m.uid == id) {
-        members.splice(i, 1);
-        break;
-      }
-    }
-    this.setState({members:members});
-  }
-
-  addNewMember(users) {
-    var members = this.state.members;
-    var all = members.concat(users);
-    this.setState({members:all});
-  }
 
   componentWillUnmount() {
-    var subscription = this.state.add_listener;
-    subscription.remove();
 
-    subscription = this.state.remove_listener;
-    subscription.remove();
-    
-    console.log("remove listener");
   }
 
   handleBack() {
-    console.log("action back");
     GroupSettingViewControllerBridge.handleBack();
   }
 
   render() {
     var self = this;
-    var rows = this.state.members.map(function(i) {
+    var rows = this.props.members.map(function(i) {
       return (
         <View key={i.uid} style={{alignItems:'center', height:78}}>
           <TouchableHighlight underlayColor='gray' style={styles.headButton} onPress={self.handleClickMember.bind(self, i)} >
@@ -132,10 +60,7 @@ class GroupSetting extends Component {
       handler: () => this.handleBack()
     };
 
-    var rightButtonConfig = {
-      title: '确定',
-      handler: () => console.log("ok")
-    };
+
 
     var titleConfig = {
       title: '聊天信息',
@@ -148,8 +73,7 @@ class GroupSetting extends Component {
             statusBar={{hidden:true}}
             style={{}}
             title={titleConfig}
-            leftButton={leftButtonConfig} 
-            rightButton={rightButtonConfig} />
+            leftButton={leftButtonConfig} />
 
         <ScrollView style={styles.container}>
           <View style={styles.block}>
@@ -180,7 +104,7 @@ class GroupSetting extends Component {
               <View style={styles.itemInternal}>
                 <Text>群聊名称</Text>
                 <View style={{flexDirection:'row', alignItems:"center", marginRight:8}}>
-                  <Text>{this.state.topic}</Text>
+                  <Text>{this.props.topic}</Text>
                   <Image source={require('./img/TableViewArrow.png')}
                          style={{marginLeft:4, width:20, height:20}} />
                 </View>
@@ -198,18 +122,12 @@ class GroupSetting extends Component {
   }
 
   handleName(event) {
-    var route = {title: '名称', index: "name", topic:this.state.topic, eventEmitter:this.eventEmitter};
-    console.log("handle name...");
+    var route = {title: '名称', index: "name"};
     this.props.navigator.push(route);
   }
 
   handleRemove(event) {
-    var users = this.props.members.slice();
-    for (var i = 0; i < users.length; i++) {
-      users[i].selected = false;
-    }
-    
-    var route = {title:'删除', index:"member_remove", users:users, eventEmitter:this.eventEmitter};
+    var route = {title:'删除', index:"member_remove"};
     this.props.navigator.push(route);
   }
 
@@ -219,7 +137,7 @@ class GroupSetting extends Component {
       for (var i = 0; i < users.length; i++) {   
         let u = users[i];
 
-        var index = self.state.members.findIndex((element, index, array) => {
+        var index = self.props.members.findIndex((element, index, array) => {
           return (element.uid == u.uid);
         });
         u.is_member = (index != -1);
@@ -227,7 +145,7 @@ class GroupSetting extends Component {
       }
       console.log("users:", users, "length:", users.length);
 
-      var route = {title:'添加', index:"member_add", users:users, eventEmitter:this.eventEmitter};
+      var route = {title:'添加', index:"member_add", users:users};
       self.props.navigator.push(route);
     });
   }
@@ -290,9 +208,6 @@ class GroupSetting extends Component {
 }
 
 
-reactMixin(GroupSetting.prototype, Subscribable.Mixin);
-
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5FCFF',
@@ -342,5 +257,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
-module.exports = GroupSetting;
+export default connect(
+    (state)=> ({...state})
+)(GroupSetting);
