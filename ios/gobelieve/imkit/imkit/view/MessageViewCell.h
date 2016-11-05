@@ -11,7 +11,7 @@
 #import "BubbleView.h"
 #import "IMessage.h"
 
-#define NAME_LABEL_HEIGHT 20
+#define NAME_LABEL_HEIGHT 14
 
 @interface MessageViewCell : UITableViewCell
 

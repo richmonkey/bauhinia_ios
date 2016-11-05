@@ -47,9 +47,9 @@
     self =  [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setup];
-        CGRect frame = CGRectMake(54,
-                                  0,
-                                  self.contentView.frame.size.width - 24,
+        CGRect frame = CGRectMake(52,
+                                  kMarginTop+kPaddingTop,
+                                  self.contentView.frame.size.width - 52,
                                   NAME_LABEL_HEIGHT);
         
         self.nameLabel = [[UILabel alloc] initWithFrame:frame];
@@ -58,12 +58,12 @@
 
         [self.contentView addSubview:self.nameLabel];
         
-        frame = CGRectMake(2, 0, 40, 40);
+        frame = CGRectMake(2, kMarginTop+kPaddingTop, 40, 40);
         self.headView = [[UIImageView alloc] initWithFrame:frame];
         [self.contentView addSubview:self.headView];
         
         frame = CGRectMake(0,
-                           NAME_LABEL_HEIGHT,
+                           kMarginTop+kPaddingTop + NAME_LABEL_HEIGHT,
                            self.contentView.frame.size.width,
                            self.contentView.frame.size.height - NAME_LABEL_HEIGHT);
         
@@ -145,14 +145,15 @@
 
     int msgType = self.msg.isOutgoing ? BubbleMessageTypeOutgoing : BubbleMessageTypeIncoming;
     
-    self.showName = showName;
     if (self.msg.type == MESSAGE_TEXT || self.msg.type == MESSAGE_IMAGE ||
         self.msg.type == MESSAGE_LOCATION || self.msg.type == MESSAGE_AUDIO ||
         self.msg.type == MESSAGE_LINK) {
         self.showHead = YES;
     } else {
         self.showHead = NO;
+        showName = NO;
     }
+    self.showName = showName;
     
     if (self.msg.isOutgoing) {
         self.nameLabel.textAlignment = NSTextAlignmentRight;
@@ -255,8 +256,8 @@
     CGRect headFrame = CGRectMake(2, kMarginTop+kPaddingTop, 40, 40);
     
     if (self.showName) {
-        bubbleFrame.origin.y = NAME_LABEL_HEIGHT;
-        bubbleFrame.size.height -= NAME_LABEL_HEIGHT;
+        bubbleFrame.origin.y = NAME_LABEL_HEIGHT + kMarginTop + kPaddingTop;
+        bubbleFrame.size.height -= NAME_LABEL_HEIGHT - kMarginTop - kPaddingTop;
     }
     
     if (self.msg.isOutgoing) {

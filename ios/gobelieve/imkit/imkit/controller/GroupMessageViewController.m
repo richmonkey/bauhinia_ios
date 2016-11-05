@@ -31,7 +31,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setNormalNavigationButtons];
     self.navigationItem.title = self.groupName;
     
     DraftDB *db = [DraftDB instance];
@@ -114,14 +113,11 @@
     return [[GroupMessageDB instance] markMessageFailure:msg.msgLocalID gid:cid];
 }
 
--(void) setNormalNavigationButtons{
-    
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
-                                                             style:UIBarButtonItemStyleDone
-                                                            target:self
-                                                            action:@selector(returnMainTableViewController)];
-    
-    self.navigationItem.leftBarButtonItem = item;
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        [self returnMainTableViewController];
+    }
+    [super viewWillDisappear:animated];
 }
 
 - (void)returnMainTableViewController {
@@ -135,8 +131,6 @@
                                                                  object:[NSNumber numberWithLongLong:self.groupID]
                                                                userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
-
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

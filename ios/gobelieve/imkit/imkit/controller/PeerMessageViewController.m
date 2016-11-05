@@ -33,10 +33,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    [self setNormalNavigationButtons];
-    
     if (self.peerName.length > 0) {
         self.navigationItem.title = self.peerName;
     } else {
@@ -59,6 +55,14 @@
     
     [self addObserver];
 }
+
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        [self returnMainTableViewController];
+    }
+    [super viewWillDisappear:animated];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -158,15 +162,6 @@
     return [[PeerMessageDB instance] eraseMessageFailure:msg.msgLocalID uid:cid];
 }
 
--(void) setNormalNavigationButtons{
-    
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
-                                                             style:UIBarButtonItemStyleDone
-                                                            target:self
-                                                            action:@selector(returnMainTableViewController)];
-    
-    self.navigationItem.leftBarButtonItem = item;
-}
 
 - (void)returnMainTableViewController {
     DraftDB *db = [DraftDB instance];
@@ -180,7 +175,6 @@
                                                                userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 
