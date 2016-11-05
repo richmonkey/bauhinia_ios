@@ -7,16 +7,17 @@
 //
 
 #import "GroupLoginViewController.h"
-#import <imsdk/IMService.h>
-#import <imkit/IMHttpAPI.h>
-#import <imkit/GroupMessageViewController.h>
-#import <imkit/PeerMessageViewController.h>
-#import <imkit/MessageListViewController.h>
-#import <imkit/MessageDB.h>
+#import <gobelieve/IMService.h>
+#import <gobelieve/IMHttpAPI.h>
+#import <gobelieve/GroupMessageViewController.h>
+#import <gobelieve/PeerMessageViewController.h>
+#import <gobelieve/MessageDB.h>
+#import <gobelieve/PeerMessageDB.h>
+#import <gobelieve/GroupMessageDB.h>
+#import <gobelieve/SyncKeyHandler.h>
 
-
-@interface GroupLoginViewController ()<MessageViewControllerUserDelegate,
-    MessageListViewControllerGroupDelegate> {
+@interface GroupLoginViewController ()<MessageViewControllerUserDelegate
+    > {
     UITextField *tfSender;
     UITextField *tfReceiver;
 }
@@ -44,7 +45,7 @@
     tfSender = [[UITextField alloc] initWithFrame:CGRectMake(52, startHeight + 4, 180, 37)];
     tfSender.textColor = [UIColor whiteColor];
     tfSender.font = [UIFont systemFontOfSize:18];
-    tfSender.placeholder = @"用户id";
+    tfSender.placeholder = @"用户id(1-10)";
     tfSender.keyboardType = UIKeyboardTypeNumberPad;
     [self.view addSubview:tfSender];
     
@@ -60,7 +61,7 @@
     tfReceiver = [[UITextField alloc] initWithFrame:CGRectMake(52, startHeight + 4, 180, 37)];
     tfReceiver.textColor = [UIColor whiteColor];
     tfReceiver.font = [UIFont systemFontOfSize:18];
-    tfReceiver.placeholder = @"群组id";
+    tfReceiver.placeholder = @"群组id(15)";
     tfReceiver.keyboardType = UIKeyboardTypeNumberPad;
     [self.view addSubview:tfReceiver];
     
@@ -120,11 +121,29 @@
 
             NSString *path = [self getDocumentPath];
             NSString *dbPath = [NSString stringWithFormat:@"%@/%lld", path, [tfSender.text longLongValue]];
-            [MessageDB setDBPath:dbPath];
+            [PeerMessageDB instance].dbPath = [NSString stringWithFormat:@"%@/peer", dbPath];
+            [GroupMessageDB instance].dbPath = [NSString stringWithFormat:@"%@/group", dbPath];
+
             
             [IMHttpAPI instance].accessToken = token;
             [[IMService instance] setToken:token];
             [IMService instance].uid = [tfSender.text longLongValue];
+            
+            NSString *fileName = [NSString stringWithFormat:@"%@/synckey", dbPath];
+            SyncKeyHandler *handler = [[SyncKeyHandler alloc] initWithFileName:fileName];
+            [IMService instance].syncKeyHandler = handler;
+            
+            [IMService instance].syncKey = [handler syncKey];
+            NSLog(@"sync key:%lld", [handler syncKey]);
+            
+            [[IMService instance] clearSuperGroupSyncKey];
+            NSDictionary *groups = [handler superGroupSyncKeys];
+            for (NSNumber *k in groups) {
+                NSNumber *v = [groups objectForKey:k];
+                NSLog(@"group id:%@ sync key:%@", k, v);
+                [[IMService instance] addSuperGroupSyncKey:[v longLongValue] gid:[k longLongValue]];
+            }
+            
             [[IMService instance] start];
             
             if (self.deviceToken.length > 0) {

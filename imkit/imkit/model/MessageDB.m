@@ -10,48 +10,13 @@
 #import "MessageDB.h"
 #include <sys/stat.h>
 #include <dirent.h>
-#import <imsdk/util.h>
+#import "util.h"
 #import "ReverseFile.h"
 
-#define HEADER_SIZE 32
-#define IMMAGIC 0x494d494d
-#define IMVERSION (1<<16) //1.0
 
 
-static NSString *dbPath = nil;
+
 @implementation MessageDB
-
-+(void)setDBPath:(NSString *)dir {
-    dbPath = dir;
-
-    NSString *peerDir = [NSString stringWithFormat:@"%@/peer", dbPath];
-    [self mkdir:peerDir];
-    
-    NSString *groupDir = [NSString stringWithFormat:@"%@/group", dbPath];
-    [self mkdir:groupDir];
-}
-
-+(BOOL)mkdir:(NSString*)path {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSError *err;
-    BOOL r = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&err];
-    
-    if (!r) {
-        NSLog(@"mkdir err:%@", err);
-    }
-    return r;
-}
-
-+(NSString*)getDBPath {
-    return dbPath;
-}
-
-+(NSString*)getDocumentPath {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-    return basePath;
-}
-
 
 //4字节magic ＋ 4字节version ＋ 24字节padding
 +(BOOL)writeHeader:(int)fd {

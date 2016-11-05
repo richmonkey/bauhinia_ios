@@ -11,17 +11,16 @@
 #import "IMessage.h"
 #import "MessageDB.h"
 
-@interface PeerConversationIterator : NSObject<ConversationIterator>
 
-@end
+#import "ConversationIterator.h"
+#import "IMessageIterator.h"
 
-@interface PeerMessageIterator : NSObject<IMessageIterator>
-
-@end
 
 @interface PeerMessageDB : NSObject
 
 +(PeerMessageDB*)instance;
+
+@property(nonatomic, copy) NSString *dbPath;
 
 -(id<IMessageIterator>)newMessageIterator:(int64_t)uid;
 -(id<IMessageIterator>)newMessageIterator:(int64_t)uid last:(int)lastMsgID;

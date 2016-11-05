@@ -8,7 +8,7 @@
 */
 
 #import "TextMessageViewController.h"
-#import <imsdk/IMService.h>
+#import "IMService.h"
 
 #import "IMessage.h"
 #import "PeerMessageDB.h"
@@ -59,25 +59,26 @@
     
     [self setup];
 
+
     [self loadConversationData];
     //content scroll to bottom
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
 }
 
-- (void)setup
-{
+- (void)setup {
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.view.backgroundColor = RGBACOLOR(235, 235, 237, 1);
+    
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     int w = CGRectGetWidth(screenBounds);
     int h = CGRectGetHeight(screenBounds);
     
-    
-    CGRect tableFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT);
+    int y = kStatusBarHeight + KNavigationBarHeight;
+    CGRect tableFrame = CGRectMake(0.0f,  y, w,  h - INPUT_HEIGHT);
     CGRect inputFrame = CGRectMake(0.0f, h - INPUT_HEIGHT, w, INPUT_HEIGHT);
-    
-    UIImage *backColor = [UIImage imageNamed:@"chatBack"];
-    UIColor *color = [[UIColor alloc] initWithPatternImage:backColor];
-    [self.view setBackgroundColor:color];
+
     
     self.tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
     self.tableView.delegate = self;
@@ -94,6 +95,7 @@
     [refreshView addSubview:self.refreshControl];
     
     [self.view addSubview:self.tableView];
+
     
     UIView *inputBar = [[UIView alloc] initWithFrame:inputFrame];
     
@@ -189,7 +191,7 @@
     return NO;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
 }
@@ -231,8 +233,10 @@
     int h = CGRectGetHeight(screenBounds);
     int w = CGRectGetWidth(screenBounds);
     
-    CGRect tableViewFrame = CGRectMake(0.0f,  0.0f, w,  h - INPUT_HEIGHT - keyboardRect.size.height);
-    CGFloat y = h - keyboardRect.size.height;
+    int y = kStatusBarHeight + KNavigationBarHeight;
+    
+    CGRect tableViewFrame = CGRectMake(0.0f,  y, w,  h - INPUT_HEIGHT - keyboardRect.size.height - y);
+    y = h - keyboardRect.size.height;
     y -= INPUT_HEIGHT;
     CGRect inputViewFrame = CGRectMake(0, y, self.inputBar.frame.size.width, INPUT_HEIGHT);
     self.inputBar.frame = inputViewFrame;
@@ -296,20 +300,11 @@
     if(!cell) {
         cell = [[MessageViewCell alloc] initWithType:message.type reuseIdentifier:CellID];
     }
-    BubbleMessageType msgType;
     
-    if(message.sender == self.sender) {
-        msgType = BubbleMessageTypeOutgoing;
-    }else{
-        msgType = BubbleMessageTypeIncoming;
-    }
-    
-    if (message.sender == self.sender) {
-        msgType = BubbleMessageTypeOutgoing;
-        [cell setMessage:message msgType:msgType showName:NO];
+    if (message.isOutgoing) {
+        [cell setMessage:message showName:NO];
     } else {
-        msgType = BubbleMessageTypeIncoming;
-        [cell setMessage:message msgType:msgType showName:self.isShowUserName];
+        [cell setMessage:message showName:self.isShowUserName];
     }
 
     return cell;
@@ -335,7 +330,7 @@
         return 0;
     }
     int nameHeight = 0;
-    if (self.isShowUserName && msg.sender != self.sender) {
+    if (self.isShowUserName && msg.isIncomming) {
         nameHeight = NAME_LABEL_HEIGHT;
     }
     
@@ -379,21 +374,10 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     return nil;
-//    CGRect screenRect = [[UIScreen mainScreen] bounds];
-//    CGFloat screenWidth = screenRect.size.width;
-//    
-//    CGRect rect = CGRectMake(0, 0, screenWidth, 30);
-//    MessageTableSectionHeaderView *sectionView = [[MessageTableSectionHeaderView alloc] initWithFrame:rect];
-//    
-//    NSDate *curtDate = [self.timestamps objectAtIndex: section];
-//    NSString *timeStr = [self formatSectionTime:curtDate];
-//    sectionView.sectionHeader.text = timeStr;
-//    
-//    return sectionView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 44;
+    return 0;
 }
 
 
@@ -405,39 +389,16 @@
  * 复用ID区分来去类型
  */
 - (NSString*)getMessageViewCellId:(IMessage*)msg{
-    if(msg.sender == self.sender){
+    if(msg.isOutgoing) {
         return [NSString stringWithFormat:@"MessageCell_%d%d", msg.type,BubbleMessageTypeOutgoing];
-    }else{
+    } else {
         return [NSString stringWithFormat:@"MessageCell_%d%d", msg.type,BubbleMessageTypeIncoming];
     }
 }
 
 
 -(void) sendTextMessage:(NSString*)text {
-    IMessage *msg = [[IMessage alloc] init];
     
-    msg.sender = self.sender;
-    msg.receiver = self.receiver;
-    
-    MessageTextContent *content = [[MessageTextContent alloc] initWithText:text];
-    msg.rawContent = content.raw;
-    msg.timestamp = (int)time(NULL);
-    
-    [self saveMessage:msg];
-    
-    [self sendMessage:msg];
-    
-    [[self class] playMessageSentSound];
-    
-    [self insertMessage:msg];
-}
-
--(void)addObserver {
-
-}
-
--(void)removeObserver {
-
 }
 
 - (void)downloadMessageContent:(IMessage*)message {

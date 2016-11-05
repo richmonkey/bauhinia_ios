@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import <imsdk/IMService.h>
+#import "IMService.h"
 #import "BaseMessageViewController.h"
 
 
@@ -33,14 +33,18 @@
 - (void)disableSend;
 - (void)enableSend;
 
-- (void)addObserver;
-- (void)removeObserver;
-
-- (BOOL)isMessageOutgoing:(IMessage*)msg;
-
 - (void)downloadMessageContent:(IMessage*)message;
 - (void)downloadMessageContent:(NSArray*)messages count:(int)count;
 
+- (void)loadSenderInfo:(IMessage*)msg;
+- (void)loadSenderInfo:(NSArray*)messages count:(int)count;
+
 - (void)stopPlayer;
 
+//protected
+- (void)createMapSnapshot:(IMessage*)msg;
+- (void)reverseGeocodeLocation:(IMessage*)msg;
+- (void)saveMessageAttachment:(IMessage*)msg address:(NSString*)address;
+- (NSString*)localImageURL;
+- (NSString*)localAudioURL;
 @end

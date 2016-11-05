@@ -12,21 +12,25 @@
 #import "RoomLoginViewController.h"
 #elif defined TEST_GROUP
 #import "GroupLoginViewController.h"
+#elif defined TEST_CUSTOMER
+#import "CustomerViewController.h"
+#import "CustomerManager.h"
 #else
 #import "MainViewController.h"
 #endif
 
-#import <imsdk/IMService.h>
-#import <imkit/PeerMessageHandler.h>
-#import <imkit/GroupMessageHandler.h>
-#import <imkit/PeerMessageDB.h>
-#import <imkit/GroupMessageDB.h>
-#import <imkit/IMHttpAPI.H>
+#import <gobelieve/IMService.h>
+#import <gobelieve/PeerMessageHandler.h>
+#import <gobelieve/GroupMessageHandler.h>
+#import <gobelieve/CustomerMessageHandler.h>
+#import <gobelieve/CustomerMessageDB.h>
+#import <gobelieve/CustomerOutbox.h>
+#import <gobelieve/IMHttpAPI.H>
 
-#define UIColorFromRGBHex(rgbValue) [UIColor \
-colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
-green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
-blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
 
 @interface AppDelegate ()
 
@@ -34,6 +38,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #elif defined TEST_GROUP
 @property(nonatomic) GroupLoginViewController *mainViewController;
+#elif defined TEST_CUSTOMER
 
 #else
 @property(nonatomic) MainViewController *mainViewController;
@@ -42,7 +47,9 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 @end
 
 @implementation AppDelegate
-
++(AppDelegate*)instance {
+    return (AppDelegate*)[UIApplication sharedApplication].delegate;
+}
 
 -(NSString*)getDocumentPath {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -52,17 +59,26 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"remote notification:%@", [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]);
-    
+
     //app可以单独部署服务器，给予第三方应用更多的灵活性
     [IMHttpAPI instance].apiURL = @"http://api.gobelieve.io";
-    [IMService instance].host = @"imnode.gobelieve.io";
-
+    [IMService instance].host = @"imnode2.gobelieve.io";
+    
+  
+#if TARGET_IPHONE_SIMULATOR
+    NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
+    [IMService instance].deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
+    NSLog(@"device id:%@", @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61");
+#else
+    NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     NSLog(@"device id:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]);
+#endif
+
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
+    [IMService instance].customerMessageHandler = [CustomerMessageHandler instance];
     [[IMService instance] startRechabilityNotifier];
-    
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
@@ -76,18 +92,17 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
     GroupLoginViewController *mainViewController = [[GroupLoginViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.mainViewController = mainViewController;
+#elif defined TEST_CUSTOMER
+    
+    [[CustomerManager instance] initWithAppID:7 appKey:@"sVDIlIiDUm7tWPYWhi6kfNbrqui3ez44" deviceID:deviceID];
+    CustomerViewController *mainViewController = [[CustomerViewController alloc] init];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
 #else
     MainViewController *mainViewController = [[MainViewController alloc] init];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.mainViewController = mainViewController;
 #endif
-    if ([UIDevice currentDevice].systemVersion.floatValue >= 7.0) {
-        [[UINavigationBar appearance] setBarTintColor:UIColorFromRGBHex(0x00abf1)];
-        [[UINavigationBar appearance] setTitleTextAttributes:
-         [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],
-            NSForegroundColorAttributeName,
-            [UIFont systemFontOfSize:21],NSFontAttributeName, nil]];
-    }
+
     
 #ifdef __IPHONE_8_0
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
@@ -105,6 +120,8 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
     UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
     [application registerForRemoteNotificationTypes:myTypes];
 #endif
+    
+    [self refreshHost];
     return YES;
 }
 
@@ -115,10 +132,25 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
   
     NSLog(@"device token is: %@:%@", deviceToken, newToken);
     
-#ifndef TEST_ROOM
+    self.deviceToken = deviceToken;
+    
+#ifdef TEST_ROOM
+
+#elif defined TEST_GROUP
+    self.mainViewController.deviceToken = newToken;
+#elif defined TEST_CUSTOMER
+    if ([CustomerManager instance].clientID > 0) {
+        [[CustomerManager instance] bindDeviceToken:deviceToken  completion:^(NSError *error) {
+            if (error) {
+                NSLog(@"bind device token fail");
+            } else {
+                NSLog(@"bind device token success");
+            }
+        }];
+    }
+#else
     self.mainViewController.deviceToken = newToken;
 #endif
-    
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -127,7 +159,24 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSLog(@"did receive remote notification:%@", userInfo);
+    NSLog(@"did receive remote notification1:%@", userInfo);
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+    if (notificationSettings.types != UIUserNotificationTypeNone) {
+        NSLog(@"didRegisterUser");
+        [application registerForRemoteNotifications];
+    }
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+{
+    NSLog(@"did receive remote notification2:%@", userInfo);
+    if ([[[userInfo objectForKey:@"xiaowei"] objectForKey:@"new"] intValue] == 1) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"new_message" object:nil userInfo:userInfo];
+    }
+    //Success
+    handler(UIBackgroundFetchResultNewData);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -140,13 +189,19 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 
     [[IMService instance] enterBackground];
+    
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     
     [[IMService instance] enterForeground];
+
+    [self refreshHost];
 }
+
+
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
@@ -154,6 +209,70 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+
+-(void)refreshHost {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSLog(@"refresh host ip...");
+        
+        for (int i = 0; i < 10; i++) {
+            NSString *host = @"imnode.gobelieve.io";
+            NSString *ip = [self resolveIP:host];
+            
+            NSString *apiHost = @"api.gobelieve.io";
+            NSString *apiIP = [self resolveIP:apiHost];
+            
+            
+            NSLog(@"host:%@ ip:%@", host, ip);
+            NSLog(@"api host:%@ ip:%@", apiHost, apiIP);
+            
+            if (ip.length == 0 || apiIP.length == 0) {
+                continue;
+            } else {
+                break;
+            }
+        }
+    });
+}
+
+-(NSString*)IP2String:(struct in_addr)addr {
+    char buf[64] = {0};
+    const char *p = inet_ntop(AF_INET, &addr, buf, 64);
+    if (p) {
+        return [NSString stringWithUTF8String:p];
+    }
+    return nil;
+    
+}
+
+-(NSString*)resolveIP:(NSString*)host {
+    struct addrinfo hints;
+    struct addrinfo *result, *rp;
+    int s;
+    
+    char buf[32];
+    snprintf(buf, 32, "%d", 0);
+    
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = 0;
+    
+    s = getaddrinfo([host UTF8String], buf, &hints, &result);
+    if (s != 0) {
+        NSLog(@"get addr info error:%s", gai_strerror(s));
+        return nil;
+    }
+    NSString *ip = nil;
+    rp = result;
+    if (rp != NULL) {
+        struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
+        ip = [self IP2String:addr->sin_addr];
+    }
+    freeaddrinfo(result);
+    return ip;
 }
 
 @end

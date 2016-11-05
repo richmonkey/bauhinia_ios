@@ -17,6 +17,10 @@
 
 @end
 
+@implementation CustomerMessage
+
+@end
+
 @implementation RoomMessage
 
 @end
@@ -25,16 +29,16 @@
 
 @end
 
-@implementation MessagePeerACK
-
-@end
-
-
 @implementation AuthenticationToken
 
 @end
 
-@implementation LoginPoint
+
+@implementation GroupSyncKey
+
+@end
+
+@implementation VOIPControl
 
 @end
 
@@ -51,10 +55,6 @@
     
     if (self.cmd == MSG_HEARTBEAT || self.cmd == MSG_PING) {
         return [NSData dataWithBytes:buf length:HEAD_SIZE];
-    } else if (self.cmd == MSG_AUTH) {
-        int64_t uid = [(NSNumber*)self.body longLongValue];
-        writeInt64(uid, p);
-        return [NSData dataWithBytes:buf length:HEAD_SIZE+8];
     } else if (self.cmd == MSG_AUTH_TOKEN) {
         AuthenticationToken *auth = (AuthenticationToken*)self.body;
         *p++ = auth.platformID;
@@ -85,6 +85,25 @@
         }
         memcpy(p, s, l);
         return [NSData dataWithBytes:buf length:HEAD_SIZE + 24 +l];
+    } else if (self.cmd == MSG_CUSTOMER || self.cmd == MSG_CUSTOMER_SUPPORT) {
+        CustomerMessage *m = (CustomerMessage*)self.body;
+        writeInt64(m.customerAppID, p);
+        p += 8;
+        writeInt64(m.customerID, p);
+        p += 8;
+        writeInt64(m.storeID, p);
+        p += 8;
+        writeInt64(m.sellerID, p);
+        p += 8;
+        writeInt32(m.timestamp, p);
+        p += 4;
+        const char *s = [m.content UTF8String];
+        size_t l = strlen(s);
+        if ((l + 36) >= 32*1024) {
+            return nil;
+        }
+        memcpy(p, s, l);
+        return [NSData dataWithBytes:buf length:HEAD_SIZE + 36 + l];
     } else if (self.cmd == MSG_ACK) {
         writeInt32([(NSNumber*)self.body intValue], p);
         return [NSData dataWithBytes:buf length:HEAD_SIZE+4];
@@ -100,7 +119,7 @@
         writeInt64(roomID, p);
         p += 8;
         return [NSData dataWithBytes:buf length:HEAD_SIZE + 8];
-    } else if (self.cmd == MSG_ROOM_IM) {
+    } else if (self.cmd == MSG_ROOM_IM || self.cmd == MSG_RT) {
         RoomMessage *rm = (RoomMessage*)self.body;
         writeInt64(rm.sender, p);
         p += 8;
@@ -118,6 +137,29 @@
         writeInt32([u intValue], p);
         p += 4;
         return [NSData dataWithBytes:buf length:HEAD_SIZE + 4];
+    } else if (self.cmd == MSG_VOIP_CONTROL) {
+        VOIPControl *ctl = (VOIPControl*)self.body;
+        writeInt64(ctl.sender, p);
+        p += 8;
+        writeInt64(ctl.receiver, p);
+        p += 8;
+        if (ctl.content.length > 0) {
+            [ctl.content getBytes:p length:ctl.content.length];
+            p += ctl.content.length;
+        }
+        return [NSData dataWithBytes:buf length:HEAD_SIZE + 16 + ctl.content.length];
+    } else if (self.cmd == MSG_SYNC) {
+        NSNumber *u = (NSNumber*)self.body;
+        writeInt64([u longLongValue], p);
+        p += 8;
+        return [NSData dataWithBytes:buf length:HEAD_SIZE + 8];
+    } else if (self.cmd == MSG_SYNC_GROUP) {
+        GroupSyncKey *s = (GroupSyncKey*)self.body;
+        writeInt64(s.groupID, p);
+        p += 8;
+        writeInt64(s.syncKey, p);
+        p += 8;
+        return [NSData dataWithBytes:buf length:HEAD_SIZE + 16];
     }
     return nil;
 }
@@ -129,7 +171,7 @@
     self.cmd = *p;
     p += 4;
     NSLog(@"seq:%d cmd:%d", self.seq, self.cmd);
-    if (self.cmd == MSG_RST || self.cmd == MSG_PONG) {
+    if (self.cmd == MSG_PONG) {
         return YES;
     } else if (self.cmd == MSG_AUTH_STATUS) {
         int status = readInt32(p);
@@ -148,18 +190,24 @@
         m.content = [[NSString alloc] initWithBytes:p length:data.length-32 encoding:NSUTF8StringEncoding];
         self.body = m;
         return YES;
+    } else if (self.cmd == MSG_CUSTOMER || self.cmd == MSG_CUSTOMER_SUPPORT) {
+        CustomerMessage *m = [[CustomerMessage alloc] init];
+        m.customerAppID = readInt64(p);
+        p += 8;
+        m.customerID = readInt64(p);
+        p += 8;
+        m.storeID = readInt64(p);
+        p += 8;
+        m.sellerID = readInt64(p);
+        p += 8;
+        m.timestamp = readInt32(p);
+        p += 4;
+        m.content = [[NSString alloc] initWithBytes:p length:data.length- HEAD_SIZE - 36 encoding:NSUTF8StringEncoding];
+        self.body = m;
+        return YES;
     } else if (self.cmd == MSG_ACK) {
         int seq = readInt32(p);
         self.body = [NSNumber numberWithInt:seq];
-        return YES;
-    } else if (self.cmd == MSG_PEER_ACK) {
-        MessagePeerACK *ack = [[MessagePeerACK alloc] init];
-        ack.sender = readInt64(p);
-        p += 8;
-        ack.receiver = readInt64(p);
-        p += 8;
-        ack.msgLocalID = readInt32(p);
-        self.body = ack;
         return YES;
     } else if (self.cmd == MSG_INPUTING) {
         MessageInputing *inputing = [[MessageInputing alloc] init];
@@ -172,16 +220,7 @@
     } else if (self.cmd == MSG_GROUP_NOTIFICATION) {
         self.body = [[NSString alloc] initWithBytes:p length:data.length-HEAD_SIZE encoding:NSUTF8StringEncoding];
         return YES;
-    } else if (self.cmd == MSG_LOGIN_POINT) {
-        LoginPoint *lp = [[LoginPoint alloc] init];
-        lp.upTimestamp = readInt32(p);
-        p += 4;
-        lp.platformID = *p;
-        p++;
-        lp.deviceID = [[NSString alloc] initWithBytes:p length:data.length-13 encoding:NSUTF8StringEncoding];
-        self.body = lp;
-        return YES;
-    } else if (self.cmd == MSG_ROOM_IM) {
+    } else if (self.cmd == MSG_ROOM_IM || self.cmd == MSG_RT) {
         RoomMessage *rm = [[RoomMessage alloc] init];
         rm.sender = readInt64(p);
         p += 8;
@@ -193,11 +232,36 @@
     } else if (self.cmd == MSG_SYSTEM) {
         self.body = [[NSString alloc] initWithBytes:p length:data.length-HEAD_SIZE encoding:NSUTF8StringEncoding];
         return YES;
+    } else if (self.cmd == MSG_VOIP_CONTROL) {
+        VOIPControl *ctl = [[VOIPControl alloc] init];
+        ctl.sender = readInt64(p);
+        p += 8;
+        ctl.receiver = readInt64(p);
+        p += 8;
+        ctl.content = [NSData dataWithBytes:p length:data.length - 24];
+        self.body = ctl;
+        return YES;
+    } else if (self.cmd == MSG_SYNC_BEGIN ||
+               self.cmd == MSG_SYNC_END ||
+               self.cmd == MSG_SYNC_NOTIFY) {
+        int64_t k = readInt64(p);
+        p += 8;
+        self.body = [NSNumber numberWithLongLong:k];
+        return YES;
+    } else if (self.cmd == MSG_SYNC_GROUP_BEGIN ||
+               self.cmd == MSG_SYNC_GROUP_END ||
+               self.cmd == MSG_SYNC_GROUP_NOTIFY) {
+        GroupSyncKey *groupSyncKey = [[GroupSyncKey alloc] init];
+        groupSyncKey.groupID = readInt64(p);
+        p += 8;
+        groupSyncKey.syncKey = readInt64(p);
+        p += 8;
+        self.body = groupSyncKey;
+        return YES;
     } else {
         self.body = [NSData dataWithBytes:p length:data.length-8];
         return YES;
     }
-    return NO;
 }
 
 @end

@@ -18,22 +18,16 @@
 #import <Foundation/Foundation.h>
 #import "IMessage.h"
 
-//由近到远遍历消息
-@protocol IMessageIterator
--(IMessage*)next;
-@end
 
-@protocol ConversationIterator
--(Conversation*)next;
-@end
+#define HEADER_SIZE 32
+#define IMMAGIC 0x494d494d
+#define IMVERSION (1<<16) //1.0
+
 
 @class ReverseFile;
 
 @interface MessageDB : NSObject
-+(void)setDBPath:(NSString*)dir;
-+(NSString*)getDBPath;
 
-+(NSString*)getDocumentPath;
 +(BOOL)writeHeader:(int)fd;
 +(BOOL)checkHeader:(int)fd;
 +(BOOL)writeMessage:(IMessage*)msg fd:(int)fd;

@@ -9,13 +9,18 @@
 
 #import "MainViewController.h"
 
-#import <imsdk/IMService.h>
-#import <imkit/TextMessageViewController.h>
-#import <imkit/MessageViewController.h>
-#import <imkit/IMHttpAPI.h>
-#import <imkit/PeerMessageViewController.h>
-#import <imkit/MessageListViewController.h>
-#import <imkit/MessageDB.h>
+#import <gobelieve/IMService.h>
+#import <gobelieve/TextMessageViewController.h>
+#import <gobelieve/MessageViewController.h>
+#import <gobelieve/IMHttpAPI.h>
+#import <gobelieve/PeerMessageViewController.h>
+#import <gobelieve/MessageDB.h>
+#import <gobelieve/PeerMessageDB.h>
+#import <gobelieve/GroupMessageDB.h>
+#import <gobelieve/CustomerMessageDB.h>
+#import <gobelieve/SyncKeyHandler.h>
+
+#import "MessageListViewController.h"
 
 @interface MainViewController ()<MessageViewControllerUserDelegate,
     MessageListViewControllerGroupDelegate>{
@@ -122,12 +127,28 @@
             
             NSString *path = [self getDocumentPath];
             NSString *dbPath = [NSString stringWithFormat:@"%@/%lld", path, [tfSender.text longLongValue]];
-            [MessageDB setDBPath:dbPath];
-            
+            [PeerMessageDB instance].dbPath = [NSString stringWithFormat:@"%@/peer", dbPath];
+            [GroupMessageDB instance].dbPath = [NSString stringWithFormat:@"%@/group", dbPath];
+            [CustomerMessageDB instance].dbPath = [NSString stringWithFormat:@"%@/customer", dbPath];
             
             [IMHttpAPI instance].accessToken = token;
             [IMService instance].token = token;
             [IMService instance].uid = [tfSender.text longLongValue];
+            
+            NSString *fileName = [NSString stringWithFormat:@"%@/synckey", dbPath];
+            SyncKeyHandler *handler = [[SyncKeyHandler alloc] initWithFileName:fileName];
+            [IMService instance].syncKeyHandler = handler;
+            
+            [IMService instance].syncKey = [handler syncKey];
+            NSLog(@"sync key:%lld", [handler syncKey]);
+            
+            [[IMService instance] clearSuperGroupSyncKey];
+            NSDictionary *groups = [handler superGroupSyncKeys];
+            for (NSNumber *k in groups) {
+                NSNumber *v = [groups objectForKey:k];
+                NSLog(@"group id:%@ sync key:%@", k, v);
+                [[IMService instance] addSuperGroupSyncKey:[v longLongValue] gid:[k longLongValue]];
+            }
             
             [[IMService instance] start];
             
@@ -178,9 +199,21 @@
     [urlRequest setAllHTTPHeaderFields:headers];
 
 
+    
+#if TARGET_IPHONE_SIMULATOR
+    NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
+    NSLog(@"device id:%@", @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61");
+#else
+    NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSLog(@"device id:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]);
+#endif
+    
+    
     NSMutableDictionary *obj = [NSMutableDictionary dictionary];
     [obj setObject:[NSNumber numberWithLongLong:uid] forKey:@"uid"];
     [obj setObject:[NSString stringWithFormat:@"测试用户%lld", uid] forKey:@"user_name"];
+    [obj setObject:[NSNumber numberWithInt:PLATFORM_IOS] forKey:@"platform_id"];
+    [obj setObject:deviceID forKey:@"device_id"];
     
     NSData *postBody = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
 
