@@ -23,4 +23,5 @@
 -(Group*)loadGroup:(int64_t)groupID;
 -(NSString*)getGroupTopic:(int64_t)groupID;
 -(void)setGroupTopic:(int64_t)groupID topic:(NSString*)topic;
+-(void)setGroupMaster:(int64_t)groupID master:(int64_t)master;
 @end

@@ -199,4 +199,10 @@
     [db setString:topic forKey:k1];
 }
 
+-(void)setGroupMaster:(int64_t)groupID master:(int64_t)master {
+    LevelDB *db = [LevelDB defaultLevelDB];
+    NSString *key = [self groupKeyFromGroupID:groupID];
+    NSString *k1 = [key stringByAppendingString:@"_master"];
+    [db setInt:master forKey:k1];
+}
 @end

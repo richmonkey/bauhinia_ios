@@ -238,6 +238,10 @@
               if (name.length > 0) {
                   [[GroupDB instance] setGroupTopic:groupID topic:name];
               }
+              int64_t masterID = [[dict objectForKey:@"master"] longLongValue];
+              if (masterID > 0) {
+                  [[GroupDB instance] setGroupMaster:groupID master:masterID];
+              }
               
               NSArray *members = [dict objectForKey:@"members"];
               for (NSDictionary *d in members) {
