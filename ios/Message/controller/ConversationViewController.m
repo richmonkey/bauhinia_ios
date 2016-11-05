@@ -297,7 +297,7 @@
 - (void)updateNotificationDesc:(Conversation*)conv {
     IMessage *message = conv.message;
     if (message.type == MESSAGE_GROUP_NOTIFICATION) {
-        MessageNotificationContent *notification = message.notificationContent;
+        MessageGroupNotificationContent *notification = message.notificationContent;
         int type = notification.notificationType;
         if (type == NOTIFICATION_GROUP_CREATED) {
             if (self.currentUID == notification.master) {
@@ -775,7 +775,7 @@
 }
 
 -(void)onGroupNotification:(NSString*)text {
-    MessageNotificationContent *notification = [[MessageNotificationContent alloc] initWithNotification:text];
+    MessageGroupNotificationContent *notification = [[MessageGroupNotificationContent alloc] initWithNotification:text];
     int64_t groupID = notification.groupID;
     
     IMessage *msg = [[IMessage alloc] init];

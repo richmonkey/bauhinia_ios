@@ -17,6 +17,7 @@
 #import "APIRequest.h"
 #import "JSBadgeView.h"
 #import <gobelieve/IMHttpAPI.h>
+#import <gobelieve/SyncKeyHandler.h>
 
 @interface MainTabBarController ()
 @property(nonatomic)dispatch_source_t refreshTimer;
@@ -95,6 +96,23 @@
     [IMService instance].token = [Token instance].accessToken;
     [IMService instance].uid = [Token instance].uid;
     NSLog(@"access token:%@", [Token instance].accessToken);
+    
+    NSString *dbPath = [self getDocumentPath];
+    NSString *fileName = [NSString stringWithFormat:@"%@/synckey", dbPath];
+    SyncKeyHandler *handler = [[SyncKeyHandler alloc] initWithFileName:fileName];
+    [IMService instance].syncKeyHandler = handler;
+    
+    [IMService instance].syncKey = [handler syncKey];
+    NSLog(@"sync key:%lld", [handler syncKey]);
+    
+    [[IMService instance] clearSuperGroupSyncKey];
+    NSDictionary *groups = [handler superGroupSyncKeys];
+    for (NSNumber *k in groups) {
+        NSNumber *v = [groups objectForKey:k];
+        NSLog(@"group id:%@ sync key:%@", k, v);
+        [[IMService instance] addSuperGroupSyncKey:[v longLongValue] gid:[k longLongValue]];
+    }
+    
     [[IMService instance] start];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -113,6 +131,12 @@
     [application registerUserNotificationSettings:settings];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRegisterForRemoteNotificationsWithDeviceToken:) name:@"didRegisterForRemoteNotificationsWithDeviceToken" object:nil];
+}
+
+-(NSString*)getDocumentPath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return basePath;
 }
 
 
