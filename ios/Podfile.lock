@@ -52,7 +52,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0)
-  - gobelieve (from `git@github.com:GoBelieveIO/im_ios.git`)
+  - gobelieve (from `./dev.podspec`)
   - JSBadgeView
   - leveldb-library (~> 1.18.2)
   - React/Core (from `../node_modules/react-native`)
@@ -67,18 +67,13 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   gobelieve:
-    :git: git@github.com:GoBelieveIO/im_ios.git
+    :path: ./dev.podspec
   React:
     :path: ../node_modules/react-native
 
-CHECKOUT OPTIONS:
-  gobelieve:
-    :commit: f73f78a69035f9955dd1ad176cac70705075a70f
-    :git: git@github.com:GoBelieveIO/im_ios.git
-
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  gobelieve: 07be49e1550e51ebe898ccc445764f4b9ca07379
+  gobelieve: 2dbcacac0037d3450acdf33b03e6ad88e854e311
   JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
   leveldb-library: ef0453697c0fda3a9e550e5650e52976e6724548
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
@@ -87,6 +82,6 @@ SPEC CHECKSUMS:
   Toast: 0773b8fc0e97352ca6054517bec7ebdd4110029d
   ZBarSDK: 4c1b5daeb7d6cc67dc9355e690af0230a661f6ec
 
-PODFILE CHECKSUM: 01a9e242e1ae25bd92826a6c6ed55edb34eae514
+PODFILE CHECKSUM: ed9f245847bcd9b7f6d1fc717f0304767cbcefb1
 
 COCOAPODS: 1.0.1
