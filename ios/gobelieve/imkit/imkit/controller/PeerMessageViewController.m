@@ -16,10 +16,12 @@
 #import "DraftDB.h"
 #import "Constants.h"
 #import "PeerOutbox.h"
+#import "UIImage+Resize.h"
+#import "SDImageCache.h"
 
 #define PAGE_COUNT 10
 
-@interface PeerMessageViewController ()<PeerOutboxObserver>
+@interface PeerMessageViewController ()<OutboxObserver, AudioDownloaderObserver>
 
 @end
 
@@ -63,21 +65,18 @@
     // Dispose of any resources that can be recreated.
 }
 
-
 -(void)addObserver {
-    [super addObserver];
+    [[AudioDownloader instance] addDownloaderObserver:self];
     [[PeerOutbox instance] addBoxObserver:self];
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addPeerMessageObserver:self];
-    [[IMService instance] addLoginPointObserver:self];
 }
 
 -(void)removeObserver {
-    [super removeObserver];
+    [[AudioDownloader instance] removeDownloaderObserver:self];
     [[PeerOutbox instance] removeBoxObserver:self];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removePeerMessageObserver:self];
-    [[IMService instance] removeLoginPointObserver:self];
 }
 
 - (int64_t)sender {
@@ -96,6 +95,16 @@
    BOOL r =  (msg.sender == self.currentUID && msg.receiver == self.peerUID) ||
                 (msg.receiver == self.currentUID && msg.sender == self.peerUID);
     return r;
+}
+
+-(void)saveMessageAttachment:(IMessage*)msg address:(NSString*)address {
+    //以附件的形式存储，以免第二次查询
+    MessageAttachmentContent *att = [[MessageAttachmentContent alloc] initWithAttachment:msg.msgLocalID address:address];
+    IMessage *attachment = [[IMessage alloc] init];
+    attachment.sender = msg.sender;
+    attachment.receiver = msg.receiver;
+    attachment.rawContent = att.raw;
+    [self saveMessage:attachment];
 }
 
 
@@ -174,6 +183,8 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+
+
 #pragma mark - MessageObserver
 - (void)onPeerMessage:(IMMessage*)im {
     if (im.sender != self.peerUID && im.receiver != self.peerUID) {
@@ -193,6 +204,7 @@
     m.msgLocalID = im.msgLocalID;
     m.rawContent = im.content;
     m.timestamp = im.timestamp;
+    m.isOutgoing = (im.sender == self.currentUID);
     
     if (self.textMode && m.type != MESSAGE_TEXT) {
         return;
@@ -237,10 +249,6 @@
     }
 }
 
--(void)onLoginPoint:(LoginPoint*)lp {
-    NSLog(@"login point:%@, platform id:%d", lp.deviceID, lp.platformID);
-}
-
 - (void)loadConversationData {
     int count = 0;
     id<IMessageIterator> iterator =  [[PeerMessageDB instance] newMessageIterator: self.peerUID];
@@ -259,6 +267,7 @@
                 [self.attachments setObject:att
                                      forKey:[NSNumber numberWithInt:att.msgLocalID]];
             } else {
+                msg.isOutgoing = (msg.sender == self.currentUID);
                 [self.messages insertObject:msg atIndex:0];
                 if (++count >= PAGE_COUNT) {
                     break;
@@ -269,6 +278,7 @@
     }
 
     [self downloadMessageContent:self.messages count:count];
+    [self loadSenderInfo:self.messages count:count];
     [self checkMessageFailureFlag:self.messages count:count];
     
     [self initTableViewData];
@@ -300,6 +310,7 @@
                                  forKey:[NSNumber numberWithInt:att.msgLocalID]];
             
         } else {
+            msg.isOutgoing = (msg.sender == self.currentUID);
             [self.messages insertObject:msg atIndex:0];
             if (++count >= PAGE_COUNT) {
                 break;
@@ -311,6 +322,7 @@
         return;
     }
 
+    [self loadSenderInfo:self.messages count:count];
     [self downloadMessageContent:self.messages count:count];
     [self checkMessageFailureFlag:self.messages count:count];
     
@@ -339,7 +351,7 @@
 }
 
 -(void)checkMessageFailureFlag:(IMessage*)msg {
-    if ([self isMessageOutgoing:msg]) {
+    if (msg.isOutgoing) {
         if (msg.type == MESSAGE_AUDIO) {
             msg.uploading = [[PeerOutbox instance] isUploading:msg];
         } else if (msg.type == MESSAGE_IMAGE) {
@@ -418,6 +430,151 @@
         m.flags = m.flags|MESSAGE_FLAG_FAILURE;
         m.uploading = NO;
     }
+}
+
+
+#pragma mark - Audio Downloader Observer
+- (void)onAudioDownloadSuccess:(IMessage*)msg {
+    if ([self isInConversation:msg]) {
+        IMessage *m = [self getMessageWithID:msg.msgLocalID];
+        m.downloading = NO;
+    }
+}
+
+- (void)onAudioDownloadFail:(IMessage*)msg {
+    if ([self isInConversation:msg]) {
+        IMessage *m = [self getMessageWithID:msg.msgLocalID];
+        m.downloading = NO;
+    }
+}
+
+
+#pragma mark - send message
+- (void)sendLocationMessage:(CLLocationCoordinate2D)location address:(NSString*)address {
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = self.sender;
+    msg.receiver = self.receiver;
+
+    MessageLocationContent *content = [[MessageLocationContent alloc] initWithLocation:location];
+    msg.rawContent = content.raw;
+    
+    content = msg.locationContent;
+    content.address = address;
+    
+    msg.timestamp = (int)time(NULL);
+    msg.isOutgoing = YES;
+
+    [self loadSenderInfo:msg];
+    
+    [self saveMessage:msg];
+    
+    [self sendMessage:msg];
+    
+    [[self class] playMessageSentSound];
+    
+    [self createMapSnapshot:msg];
+    if (content.address.length == 0) {
+        [self reverseGeocodeLocation:msg];
+    } else {
+        [self saveMessageAttachment:msg address:content.address];
+    }
+    [self insertMessage:msg];
+}
+
+- (void)sendAudioMessage:(NSString*)path second:(int)second {
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = self.sender;
+    msg.receiver = self.receiver;
+
+    MessageAudioContent *content = [[MessageAudioContent alloc] initWithAudio:[self localAudioURL] duration:second];
+    
+    msg.rawContent = content.raw;
+    msg.timestamp = (int)time(NULL);
+    msg.isOutgoing = YES;
+    
+    [self loadSenderInfo:msg];
+    
+    //todo 优化读文件次数
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    FileCache *fileCache = [FileCache instance];
+    [fileCache storeFile:data forKey:content.url];
+    
+    [self saveMessage:msg];
+    
+    [self sendMessage:msg];
+    
+    [[self class] playMessageSentSound];
+    
+    [self insertMessage:msg];
+}
+
+
+- (void)sendImageMessage:(UIImage*)image {
+    if (image.size.height == 0) {
+        return;
+    }
+    
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = self.sender;
+    msg.receiver = self.receiver;
+
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenHeight = screenRect.size.height;
+    float newHeight = screenHeight;
+    float newWidth = newHeight*image.size.width/image.size.height;
+    
+    MessageImageContent *content = [[MessageImageContent alloc] initWithImageURL:[self localImageURL] width:newWidth height:newHeight];
+    msg.rawContent = content.raw;
+    msg.timestamp = (int)time(NULL);
+    msg.isOutgoing = YES;
+    
+    [self loadSenderInfo:msg];
+    
+    UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
+    image = [image resizedImage:CGSizeMake(newWidth, newHeight) interpolationQuality:kCGInterpolationDefault];
+    
+    [[SDImageCache sharedImageCache] storeImage:image forKey:content.imageURL];
+    NSString *littleUrl =  [content littleImageURL];
+    [[SDImageCache sharedImageCache] storeImage:sizeImage forKey: littleUrl];
+    
+    [self saveMessage:msg];
+    
+    [self sendMessage:msg withImage:image];
+    
+    [self insertMessage:msg];
+    
+    [[self class] playMessageSentSound];
+}
+
+-(void) sendTextMessage:(NSString*)text {
+    IMessage *msg = [[IMessage alloc] init];
+    
+    msg.sender = self.sender;
+    msg.receiver = self.receiver;
+
+    MessageTextContent *content = [[MessageTextContent alloc] initWithText:text];
+    msg.rawContent = content.raw;
+    msg.timestamp = (int)time(NULL);
+    msg.isOutgoing = YES;
+    [self loadSenderInfo:msg];
+    
+    [self saveMessage:msg];
+    
+    [self sendMessage:msg];
+    
+    [[self class] playMessageSentSound];
+    
+    [self insertMessage:msg];
+}
+
+
+-(void)resendMessage:(IMessage*)message {
+    message.flags = message.flags & (~MESSAGE_FLAG_FAILURE);
+    [self eraseMessageFailure:message];
+    [self sendMessage:message];
 }
 
 

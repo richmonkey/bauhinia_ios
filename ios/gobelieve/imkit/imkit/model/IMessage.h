@@ -18,6 +18,7 @@
 #define MESSAGE_LOCATION 4
 #define MESSAGE_GROUP_NOTIFICATION 5 //群通知
 #define MESSAGE_LINK 6
+#define MESSAGE_HEADLINE 7  //客服的标题
 
 #define MESSAGE_TIME_BASE  254 //虚拟的消息，不会存入磁盘
 #define MESSAGE_ATTACHMENT 255 //消息附件， 只存在本地磁盘
@@ -42,6 +43,7 @@
 #define CONVERSATION_PEER 1
 #define CONVERSATION_GROUP 2
 #define CONVERSATION_SYSTEM 3
+#define CONVERSATION_CUSTOMER_SERVICE 4
 
 @class IUser;
 @class IGroup;
@@ -49,6 +51,7 @@
 @interface MessageContent : NSObject
 
 @property(nonatomic) NSString *raw;
+@property(nonatomic, readonly) NSString *uuid;
 @end
 
 @interface MessageTextContent : MessageContent
@@ -63,13 +66,20 @@
 @property(nonatomic, copy) NSString *url;
 @property(nonatomic) int duration;
 
+-(MessageAudioContent*)cloneWithURL:(NSString*)url;
+
 @end
 
 @interface MessageImageContent : MessageContent
-- (id)initWithImageURL:(NSString*)imageURL;
+- (id)initWithImageURL:(NSString *)imageURL width:(int)width height:(int)height;
 
 @property(nonatomic, readonly) NSString *imageURL;
 @property(nonatomic, readonly) NSString *littleImageURL;
+
+@property(nonatomic, readonly) int width;
+@property(nonatomic, readonly) int height;
+
+-(MessageImageContent*)cloneWithURL:(NSString*)url;
 @end
 
 @interface MessageLinkContent : MessageContent
@@ -89,6 +99,10 @@
 @end
 
 @interface MessageNotificationContent : MessageContent
+@property(nonatomic, copy) NSString *notificationDesc;
+@end
+
+@interface MessageGroupNotificationContent : MessageNotificationContent
 
 @property(nonatomic) int notificationType;
 
@@ -108,8 +122,6 @@
 
 @property(nonatomic, copy) NSString *rawNotification;
 
-@property(nonatomic, copy) NSString *notificationDesc;
-
 -(id)initWithNotification:(NSString*)raw;
 
 @end
@@ -124,11 +136,17 @@
 
 @end
 
-@interface MessageTimeBaseContent : MessageContent
+@interface MessageTimeBaseContent : MessageNotificationContent
 @property(nonatomic, readonly) int timestamp;
-@property(nonatomic, copy) NSString *timeDesc;
 
 -(id)initWithTimestamp:(int)ts;
+
+@end
+
+@interface MessageHeadlineContent : MessageNotificationContent
+@property(nonatomic, readonly) NSString *headline;
+
+-(id)initWithHeadline:(NSString*)headline;
 
 @end
 
@@ -145,7 +163,7 @@
 @property(nonatomic, readonly) MessageAudioContent *audioContent;
 @property(nonatomic, readonly) MessageImageContent *imageContent;
 @property(nonatomic, readonly) MessageLocationContent *locationContent;
-@property(nonatomic, readonly) MessageNotificationContent *notificationContent;
+@property(nonatomic, readonly) MessageGroupNotificationContent *notificationContent;
 @property(nonatomic, readonly) MessageLinkContent *linkContent;
 @property(nonatomic, readonly) MessageAttachmentContent *attachmentContent;
 @property(nonatomic, readonly) MessageTimeBaseContent *timeBaseContent;
@@ -154,6 +172,10 @@
 @property(nonatomic, readonly) BOOL isACK;
 @property(nonatomic, readonly) BOOL isFailure;
 @property(nonatomic, readonly) BOOL isListened;
+
+//当前用户发出的消息
+@property(nonatomic) BOOL isOutgoing;
+@property(nonatomic, readonly) BOOL isIncomming;//!isOutgoing
 
 //UI, kvo
 @property(nonatomic) BOOL uploading;
@@ -164,6 +186,14 @@
 
 @property(nonatomic) IUser *senderInfo;
 
+@end
+
+@interface ICustomerMessage : IMessage
+@property(nonatomic) int64_t customerAppID;
+@property(nonatomic) int64_t customerID;
+@property(nonatomic) int64_t storeID;
+@property(nonatomic) int64_t sellerID;
+@property(nonatomic) BOOL  isSupport;
 @end
 
 @interface Conversation : NSObject

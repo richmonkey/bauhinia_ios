@@ -44,40 +44,9 @@
 - (void)loadEarlierData {
     NSAssert(NO, @"not implement");
 }
-
-- (BOOL)isInConversation:(IMessage*)msg {
+- (BOOL)markMesageListened:(IMessage*)msg {
     NSAssert(NO, @"not implement");
     return NO;
-}
-
--(BOOL)saveMessage:(IMessage*)msg {
-    NSAssert(NO, @"not implement");
-    return NO;
-}
--(BOOL)removeMessage:(IMessage*)msg {
-    NSAssert(NO, @"not implement");
-    return NO;
-}
--(BOOL)markMessageFailure:(IMessage*)msg {
-    NSAssert(NO, @"not implement");
-    return NO;
-}
--(BOOL)markMesageListened:(IMessage*)msg {
-    NSAssert(NO, @"not implement");
-    return NO;
-}
-
--(BOOL)eraseMessageFailure:(IMessage*)msg {
-    NSAssert(NO, @"not implement");
-    return NO;
-}
-
-- (void)sendMessage:(IMessage *)msg withImage:(UIImage*)image {
-    NSAssert(NO, @"not implement");
-}
-
-- (void)sendMessage:(IMessage*)msg {
-    NSAssert(NO, @"not implement");
 }
 
 
@@ -105,6 +74,7 @@
             MessageTimeBaseContent *tb = [[MessageTimeBaseContent alloc] initWithTimestamp:msg.timestamp];
             IMessage *m = [[IMessage alloc] init];
             m.rawContent = tb.raw;
+            m.notificationContent.notificationDesc = [self formatSectionTime:[NSDate dateWithTimeIntervalSince1970:tb.timestamp]];
             [newMessages addObject:m];
             lastDate = [NSDate dateWithTimeIntervalSince1970:msg.timestamp];
         }
@@ -133,6 +103,7 @@
         MessageTimeBaseContent *tb = [[MessageTimeBaseContent alloc] initWithTimestamp:msg.timestamp];
         IMessage *m = [[IMessage alloc] init];
         m.rawContent = tb.raw;
+        m.notificationContent.notificationDesc = [self formatSectionTime:[NSDate dateWithTimeIntervalSince1970:tb.timestamp]];
         [self.messages addObject:m];
         NSIndexPath *indexPath = nil;
         indexPath = [NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0];

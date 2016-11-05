@@ -11,18 +11,14 @@
 
 #import "IMessage.h"
 #import "MessageDB.h"
+#import "IMessageIterator.h"
+#import "ConversationIterator.h"
 
-@interface GroupConversationIterator : NSObject<ConversationIterator>
-
-@end
-
-@interface GroupMessageIterator : NSObject<IMessageIterator>
-
-@end
 
 @interface GroupMessageDB : NSObject
 +(GroupMessageDB*)instance;
 
+@property(nonatomic, copy) NSString *dbPath;
 
 -(id<IMessageIterator>)newMessageIterator:(int64_t)uid;
 -(id<IMessageIterator>)newMessageIterator:(int64_t)uid last:(int)lastMsgID;

@@ -9,7 +9,7 @@
 
 #import "GroupMessageHandler.h"
 #import "IMessage.h"
-#import <imsdk/IMService.h>
+#import "IMService.h"
 #import "GroupMessageDB.h"
 
 @implementation GroupMessageHandler
@@ -46,7 +46,7 @@
 }
 
 -(BOOL)handleGroupNotification:(NSString*)notification {
-    MessageNotificationContent *obj = [[MessageNotificationContent alloc] initWithNotification:notification];
+    MessageGroupNotificationContent *obj = [[MessageGroupNotificationContent alloc] initWithNotification:notification];
     
     IMessage *m = [[IMessage alloc] init];
     m.sender = 0;
