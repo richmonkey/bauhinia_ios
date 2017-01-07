@@ -31,7 +31,7 @@
     }
     "location":{
         "latitude":"纬度(浮点数)",
-        "latitude":"经度(浮点数)"
+        "longitude":"经度(浮点数)"
     }
     "notification":"群组通知内容"
     "link":{
@@ -433,6 +433,9 @@
     _content = content;
 }
 
+-(NSString*)uuid {
+    return [self.content uuid];
+}
 -(MessageTextContent*)textContent {
     if (self.type == MESSAGE_TEXT) {
         return (MessageTextContent*)self.content;
@@ -533,11 +536,5 @@
 }
 @end
 
-@implementation IGroup
-
-@end
-
-@implementation Conversation
 
 
-@end
