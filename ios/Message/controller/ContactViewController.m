@@ -18,7 +18,7 @@
 #import "UIImageView+Letters.h"
 #import "UIImageView+WebCache.h"
 #import "pinyin.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "UIView+Toast.h"
 #import "Config.h"
 
@@ -174,7 +174,7 @@
 
     msgController.peerName = user.displayName;
 
-    msgController.currentUID = [UserPresent instance].uid;
+    msgController.currentUID = [Profile instance].uid;
     
     [self.navigationController pushViewController:msgController animated:YES];
 }
@@ -189,7 +189,7 @@
         PeerMessageViewController* msgController = [[PeerMessageViewController alloc] init];
         msgController.peerUID = mu.uid;
         msgController.peerName = mu.displayName;
-        msgController.currentUID = [UserPresent instance].uid;
+        msgController.currentUID = [Profile instance].uid;
         
         [self.navigationController pushViewController:msgController animated:YES];
     } else if ([self.contact.users count] > 1) {
@@ -247,7 +247,7 @@
 
     msgController.peerName = mu.displayName;
 
-    msgController.currentUID = [UserPresent instance].uid;
+    msgController.currentUID = [Profile instance].uid;
     
     [self.navigationController pushViewController:msgController animated:YES];
 }

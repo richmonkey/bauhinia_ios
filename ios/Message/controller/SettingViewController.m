@@ -30,7 +30,6 @@
 
 #define kNetStatusCellTag               300
 
-#define kClearConversationCellTag       400
 
 #define kGreenColor         RGBCOLOR(48,176,87)
 #define kRedColor           RGBCOLOR(207,6,6)
@@ -53,8 +52,7 @@
     if (self) {
         self.cellTitleArray = @[ @"关于",
                                  @[@"个人资讯",@"会话设置",@"Web端登录"],
-                                 @"网络状态",
-                                 @"清除所有对话记录"
+                                 @"网络状态"
                                 ];
         [[IMService instance] addConnectionObserver:self];
     }
@@ -205,13 +203,7 @@
 
         }
             break;
-        case kClearConversationCellTag:
-        {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"确认" message:@"是否清除所有聊天记录?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确认", nil];
-            alertView.tag = kClearAllContentTag;
-            [alertView show];
-        }
-            break;
+
         default:
             break;
     }
@@ -260,22 +252,7 @@
 
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (alertView.tag == kClearAllContentTag) {
-        if (buttonIndex == 0) {
-        //取消
-            
-        }else if(buttonIndex == 1){
-        //确认
-          BOOL result =  [[PeerMessageDB instance] clear];
-            if (result) {
-                
-                NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_ALL_CONVESATION object: nil userInfo:nil];
-                [[NSNotificationCenter defaultCenter] postNotification:notification];
-                
-                [self.view makeToast:@"会话清理完毕" duration:0.9 position:@"center"];
-            }
-        }
-    }
+
 }
 
 

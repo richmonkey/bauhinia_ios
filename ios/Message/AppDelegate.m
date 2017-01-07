@@ -15,7 +15,7 @@
 #import <gobelieve/GroupMessageDB.h>
 #import <gobelieve/PeerMessageDB.h>
 #import "Token.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "Config.h"
 #import "MainTabBarController.h"
 #import "AskPhoneNumberViewController.h"

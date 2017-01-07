@@ -8,7 +8,7 @@
 
 #import "ProfileViewController.h"
 
-#import "UserPresent.h"
+#import "Profile.h"
 #import "APIRequest.h"
 #import "UserDB.h"
 #import "MBProgressHUD.h"
@@ -62,9 +62,9 @@
     self.name = [SystemProperty instance].nameString;
     [self.nameTextField setText: [SystemProperty instance].nameString];
     
-    if ([UserPresent instance].avatarURL) {
+    if ([Profile instance].avatarURL) {
         
-        NSURL *headUrl = [[NSURL alloc] initWithString:[UserPresent instance].avatarURL];
+        NSURL *headUrl = [[NSURL alloc] initWithString:[Profile instance].avatarURL];
         [self.headView sd_setImageWithURL:headUrl];
     
     }else{
@@ -74,9 +74,9 @@
         
         [self.netStatusArea setHidden:NO];
         
-        if ([UserPresent instance].state.length > 0) {
+        if ([Profile instance].state.length > 0) {
             
-            [self.statusBtn setTitle:[UserPresent instance].state forState:UIControlStateNormal];
+            [self.statusBtn setTitle:[Profile instance].state forState:UIControlStateNormal];
         }else{
             [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
         }
@@ -110,9 +110,9 @@
 }
 
 - (void) viewWillAppear:(BOOL)animated{
-    if ([UserPresent instance].state.length > 0) {
+    if ([Profile instance].state.length > 0) {
         
-        [self.statusBtn setTitle:[UserPresent instance].state forState:UIControlStateNormal];
+        [self.statusBtn setTitle:[Profile instance].state forState:UIControlStateNormal];
     }else{
         [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
     }
@@ -163,7 +163,7 @@
     UITabBarController *tabController = [[MainTabBarController alloc] init];
     UINavigationController *navCtl = [[UINavigationController alloc] initWithRootViewController:tabController];
     navCtl.navigationBarHidden = YES;
-    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    AppDelegate *delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     delegate.tabBarController = tabController;
     delegate.window.rootViewController = navCtl;
 }
@@ -247,8 +247,8 @@
                           [[SDImageCache sharedImageCache] storeImage:img forKey: url];
                           [self.headView setImage: img];
                           
-                          [UserPresent instance].avatarURL =  url;
-                          [[UserDB instance] addUser: [UserPresent instance]];
+                          [Profile instance].avatarURL =  url;
+                          [[Profile instance] save];
                           [hud hide:NO];
                         }
                          fail:^{

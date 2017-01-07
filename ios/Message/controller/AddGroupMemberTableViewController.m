@@ -9,7 +9,7 @@
 #import "AddGroupMemberTableViewController.h"
 #import "User.h"
 #import "ContactDB.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "MBProgressHUD.h"
 #import <gobelieve/IMHttpApi.h>
 #import <gobelieve/IMessage.h>
@@ -91,7 +91,7 @@
     
     NSLog(@"craete group...");
     
-    int64_t uid = [UserPresent instance].uid;
+    int64_t uid = [Profile instance].uid;
     [self.selectedUsers addObject:[NSNumber numberWithLongLong:uid]];
     NSArray *members = [self.selectedUsers allObjects];
     

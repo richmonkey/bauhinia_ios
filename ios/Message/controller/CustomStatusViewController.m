@@ -9,7 +9,7 @@
 #import "TAHttpOperation.h"
 #import "Config.h"
 #import "Token.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "UserDB.h"
 #import "APIRequest.h"
 
@@ -40,17 +40,17 @@
 }
 
 -(NSString*)currentStatus {
-    if ([UserPresent instance].state.length > 0) {
-        return [UserPresent instance].state;
+    if ([Profile instance].state.length > 0) {
+        return [Profile instance].state;
     }else{
         return @"~没有状态~";
     }
 }
 
 -(void)setCurrentStatus:(NSString *)currentStatus {
-    User *u = [UserPresent instance];
+    Profile *u = [Profile instance];
     u.state = currentStatus;
-    [[UserDB instance] setUserState:u.uid state:currentStatus];
+    [u save];
 }
 
 - (void)viewDidLoad
@@ -95,7 +95,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = nil;
-    NSLog(@"%d,%d",indexPath.section,indexPath.row);
+    NSLog(@"%zd,%zd",indexPath.section,indexPath.row);
     if (indexPath.section != kClearStatusCellSection) {
         if(indexPath.section == kDefineStatusCellSection && indexPath.row == kDefineStatusCellRow){
             cell  = [tableView dequeueReusableCellWithIdentifier:@"definestatuscell"];

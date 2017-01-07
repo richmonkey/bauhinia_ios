@@ -6,7 +6,7 @@
 #import "UserDB.h"
 #import "Token.h"
 #import "ContactViewController.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "APIRequest.h"
 
 
@@ -63,7 +63,7 @@
 	[self.view addSubview:self.tableView];
     
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
-    PhoneNumber *phoneNumber = [UserPresent instance].phoneNumber;
+    PhoneNumber *phoneNumber = [Profile instance].phoneNumber;
     NSString *s = [NSString stringWithFormat:@"   我的电话号码: +%@ %@", phoneNumber.zone, phoneNumber.number];
     NSMutableAttributedString *attrTitle = [[NSMutableAttributedString alloc] initWithString: s];
     [attrTitle addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x35bc6e) range:NSMakeRange(10, [s length]-10)];
@@ -124,7 +124,7 @@
     if (time(NULL) - t < 24*3600) {
         //  return;
     }
-    IMLog(@"request users.....");
+    NSLog(@"request users.....");
     [APIRequest requestUsers:self.contacts
                      success:^(NSArray *resp) {
                          for (NSDictionary *dict in resp) {

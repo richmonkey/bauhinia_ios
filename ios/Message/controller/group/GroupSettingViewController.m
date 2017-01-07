@@ -15,7 +15,7 @@
 #import "UserDB.h"
 #import "ContactDB.h"
 #import "ContactViewController.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "RCTEventDispatcher.h"
 #import "Token.h"
 #import "Config.h"
@@ -129,7 +129,7 @@ RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
     }
     [dict setObject:members forKey:@"members"];
     
-    if (group.masterID == [UserPresent instance].uid) {
+    if (group.masterID == [Profile instance].uid) {
         [dict setObject:[NSNumber numberWithBool:YES] forKey:@"is_master"];
     } else {
         [dict setObject:[NSNumber numberWithBool:NO] forKey:@"is_master"];

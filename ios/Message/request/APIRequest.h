@@ -38,10 +38,6 @@
                         success:(void (^)(NSArray *resp))success
                            fail:(void (^)())fail;
 
-+(TAHttpOperation*)getGroup:(int64_t)groupID
-                    success:(void(^)(NSDictionary *resp))success
-                       fail:(void (^)())fail;
-
 
 +(TAHttpOperation*)webIMlogin:(NSString*)scanToken success:(void (^)())success fail:(void (^)())fail;
 

@@ -18,7 +18,7 @@
 		2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 210564C419695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m */; };
 		21150CA0196F78A5009DE9DE /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9B196F78A5009DE9DE /* User.m */; };
 		21150CA1196F78A5009DE9DE /* UserDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9D196F78A5009DE9DE /* UserDB.m */; };
-		21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9F196F78A5009DE9DE /* UserPresent.m */; };
+		21150CA2196F78A5009DE9DE /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150C9F196F78A5009DE9DE /* Profile.m */; };
 		21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CA4196F78C8009DE9DE /* PhoneNumber.m */; };
 		21150CAA196F7910009DE9DE /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CA7196F7910009DE9DE /* Config.m */; };
 		21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 21150CAD196F79AA009DE9DE /* TAHttpOperation.m */; };
@@ -130,8 +130,8 @@
 		21150C9B196F78A5009DE9DE /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		21150C9C196F78A5009DE9DE /* UserDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDB.h; sourceTree = "<group>"; };
 		21150C9D196F78A5009DE9DE /* UserDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDB.m; sourceTree = "<group>"; };
-		21150C9E196F78A5009DE9DE /* UserPresent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPresent.h; sourceTree = "<group>"; };
-		21150C9F196F78A5009DE9DE /* UserPresent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPresent.m; sourceTree = "<group>"; };
+		21150C9E196F78A5009DE9DE /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
+		21150C9F196F78A5009DE9DE /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
 		21150CA3196F78C8009DE9DE /* PhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneNumber.h; sourceTree = "<group>"; };
 		21150CA4196F78C8009DE9DE /* PhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneNumber.m; sourceTree = "<group>"; };
 		21150CA6196F7910009DE9DE /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = Message/Config.h; sourceTree = SOURCE_ROOT; };
@@ -367,8 +367,8 @@
 				21150C9B196F78A5009DE9DE /* User.m */,
 				21150C9C196F78A5009DE9DE /* UserDB.h */,
 				21150C9D196F78A5009DE9DE /* UserDB.m */,
-				21150C9E196F78A5009DE9DE /* UserPresent.h */,
-				21150C9F196F78A5009DE9DE /* UserPresent.m */,
+				21150C9E196F78A5009DE9DE /* Profile.h */,
+				21150C9F196F78A5009DE9DE /* Profile.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -650,7 +650,7 @@
 		21798F8B194E9C4600B67C1F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = daozhu;
 				TargetAttributes = {
 					21798F92194E9C4600B67C1F = {
@@ -793,7 +793,7 @@
 			files = (
 				2157372F19850D550071C2EF /* ContactIMUserTableViewCell.m in Sources */,
 				48731E1F19C5F17900FF8A7C /* CheckVerifyCodeController.m in Sources */,
-				21150CA2196F78A5009DE9DE /* UserPresent.m in Sources */,
+				21150CA2196F78A5009DE9DE /* Profile.m in Sources */,
 				6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */,
 				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
@@ -897,6 +897,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -906,14 +907,20 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -939,6 +946,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -948,14 +956,19 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

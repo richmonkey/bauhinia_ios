@@ -9,7 +9,7 @@
 #import "CheckVerifyCodeController.h"
 #import "APIRequest.h"
 #import "MBProgressHUD.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "TAHttpOperation.h"
 #import "Config.h"
 #import "Token.h"
@@ -105,10 +105,10 @@
                              token.uid = uid;
                              [token save];
                              
-                             [UserPresent instance].uid = uid;
-                             [UserPresent instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.phoneNumberStr];
-                             [UserPresent instance].state = state;
-                             [[UserDB instance] addUser:[UserPresent instance]];
+                             [Profile instance].uid = uid;
+                             [Profile instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.phoneNumberStr];
+                             [Profile instance].state = state;
+                             [[Profile instance] save];
                              [hud hide:NO];
                              [backView removeFromSuperview];
                              [self verifySuccess];

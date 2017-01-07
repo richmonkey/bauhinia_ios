@@ -19,7 +19,7 @@
 #import "NewGroupViewController.h"
 #import "UserDB.h"
 #import "UIImageView+WebCache.h"
-#import "UserPresent.h"
+#import "Profile.h"
 #import "JSBadgeView.h"
 
 #import "Config.h"
@@ -118,8 +118,6 @@
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newMessage:) name:LATEST_PEER_MESSAGE object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearAllConversation:) name:CLEAR_ALL_CONVESATION object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSinglePeerNewState:) name:CLEAR_PEER_NEW_MESSAGE object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearSingleGroupNewState:) name:CLEAR_GROUP_NEW_MESSAGE object:nil];
@@ -183,7 +181,7 @@
     [self updateEmptyContentView];
     [self checkVersion];
     
-    self.currentUID = [UserPresent instance].uid;
+    self.currentUID = [Profile instance].uid;
 }
 
 
@@ -279,7 +277,6 @@
               }
           }
      ];
-
 }
 
 -(void)checkVersion {
@@ -521,7 +518,7 @@
         
         msgController.peerUID = rmtUser.uid;
         msgController.peerName = rmtUser.displayName;
-        msgController.currentUID = [UserPresent instance].uid;
+        msgController.currentUID = [Profile instance].uid;
         
         msgController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:msgController animated: YES];
@@ -537,7 +534,7 @@
         
         msgController.groupName = con.name;
         
-        msgController.currentUID = [UserPresent instance].uid;
+        msgController.currentUID = [Profile instance].uid;
         
         msgController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:msgController animated: YES];
@@ -558,13 +555,6 @@
     IMessage *m = notification.object;
     NSLog(@"new message:%lld, %lld", m.sender, m.receiver);
     [self onNewMessage:m cid:m.receiver];
-}
-
-- (void)clearAllConversation:(NSNotification*) notification{
-    [self.conversations removeAllObjects];
-    [self.tableview reloadData];
-
-    [self updateEmptyContentView];
 }
 
 - (void)clearSinglePeerNewState:(NSNotification*) notification {

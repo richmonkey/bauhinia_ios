@@ -98,6 +98,10 @@
     options.create_if_missing = true;
     leveldb::Status status = leveldb::DB::Open(options, [path UTF8String], &db);
     assert(status.ok());
+    const char *p = status.ToString().c_str();
+    if (p != NULL) {
+      NSLog(@"open leveldb:%s", p);
+    }
     self.db = db;
   }
   return self;

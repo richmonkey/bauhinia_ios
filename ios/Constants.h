@@ -35,7 +35,6 @@ alpha:(a)]
 
 //NSNotificaiton
 #define CREATE_NEW_GROUP        @"create_new_group"
-#define CLEAR_ALL_CONVESATION   @"clear_all_conversation"
 
 //from imkit
 //最近发出的消息

@@ -73,7 +73,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     UITableViewCell *cell = nil;
-    NSLog(@"%d,%d",indexPath.section,indexPath.row);
+    NSLog(@"%zd,%zd",indexPath.section,indexPath.row);
     
     cell  = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
     if (cell == nil) {
@@ -95,7 +95,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    int cellTag = (indexPath.section + 1) *100 + indexPath.row;
+    NSInteger cellTag = (indexPath.section + 1) *100 + indexPath.row;
     switch (cellTag) {
         case kSetBackgroundCellTag:
         {

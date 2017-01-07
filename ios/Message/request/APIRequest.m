@@ -361,14 +361,14 @@
     request.successCB = ^(TAHttpOperation*commObj, NSURLResponse *response, NSData *data) {
         NSInteger statusCode = [(NSHTTPURLResponse*)response statusCode];
         if (statusCode != 200) {
-            IMLog(@"web login fail:%d",statusCode);
+            NSLog(@"web login fail:%zd",statusCode);
             fail();
             return;
         }
         success();
     };
     request.failCB = ^(TAHttpOperation*commObj, TAHttpOperationError error) {
-        IMLog(@"web login fail");
+        NSLog(@"web login fail");
         fail();
     };
     [[NSOperationQueue mainQueue] addOperation:request];

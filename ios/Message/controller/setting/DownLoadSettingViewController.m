@@ -63,7 +63,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     UITableViewCell *cell = nil;
-    NSLog(@"%d,%d",indexPath.section,indexPath.row);
+    NSLog(@"%zd,%zd",indexPath.section,indexPath.row);
     
     cell  = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
     if (cell == nil) {
@@ -91,7 +91,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    int selecteIndex = indexPath.row;
+    NSInteger selecteIndex = indexPath.row;
     
     if (self.type == kSetAudioType) {
         [[SystemProperty instance] setLoadAudioSetting:[NSNumber numberWithInt:selecteIndex]];
