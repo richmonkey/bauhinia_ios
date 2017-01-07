@@ -29,6 +29,7 @@
 #import "AFNetworking.h"
 #import "Token.h"
 #import "NewCount.h"
+#import "Conversation.h"
 
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
@@ -126,17 +127,25 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
 
     id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
-    Conversation * conversation = [iterator next];
-    while (conversation) {
+    IMessage * msg = [iterator next];
+    while (msg) {
+        Conversation *conversation = [[Conversation alloc] init];
+        conversation.message = msg;
+        conversation.cid = [Token instance].uid == msg.sender ? msg.receiver : msg.sender;
+        conversation.type = CONVERSATION_PEER;
         [self.conversations addObject:conversation];
-        conversation = [iterator next];
+        msg = [iterator next];
     }
     
     iterator = [[GroupMessageDB instance] newConversationIterator];
-    conversation = [iterator next];
-    while (conversation) {
+    msg = [iterator next];
+    while (msg) {
+        Conversation *conversation = [[Conversation alloc] init];
+        conversation.message = msg;
+        conversation.cid = msg.receiver;
+        conversation.type = CONVERSATION_GROUP;
         [self.conversations addObject:conversation];
-        conversation = [iterator next];
+        msg = [iterator next];
     }
     
     for (Conversation *conv in self.conversations) {
@@ -552,7 +561,9 @@
 }
 
 - (void)clearAllConversation:(NSNotification*) notification{
-    [self reloadTheConversation];
+    [self.conversations removeAllObjects];
+    [self.tableview reloadData];
+
     [self updateEmptyContentView];
 }
 
@@ -877,26 +888,6 @@
         }
         [self.tableview setHidden:NO];
     }
-}
-
--(void) reloadTheConversation{
-    
-    [self.conversations removeAllObjects];
-    
-    UserDB *db = [UserDB instance];
-    id<ConversationIterator> iterator =  [[PeerMessageDB instance] newConversationIterator];
-    
-    Conversation * conversation = [iterator next];
-    while (conversation) {
-        User *user = [db loadUser:conversation.cid];
-        conversation.name = [user displayName];
-        conversation.avatarURL = user.avatarURL;
-        [self.conversations addObject:conversation];
-        conversation = [iterator next];
-    }
-    
-    [self.tableview reloadData];
-    
 }
 
 -(void) resetConversationsViewControllerNewState{

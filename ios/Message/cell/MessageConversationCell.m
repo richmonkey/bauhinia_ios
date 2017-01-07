@@ -9,7 +9,7 @@
 #import "MessageConversationCell.h"
 #import "JSBadgeView.h"
 #import <gobelieve/IMessage.h>
-
+#import "Conversation.h"
 #define kCatchWidth 74.0f
 
 

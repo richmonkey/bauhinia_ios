@@ -17,6 +17,9 @@
 #import "APIRequest.h"
 #import "JSBadgeView.h"
 #import <gobelieve/IMHttpAPI.h>
+#import <gobelieve/PeerMessageHandler.h>
+#import <gobelieve/GroupMessageHandler.h>
+#import <gobelieve/CustomerMessageHandler.h>
 #import <gobelieve/SyncKeyHandler.h>
 
 @interface MainTabBarController ()
@@ -91,10 +94,12 @@
     });
     
     [self startRefreshTimer];
-    
+
+    [PeerMessageHandler instance].uid = [Token instance].uid;
+    [GroupMessageHandler instance].uid = [Token instance].uid;
+    [CustomerMessageHandler instance].uid = [Token instance].uid;
     [IMHttpAPI instance].accessToken = [Token instance].accessToken;
     [IMService instance].token = [Token instance].accessToken;
-    [IMService instance].uid = [Token instance].uid;
     NSLog(@"access token:%@", [Token instance].accessToken);
     
     NSString *dbPath = [self getDocumentPath];
