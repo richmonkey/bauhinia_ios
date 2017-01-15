@@ -99,8 +99,8 @@ android {
         applicationId "com.beetle.bauhinia"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 17
-        versionName '1.7'
+        versionCode 18
+        versionName '1.8'
 
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -132,8 +132,6 @@ android {
             signingConfig signingConfigs.app
         }
     }
-
-
 }
 
 repositories {
