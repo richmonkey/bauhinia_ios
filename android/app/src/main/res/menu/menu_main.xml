@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item android:id="@+id/action_new_conversation"
+        android:title="new"
+        android:icon="@drawable/ic_new_conversation"
+        app:showAsAction="ifRoom"
+        />
+
+    <item android:id="@+id/action_new_conversation2"
+        android:title="新建对话"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_new_group"
+        android:title="新建群组"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_qrcode"
+        android:title="登录网页版"
+        app:showAsAction="never"
+        />
+
+</menu>
