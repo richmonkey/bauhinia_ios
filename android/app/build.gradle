@@ -94,7 +94,6 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-    useLibrary  'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.beetle.bauhinia"
@@ -161,12 +160,10 @@ dependencies {
     compile 'bz.tsung.android:objectify:1.+'
     compile "com.facebook.react:react-native:+"
     compile 'joda-time:joda-time:2.5'
-    compile files('src/main/jniLibs/crashdump-v1.0.0.jar')
     compile files('src/main/jniLibs/zbar.jar')
     compile project(':imkit')
     compile project(':imsdk')
     compile project(':pushsdk')
-    compile project(':react-native-dialogs')
 }
 
 android {

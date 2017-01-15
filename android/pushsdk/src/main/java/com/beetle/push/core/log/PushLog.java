@@ -23,52 +23,26 @@ import android.content.Context;
  * Logging helper class.
  */
 public class PushLog {
-
-
     private static boolean DEBUG = true;
-
-    protected static LogFileHandler sLogHandler;
-
-    /**
-     * 初始化日志本地化输出渠道(调用此方法后日志将输出到文件中)
-     *
-     * @param context
-     * @param logFileName 请用模块名称加上版本号作为唯一文件名
-     */
-    public static void initFileLoger(Context context, String logFileName) {
-        sLogHandler = LogFileHandler.getInstance();
-        sLogHandler.init(context, logFileName);
-    }
 
     public static void v(String tag, String content) {
         android.util.Log.v(tag, content);
-        log2File("v", tag, content);
     }
 
     public static void d(String tag, String content) {
         android.util.Log.d(tag, content);
-        log2File("d", tag, content);
     }
 
     public static void e(String tag, String content) {
         android.util.Log.e(tag, content);
-        log2File("e", tag, content);
     }
 
     public static void e(String tag, Throwable tr) {
         String content = tr.toString();
         android.util.Log.e(tag, content, tr);
-        log2File("e", tag, content);
     }
 
     public static void e(String tag, Throwable tr, String content) {
         android.util.Log.e(tag, content, tr);
-        log2File("e", tag, content);
-    }
-
-    private static void log2File(String prefix, String tag, String content) {
-        if (DEBUG && null != sLogHandler) {
-            sLogHandler.log2File(prefix + " " + tag + ":" + content);
-        }
     }
 }

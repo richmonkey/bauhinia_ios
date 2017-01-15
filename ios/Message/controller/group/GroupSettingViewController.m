@@ -19,9 +19,9 @@
 #import "RCTEventDispatcher.h"
 #import "Token.h"
 #import "Config.h"
-#import "ProgressHudBridge.h"
+#import "MBProgressHUD.h"
 
-@interface GroupSettingViewController ()
+@interface GroupSettingViewController ()<RCTBridgeModule>
 
 @property(nonatomic, weak) RCTRootView *rootView;
 
@@ -32,49 +32,117 @@
 
 @end
 
-@interface GroupSettingViewControllerBridge : NSObject <RCTBridgeModule>
-@property(nonatomic, weak) GroupSettingViewController *controller;
-@end
 
-@implementation GroupSettingViewControllerBridge
-
-
--(GroupSettingViewControllerBridge*)init {
-    self = [super init];
-    if (self) {
-
-    }
-    return self;
-}
-
--(void)dealloc {
-
-}
-
+@implementation GroupSettingViewController
 RCT_EXPORT_MODULE();
+
+RCT_EXPORT_METHOD(showHUD)
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+}
+
+RCT_EXPORT_METHOD(hideHUD)
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+
+RCT_EXPORT_METHOD(hideTextHUD:(NSString*)text)
+{
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:self.view];
+    hud.labelText = text;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    });
+}
 
 RCT_EXPORT_METHOD(quitGroup)
 {
-    [self.controller quitGroup];
+    [self.navigationController popViewControllerAnimated:YES];
 }
-
-
 
 RCT_EXPORT_METHOD(handleClickMember:(nonnull NSNumber*)memberID)
 {
-    [self.controller handleClickMember:memberID];
+    NSLog(@"member:%@", memberID);
+    
+    User *u = [[UserDB instance] loadUser:[memberID longLongValue]];
+    if (!u) {
+        return;
+    }
+    ABContact *contact = [[ContactDB instance] loadContactWithNumber:u.phoneNumber];
+    if (!contact) {
+        return;
+    }
+    IMContact *c = [[ContactDB instance] loadIMContact:contact.recordID];
+    if (!c) {
+        return;
+    }
+    
+    ContactViewController *ctl = [[ContactViewController alloc] init];
+    ctl.hidesBottomBarWhenPushed = YES;
+    ctl.contact = c;
+    [self.navigationController pushViewController:ctl animated:YES];
 }
 
 
 RCT_EXPORT_METHOD(handleBack)
 {
-    [self.controller handleBack];
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    [[self navigationController] setNavigationBarHidden:NO animated:YES];
 }
 
 
 RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
 {
-    [self.controller loadUsers:callback];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    NSArray *contacts = [[ContactDB instance] contactsArray];
+    if([contacts count] == 0) {
+        return;
+    }
+    
+    for (IMContact *contact in contacts) {
+        NSString *string = contact.contactName;
+        if ([contact.users count] > 0) {
+            User *user = [contact.users objectAtIndex:0];
+            NSLog(@"name:%@ state:%@", string, user.state);
+        }
+        
+        for (User *u in contact.users) {
+            u.contactName = contact.contactName;
+            [dict setObject:u forKey:[NSNumber numberWithLongLong:u.uid]];
+        }
+    }
+    
+    NSArray *users = [dict allValues];
+    
+    Group *group = [[GroupDB instance] loadGroup:self.groupID];
+    
+    if (!group) {
+        NSLog(@"group id is invalid");
+        return;
+    }
+    
+    
+    
+    NSMutableArray *groupUsers = [NSMutableArray array];
+    for (User *u in users) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        
+        NSNumber *n = [NSNumber numberWithLongLong:u.uid];
+        [dict setObject:n forKey:@"uid"];
+        [dict setObject:u.displayName forKey:@"name"];
+        
+        if ([group.members indexOfObject:n] != NSNotFound) {
+            [dict setObject:@YES forKey:@"is_member"];
+            [dict setObject:@YES forKey:@"selected"];
+        } else {
+            [dict setObject:@NO forKey:@"is_member"];
+            [dict setObject:@NO forKey:@"selected"];
+        }
+        
+        [groupUsers addObject:dict];
+    }
+    callback(@[groupUsers]);
 }
 
 
@@ -83,12 +151,6 @@ RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
     return dispatch_get_main_queue();
 }
 
-
-@end
-
-
-
-@implementation GroupSettingViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -141,12 +203,7 @@ RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
     
     __weak GroupSettingViewController *wself = self;
     RCTBridgeModuleProviderBlock provider = ^NSArray<id<RCTBridgeModule>> *{
-        ProgressHudBridge *hud = [ProgressHudBridge new];
-        hud.view = wself.view;
-        
-        GroupSettingViewControllerBridge *module = [GroupSettingViewControllerBridge new];
-        module.controller = wself;
-        return @[module, hud];
+        return @[wself];
     };
 
     RCTBridge *bridge = [[RCTBridge alloc] initWithBundleURL:jsCodeLocation
@@ -184,91 +241,6 @@ RCT_EXPORT_METHOD(loadUsers:(RCTResponseSenderBlock)callback)
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)quitGroup {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)handleClickMember:(NSNumber*)memberID {
-    NSLog(@"member:%@", memberID);
-    
-    User *u = [[UserDB instance] loadUser:[memberID longLongValue]];
-    if (!u) {
-        return;
-    }
-    ABContact *contact = [[ContactDB instance] loadContactWithNumber:u.phoneNumber];
-    if (!contact) {
-        return;
-    }
-    IMContact *c = [[ContactDB instance] loadIMContact:contact.recordID];
-    if (!c) {
-        return;
-    }
-    
-    ContactViewController *ctl = [[ContactViewController alloc] init];
-    ctl.hidesBottomBarWhenPushed = YES;
-    ctl.contact = c;
-    [self.navigationController pushViewController:ctl animated:YES];
-}
-
-
-- (void)handleBack {
-    [self.navigationController popViewControllerAnimated:YES];
-    
-    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-}
-
-- (void)loadUsers:(RCTResponseSenderBlock)callback {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSArray *contacts = [[ContactDB instance] contactsArray];
-    if([contacts count] == 0) {
-        return;
-    }
-    
-    for (IMContact *contact in contacts) {
-        NSString *string = contact.contactName;
-        if ([contact.users count] > 0) {
-            User *user = [contact.users objectAtIndex:0];
-            NSLog(@"name:%@ state:%@", string, user.state);
-        }
-        
-        for (User *u in contact.users) {
-            u.contactName = contact.contactName;
-            [dict setObject:u forKey:[NSNumber numberWithLongLong:u.uid]];
-        }
-    }
-    
-    NSArray *users = [dict allValues];
-    
-    Group *group = [[GroupDB instance] loadGroup:self.groupID];
-    
-    if (!group) {
-        NSLog(@"group id is invalid");
-        return;
-    }
-    
-    
-    
-    NSMutableArray *groupUsers = [NSMutableArray array];
-    for (User *u in users) {
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        
-        NSNumber *n = [NSNumber numberWithLongLong:u.uid];
-        [dict setObject:n forKey:@"uid"];
-        [dict setObject:u.displayName forKey:@"name"];
-        
-        if ([group.members indexOfObject:n] != NSNotFound) {
-            [dict setObject:@YES forKey:@"is_member"];
-            [dict setObject:@YES forKey:@"selected"];
-        } else {
-            [dict setObject:@NO forKey:@"is_member"];
-            [dict setObject:@NO forKey:@"selected"];
-        }
-        
-        [groupUsers addObject:dict];
-    }
-    callback(@[groupUsers]);
 }
 
 @end

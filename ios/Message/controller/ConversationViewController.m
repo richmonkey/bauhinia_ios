@@ -14,14 +14,10 @@
 #import <gobelieve/PeerMessageViewController.h>
 #import <gobelieve/GroupMessageViewController.h>
 #import "MGroupMessageViewController.h"
+#import "GroupCreatorViewController.h"
 #import "pinyin.h"
-#import "MessageGroupConversationCell.h"
-#import "NewGroupViewController.h"
 #import "UserDB.h"
-#import "UIImageView+WebCache.h"
 #import "Profile.h"
-#import "JSBadgeView.h"
-
 #import "Config.h"
 #import "APIRequest.h"
 #import "LevelDB.h"
@@ -39,7 +35,7 @@
 
 #define kNewVersionTag 100
 
-@interface ConversationViewController () <MessageViewControllerUserDelegate>
+@interface ConversationViewController () <MessageViewControllerUserDelegate, GroupCreatorViewControllerDelegate>
 
 @property(strong , nonatomic) NSString *versionUrl;
 
@@ -398,9 +394,9 @@
 }
 
 - (void)newGroup {
-    NewGroupViewController *ctl = [[NewGroupViewController alloc] initWithNibName:@"NewGroupViewController" bundle:nil];
-    UINavigationController * navCtr = [[UINavigationController alloc] initWithRootViewController: ctl];
-    [self presentViewController:navCtr animated:YES completion:nil];
+    GroupCreatorViewController *ctrl = [[GroupCreatorViewController alloc] init];
+    ctrl.delegate = self;
+    [self presentViewController:ctrl animated:YES completion:nil];
 }
 
 #pragma mark - Table view data source
@@ -959,5 +955,26 @@
         });
     });
 }
+#pragma mark - GroupCreatorViewControllerDelegate
+-(void)onGroupCreated:(int64_t)gid name:(NSString*)name {
+    NSLog(@"group created:%lld %@", gid, name);
+    [self dismissViewControllerAnimated:NO completion:nil];
+    
+    MGroupMessageViewController* msgController = [[MGroupMessageViewController alloc] init];
+    msgController.isShowUserName = YES;
+    msgController.userDelegate = self;
+    
+    msgController.groupID = gid;
+    
+    msgController.groupName = name;
+    
+    msgController.currentUID = [Profile instance].uid;
+    
+    msgController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:msgController animated: YES];
+}
 
+-(void)onGroupCreateCanceled {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

@@ -14,5 +14,6 @@ target 'Message' do
       'RCTNetwork',
       'RCTVibration',
       'RCTGeolocation',
+      'RCTAnimation',
     ]
 end

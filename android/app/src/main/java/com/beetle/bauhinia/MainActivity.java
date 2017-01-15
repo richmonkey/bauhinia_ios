@@ -194,8 +194,10 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             if (group_id == 0) {
                 return;
             }
-
-            String groupName = getGroupName(group_id);
+            String groupName = data.getStringExtra("group_name");
+            if (TextUtils.isEmpty(groupName)) {
+                groupName = getGroupName(group_id);
+            }
             Intent intent = new Intent(this, AppGroupMessageActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("group_id", group_id);

@@ -55,7 +55,6 @@ public class SmartPushServiceProvider implements SmartPushServiceInterface, Push
     public void onServiceCreate(Context context) {
         initServiceContext(context);
         System.out.println("local onServiceCreate");
-        PushLog.initFileLoger(context, "pushv2");
         try {
             IoLoop loop = IoLoop.getDefaultLoop();
             if (!loop.isAlive()) {

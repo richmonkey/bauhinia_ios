@@ -2,45 +2,55 @@ package com.beetle.bauhinia.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.KeyEvent;
 
-import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
 import com.beetle.bauhinia.BuildConfig;
 import com.beetle.bauhinia.Config;
 import com.beetle.bauhinia.Token;
 import com.beetle.bauhinia.api.types.User;
 import com.beetle.bauhinia.model.Contact;
 import com.beetle.bauhinia.model.ContactDB;
-import com.beetle.bauhinia.model.Group;
-import com.beetle.bauhinia.model.GroupDB;
 import com.beetle.bauhinia.model.PhoneNumber;
 import com.beetle.bauhinia.model.Profile;
 import com.beetle.bauhinia.model.UserDB;
-import com.facebook.react.LifecycleState;
+
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeArray;
-import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.react.uimanager.ViewManager;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class GroupCreatorActivity extends Activity implements DefaultHardwareBackBtnHandler {
+    public static final int PERMISSION_REQ_CODE = 1234;
+    public static final int OVERLAY_PERMISSION_REQ_CODE = 1235;
+
+    String[] perms = {
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+    };
+
+
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
 
@@ -51,21 +61,33 @@ public class GroupCreatorActivity extends Activity implements DefaultHardwareBac
 
         @Override
         public String getName() {
-            return "GroupCreatorModule";
+            return "GroupCreatorActivity";
         }
 
 
         @ReactMethod
         public void finish() {
-            GroupCreatorActivity.this.finish();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    GroupCreatorActivity.this.finish();
+                }
+            });
         }
         @ReactMethod
-        public void finishWithGroupID(String strGroupID) {
-            long groupID = Long.parseLong(strGroupID);
-            Intent intent = new Intent();
-            intent.putExtra("group_id", groupID);
-            GroupCreatorActivity.this.setResult(RESULT_OK, intent);
-            GroupCreatorActivity.this.finish();
+        public void finishWithGroupID(final String strGroupID, final String name) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    long groupID = Long.parseLong(strGroupID);
+                    Intent intent = new Intent();
+                    intent.putExtra("group_id", groupID);
+                    intent.putExtra("name", name);
+                    GroupCreatorActivity.this.setResult(RESULT_OK, intent);
+                    GroupCreatorActivity.this.finish();
+                }
+            });
+
         }
     }
 
@@ -93,10 +115,54 @@ public class GroupCreatorActivity extends Activity implements DefaultHardwareBac
     }
 
 
+    public void checkPerms() {
+        // Checking if device version > 22 and we need to use new permission model
+        if(BuildConfig.DEBUG && Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1) {
+            // Checking if we can draw window overlay
+            if (!Settings.canDrawOverlays(this)) {
+                // Requesting permission for window overlay(needed for all react-native apps)
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+            }
+            for(String perm : perms){
+                // Checking each persmission and if denied then requesting permissions
+                if(checkSelfPermission(perm) == PackageManager.PERMISSION_DENIED){
+                    requestPermissions(perms, PERMISSION_REQ_CODE);
+                    break;
+                }
+            }
+        }
+    }
+
+    // Window overlay permission intent result
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
+            checkPerms();
+        }
+    }
+
+    // Permission results
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+        switch(permsRequestCode){
+            case PERMISSION_REQ_CODE:
+                // example how to get result of permissions requests (there can be more then one permission dialog)
+                // boolean readAccepted = grantResults[0]==PackageManager.PERMISSION_GRANTED;
+                // boolean writeAccepted = grantResults[1]==PackageManager.PERMISSION_GRANTED;
+                // checking permissions to prevent situation when user denied some permission
+                checkPerms();
+                break;
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPerms();
 
         mReactRootView = new ReactRootView(this);
         mReactInstanceManager = ReactInstanceManager.builder()
@@ -105,7 +171,6 @@ public class GroupCreatorActivity extends Activity implements DefaultHardwareBac
                 .setJSMainModuleName("index.android")
                 .addPackage(new MainReactPackage())
                 .addPackage(new GroupCreatorPackage())
-                .addPackage(new ReactNativeDialogsPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
@@ -154,7 +219,7 @@ public class GroupCreatorActivity extends Activity implements DefaultHardwareBac
         super.onPause();
 
         if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostPause();
+            mReactInstanceManager.onHostPause(this);
         }
     }
 
@@ -172,7 +237,7 @@ public class GroupCreatorActivity extends Activity implements DefaultHardwareBac
         super.onDestroy();
 
         if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostDestroy();
+            mReactInstanceManager.onHostDestroy(this);
         }
     }
 

@@ -51,8 +51,6 @@
 		21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF22D1968659C00DFA0E5 /* ContactDB.m */; };
 		21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF2361968E6A500DFA0E5 /* MessageConversationCell.m */; };
 		21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF2371968E6A500DFA0E5 /* MessageConversationCell.xib */; };
-		21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */; };
-		21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */; };
 		36FFA767B7D0D505DFD440AB /* libPods-Message.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ED661FB634FC12D0EDDBAA1 /* libPods-Message.a */; };
 		48338B3219C521A600BA2392 /* ConversationSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48338B3019C521A600BA2392 /* ConversationSettingViewController.m */; };
 		48338B3319C521A600BA2392 /* ConversationSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48338B3119C521A600BA2392 /* ConversationSettingViewController.xib */; };
@@ -86,7 +84,6 @@
 		6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D11C72E19BB3D3F00E67389 /* APITests.m */; };
 		6D2CA5751D58612B00AF929B /* GroupSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5741D58612B00AF929B /* GroupSettingViewController.m */; };
 		6D2CA5791D58634000AF929B /* MGroupMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */; };
-		6D2CA5831D5C80EE00AF929B /* ProgressHudBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
 		6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D76214F197ECA9300B690D7 /* LevelDB.mm */; };
 		6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D776314197B6D6B0090D511 /* MainTabBarController.m */; };
@@ -95,9 +92,8 @@
 		6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4419C4BE1D0027A658 /* Token.m */; };
 		6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4719C4BF340027A658 /* APIRequest.m */; };
 		6DB5B76C1C0858090057D55E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB5B76A1C0858090057D55E /* Localizable.strings */; };
-		6DFDA0311AB98EF600EF553A /* NewGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DFDA02F1AB98EF600EF553A /* NewGroupViewController.m */; };
-		6DFDA0321AB98EF600EF553A /* NewGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */; };
-		6DFDA0351AB991E200EF553A /* AddGroupMemberTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */; };
+		6DEC54D81E2B55AB0018CF94 /* GroupCreatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DEC54D71E2B55AB0018CF94 /* GroupCreatorViewController.m */; };
+		6DEC54ED1E2B5DC30018CF94 /* libToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DEC54EC1E2B5DC30018CF94 /* libToast.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +103,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 21798F92194E9C4600B67C1F;
 			remoteInfo = Message;
+		};
+		6DEC54EA1E2B5D830018CF94 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 327633421BFAAD7E004DA88E;
+			remoteInfo = RCTToast;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -181,9 +184,6 @@
 		21FCF2351968E6A500DFA0E5 /* MessageConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageConversationCell.h; sourceTree = "<group>"; };
 		21FCF2361968E6A500DFA0E5 /* MessageConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageConversationCell.m; sourceTree = "<group>"; };
 		21FCF2371968E6A500DFA0E5 /* MessageConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageConversationCell.xib; sourceTree = "<group>"; };
-		21FCF23A1968E6E600DFA0E5 /* MessageGroupConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageGroupConversationCell.h; sourceTree = "<group>"; };
-		21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageGroupConversationCell.m; sourceTree = "<group>"; };
-		21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageGroupConversationCell.xib; sourceTree = "<group>"; };
 		48338B2F19C521A600BA2392 /* ConversationSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationSettingViewController.h; sourceTree = "<group>"; };
 		48338B3019C521A600BA2392 /* ConversationSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationSettingViewController.m; sourceTree = "<group>"; };
 		48338B3119C521A600BA2392 /* ConversationSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationSettingViewController.xib; sourceTree = "<group>"; };
@@ -235,8 +235,6 @@
 		6D2CA5741D58612B00AF929B /* GroupSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupSettingViewController.m; path = group/GroupSettingViewController.m; sourceTree = "<group>"; };
 		6D2CA5771D58634000AF929B /* MGroupMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGroupMessageViewController.h; path = group/MGroupMessageViewController.h; sourceTree = "<group>"; };
 		6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGroupMessageViewController.m; path = group/MGroupMessageViewController.m; sourceTree = "<group>"; };
-		6D2CA5811D5C80EE00AF929B /* ProgressHudBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressHudBridge.h; path = bridge/ProgressHudBridge.h; sourceTree = "<group>"; };
-		6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressHudBridge.m; path = bridge/ProgressHudBridge.m; sourceTree = "<group>"; };
 		6D32393B19BD79C7005A00B2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		6D76214E197ECA9300B690D7 /* LevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelDB.h; sourceTree = "<group>"; };
 		6D76214F197ECA9300B690D7 /* LevelDB.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelDB.mm; sourceTree = "<group>"; };
@@ -253,11 +251,10 @@
 		6DB0AA4719C4BF340027A658 /* APIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIRequest.m; sourceTree = "<group>"; };
 		6DB5B76B1C0858090057D55E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6DB5B76D1C0858180057D55E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		6DFDA02E1AB98EF600EF553A /* NewGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewGroupViewController.h; sourceTree = "<group>"; };
-		6DFDA02F1AB98EF600EF553A /* NewGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewGroupViewController.m; sourceTree = "<group>"; };
-		6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewGroupViewController.xib; sourceTree = "<group>"; };
-		6DFDA0331AB991E200EF553A /* AddGroupMemberTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGroupMemberTableViewController.h; sourceTree = "<group>"; };
-		6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddGroupMemberTableViewController.m; sourceTree = "<group>"; };
+		6DEC54D61E2B55AB0018CF94 /* GroupCreatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupCreatorViewController.h; path = group/GroupCreatorViewController.h; sourceTree = "<group>"; };
+		6DEC54D71E2B55AB0018CF94 /* GroupCreatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupCreatorViewController.m; path = group/GroupCreatorViewController.m; sourceTree = "<group>"; };
+		6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../node_modules/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
+		6DEC54EC1E2B5DC30018CF94 /* libToast.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libToast.a; path = "../../../../Library/Developer/Xcode/DerivedData/Message-eywqwmqqzmmrlbdzzjmcrigyfprb/Build/Products/Debug-iphonesimulator/Toast/libToast.a"; sourceTree = "<group>"; };
 		8ED661FB634FC12D0EDDBAA1 /* libPods-Message.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Message.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E408BB9C86D8C815CFEE07F8 /* Pods-Message.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Message.release.xcconfig"; path = "Pods/Target Support Files/Pods-Message/Pods-Message.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -267,6 +264,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DEC54ED1E2B5DC30018CF94 /* libToast.a in Frameworks */,
 				486C869B1AB415CC0041B135 /* libxml2.dylib in Frameworks */,
 				48C2D9771A8D9A0600F7A7E2 /* libiconv.dylib in Frameworks */,
 				48C2D9751A8D99E500F7A7E2 /* QuartzCore.framework in Frameworks */,
@@ -321,11 +319,6 @@
 				217F2C2F196D62680064F478 /* MessageShowThePotraitViewController.m */,
 				6D776313197B6D6B0090D511 /* MainTabBarController.h */,
 				6D776314197B6D6B0090D511 /* MainTabBarController.m */,
-				6DFDA02E1AB98EF600EF553A /* NewGroupViewController.h */,
-				6DFDA02F1AB98EF600EF553A /* NewGroupViewController.m */,
-				6DFDA0301AB98EF600EF553A /* NewGroupViewController.xib */,
-				6DFDA0331AB991E200EF553A /* AddGroupMemberTableViewController.h */,
-				6DFDA0341AB991E200EF553A /* AddGroupMemberTableViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -401,6 +394,7 @@
 		21798F8A194E9C4600B67C1F = {
 			isa = PBXGroup;
 			children = (
+				6DEC54E51E2B5D6B0018CF94 /* Projects */,
 				21798F9C194E9C4600B67C1F /* Message */,
 				21798FB5194E9C4600B67C1F /* MessageTests */,
 				21798F95194E9C4600B67C1F /* Frameworks */,
@@ -421,6 +415,7 @@
 		21798F95194E9C4600B67C1F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6DEC54EC1E2B5DC30018CF94 /* libToast.a */,
 				48C2D9761A8D9A0600F7A7E2 /* libiconv.dylib */,
 				48C2D9741A8D99E500F7A7E2 /* QuartzCore.framework */,
 				48C2D9721A8D99D500F7A7E2 /* CoreVideo.framework */,
@@ -445,7 +440,6 @@
 			isa = PBXGroup;
 			children = (
 				6D82170B1DAE545F00E49821 /* Message.entitlements */,
-				6D2CA5841D5C80F500AF929B /* bridge */,
 				6DB0AA4219C4BDF10027A658 /* request */,
 				2105646619695FC0008D3A83 /* controller */,
 				2105647A19695FC0008D3A83 /* third-party */,
@@ -504,9 +498,6 @@
 				21FCF2351968E6A500DFA0E5 /* MessageConversationCell.h */,
 				21FCF2361968E6A500DFA0E5 /* MessageConversationCell.m */,
 				21FCF2371968E6A500DFA0E5 /* MessageConversationCell.xib */,
-				21FCF23A1968E6E600DFA0E5 /* MessageGroupConversationCell.h */,
-				21FCF23B1968E6E600DFA0E5 /* MessageGroupConversationCell.m */,
-				21FCF23C1968E6E600DFA0E5 /* MessageGroupConversationCell.xib */,
 				2157372719850AEE0071C2EF /* ContactHeaderView.h */,
 				2157372819850AEE0071C2EF /* ContactHeaderView.m */,
 				2157372A19850B100071C2EF /* ContactHeaderView.xib */,
@@ -580,17 +571,10 @@
 				6D2CA5741D58612B00AF929B /* GroupSettingViewController.m */,
 				6D2CA5771D58634000AF929B /* MGroupMessageViewController.h */,
 				6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */,
+				6DEC54D61E2B55AB0018CF94 /* GroupCreatorViewController.h */,
+				6DEC54D71E2B55AB0018CF94 /* GroupCreatorViewController.m */,
 			);
 			name = group;
-			sourceTree = "<group>";
-		};
-		6D2CA5841D5C80F500AF929B /* bridge */ = {
-			isa = PBXGroup;
-			children = (
-				6D2CA5811D5C80EE00AF929B /* ProgressHudBridge.h */,
-				6D2CA5821D5C80EE00AF929B /* ProgressHudBridge.m */,
-			);
-			name = bridge;
 			sourceTree = "<group>";
 		};
 		6DB0AA4219C4BDF10027A658 /* request */ = {
@@ -600,6 +584,22 @@
 				6DB0AA4719C4BF340027A658 /* APIRequest.m */,
 			);
 			path = request;
+			sourceTree = "<group>";
+		};
+		6DEC54E51E2B5D6B0018CF94 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */,
+			);
+			name = Projects;
+			sourceTree = "<group>";
+		};
+		6DEC54E71E2B5D830018CF94 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6DEC54EB1E2B5D830018CF94 /* libRCTToast.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -677,6 +677,12 @@
 			mainGroup = 21798F8A194E9C4600B67C1F;
 			productRefGroup = 21798F94194E9C4600B67C1F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6DEC54E71E2B5D830018CF94 /* Products */;
+					ProjectRef = 6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				21798F92194E9C4600B67C1F /* Message */,
@@ -684,6 +690,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		6DEC54EB1E2B5D830018CF94 /* libRCTToast.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTToast.a;
+			remoteRef = 6DEC54EA1E2B5D830018CF94 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		21798F91194E9C4600B67C1F /* Resources */ = {
@@ -698,7 +714,6 @@
 				21573735198531A40071C2EF /* ContactPhoneTableViewCell.xib in Resources */,
 				48338B3319C521A600BA2392 /* ConversationSettingViewController.xib in Resources */,
 				48731E1B19C5E95400FF8A7C /* AskPhoneNumberViewController.xib in Resources */,
-				6DFDA0321AB98EF600EF553A /* NewGroupViewController.xib in Resources */,
 				48731E2019C5F17900FF8A7C /* CheckVerifyCodeController.xib in Resources */,
 				2157372B19850B100071C2EF /* ContactHeaderView.xib in Resources */,
 				6DB5B76C1C0858090057D55E /* Localizable.strings in Resources */,
@@ -710,7 +725,6 @@
 				210564CF19695FC1008D3A83 /* SettingViewController.xib in Resources */,
 				210564C919695FC1008D3A83 /* CustomStatusViewController.xib in Resources */,
 				21FCF2391968E6A500DFA0E5 /* MessageConversationCell.xib in Resources */,
-				21FCF23E1968E6E600DFA0E5 /* MessageGroupConversationCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,7 +814,6 @@
 				6DA7C4E01E208FF500CC2AC0 /* Conversation.m in Sources */,
 				489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */,
 				489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */,
-				6DFDA0311AB98EF600EF553A /* NewGroupViewController.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
@@ -809,11 +822,9 @@
 				6D2CA5791D58634000AF929B /* MGroupMessageViewController.m in Sources */,
 				21150CA0196F78A5009DE9DE /* User.m in Sources */,
 				21573734198531A40071C2EF /* ContactPhoneTableViewCell.m in Sources */,
-				6D2CA5831D5C80EE00AF929B /* ProgressHudBridge.m in Sources */,
 				210564CE19695FC1008D3A83 /* SettingViewController.m in Sources */,
 				6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */,
 				489933D319C44C4D00C56F2D /* ProfileViewController.m in Sources */,
-				21FCF23D1968E6E600DFA0E5 /* MessageGroupConversationCell.m in Sources */,
 				2142CB62196268860002E4A9 /* ABContact.m in Sources */,
 				6D032FE01AA9B31D004AA39F /* GroupDB.m in Sources */,
 				6D82170A1DACD72000E49821 /* NewCount.m in Sources */,
@@ -828,8 +839,8 @@
 				489933CE19C44C0F00C56F2D /* AboutViewController.m in Sources */,
 				2105650919695FC1008D3A83 /* UIView+AnimationOptionsForCurve.m in Sources */,
 				21150CAE196F79AA009DE9DE /* TAHttpOperation.m in Sources */,
+				6DEC54D81E2B55AB0018CF94 /* GroupCreatorViewController.m in Sources */,
 				48860CA019CFC8FF00DF7466 /* UIApplication+Util.m in Sources */,
-				6DFDA0351AB991E200EF553A /* AddGroupMemberTableViewController.m in Sources */,
 				21798FA3194E9C4600B67C1F /* main.m in Sources */,
 				2157372919850AEE0071C2EF /* ContactHeaderView.m in Sources */,
 				21150CA1196F78A5009DE9DE /* UserDB.m in Sources */,

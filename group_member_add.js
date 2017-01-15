@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableHighlight,
   ActionSheetIOS,
+  Platform,
   View
 } from 'react-native';
 
@@ -17,12 +18,14 @@ import {connect} from 'react-redux';
 
 import NavigationBar from 'react-native-navbar';
 
-import { NativeModules } from 'react-native';
-
 import {addGroupMembers} from "./actions";
 
-var GroupMemberAddViewControllerBridge = NativeModules.GroupMemberAddViewControllerBridge;
-var ProgressHudBridge = NativeModules.ProgressHudBridge;
+import { NativeModules } from 'react-native';
+
+var native = (Platform.OS == 'android') ? NativeModules.GroupSettingActivity : NativeModules.GroupSettingViewController;
+
+
+
 
 var GroupMemberAdd = React.createClass({
   getInitialState: function() {
@@ -44,8 +47,8 @@ var GroupMemberAdd = React.createClass({
   addMember: function(users) {
     var userIDs = users.map((u) => u.uid)
 
-    var url = this.props.url + "/groups/" + this.props.group_id + "/members";
-    ProgressHudBridge.showHud();
+    var url = this.props.url + "/client/groups/" + this.props.group_id + "/members";
+    native.showHUD();
     fetch(url, {
       method:"POST",  
       headers: {
@@ -59,17 +62,17 @@ var GroupMemberAdd = React.createClass({
       if (response.status == 200) {
           var e = addGroupMembers(users);
           this.props.dispatch(e);
-          ProgressHudBridge.hideHud();
+          native.hideHUD();
           this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
-          ProgressHudBridge.hideTextHud(responseJson.meta.message);
+          native.hideTextHUD(responseJson.meta.message);
         });
       }
     }).catch((error) => {
       console.log("error:", error);
-      ProgressHudBridge.hideTextHud('' + error);
+      native.hideTextHUD('' + error);
     });
   },
 

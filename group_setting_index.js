@@ -18,15 +18,12 @@ import {
 } from 'react-native';
 
 import { Provider } from 'react-redux';
-
-import { NativeModules, NativeAppEventEmitter } from 'react-native';
-
 import { createStore } from 'redux'
 
-import GroupMemberAdd from './group_member_add.ios';
-import GroupMemberRemove from './group_member_remove.ios';
-import GroupName from './group_name.ios';
-import GroupSetting from './group_setting.ios';
+import GroupMemberAdd from './group_member_add';
+import GroupMemberRemove from './group_member_remove';
+import GroupName from './group_name';
+import GroupSetting from './group_setting';
 
 import {groupApp} from "./actions";
 

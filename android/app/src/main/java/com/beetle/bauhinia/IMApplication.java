@@ -18,7 +18,7 @@ import com.beetle.bauhinia.db.GroupMessageHandler;
 import com.beetle.bauhinia.db.PeerMessageDB;
 import com.beetle.bauhinia.db.PeerMessageHandler;
 import com.beetle.bauhinia.model.Profile;
-import com.beetle.bauhinia.react.ReactInstance;
+
 import com.beetle.im.IMService;
 import com.beetle.bauhinia.api.IMHttp;
 import com.beetle.bauhinia.api.IMHttpFactory;
@@ -28,16 +28,12 @@ import com.beetle.bauhinia.tools.BinAscii;
 import com.beetle.bauhinia.tools.FileCache;
 import com.beetle.push.Push;
 import com.beetle.push.instance.SmartPushServiceProvider;
-import com.facebook.react.ReactInstanceManager;
-import com.gameservice.sdk.crashdump.NgdsCrashHandler;
 import com.beetle.push.IMsgReceiver;
 
 import com.google.code.p.leveldb.LevelDB;
 
 import java.io.File;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -57,9 +53,6 @@ public class IMApplication extends Application implements Application.ActivityLi
             return;
         }
         Log.i(TAG, "app application create");
-
-
-        ReactInstance.getInstance().build(this);
 
         LevelDB ldb = LevelDB.getDefaultDB();
         String dir = getFilesDir().getAbsoluteFile() + File.separator + "db";
@@ -121,16 +114,6 @@ public class IMApplication extends Application implements Application.ActivityLi
             im.setUID(Profile.getInstance().uid);
             IMHttpAPI.setToken(Token.getInstance().accessToken);
         }
-        initErrorHandler();
-    }
-
-
-    private void initErrorHandler() {
-        //交给crashHandler自行判断,默认路径 /mnt/sdcard/.ngdsCrashDump/{your pacakagename}
-        Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler =
-                Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(
-                new NgdsCrashHandler(this, defaultUncaughtExceptionHandler));
     }
 
     private boolean isAppProcess() {

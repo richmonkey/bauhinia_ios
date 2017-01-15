@@ -13,19 +13,17 @@ import {
   ScrollView,
   TouchableHighlight,
   TextInput,
+  Platform,
   View
 } from 'react-native';
 
-import { NativeModules, NativeAppEventEmitter } from 'react-native';
+import { NativeModules } from 'react-native';
+var native = (Platform.OS == 'android') ? NativeModules.GroupSettingActivity : NativeModules.GroupSettingViewController;
 
 import NavigationBar from 'react-native-navbar';
 
 import { connect } from 'react-redux';
 import {updateGroupName} from "./actions";
-
-var GroupNameViewControllerBridge = NativeModules.GroupNameViewControllerBridge;
-var ProgressHudBridge = NativeModules.ProgressHudBridge;
-
 
 class GroupName extends Component {
   constructor(props) {
@@ -50,8 +48,8 @@ class GroupName extends Component {
     console.log("update group name...");
 
     var name = this.state.topic;
-    var url = this.props.url + "/groups/" + this.props.group_id;
-    ProgressHudBridge.showHud();
+    var url = this.props.url + "/client/groups/" + this.props.group_id;
+    native.showHUD();
     fetch(url, {
       method:"PATCH",
       headers: {
@@ -64,17 +62,17 @@ class GroupName extends Component {
       console.log("status:", response.status);
       if (response.status == 200) {
           this.props.dispatch(updateGroupName(name));
-          ProgressHudBridge.hideHud();
+          native.hideHUD();
           this.props.navigator.pop();
       } else {
         return response.json().then((responseJson)=>{
           console.log(responseJson.meta.message);
-          ProgressHudBridge.hideTextHud(responseJson.meta.message);
+          native.hideTextHUD(responseJson.meta.message);
         });
       }
     }).catch((error) => {
       console.log("error:", error);
-      ProgressHudBridge.hideTextHud('' + error);
+      native.hideTextHUD('' + error);
     });
 
   }
@@ -107,7 +105,6 @@ class GroupName extends Component {
             title={titleConfig}
             leftButton={leftButtonConfig} 
             rightButton={rightButtonConfig} />
-
 
         <ScrollView style={{flex:1, backgroundColor:"#F5FCFF"}}>
           <View style={{marginTop:12}}>
