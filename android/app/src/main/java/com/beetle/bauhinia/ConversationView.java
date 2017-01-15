@@ -3,13 +3,11 @@ package com.beetle.bauhinia;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beetle.bauhinia.db.Conversation;
-import com.beetle.bauhinia.db.IMessage;
+import com.beetle.bauhinia.model.Conversation;
 import com.beetle.bauhinia.tools.TimeUtil;
 import com.squareup.picasso.Picasso;
 

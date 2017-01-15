@@ -7,17 +7,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.beetle.bauhinia.activity.GroupSettingActivity;
-import com.beetle.bauhinia.api.types.User;
-import com.beetle.bauhinia.db.IMessage;
 import com.beetle.bauhinia.model.Contact;
 import com.beetle.bauhinia.model.ContactDB;
 import com.beetle.bauhinia.model.GroupDB;
 import com.beetle.bauhinia.model.PhoneNumber;
 import com.beetle.bauhinia.model.UserDB;
-import com.beetle.bauhinia.tools.Notification;
-import com.beetle.bauhinia.tools.NotificationCenter;
-
-import java.util.ArrayList;
 
 /**
  * Created by houxh on 15/3/21.
@@ -29,7 +23,10 @@ public class AppGroupMessageActivity extends GroupMessageActivity {
     @Override
     protected User getUser(long uid) {
         if (uid == 0) {
-            return null;
+            User u = new User();
+            u.name = "";
+            u.avatarURL = "";
+            return u;
         }
         com.beetle.bauhinia.api.types.User u = UserDB.getInstance().loadUser(uid);
         Contact c = ContactDB.getInstance().loadContact(new PhoneNumber(u.zone, u.number));
@@ -40,7 +37,7 @@ public class AppGroupMessageActivity extends GroupMessageActivity {
         }
         User user = new User();
         user.name = u.name;
-        user.avatarURL = u.avatar;
+        user.avatarURL = u.avatar != null ? u.avatar : "";
         return user;
     }
 
@@ -50,7 +47,6 @@ public class AppGroupMessageActivity extends GroupMessageActivity {
 
         leaved = GroupDB.getInstance().isLeaved(groupID);
         if (leaved) {
-            hintView.setVisibility(View.VISIBLE);
             inputMenu.setVisibility(View.GONE);
         }
     }

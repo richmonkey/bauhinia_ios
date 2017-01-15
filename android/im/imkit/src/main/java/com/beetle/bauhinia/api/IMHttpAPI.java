@@ -21,6 +21,7 @@ import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Part;
+import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 import rx.Observable;
@@ -87,6 +88,9 @@ public class IMHttpAPI {
 
         @POST("/audios")
         Observable<Audio> postAudios(@Header("Content-Type") String contentType, @Body TypedFile file);
+
+        @GET("/client/groups/{id}")
+        Observable<Object> getGroup(@Path("id") long gid);
     };
 
 

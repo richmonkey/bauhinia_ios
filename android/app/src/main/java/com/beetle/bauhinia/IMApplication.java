@@ -110,8 +110,9 @@ public class IMApplication extends Application implements Application.ActivityLi
 
         //already login
         if (Profile.getInstance().uid > 0) {
+            PeerMessageHandler.getInstance().setUID(Profile.getInstance().uid);
+            GroupMessageHandler.getInstance().setUID(Profile.getInstance().uid);
             im.setToken(Token.getInstance().accessToken);
-            im.setUID(Profile.getInstance().uid);
             IMHttpAPI.setToken(Token.getInstance().accessToken);
         }
     }

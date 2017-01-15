@@ -18,7 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+import com.beetle.bauhinia.db.GroupMessageHandler;
+import com.beetle.bauhinia.db.PeerMessageHandler;
 import com.beetle.bauhinia.db.SyncKeyHandler;
+import com.beetle.bauhinia.model.Conversation;
 import com.beetle.bauhinia.model.NewCount;
 import com.beetle.bauhinia.model.Profile;
 import com.beetle.bauhinia.service.ForegroundService;
@@ -29,7 +32,6 @@ import com.beetle.bauhinia.activity.ZBarActivity;
 import com.beetle.bauhinia.api.IMHttpAPI;
 import com.beetle.bauhinia.api.body.PostQRCode;
 import com.beetle.bauhinia.api.types.Version;
-import com.beetle.bauhinia.db.Conversation;
 import com.beetle.bauhinia.db.ConversationIterator;
 import com.beetle.bauhinia.db.GroupMessageDB;
 import com.beetle.bauhinia.db.IMessage;
@@ -231,11 +233,13 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             ContactDB.getInstance().addObserver(this);
         }
 
+        PeerMessageHandler.getInstance().setUID(Profile.getInstance().uid);
+        GroupMessageHandler.getInstance().setUID(Profile.getInstance().uid);
+
         IMService im =  IMService.getInstance();
         im.addObserver(this);
         im.addPeerObserver(this);
         im.addGroupObserver(this);
-        im.setUID(Profile.getInstance().uid);
 
         SyncKeyHandler handler = new SyncKeyHandler(this.getApplicationContext(), "sync_key");
         handler.load();
@@ -431,13 +435,15 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
         conversations = new ArrayList<Conversation>();
         ConversationIterator iter = PeerMessageDB.getInstance().newConversationIterator();
         while (true) {
-            Conversation conv = iter.next();
-            if (conv == null) {
+            IMessage msg = iter.next();
+            if (msg == null) {
                 break;
             }
-            if (conv.message == null) {
-                continue;
-            }
+
+            Conversation conv = new Conversation();
+            conv.message = msg;
+            conv.type = Conversation.CONVERSATION_PEER;
+            conv.cid = (Profile.getInstance().uid == msg.sender) ? msg.receiver : msg.sender;
             int unread = NewCount.getNewCount(conv.cid);
             conv.setUnreadCount(unread);
             updatePeerConversationName(conv);
@@ -447,13 +453,14 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
 
         iter = GroupMessageDB.getInstance().newConversationIterator();
         while (true) {
-            final Conversation conv = iter.next();
-            if (conv == null) {
+            IMessage msg = iter.next();
+            if (msg == null) {
                 break;
             }
-            if (conv.message == null) {
-                continue;
-            }
+            Conversation conv = new Conversation();
+            conv.message = msg;
+            conv.type = Conversation.CONVERSATION_GROUP;
+            conv.cid = msg.receiver;
 
             int unread = NewCount.getGroupNewCount(conv.cid);
             conv.setUnreadCount(unread);
@@ -627,7 +634,6 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             intent.putExtra("peer_uid", conv.cid);
             intent.putExtra("peer_name", conv.getName());
             intent.putExtra("peer_avatar", conv.getAvatar());
-            intent.putExtra("peer_up_timestamp", user.up_timestamp);
             intent.putExtra("current_uid", profile.uid);
             intent.putExtra("avatar", profile.avatar);
 
