@@ -7,16 +7,16 @@
 //
 
 #import "GroupSettingViewController.h"
-#import "RCTRootView.h"
-#import "RCTBundleURLProvider.h"
-
-#import "RCTBridgeModule.h"
+#import <React/RCTRootView.h>
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTBridgeModule.h>
+//#import <React/RCTEventDispatcher.h>
 #import "GroupDB.h"
 #import "UserDB.h"
 #import "ContactDB.h"
 #import "ContactViewController.h"
 #import "Profile.h"
-#import "RCTEventDispatcher.h"
+
 #import "Token.h"
 #import "Config.h"
 #import "MBProgressHUD.h"

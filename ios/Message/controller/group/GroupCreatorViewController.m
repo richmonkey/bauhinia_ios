@@ -7,9 +7,9 @@
 //
 
 #import "GroupCreatorViewController.h"
-#import "RCTRootView.h"
-#import "RCTBundleURLProvider.h"
-#import "RCTBridgeModule.h"
+#import <React/RCTRootView.h>
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTBridgeModule.h>
 
 #import "UserDB.h"
 #import "ContactDB.h"
