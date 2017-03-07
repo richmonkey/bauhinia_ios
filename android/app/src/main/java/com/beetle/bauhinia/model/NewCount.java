@@ -22,7 +22,7 @@ public class NewCount {
         LevelDB db = LevelDB.getDefaultDB();
 
         try {
-            String key = String.format("news_group_%d", uid);
+            String key = String.format("news_peer_%d", uid);
             db.setLong(key, count);
         } catch (Exception e) {
             e.printStackTrace();
