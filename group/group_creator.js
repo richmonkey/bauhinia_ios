@@ -22,7 +22,8 @@ import {connect} from 'react-redux'
 var IsAndroid = (Platform.OS == 'android');
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const URL = "https://api.gobelieve.io";
+import {API_URL} from './config';
+
 class GroupCreator extends Component {
     static navigatorButtons = {
         rightButtons: [
@@ -108,7 +109,7 @@ class GroupCreator extends Component {
             members:users
         };
 
-        var url = URL + "/client/groups";
+        var url = API_URL + "/client/groups";
 
         this.showSpinner();
         fetch(url, {
