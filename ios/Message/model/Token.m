@@ -56,3 +56,32 @@
 }
 
 @end
+
+
+@implementation TokenManager
+RCT_EXPORT_MODULE();
+
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
+
+RCT_REMAP_METHOD(getToken,
+                 resolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    
+    if ([Token instance].uid > 0) {
+        NSDictionary *dict =@{@"uid":@([Token instance].uid),
+                              @"name":@"我",
+                              @"gobelieveToken":[Token instance].accessToken,
+                              };
+        
+        resolve(dict);
+    } else {
+        reject(@"token uninitialize", @"", nil);
+    }
+}
+
+
+@end

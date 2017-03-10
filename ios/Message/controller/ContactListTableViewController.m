@@ -40,7 +40,7 @@
     [super viewDidLoad];
     self.tabBarController.navigationItem.title = @"所有联系人";
 	
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,kStatusBarHeight + KNavigationBarHeight, self.view.frame.size.width, kSearchBarHeight)];
+	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,0, self.view.frame.size.width, kSearchBarHeight)];
 	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
@@ -58,7 +58,7 @@
 	self.tableView.showsVerticalScrollIndicator = YES;
     self.tableView.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
     
-    self.tableView.frame = CGRectMake(0, KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight, self.view.frame.size.width, self.view.frame.size.height - (KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight + kTabBarHeight));
+    self.tableView.frame = CGRectMake(0, kSearchBarHeight, self.view.frame.size.width, self.view.frame.size.height - (kSearchBarHeight + kTabBarHeight));
     NSLog(@"height:%f", self.view.frame.size.height);
 	[self.view addSubview:self.tableView];
     

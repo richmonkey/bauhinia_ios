@@ -1,0 +1,20 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.reactnativenavigation">
+
+    <application>
+        <activity android:name=".controllers.NavigationActivity"
+            android:theme="@style/NoActionBar"/>
+        <activity
+            android:name=".controllers.PortraitNavigationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar"/>
+        <activity
+            android:name=".controllers.LandscapeNavigationActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/NoActionBar"/>
+        <activity
+            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

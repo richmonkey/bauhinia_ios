@@ -9,5 +9,5 @@
 #import <gobelieve/GroupMessageViewController.h>
 
 @interface MGroupMessageViewController : GroupMessageViewController
-
+@property(nonatomic, copy) NSString *navigatorID;
 @end

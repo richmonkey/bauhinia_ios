@@ -21,6 +21,11 @@
 #import "AskPhoneNumberViewController.h"
 #import "APIRequest.h"
 
+#import "RCCManager.h"
+
+#import <React/RCTBundleURLProvider.h>
+
+
 @implementation AppDelegate
 
 -(NSString*)getDocumentPath {
@@ -53,6 +58,16 @@
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
     [[IMService instance] startRechabilityNotifier];
     
+    //创建bridge对象
+    NSURL *jsCodeLocation;
+    jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
+    // jsCodeLocation = [NSURL URLWithString:@"http://192.168.0.101:8081/index.ios.bundle"];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    [[RCCManager sharedInstance] initBridgeWithBundleURL:jsCodeLocation];
+    return YES;
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     application.statusBarHidden = NO;
     
@@ -72,17 +87,19 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
+    
 
+    
     return YES;
 }
 
-#ifdef __IPHONE_8_0
+
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
     //register to receive notifications
     [application registerForRemoteNotifications];
 }
-#endif
+
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterForRemoteNotificationsWithDeviceToken"

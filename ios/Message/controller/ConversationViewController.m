@@ -26,6 +26,8 @@
 #import "Token.h"
 #import "NewCount.h"
 #import "Conversation.h"
+#import "RCCManager.h"
+#import <React/RCTEventDispatcher.h>
 
 #define kPeerConversationCellHeight         60
 #define kGroupConversationCellHeight        44
@@ -394,9 +396,48 @@
 }
 
 - (void)newGroup {
-    GroupCreatorViewController *ctrl = [[GroupCreatorViewController alloc] init];
-    ctrl.delegate = self;
-    [self presentViewController:ctrl animated:YES completion:nil];
+    NSMutableArray *users = [NSMutableArray array];
+    NSArray *contacts = [ContactDB instance].contactsArray;
+
+    for (IMContact *contact in contacts) {
+        for (User *u in contact.users) {
+            NSInteger index = [users indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSDictionary *dict = (NSDictionary*)obj;
+                if (u.uid == [dict[@"uid"] longLongValue]) {
+                    *stop = YES;
+                    return YES;
+                } else {
+                    return NO;
+                }
+            }];
+            if (index == NSNotFound) {
+                [users addObject:@{@"id":@(u.uid), @"uid":@(u.uid), @"name":u.displayName}];
+            }
+        }
+    }
+    
+    NSInteger index = [users indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary *dict = (NSDictionary*)obj;
+        if ([Token instance].uid == [dict[@"uid"] longLongValue]) {
+            *stop = YES;
+            return YES;
+        } else {
+            return NO;
+        }
+    }];
+    if (index == NSNotFound) {
+        [users addObject:@{@"id":@([Token instance].uid), @"uid":@([Token instance].uid), @"name":@""}];
+    }
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:users forKey:@"users"];
+    
+    NSDictionary *body = @{@"navigatorID":self.navigatorID,
+                           @"users":users};
+    
+    RCTBridge *bridge = [[RCCManager sharedIntance] getBridge];
+    [bridge.eventDispatcher sendAppEventWithName:@"create_group" body:body];
+    return;
 }
 
 #pragma mark - Table view data source
@@ -531,6 +572,7 @@
         msgController.groupName = con.name;
         
         msgController.currentUID = [Profile instance].uid;
+        msgController.navigatorID = self.navigatorID;
         
         msgController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:msgController animated: YES];

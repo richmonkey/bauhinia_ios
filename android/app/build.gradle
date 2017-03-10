@@ -162,6 +162,7 @@ dependencies {
     compile project(':imkit')
     compile project(':imsdk')
     compile project(':pushsdk')
+    compile project(':react-native-navigation')
 }
 
 android {

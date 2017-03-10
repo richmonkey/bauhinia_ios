@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <React/RCTBridgeModule.h>
 
 @interface Token : NSObject
 +(Token*)instance;
@@ -16,4 +17,9 @@
 @property(assign)int expireTimestamp;
 @property(assign)int64_t uid;
 -(void)save;
+@end
+
+
+@interface TokenManager : NSObject <RCTBridgeModule>
+
 @end

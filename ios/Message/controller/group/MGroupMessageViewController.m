@@ -10,14 +10,23 @@
 #import "GroupSettingViewController.h"
 #import "GroupDB.h"
 #import "Token.h"
+#import "UserDB.h"
+#import "Profile.h"
+#import "ContactDB.h"
 
-@interface MGroupMessageViewController ()
+#import "RCCManager.h"
+#import <React/RCTEventDispatcher.h>
+
+@interface MGroupMessageViewController ()<MessageViewControllerUserDelegate>
 
 @end
 
 @implementation MGroupMessageViewController
 
 - (void)viewDidLoad {
+    
+    self.userDelegate = self;
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
@@ -47,6 +56,7 @@
                                                             action:@selector(groupSetting)];
     
     self.navigationItem.rightBarButtonItem = item;
+
     
 }
 
@@ -55,11 +65,76 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)groupSetting {
-    GroupSettingViewController *ctrl = [[GroupSettingViewController alloc] init];
-    ctrl.groupID = self.groupID;
+-(NSArray*)getContacts {
+    NSMutableArray *users = [NSMutableArray array];
+    NSArray *contacts = [ContactDB instance].contactsArray;
+    
+    for (IMContact *contact in contacts) {
+        for (User *u in contact.users) {
+            NSInteger index = [users indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSDictionary *dict = (NSDictionary*)obj;
+                if (u.uid == [dict[@"uid"] longLongValue]) {
+                    *stop = YES;
+                    return YES;
+                } else {
+                    return NO;
+                }
+            }];
+            if (index == NSNotFound) {
+                [users addObject:@{@"id":@(u.uid), @"uid":@(u.uid), @"name":u.displayName}];
+            }
+        }
+    }
+    
+    NSInteger index = [users indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary *dict = (NSDictionary*)obj;
+        if ([Token instance].uid == [dict[@"uid"] longLongValue]) {
+            *stop = YES;
+            return YES;
+        } else {
+            return NO;
+        }
+    }];
+    if (index == NSNotFound) {
+        [users addObject:@{@"id":@([Token instance].uid), @"uid":@([Token instance].uid), @"name":@""}];
+    }
+    return users;
+}
 
-    [self.navigationController pushViewController:ctrl animated:YES];
+- (void)groupSetting {
+    Group *group = [[GroupDB instance] loadGroup:self.groupID];
+    
+    if (!group) {
+        NSLog(@"group id is invalid");
+        return;
+    }
+    
+    NSMutableArray *members = [NSMutableArray array];
+    for (int i = 0; i < group.members.count; i++) {
+        NSNumber *memberID = [group.members objectAtIndex:i];
+        
+        NSMutableDictionary *member = [NSMutableDictionary dictionary];
+        [member setObject:memberID forKey:@"uid"];
+        [member setObject:memberID forKey:@"id"];
+        User *u = [[UserDB instance] loadUser:[memberID longLongValue]];
+        [member setObject:u.displayName forKey:@"name"];
+        
+        [members addObject:member];
+    }
+    
+    NSDictionary *g = @{@"id":@(group.groupID),
+                        @"name":group.topic,
+                        @"members":members,
+                        @"master":@(group.masterID)
+                        };
+    
+    
+    NSArray *contacts = [self getContacts];
+    NSDictionary *body = @{@"group":g, @"contacts":contacts, @"navigatorID":self.navigatorID};
+    
+    RCTBridge *bridge = [[RCCManager sharedIntance] getBridge];
+
+    [bridge.eventDispatcher sendAppEventWithName:@"group_setting" body:body];
 }
 
 /*
@@ -71,5 +146,34 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+#pragma mark - MessageViewControllerUserDelegate
+//从本地获取用户信息, IUser的name字段为空时，显示identifier字段
+- (IUser*)getUser:(int64_t)uid {
+    UserDB *db = [UserDB instance];
+    User *user = [db loadUser:uid];
+    
+    IUser *u = [[IUser alloc] init];
+    u.identifier = [NSString stringWithFormat:@"%lld", uid];
+    u.name = [user displayName];
+    u.avatarURL = user.avatarURL;
+    return u;
+}
+//从服务器获取用户信息
+- (void)asyncGetUser:(int64_t)uid cb:(void(^)(IUser*))cb {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UserDB *db = [UserDB instance];
+            User *user = [db loadUser:uid];
+            
+            IUser *u = [[IUser alloc] init];
+            u.identifier = [NSString stringWithFormat:@"%lld", uid];
+            u.name = [user displayName];
+            u.avatarURL = user.avatarURL;
+            cb(u);
+        });
+    });
+}
 
 @end

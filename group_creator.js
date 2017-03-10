@@ -19,20 +19,11 @@ import {
 
 var Toast = require('react-native-toast');
 import NavigationBar from 'react-native-navbar';
-import { NativeModules } from 'react-native';
-var IsAndroid = (Platform.OS == 'android');
-var native;
-if (IsAndroid) {
-    native = NativeModules.GroupCreatorActivity;
-} else {
-    native = NativeModules.GroupCreatorViewController;
-}
-
 
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-class GroupName extends Component {
+class GroupCreator extends Component {
     constructor(props) {
         super(props);
         this.state = {topic:"", visible:false};
@@ -106,7 +97,7 @@ class GroupName extends Component {
                     console.log("response json:", responseJson);
                     console.log("group id:", responseJson.data.group_id);
                     let groupID = responseJson.data.group_id;
-                    native.finishWithGroupID('' + groupID, topic);
+                    //native.finishWithGroupID('' + groupID, topic);
                 } else {
                     console.log(responseJson.meta.message);
                     Toast.showLongBottom(responseJson.meta.message);
@@ -169,8 +160,10 @@ class GroupName extends Component {
 }
 
 
-var GroupCreator = React.createClass({
-    getInitialState: function() {
+class GroupSelectMember extends Component {
+    constructor(props) {
+        super(props);
+
         var rowHasChanged = function (r1, r2) {
             return r1 !== r2;
         }
@@ -180,15 +173,14 @@ var GroupCreator = React.createClass({
         for (var i = 0; i < data.length; i++) {
             data[i].id = i;
         }
-        return {
+        this.state =  {
             data:data,
             dataSource: ds.cloneWithRows(data),
             visible:false,
         };
-    },
+    }
 
-
-    handleCreate: function() {
+    handleCreate() {
         var users = [];
         var data = this.state.data;
         for (var i = 0; i < data.length; i++) {
@@ -203,21 +195,21 @@ var GroupCreator = React.createClass({
 
         var route = {index: "name", users:users};
         this.props.navigator.push(route);
-    },
+    }
 
-    handleCancel: function() {
-        native.finish();
-    },
+    handleCancel() {
+        //native.finish();
+    }
 
-    showSpinner: function() {
+    showSpinner() {
         this.setState({visible:true});
-    },
+    }
 
-    hideSpinner: function() {
+    hideSpinner() {
         this.setState({visible:false});
-    },
+    }
 
-    render: function() {
+    render() {
         var renderRow = (rowData) => {
             var selectImage = () => {
                 if (rowData.selected) {
@@ -270,18 +262,17 @@ var GroupCreator = React.createClass({
                 <Spinner visible={this.state.visible} />
             </View>
         );
-    },
+    }
 
-    rowPressed: function(rowData) {
+    rowPressed(rowData) {
         var data = this.state.data;
         var ds = this.state.dataSource;
         var newData = data.slice();
         var newRow = {uid:rowData.uid, name:rowData.name, id:rowData.id, selected:!rowData.selected};
         newData[rowData.id] = newRow;
         this.setState({data:newData, dataSource:ds.cloneWithRows(newData)});
-    },
-
-});
+    }
+}
 
 
 const styles = StyleSheet.create({
@@ -292,53 +283,5 @@ const styles = StyleSheet.create({
 
 
 
-
-class GroupCreatorIndex extends Component {
-    constructor(props) {
-        super(props);
-    }
-    
-    componentDidMount() {
-        var self = this;
-
-        BackAndroid.addEventListener('hardwareBackPress', () => {
-            if (self.navigator && self.navigator.getCurrentRoutes().length > 1) {
-                self.navigator.pop();
-                return true;
-            } else {
-                return false;        
-            }
-        });
-    }
-
-    render() {
-        const routes = [
-            {index: "select"},
-        ];
-
-
-        var self = this;
-        var renderScene = function(route, navigator) {
-            if (route.index == "select") {
-                return <GroupCreator  {...self.props} navigator={navigator}/>
-            } else if (route.index == "name") {
-                return <GroupName {...self.props} users={route.users} navigator={navigator}/>
-            } 
-        }
-
-        return (
-            <Navigator ref={(nav) => { self.navigator = nav; }} 
-                       initialRoute={routes[0]}
-                       renderScene={renderScene}
-                       configureScene={(route, routeStack) =>
-                           Navigator.SceneConfigs.FloatFromRight}/>
-        );
-    }
-
-}
-
-
-
-AppRegistry.registerComponent('GroupCreatorIndex', () => GroupCreatorIndex);
-
+export {GroupSelectMember, GroupCreator}
 

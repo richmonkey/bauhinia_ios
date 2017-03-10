@@ -30,4 +30,5 @@
 @property (strong , nonatomic) UITableView *tableview;
 @property (strong,nonatomic) UILabel *emputyLabel;
 
+@property (nonatomic, copy) NSString *navigatorID;
 @end

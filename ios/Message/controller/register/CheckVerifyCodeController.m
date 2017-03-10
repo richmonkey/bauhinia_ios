@@ -21,8 +21,8 @@
 #import "UIView+Toast.h"
 #import "UIApplication+Util.h"
 
-
-
+#import <React/RCTEventDispatcher.h>
+#import "RCCManager.h"
 
 @interface CheckVerifyCodeController ()
 
@@ -127,9 +127,13 @@
 
 
 -(void) verifySuccess{
-    ProfileViewController * ctrl = [[ProfileViewController alloc] init];
-    ctrl.editorState = ProfileEditorLoginingType;
-    [self.navigationController pushViewController:ctrl animated: YES];
+    RCTBridge *bridge = [[RCCManager sharedIntance] getBridge];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+    NSDictionary *token = @{@"uid":@([Token instance].uid),
+                            @"gobelieveToken":[Token instance].accessToken};
+    NSDictionary *body = @{@"token":token};
+    [bridge.eventDispatcher sendAppEventWithName:@"open_app_main" body:body];
 
 }
 

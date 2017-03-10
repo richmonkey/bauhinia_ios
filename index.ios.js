@@ -1,2 +1,5 @@
-import './group_setting_index';
-import './group_creator';
+import {
+    AppRegistry,
+} from 'react-native';
+
+import App from './App';

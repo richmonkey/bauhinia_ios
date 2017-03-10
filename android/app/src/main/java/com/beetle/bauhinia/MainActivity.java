@@ -8,10 +8,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +27,13 @@ import com.beetle.bauhinia.model.Conversation;
 import com.beetle.bauhinia.model.NewCount;
 import com.beetle.bauhinia.model.Profile;
 import com.beetle.bauhinia.service.ForegroundService;
+import com.beetle.bauhinia.tools.event.BusProvider;
+import com.beetle.bauhinia.tools.event.GroupEvent;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
 
 import com.beetle.bauhinia.activity.GroupCreatorActivity;
@@ -59,6 +68,10 @@ import com.beetle.bauhinia.tools.*;
 import com.beetle.bauhinia.tools.Notification;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.react.JsDevReloadHandler;
+import com.reactnativenavigation.react.ReactDevPermission;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -83,8 +96,8 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
         GroupMessageObserver,
         PeerMessageObserver,
         AdapterView.OnItemClickListener,
-
-        ContactDB.ContactObserver, NotificationCenter.NotificationCenterObserver {
+        ContactDB.ContactObserver,
+        NotificationCenter.NotificationCenterObserver {
 
     private static final int QRCODE_SCAN_REQUEST = 100;
     private static final int GROUP_CREATOR_RESULT = 101;
@@ -142,6 +155,7 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -154,11 +168,66 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             startActivityForResult(intent, QRCODE_SCAN_REQUEST);
             return true;
         } else if (id == R.id.action_new_group) {
-            Intent intent = new Intent(MainActivity.this, GroupCreatorActivity.class);
-            startActivityForResult(intent, GROUP_CREATOR_RESULT);
+            this.onNewGroup();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void onNewGroup() {
+        boolean containSelf = false;
+        long uid = Profile.getInstance().uid;
+        WritableArray users = Arguments.createArray();
+        ContactDB db = ContactDB.getInstance();
+        final ArrayList<Contact> contacts = db.getContacts();
+        for (int i = 0; i < contacts.size(); i++) {
+            Contact c = contacts.get(i);
+            for (int j = 0; j < c.phoneNumbers.size(); j++) {
+                Contact.ContactData data = c.phoneNumbers.get(j);
+                PhoneNumber number = new PhoneNumber();
+                if (!number.parsePhoneNumber(data.value)) {
+                    continue;
+                }
+
+                UserDB userDB = UserDB.getInstance();
+                User u = userDB.loadUser(number);
+                if (u != null) {
+                    u.name = c.displayName;
+
+                    WritableMap map = Arguments.createMap();
+                    map.putString("name", u.name);
+                    map.putDouble("uid", u.uid);
+                    map.putDouble("id", u.uid);
+                    users.pushMap(map);
+
+                    if (u.uid == uid) {
+                        containSelf = true;
+                    }
+                }
+            }
+        }
+        if (!containSelf) {
+            WritableMap map = Arguments.createMap();
+            map.putString("name", "我");
+            map.putDouble("uid", uid);
+            map.putDouble("id", uid);
+            users.pushMap(map);
+        }
+
+        WritableMap map = Arguments.createMap();
+        map.putArray("users", users);
+        ReactContext reactContext = NavigationApplication.instance.getReactGateway().getReactContext();
+        this.sendEvent(reactContext, "create_group_android", map);
+    }
+
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -256,6 +325,8 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
 
         im.start();
 
+        BusProvider.getInstance().register(this);
+
         refreshConversations();
 
         initWidget();
@@ -296,6 +367,20 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
         startService(service);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (ReactDevPermission.shouldAskPermission()) {
+            ReactDevPermission.askPermission(this);
+            return;
+        }
+
+        if (!NavigationApplication.instance.isReactContextInitialized()) {
+            NavigationApplication.instance.startReactContextOnceInBackgroundAndExecuteJS();
+        }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -316,6 +401,11 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return JsDevReloadHandler.onKeyUp(getCurrentFocus(), keyCode) || super.onKeyUp(keyCode, event);
     }
 
     private void checkVersion(final Version version) {
@@ -352,6 +442,7 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BusProvider.getInstance().unregister(this);
         ContactDB.getInstance().removeObserver(this);
         IMService im =  IMService.getInstance();
         im.removeObserver(this);
@@ -927,6 +1018,17 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
                 NewCount.setGroupNewCount(conversation.cid, 0);
             }
         }
+    }
+
+    @Subscribe
+    public void onGroupCreated(GroupEvent event) {
+        Profile profile = Profile.getInstance();
+        Intent intent = new Intent(this, AppGroupMessageActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("group_id", event.groupID);
+        intent.putExtra("group_name", event.name);
+        intent.putExtra("current_uid", profile.uid);
+        startActivity(intent);
     }
 
     public boolean canBack() {

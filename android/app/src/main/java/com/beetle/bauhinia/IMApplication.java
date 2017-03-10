@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -30,9 +31,12 @@ import com.beetle.push.Push;
 import com.beetle.push.instance.SmartPushServiceProvider;
 import com.beetle.push.IMsgReceiver;
 
+import com.facebook.react.ReactPackage;
 import com.google.code.p.leveldb.LevelDB;
+import com.reactnativenavigation.NavigationApplication;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,9 +45,27 @@ import rx.functions.Action1;
 /**
  * Created by houxh on 14-8-24.
  */
-public class IMApplication extends Application implements Application.ActivityLifecycleCallbacks {
+public class IMApplication extends NavigationApplication implements Application.ActivityLifecycleCallbacks {
 
     public String deviceToken;
+
+    @Override
+    public boolean isDebug() {
+        // Make sure you are using BuildConfig from your own application
+        return BuildConfig.DEBUG;
+    }
+
+
+    @NonNull
+    @Override
+    public List<ReactPackage> createAdditionalReactPackages() {
+        // Add the packages you require here.
+        // No need to add RnnPackage and MainReactPackage
+        return Arrays.<ReactPackage>asList(
+                new BauhinaPackage()
+        );
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
