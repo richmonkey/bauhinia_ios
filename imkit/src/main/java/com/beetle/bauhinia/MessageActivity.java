@@ -78,14 +78,14 @@ public class MessageActivity extends BaseActivity implements
 
     protected final String TAG = "imservice";
 
-    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 2;
-    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
+    private static final int PERMISSIONS_REQUEST = 2;
 
 
     private static final int IN_MSG = 0;
     private static final int OUT_MSG = 1;
 
     protected boolean isShowUserName = false;
+    private File captureFile;
 
     protected ArrayList<IMessage> messages = new ArrayList<IMessage>();
     protected HashMap<Integer, IMessage.Attachment> attachments = new HashMap<Integer, IMessage.Attachment>();
@@ -209,6 +209,7 @@ public class MessageActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
+        captureFile = new File(getExternalFilesDir(null), "pic.jpg");
 
         File f = new File(getCacheDir(), "bh_audio.amr");
         recordFileName = f.getAbsolutePath();
@@ -317,10 +318,8 @@ public class MessageActivity extends BaseActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
-            Log.i(TAG, "record audio permission:" + grantResults);
-        } else if (requestCode == PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            Log.i(TAG, "read external storage permission:" + grantResults);
+        if (requestCode == PERMISSIONS_REQUEST) {
+            Log.i(TAG, "granted permission:" + grantResults);
         }
     }
 
@@ -328,23 +327,32 @@ public class MessageActivity extends BaseActivity implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int recordPermission = (checkSelfPermission(Manifest.permission.RECORD_AUDIO));
             int readExternalPermission = (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE));
+            int fineLocationPermission = (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION));
+            int coarseLocationPermission = (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
+
+            ArrayList<String> permissions = new ArrayList<String>();
 
             if (recordPermission != PackageManager.PERMISSION_GRANTED) {
-                try {
-                    this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                }
+                permissions.add(Manifest.permission.RECORD_AUDIO);
             }
 
             if (readExternalPermission != PackageManager.PERMISSION_GRANTED) {
-                try {
-                    this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                }
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
 
+            if (fineLocationPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+
+            if (coarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+
+            if (permissions.size() > 0) {
+                String[] array = new String[permissions.size()];
+                permissions.toArray(array);
+                this.requestPermissions(array, PERMISSIONS_REQUEST);
+            }
         }
     }
 
@@ -1004,6 +1012,7 @@ public class MessageActivity extends BaseActivity implements
 
     void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(captureFile));
         startActivityForResult(takePictureIntent, TAKE_PICTURE);
     }
 
@@ -1013,10 +1022,14 @@ public class MessageActivity extends BaseActivity implements
             return;
         }
 
-        Bitmap bmp;
         if (requestCode == TAKE_PICTURE) {
-            bmp = (Bitmap) data.getExtras().get("data");
-            sendImageMessage(bmp);
+            if (captureFile.exists()) {
+                Log.i(TAG, "take picture success:" + captureFile.getAbsolutePath());
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                Bitmap bmp = BitmapFactory.decodeFile(captureFile.getAbsolutePath(), options);
+                sendImageMessage(bmp);
+            }
         } else if (requestCode == SELECT_PICTURE || requestCode == SELECT_PICTURE_KITKAT) {
             try {
                 Uri selectedImageUri = data.getData();
@@ -1024,7 +1037,7 @@ public class MessageActivity extends BaseActivity implements
                 InputStream is = getContentResolver().openInputStream(selectedImageUri);
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                bmp = BitmapFactory.decodeStream(is, null, options);
+                Bitmap bmp = BitmapFactory.decodeStream(is, null, options);
                 sendImageMessage(bmp);
             } catch (Exception e) {
                 e.printStackTrace();
