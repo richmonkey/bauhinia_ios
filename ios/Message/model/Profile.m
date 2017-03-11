@@ -25,13 +25,6 @@
 }
 
 
--(NSString*)displayName {
-    if (self.contactName.length == 0){
-        return  self.phoneNumber.number;
-    }
-    return self.contactName;
-    
-}
 
 -(void)load {
     NSDictionary *dict = [self loadDictionary];
@@ -44,16 +37,26 @@
             self.uid= u.uid;
             self.avatarURL = u.avatarURL;
             self.state = u.state;
-            self.contactName = u.contactName;
         }
     } else {
         self.uid = [[dict objectForKey:@"uid"] longLongValue];
         self.avatarURL = [dict objectForKey:@"avatar"];
         self.state = [dict objectForKey:@"state"];
+        
         PhoneNumber *pn = [[PhoneNumber alloc] init];
         pn.zone = [dict objectForKey:@"zone"];
         pn.number = [dict objectForKey:@"number"];
         self.phoneNumber = pn;
+        
+        self.name = [dict objectForKey:@"name"];
+        if (!self.name) {
+            self.name = @"";
+        }
+        
+        self.avatarURL = [dict objectForKey:@"avatar"];
+        if (!self.avatarURL) {
+            self.avatarURL = @"";
+        }
     }
 }
 
@@ -62,6 +65,7 @@
     NSDictionary *dict = @{@"uid":@(self.uid),
                            @"avatar":self.avatarURL?self.avatarURL:@"",
                            @"state":self.state?self.state:@"",
+                           @"name":self.name?self.name:@"",
                            @"zone":self.phoneNumber.zone?self.phoneNumber.zone:@"",
                            @"number":self.phoneNumber.number?self.phoneNumber.number:@""};
     

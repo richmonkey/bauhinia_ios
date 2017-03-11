@@ -19,25 +19,11 @@ import {
 } from 'react-native';
 
 import {connect} from 'react-redux'
+import {NAVIGATOR_STYLE} from './config';
 
 class Profile extends Component {
 
-    static navigatorStyle = Platform.select({
-        ios: {
-            navBarBackgroundColor: '#4dbce9',
-            navBarTextColor: '#ffff00',
-            navBarSubtitleTextColor: '#ff0000',
-            navBarButtonColor: '#ffffff',
-            statusBarTextColorScheme: 'light',
-        },
-        android: {
-            navBarBackgroundColor: '#212121',
-            navBarTextColor: '#ffffff',
-            navBarSubtitleTextColor: '#ff0000',
-            navBarButtonColor: '#ffffff',
-            statusBarTextColorScheme: 'light',
-        }
-    });
+    static navigatorStyle = NAVIGATOR_STYLE;
     
     constructor(props) {
         super(props);

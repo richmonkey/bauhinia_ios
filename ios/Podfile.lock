@@ -30,30 +30,6 @@ PODS:
   - JSBadgeView (1.4.1)
   - leveldb-library (1.18.2)
   - MBProgressHUD (0.9.2)
-  - React/Core (0.40.0):
-    - React/cxxreact
-    - React/yoga
-  - React/cxxreact (0.40.0):
-    - React/jschelpers
-  - React/jschelpers (0.40.0)
-  - React/RCTActionSheet (0.40.0):
-    - React/Core
-  - React/RCTAnimation (0.40.0):
-    - React/Core
-  - React/RCTGeolocation (0.40.0):
-    - React/Core
-  - React/RCTImage (0.40.0):
-    - React/Core
-    - React/RCTNetwork
-  - React/RCTNetwork (0.40.0):
-    - React/Core
-  - React/RCTText (0.40.0):
-    - React/Core
-  - React/RCTVibration (0.40.0):
-    - React/Core
-  - React/RCTWebSocket (0.40.0):
-    - React/Core
-  - React/yoga (0.40.0)
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
   - SDWebImage/Core (3.7.6)
@@ -65,22 +41,11 @@ DEPENDENCIES:
   - gobelieve (from `./dev.podspec`)
   - JSBadgeView
   - leveldb-library (~> 1.18.2)
-  - React/Core (from `../node_modules/react-native`)
-  - React/RCTActionSheet (from `../node_modules/react-native`)
-  - React/RCTAnimation (from `../node_modules/react-native`)
-  - React/RCTGeolocation (from `../node_modules/react-native`)
-  - React/RCTImage (from `../node_modules/react-native`)
-  - React/RCTNetwork (from `../node_modules/react-native`)
-  - React/RCTText (from `../node_modules/react-native`)
-  - React/RCTVibration (from `../node_modules/react-native`)
-  - React/RCTWebSocket (from `../node_modules/react-native`)
   - ZBarSDK
 
 EXTERNAL SOURCES:
   gobelieve:
     :path: ./dev.podspec
-  React:
-    :path: ../node_modules/react-native
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -89,11 +54,10 @@ SPEC CHECKSUMS:
   JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
   leveldb-library: ef0453697c0fda3a9e550e5650e52976e6724548
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
-  React: 6dfb2f72edb1d74a800127ae157af038646673ce
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   Toast: 0773b8fc0e97352ca6054517bec7ebdd4110029d
   ZBarSDK: 4c1b5daeb7d6cc67dc9355e690af0230a661f6ec
 
-PODFILE CHECKSUM: 0820f2881b369432d69a2ee701fd31913a14c413
+PODFILE CHECKSUM: 8ba2590fd32ad8b704033cb2f58cc263c83ea5de
 
 COCOAPODS: 1.1.1

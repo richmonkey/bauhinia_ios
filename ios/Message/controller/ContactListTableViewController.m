@@ -10,14 +10,13 @@
 #import "APIRequest.h"
 
 
-@interface ContactListTableViewController()
+@interface ContactListTableViewController()<UISearchResultsUpdating>
 @property (nonatomic) NSArray *contacts;
 @property (nonatomic) NSMutableArray *filteredArray;
 @property (nonatomic) NSMutableArray *sectionArray;
 
 @property (nonatomic) UITableView *tableView;
-@property (nonatomic) UISearchDisplayController *searchDC;
-@property (nonatomic) UISearchBar *searchBar;
+@property (nonatomic) UISearchController *searchDC;
 @property (nonatomic) UINavigationController *aBPersonNav;
 
 @property (nonatomic) NSIndexPath *selectedIndexPath;
@@ -39,17 +38,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tabBarController.navigationItem.title = @"所有联系人";
-	
-	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f,0, self.view.frame.size.width, kSearchBarHeight)];
-	self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
-	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
-	self.searchBar.keyboardType = UIKeyboardTypeDefault;
-	self.searchBar.delegate = self;
-    [self.view addSubview:self.searchBar];
-	
-    self.searchDC = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] ;
-	self.searchDC.searchResultsDataSource = self;
-	self.searchDC.searchResultsDelegate = self;
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
 	self.tableView.delegate = self;
@@ -64,12 +52,22 @@
     NSLog(@"height:%f %f", self.view.frame.size.height, [UIApplication sharedApplication].keyWindow.frame.size.height);
 	[self.view addSubview:self.tableView];
     
+    self.searchDC = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchDC.searchResultsUpdater = self;
+    self.searchDC.dimsBackgroundDuringPresentation = NO;
+    self.searchDC.searchBar.placeholder = @"搜索";
+    self.searchDC.hidesNavigationBarDuringPresentation = YES;
+    
+    [self.view addSubview:self.searchDC.searchBar];
+    
+    self.definesPresentationContext = YES;
+    
+    
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
     PhoneNumber *phoneNumber = [Profile instance].phoneNumber;
     NSString *s = [NSString stringWithFormat:@"   我的电话号码: +%@ %@", phoneNumber.zone, phoneNumber.number];
     NSMutableAttributedString *attrTitle = [[NSMutableAttributedString alloc] initWithString: s];
     [attrTitle addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x35bc6e) range:NSMakeRange(10, [s length]-10)];
-    
     [head setAttributedText:attrTitle];
     
     self.tableView.tableHeaderView = head;
@@ -85,9 +83,9 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.selectedTableView deselectRowAtIndexPath:self.selectedIndexPath animated:YES];
-    self.selectedIndexPath = nil;
-    self.selectedTableView = nil;
+//    [self.selectedTableView deselectRowAtIndexPath:self.selectedIndexPath animated:YES];
+//    self.selectedIndexPath = nil;
+//    self.selectedTableView = nil;
 }
 
 -(NSString*)getSectionName:(NSString*)string {
@@ -200,7 +198,7 @@
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView {
-    if (aTableView == self.tableView){
+    if (!self.searchDC.active){
         return 27;
     } else {
         return 1;
@@ -208,7 +206,7 @@
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)aTableView {
-	if (aTableView == self.tableView) {
+	if (!self.searchDC.active) {
 		NSMutableArray *indices = [NSMutableArray arrayWithObject:UITableViewIndexSearch];
 		for (int i = 0; i < 27; i++){
 			if ([[self.sectionArray objectAtIndex:i] count]){
@@ -227,7 +225,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)aTableView titleForHeaderInSection:(NSInteger)section {
-	if (aTableView == self.tableView) {
+	if (!self.searchDC.active) {
 		if ([[self.sectionArray objectAtIndex:section] count] == 0) {
             return nil;
         }
@@ -238,119 +236,25 @@
     }
 }
 
-//获取每一个字符的拼音的首字符
--(NSString*)getPinYin:(NSString*)string {
-    NSString *name = @"";
-    for (int i = 0; i < [string length]; i++)
-    {
-        if([name length] < 1) {
-            name = [self getSectionName:string];
-        } else {
-            name = [NSString stringWithFormat:@"%@%c",name,pinyinFirstLetter([string characterAtIndex:i])];
-        }
-    }
-    return name;
-}
 
--(BOOL)searchResult:(NSString *)contactName searchText:(NSString *)searchT{
-	NSComparisonResult result = [contactName compare:searchT options:NSCaseInsensitiveSearch
-                                               range:NSMakeRange(0, searchT.length)];
-	if (result == NSOrderedSame)
-		return YES;
-	else
-		return NO;
-}
 
 - (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section {
-	if (aTableView == self.tableView){
+	if (!self.searchDC.active){
         return [[self.sectionArray objectAtIndex:section] count];
 	} else {
         return self.filteredArray.count;
     }
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    [self.filteredArray removeAllObjects];
-    
-    for(IMContact *contact in self.contacts) {
-        NSString *string = contact.contactName;
-        if (string.length == 0) {
-            continue;
-        }
-        
-        NSString *name = [self getPinYin:string];
-        
-        if ([self searchResult:name searchText:self.searchBar.text]) {
-            [self.filteredArray addObject:contact];
-        } else if ([self searchResult:string searchText:self.searchBar.text]) {
-            [self.filteredArray addObject:contact];
-        }
-    }
-}
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)asearchBar {
-    //move the search bar up to the correct location eg
-    [UIView animateWithDuration:.1
-                     animations:^{
-                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                                           kStatusBarHeight+KNavigationBarHeight,
-                                                           self.tableView.frame.size.width,
-                                                           self.tableView.frame.size.height + kStatusBarHeight+KNavigationBarHeight);
-                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                           kStatusBarHeight,
-                                                           self.searchBar.frame.size.width,
-                                                           self.searchBar.frame.size.height);
-                         
-                     }
-                     completion:^(BOOL finished){
-                         
-                     }];
-    [self.searchDisplayController setActive:YES animated:YES];
-}
 
-- (void) resetSearchBarPosition{
-    [UIView animateWithDuration:.1
-                     animations:^{
-                         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                                           kSearchBarHeight,
-                                                           self.tableView.frame.size.width,
-                                                           self.tableView.frame.size.height - kStatusBarHeight - KNavigationBarHeight);
-                         self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                           0,
-                                                           self.searchBar.frame.size.width,
-                                                           self.searchBar.frame.size.height);
-                         
-                     }
-                     completion:^(BOOL finished){
-                     }];
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    //move the search bar down to the correct location eg
-    if (searchBar.text.length > 0) {
-        return;
-    }
-    
-    [self resetSearchBarPosition];
-    
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    
-	[self.searchBar setText:@""];
-    
-    if (![searchBar isFirstResponder]) {
-        [self resetSearchBarPosition];
-    }
-    
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 40;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.tableView == tableView) {
+    if (!self.searchDC.active) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell"];
         
         if (cell == nil) {
@@ -392,7 +296,7 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	IMContact *contact;
-	if (aTableView == self.tableView){
+	if (!self.searchDC.active){
 		contact = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 	}else{
 		contact = [self.filteredArray objectAtIndex:indexPath.row];
@@ -434,4 +338,51 @@
 }
 
 
+//获取每一个字符的拼音的首字符
+-(NSString*)getPinYin:(NSString*)string {
+    NSString *name = @"";
+    for (int i = 0; i < [string length]; i++)
+    {
+        if([name length] < 1) {
+            name = [self getSectionName:string];
+        } else {
+            name = [NSString stringWithFormat:@"%@%c",name,pinyinFirstLetter([string characterAtIndex:i])];
+        }
+    }
+    return name;
+}
+
+-(BOOL)searchResult:(NSString *)contactName searchText:(NSString *)searchT{
+    NSComparisonResult result = [contactName compare:searchT options:NSCaseInsensitiveSearch
+                                               range:NSMakeRange(0, searchT.length)];
+    if (result == NSOrderedSame) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+#pragma mark -UISearchResultsUpdating
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    NSString *searchString = [self.searchDC.searchBar text];
+    
+    [self.filteredArray removeAllObjects];
+    
+    for(IMContact *contact in self.contacts) {
+        NSString *string = contact.contactName;
+        if (string.length == 0) {
+            continue;
+        }
+        
+        NSString *name = [self getPinYin:string];
+        
+        if ([self searchResult:name searchText:searchString]) {
+            [self.filteredArray addObject:contact];
+        } else if ([self searchResult:string searchText:searchString]) {
+            [self.filteredArray addObject:contact];
+        }
+    }
+    
+    [self.tableView reloadData];
+}
 @end

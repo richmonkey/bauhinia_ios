@@ -5,15 +5,4 @@ target 'Message' do
     pod 'leveldb-library', '~> 1.18.2'
     pod 'ZBarSDK'
     pod 'AFNetworking', '~> 3.0'
-    pod 'React', :path => '../node_modules/react-native', :subspecs => [
-      'Core',
-      'RCTText',
-      'RCTWebSocket', # needed for debugging
-      'RCTActionSheet',
-      'RCTImage',
-      'RCTNetwork',
-      'RCTVibration',
-      'RCTGeolocation',
-      'RCTAnimation',
-    ]
 end

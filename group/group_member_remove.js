@@ -17,7 +17,7 @@ import {connect} from 'react-redux';
 import {removeGroupMembers} from "./actions";
 import Spinner from 'react-native-loading-spinner-overlay';
 
-import {API_URL} from './config';
+import {API_URL, NAVIGATOR_STYLE} from './config';
 
 class GroupMemberRemove extends React.Component {
     static navigatorButtons = {
@@ -29,14 +29,7 @@ class GroupMemberRemove extends React.Component {
             },
         ]
     };
-
-    static navigatorStyle = {
-        navBarBackgroundColor: '#4dbce9',
-        navBarTextColor: '#ffff00',
-        navBarSubtitleTextColor: '#ff0000',
-        navBarButtonColor: '#ffffff',
-        statusBarTextColorScheme: 'light',
-    };
+    static navigatorStyle = NAVIGATOR_STYLE;
     
     constructor(props) {
         super(props);

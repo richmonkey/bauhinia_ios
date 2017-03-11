@@ -80,7 +80,11 @@
                 }
             }];
             if (index == NSNotFound) {
-                [users addObject:@{@"id":@(u.uid), @"uid":@(u.uid), @"name":u.displayName}];
+                if (contact.contactName.length > 0) {
+                    [users addObject:@{@"id":@(u.uid), @"uid":@(u.uid), @"name":contact.contactName}];
+                } else {
+                    [users addObject:@{@"id":@(u.uid), @"uid":@(u.uid), @"name":u.displayName}];
+                }
             }
         }
     }
@@ -95,7 +99,8 @@
         }
     }];
     if (index == NSNotFound) {
-        [users addObject:@{@"id":@([Token instance].uid), @"uid":@([Token instance].uid), @"name":@""}];
+        NSString *name = [Profile instance].name;
+        [users addObject:@{@"id":@([Token instance].uid), @"uid":@([Token instance].uid), @"name":name}];
     }
     return users;
 }

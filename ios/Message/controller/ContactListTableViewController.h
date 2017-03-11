@@ -10,9 +10,9 @@
 #import "ABContact.h"
 #import "ContactDB.h"
 
-@interface ContactListTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,
-                                                        UISearchBarDelegate,
-                                                        ContactDBObserver> {
+@interface ContactListTableViewController : UIViewController <UITableViewDelegate,
+                                                            UITableViewDataSource,
+                                                            ContactDBObserver> {
 
 }
 

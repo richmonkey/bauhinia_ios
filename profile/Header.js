@@ -25,7 +25,7 @@ import ImagePicker from 'react-native-image-picker'
 import DialogAndroid from 'react-native-dialogs';
 
 import ProfileDB from './ProfileDB';
-import {API_URL} from './config';
+import {API_URL, NAVIGATOR_STYLE} from './config';
 
 class Header extends Component {
     static navigatorButtons = {
@@ -38,23 +38,7 @@ class Header extends Component {
         ]
     };
     
-    
-    static navigatorStyle = Platform.select({
-        ios: {
-            navBarBackgroundColor: '#4dbce9',
-            navBarTextColor: '#ffff00',
-            navBarSubtitleTextColor: '#ff0000',
-            navBarButtonColor: '#ffffff',
-            statusBarTextColorScheme: 'light',
-        },
-        android: {
-            navBarBackgroundColor: '#212121',
-            navBarTextColor: '#ffffff',
-            navBarSubtitleTextColor: '#ff0000',
-            navBarButtonColor: '#ffffff',
-            statusBarTextColorScheme: 'light',
-        }
-    });
+    static navigatorStyle = NAVIGATOR_STYLE;
     
     constructor(props) {
         super(props);

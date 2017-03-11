@@ -1,7 +1,5 @@
 import {Platform} from 'react-native';
 
-export const API_URL = "https://api.gobelieve.io";
-
 export const NAVIGATOR_STYLE = Platform.select({
     ios: {
 
@@ -14,3 +12,4 @@ export const NAVIGATOR_STYLE = Platform.select({
         statusBarTextColorScheme: 'light',
     }
 });
+

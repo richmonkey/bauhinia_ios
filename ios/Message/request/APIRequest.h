@@ -27,7 +27,7 @@
                              success:(void (^)(NSString* code))success fail:(void (^)())fail;
 
 +(TAHttpOperation*)requestAuthToken:(NSString*)code zone:(NSString*)zone number:(NSString*)number deviceToken:(NSString*)deviceToken
-                            success:(void (^)(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp, NSString *state))success
+                            success:(void (^)(NSDictionary* resp))success
                                fail:(void (^)())fail;
 
 +(TAHttpOperation*)refreshAccessToken:(NSString*)refreshToken

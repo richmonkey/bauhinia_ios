@@ -97,7 +97,17 @@
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:backView animated:YES];
     
     [APIRequest requestAuthToken:self.verifyCodeTextField.text zone:@"86" number:self.phoneNumberStr deviceToken:@""
-                         success:^(int64_t uid, NSString* accessToken, NSString *refreshToken, int expireTimestamp, NSString *state){
+                         success:^(NSDictionary *resp) {
+                             
+                             NSString *accessToken = [resp objectForKey:@"access_token"];
+                             NSString *refreshToken = [resp objectForKey:@"refresh_token"];
+                             int expireTimestamp = (int)time(NULL) + [[resp objectForKey:@"expires_in"] intValue];
+                             int64_t uid = [[resp objectForKey:@"uid"] longLongValue];
+                             NSString *state = [resp objectForKey:@"state"];
+                             NSString *name = [resp objectForKey:@"name"];
+                             NSString *avatar = [resp objectForKey:@"avatar"];
+                             
+                             
                              Token *token = [Token instance];
                              token.accessToken = accessToken;
                              token.refreshToken = refreshToken;
@@ -108,6 +118,8 @@
                              [Profile instance].uid = uid;
                              [Profile instance].phoneNumber = [[PhoneNumber alloc] initWithPhoneNumber:self.phoneNumberStr];
                              [Profile instance].state = state;
+                             [Profile instance].name = name;
+                             [Profile instance].avatarURL = avatar;
                              [[Profile instance] save];
                              [hud hide:NO];
                              [backView removeFromSuperview];

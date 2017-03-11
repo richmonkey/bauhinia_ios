@@ -22,8 +22,7 @@
 //最后上线时间
 @property(nonatomic, assign)int64_t lastUpTimestamp;
 
-@property(nonatomic) NSString *contactName;
--(NSString*) displayName;
+@property(nonatomic, copy) NSString *name;
 
 -(void)save;
 
