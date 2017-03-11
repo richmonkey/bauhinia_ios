@@ -35,6 +35,19 @@ import rx.Observable;
  */
 public interface IMHttp {
 
+    public static class AccessToken {
+        @SerializedName("access_token")
+        public String accessToken;
+        @SerializedName("refresh_token")
+        public String refreshToken;
+        @SerializedName("expires_in")
+        public int expireTimestamp;
+
+        public String name;
+        public String avatar;
+        public long uid;
+
+    }
     public static class Token {
         @SerializedName("access_token")
         public String accessToken;
@@ -54,7 +67,7 @@ public interface IMHttp {
     Observable<Code> getVerifyCode(@Query("zone") String zone, @Query("number") String number);
 
     @POST("/auth/token")
-    Observable<Token> postAuthToken(@Body PostAuthToken code);
+    Observable<AccessToken> postAuthToken(@Body PostAuthToken code);
 
     @POST("/auth/refresh_token")
     Observable<Token> postAuthRefreshToken(@Body PostAuthRefreshToken refreshToken);

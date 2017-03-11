@@ -78,9 +78,9 @@ public class VerifyActivity extends AccountActivity implements TextView.OnEditor
         IMHttp imHttp = IMHttpFactory.Singleton();
         imHttp.postAuthToken(postAuthToken)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<IMHttp.Token>() {
+                .subscribe(new Action1<IMHttp.AccessToken>() {
                     @Override
-                    public void call(IMHttp.Token token) {
+                    public void call(IMHttp.AccessToken token) {
                         dialog.dismiss();
 
                         Token t = Token.getInstance();
@@ -91,6 +91,8 @@ public class VerifyActivity extends AccountActivity implements TextView.OnEditor
 
                         Profile profile = Profile.getInstance();
                         profile.uid = token.uid;
+                        profile.name = token.name;
+                        profile.avatar = token.avatar;
                         profile.save(VerifyActivity.this);
 
                         User u = new User();

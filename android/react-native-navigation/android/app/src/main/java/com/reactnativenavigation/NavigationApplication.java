@@ -62,6 +62,10 @@ public abstract class NavigationApplication extends Application implements React
         return reactGateway.isInitialized();
     }
 
+    public boolean hasStartedCreatingContext() {
+        return reactGateway.hasStartedCreatingContext();
+    }
+
     public void onReactInitialized(ReactContext reactContext) {
         // nothing
     }

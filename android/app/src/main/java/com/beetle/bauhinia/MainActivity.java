@@ -403,7 +403,8 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             return;
         }
 
-        if (!NavigationApplication.instance.isReactContextInitialized()) {
+        if (!NavigationApplication.instance.isReactContextInitialized() &&
+                !NavigationApplication.instance.hasStartedCreatingContext()) {
             NavigationApplication.instance.startReactContextOnceInBackgroundAndExecuteJS();
         }
     }

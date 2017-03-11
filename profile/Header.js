@@ -15,6 +15,7 @@ import {
     Platform,
     Alert,
     View,
+    Dimensions,
     NativeModules,
     PermissionsAndroid,
 } from 'react-native';
@@ -180,17 +181,19 @@ class Header extends Component {
     }
     
     renderAvatar() {
+        var width = Dimensions.get('window').width;
+        var height = Dimensions.get('window').height;
+        
         if (this.props.avatar) {
             return (
-                <Image  style={{width:"100%",
-                                height:"100%"}}
+                <Image style={{flex:1, width:width}}
                         resizeMode="stretch"
                         source={{uri:this.props.avatar}}>
                 </Image>
             );
         } else {
             return (
-                <Image style={{width:"100%", height:"100%"}}
+                <Image style={{flex:1, width:width}}
                        resizeMode="stretch"
                        source={require('../img/PersonalChat.png')}>
                 </Image>
@@ -204,7 +207,6 @@ class Header extends Component {
             <View  style={{flex:1,
                            backgroundColor:"#F5FCFF"}}>
                 <View style={{flex:1,
-                              flexDirection:"row",
                               alignItems:"stretch",
                               paddingVertical:48,
                               backgroundColor:"#F5FCFF"}}>

@@ -89,7 +89,6 @@ var app = {
     openMain: function() {
         Navigation.startTabBasedApp({
             tabs: [
-
                 {
                     screen: 'app.Status',
                     icon: require("./img/TabBarIconStatusOff.png"),
@@ -100,7 +99,6 @@ var app = {
                         
                     },
                 },
-                
             
                 {
                     screen: 'app.Contact',
@@ -247,7 +245,7 @@ var app = {
             self.store.dispatch(setGroup(event.group));
 
             var params = {
-                title:"setting",
+                title:"聊天信息",
                 screen:"group.GroupSetting",
                 navigatorStyle:{
                     tabBarHidden:true
@@ -268,7 +266,7 @@ var app = {
 
             var params = {
                 screen:{
-                    title:"setting",
+                    title:"聊天信息",
                     screen:"group.GroupSetting",
                     navigatorStyle:{
                         tabBarHidden:true

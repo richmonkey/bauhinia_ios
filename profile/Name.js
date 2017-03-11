@@ -136,7 +136,7 @@ class Name extends Component {
         });
         
         return (
-            <View style={{flex:1, marginHorizontal:16}}>
+            <View style={{flex:1, marginHorizontal:16, backgroundColor:"#F5FCFF"}}>
                 <TextInput
                     onChangeText={(text) => {
                             this.setState({name:text});
