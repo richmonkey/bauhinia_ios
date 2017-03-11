@@ -139,6 +139,13 @@
 			remoteGlobalIDString = 2D2A287B1D9B048500D4039D;
 			remoteInfo = "RCTText-tvOS";
 		};
+		6D16BECE1E74612B0091B3BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6D8860381E743835001F2ED4 /* React.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 83CBBA2D1A601D0E00E9B192;
+			remoteInfo = React;
+		};
 		6D885FEC1E72C6D6001F2ED4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5E998FF3099B4B2F92E2D497 /* ReactNativePermissions.xcodeproj */;
@@ -1006,6 +1013,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				6D16BECF1E74612B0091B3BA /* PBXTargetDependency */,
 			);
 			name = Message;
 			productName = Message;
@@ -1481,6 +1489,11 @@
 			isa = PBXTargetDependency;
 			target = 21798F92194E9C4600B67C1F /* Message */;
 			targetProxy = 21798FB3194E9C4600B67C1F /* PBXContainerItemProxy */;
+		};
+		6D16BECF1E74612B0091B3BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = React;
+			targetProxy = 6D16BECE1E74612B0091B3BA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
