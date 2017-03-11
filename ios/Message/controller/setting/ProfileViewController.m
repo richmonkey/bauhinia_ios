@@ -59,8 +59,8 @@
     [imageLayer setMasksToBounds:YES];
     [imageLayer setCornerRadius:6];
     
-    self.name = [SystemProperty instance].nameString;
-    [self.nameTextField setText: [SystemProperty instance].nameString];
+    self.name = [Profile instance].name;
+    [self.nameTextField setText: self.name];
     
     if ([Profile instance].avatarURL) {
         
@@ -141,10 +141,10 @@
 - (void) setting {
     NSString *name = self.nameTextField.text;
     if (![name isEqualToString:self.name]) {
-        [[SystemProperty instance] setNameString:name];
         [APIRequest updateName:name
                        success:^{
-                           
+                           [Profile instance].name = name;
+                           [[Profile instance] save];
                        }
                           fail:^{
                               
@@ -154,7 +154,6 @@
 }
 
 - (void) nextAction{
-    
     [self.view makeToast:@"您可以在设置>个人资讯 重新设置" duration:1.0f position:@"center"];
     [self performSelector:@selector(jumpToMainController) withObject:nil afterDelay:1.3f];
 }
@@ -170,18 +169,12 @@
 
 -(IBAction) editorNameAction:(id)sender{
     
-    [[SystemProperty instance] setNameString:self.nameTextField.text];
-
-    
 }
 
 -(IBAction)editorStatus:(id)sender{
-   
-    CustomStatusViewController * ctr = [[CustomStatusViewController alloc] init];
+   CustomStatusViewController * ctr = [[CustomStatusViewController alloc] init];
    [self.navigationController pushViewController:ctr animated: YES];
-    
 }
-
 
 - (IBAction)onTap:(id)sender
 {

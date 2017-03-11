@@ -115,33 +115,7 @@
     
 }
 
-- (NSString*) nameString{
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *plistPath1 = [paths objectAtIndex:0];
-    NSString *filename = [plistPath1 stringByAppendingPathComponent:@"setting.plist"];
-    
-    NSMutableDictionary *settings = [[NSMutableDictionary alloc] initWithContentsOfFile:filename];
-    
-    return [settings objectForKey:kNameStringKey];
-    
-}
 
--(void) setNameString:(NSString *) ImgStr{
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"setting" ofType:@"plist"];
-    NSMutableDictionary *settings = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
-    
-    [settings setObject:ImgStr forKey:kNameStringKey];
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *plistPath1 = [paths objectAtIndex:0];
-    
-    //得到完整的文件名
-    NSString *filename = [plistPath1 stringByAppendingPathComponent:@"setting.plist"];
-    //输入写入
-    [settings writeToFile:filename atomically:YES];
-    
-}
 
 - (NSString*) backgroundString{
     
