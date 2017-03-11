@@ -14,7 +14,6 @@
 #import <gobelieve/PeerMessageViewController.h>
 #import <gobelieve/GroupMessageViewController.h>
 #import "MGroupMessageViewController.h"
-#import "GroupCreatorViewController.h"
 #import "pinyin.h"
 #import "UserDB.h"
 #import "Profile.h"
@@ -37,7 +36,7 @@
 
 #define kNewVersionTag 100
 
-@interface ConversationViewController () <MessageViewControllerUserDelegate, GroupCreatorViewControllerDelegate>
+@interface ConversationViewController () <MessageViewControllerUserDelegate>
 
 @property(strong , nonatomic) NSString *versionUrl;
 
@@ -997,26 +996,5 @@
         });
     });
 }
-#pragma mark - GroupCreatorViewControllerDelegate
--(void)onGroupCreated:(int64_t)gid name:(NSString*)name {
-    NSLog(@"group created:%lld %@", gid, name);
-    [self dismissViewControllerAnimated:NO completion:nil];
-    
-    MGroupMessageViewController* msgController = [[MGroupMessageViewController alloc] init];
-    msgController.isShowUserName = YES;
-    msgController.userDelegate = self;
-    
-    msgController.groupID = gid;
-    
-    msgController.groupName = name;
-    
-    msgController.currentUID = [Profile instance].uid;
-    
-    msgController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:msgController animated: YES];
-}
 
--(void)onGroupCreateCanceled {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 @end

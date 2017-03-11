@@ -7,8 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.beetle.bauhinia.activity.GroupSettingActivity;
-import com.beetle.bauhinia.api.types.User;
 import com.beetle.bauhinia.model.Contact;
 import com.beetle.bauhinia.model.ContactDB;
 import com.beetle.bauhinia.model.Group;

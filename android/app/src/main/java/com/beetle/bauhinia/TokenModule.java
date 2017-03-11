@@ -1,6 +1,7 @@
 package com.beetle.bauhinia;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.beetle.bauhinia.model.Group;
@@ -31,13 +32,33 @@ public class TokenModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getVersion(final Promise promise) {
+        WritableMap map = Arguments.createMap();
+        map.putString("version", BuildConfig.VERSION_NAME);
+        promise.resolve(map);
+    }
+
+    @ReactMethod
     public void getToken(final Promise promise) {
+        String avatar = Profile.getInstance().avatar;
+        if (TextUtils.isEmpty(avatar)) {
+            avatar = "";
+        }
+
+        String name = Profile.getInstance().name;
+        if (TextUtils.isEmpty(name)) {
+            name = "";
+        }
+
         long uid = Profile.getInstance().uid;
         String token = Token.getInstance().accessToken;
         WritableMap map = Arguments.createMap();
         map.putDouble("uid", uid);
+        map.putString("username", "" + uid);
         map.putString("gobelieveToken", token);
-        map.putString("name", "我");
+        map.putString("token", token);
+        map.putString("name", name);
+        map.putString("avatar", avatar);
         if (uid > 0) {
             promise.resolve(map);
         } else {

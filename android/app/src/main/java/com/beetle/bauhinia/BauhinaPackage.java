@@ -1,5 +1,6 @@
 package com.beetle.bauhinia;
 
+import com.beetle.bauhinia.model.ProfileModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
@@ -31,6 +32,7 @@ public class BauhinaPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<NativeModule>();
 
         modules.add(new TokenModule(reactContext));
+        modules.add(new ProfileModule(reactContext));
         return modules;
     }
 }

@@ -57,9 +57,11 @@
 	self.tableView.scrollEnabled = YES;
 	self.tableView.showsVerticalScrollIndicator = YES;
     self.tableView.separatorColor = [UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1.0];
+
+    self.tableView.frame = CGRectMake(0, kSearchBarHeight, self.view.frame.size.width,
+                                      self.view.frame.size.height - (kStatusBarHeight + kSearchBarHeight + kTabBarHeight + KNavigationBarHeight));
     
-    self.tableView.frame = CGRectMake(0, kSearchBarHeight, self.view.frame.size.width, self.view.frame.size.height - (kSearchBarHeight + kTabBarHeight));
-    NSLog(@"height:%f", self.view.frame.size.height);
+    NSLog(@"height:%f %f", self.view.frame.size.height, [UIApplication sharedApplication].keyWindow.frame.size.height);
 	[self.view addSubview:self.tableView];
     
     UILabel *head = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
@@ -310,11 +312,11 @@
     [UIView animateWithDuration:.1
                      animations:^{
                          self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
-                                                           KNavigationBarHeight + kStatusBarHeight + kSearchBarHeight,
+                                                           kSearchBarHeight,
                                                            self.tableView.frame.size.width,
                                                            self.tableView.frame.size.height - kStatusBarHeight - KNavigationBarHeight);
                          self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
-                                                           KNavigationBarHeight + kStatusBarHeight,
+                                                           0,
                                                            self.searchBar.frame.size.width,
                                                            self.searchBar.frame.size.height);
                          

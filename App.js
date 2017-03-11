@@ -23,6 +23,13 @@ import { Provider } from 'react-redux'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import {Navigation} from 'react-native-navigation';
 
+import About from './About';
+import Setting from './Setting';
+
+import Name from './profile/Name.js';
+import Profile from './profile/Profile.js';
+import Header from './profile/Header.js'
+
 import {GroupCreator, GroupSelectMember} from "./group/group_creator";
 import GroupSetting from './group/group_setting';
 import GroupName from './group/group_name';
@@ -56,14 +63,19 @@ class AppView extends Component {
 
 var app = {
     registerScreens: function() {
+        Navigation.registerComponent('profile.Profile', () => Profile, this.store, Provider);
+        Navigation.registerComponent('profile.Name', () => Name, this.store, Provider);
+        Navigation.registerComponent('profile.Header', () => Header, this.store, Provider);
+        Navigation.registerComponent('app.Setting', () => Setting, this.store, Provider);
+        Navigation.registerComponent('app.About', () => About, this.store, Provider);
+        
         Navigation.registerComponent('app.Authentication', () => AppView, this.store, Provider);
         Navigation.registerComponent('app.Conversation', () => AppView, this.store, Provider);
         Navigation.registerComponent('app.Contact', () => AppView, this.store, Provider);
-        Navigation.registerComponent('app.Setting', () => AppView, this.store, Provider);
         Navigation.registerComponent('app.Status', () => AppView, this.store, Provider);
+        
         Navigation.registerComponent('chat.GroupChat', () => AppView, this.store, Provider);
-
-
+        
         Navigation.registerComponent('group.GroupSelectMember', () => GroupSelectMember, this.store, Provider);
         Navigation.registerComponent('group.GroupCreator', () => GroupCreator, this.store, Provider);
         Navigation.registerComponent('group.GroupSetting', () => GroupSetting, this.store, Provider);
@@ -134,11 +146,6 @@ var app = {
                 screen: 'app.Authentication',
                 title: '手机验证',
                 navigatorStyle: {
-                    navBarBackgroundColor: '#4dbce9',
-                    navBarTextColor: '#ffff00',
-                    navBarSubtitleTextColor: '#ff0000',
-                    navBarButtonColor: '#ffffff',
-                    statusBarTextColorScheme: 'light'
                 },
             },
             passProps: {
@@ -230,7 +237,7 @@ var app = {
 
         RCTDeviceEventEmitter.addListener('open_app_main', function(event) {
             console.log("open app main:", event);
-            this.store.dispatch({type:"set_profile", profile:event.token});
+            self.store.dispatch({type:"set_profile", profile:event.token});
             self.openMain();
         });
 
@@ -277,6 +284,27 @@ var app = {
             Navigation.startSingleScreenApp(params);            
         });
 
+        
+        RCTDeviceEventEmitter.addListener('open_setting', function(event) {
+            console.log("open setting:", event)
+            var params = {
+                screen:{
+                    title:"设置",
+                    screen:"app.Setting",
+                    navigatorStyle:{
+                        tabBarHidden:true
+                    },
+                    leftButton: {
+                        id:"back",
+                    },
+                },
+                passProps:{
+                    connectState:event.connectState,
+                },
+            };
+            Navigation.startSingleScreenApp(params);            
+        });
+        
     },
 }
 

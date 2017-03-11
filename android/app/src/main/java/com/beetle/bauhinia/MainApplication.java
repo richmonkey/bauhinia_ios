@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
 import com.beetle.bauhinia.api.IMHttpAPI;
 import com.beetle.bauhinia.api.body.PostDeviceToken;
 import com.beetle.bauhinia.db.GroupMessageDB;
@@ -33,6 +34,8 @@ import com.beetle.push.IMsgReceiver;
 
 import com.facebook.react.ReactPackage;
 import com.google.code.p.leveldb.LevelDB;
+import com.imagepicker.ImagePickerPackage;
+import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.reactnativenavigation.NavigationApplication;
 
 import java.io.File;
@@ -45,7 +48,7 @@ import rx.functions.Action1;
 /**
  * Created by houxh on 14-8-24.
  */
-public class IMApplication extends NavigationApplication implements Application.ActivityLifecycleCallbacks {
+public class MainApplication extends NavigationApplication implements Application.ActivityLifecycleCallbacks {
 
     public String deviceToken;
 
@@ -62,7 +65,10 @@ public class IMApplication extends NavigationApplication implements Application.
         // Add the packages you require here.
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
-                new BauhinaPackage()
+                new BauhinaPackage(),
+                new ImagePickerPackage(),
+                new ReactNativePermissionsPackage(),
+                new ReactNativeDialogsPackage()
         );
     }
 
@@ -103,9 +109,9 @@ public class IMApplication extends NavigationApplication implements Application.
                 String deviceTokenStr = null;
                 deviceTokenStr = BinAscii.bin2Hex(tokenArray);
                 Log.i(TAG, "device token:" + deviceTokenStr);
-                IMApplication.this.deviceToken = deviceTokenStr;
+                MainApplication.this.deviceToken = deviceTokenStr;
                 if (Profile.getInstance().uid > 0) {
-                    IMApplication.this.bindDeviceToken(deviceTokenStr);
+                    MainApplication.this.bindDeviceToken(deviceTokenStr);
                 }
             }
         });

@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.beetle.bauhinia.R;
 import com.beetle.bauhinia.model.Profile;
 import com.beetle.im.IMService;
-import com.beetle.bauhinia.IMApplication;
+import com.beetle.bauhinia.MainApplication;
 import com.beetle.bauhinia.MainActivity;
 import com.beetle.bauhinia.Token;
 import com.beetle.bauhinia.api.IMHttp;
@@ -72,7 +72,7 @@ public class VerifyActivity extends AccountActivity implements TextView.OnEditor
         postAuthToken.code = code;
         postAuthToken.zone = "86";
         postAuthToken.number = phone;
-        IMApplication app = (IMApplication)getApplication();
+        MainApplication app = (MainApplication)getApplication();
         postAuthToken.ng_device_token = app.deviceToken;
         Log.i(TAG, "auth device token:" + app.deviceToken);
         IMHttp imHttp = IMHttpFactory.Singleton();

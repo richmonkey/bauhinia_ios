@@ -36,7 +36,6 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
 
-import com.beetle.bauhinia.activity.GroupCreatorActivity;
 import com.beetle.bauhinia.activity.ZBarActivity;
 import com.beetle.bauhinia.api.IMHttpAPI;
 import com.beetle.bauhinia.api.body.PostQRCode;
@@ -170,8 +169,30 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
         } else if (id == R.id.action_new_group) {
             this.onNewGroup();
             return true;
+        } else if (id == R.id.action_setting) {
+            this.onSetting();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onSetting() {
+        String state = "未链接";
+        IMService.ConnectState connectState = IMService.getInstance().getConnectState();
+        if (connectState == IMService.ConnectState.STATE_CONNECTED) {
+            state = "已链接";
+        } else if (connectState == IMService.ConnectState.STATE_CONNECTING) {
+            state = "正在链接...";
+        } else if (connectState == IMService.ConnectState.STATE_CONNECTFAIL) {
+            state = "链接失败";
+        } else if (connectState == IMService.ConnectState.STATE_UNCONNECTED) {
+            state = "未链接";
+        }
+
+        WritableMap map = Arguments.createMap();
+        map.putString("connectState", state);
+        ReactContext reactContext = NavigationApplication.instance.getReactGateway().getReactContext();
+        this.sendEvent(reactContext, "open_setting", map);
     }
 
     private void onNewGroup() {
@@ -208,7 +229,12 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
         }
         if (!containSelf) {
             WritableMap map = Arguments.createMap();
-            map.putString("name", "我");
+            Profile p = Profile.getInstance();
+            if (TextUtils.isEmpty(p.name)) {
+                map.putString("name", "我");
+            } else {
+                map.putString("name", p.name);
+            }
             map.putDouble("uid", uid);
             map.putDouble("id", uid);
             users.pushMap(map);

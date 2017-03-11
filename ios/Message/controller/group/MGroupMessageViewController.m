@@ -7,7 +7,6 @@
 //
 
 #import "MGroupMessageViewController.h"
-#import "GroupSettingViewController.h"
 #import "GroupDB.h"
 #import "Token.h"
 #import "UserDB.h"

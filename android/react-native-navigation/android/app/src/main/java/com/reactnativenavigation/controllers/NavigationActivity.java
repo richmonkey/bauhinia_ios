@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -12,6 +13,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
+import com.imagepicker.permissions.OnImagePickerPermissionsCallback;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.events.Event;
 import com.reactnativenavigation.events.EventBus;
@@ -34,7 +36,10 @@ import com.reactnativenavigation.views.SideMenu.Side;
 
 import java.util.List;
 
-public class NavigationActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler, Subscriber, PermissionAwareActivity {
+public class NavigationActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler,
+        Subscriber,
+        PermissionAwareActivity,
+        OnImagePickerPermissionsCallback {
 
     /**
      * Although we start multiple activities, we make sure to pass Intent.CLEAR_TASK | Intent.NEW_TASK
@@ -336,5 +341,10 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         if (mPermissionListener != null && mPermissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             mPermissionListener = null;
         }
+    }
+
+    @Override
+    public void setPermissionListener(@NonNull PermissionListener listener) {
+        mPermissionListener = listener;
     }
 }
