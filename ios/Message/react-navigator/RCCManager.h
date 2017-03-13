@@ -18,4 +18,7 @@
 
 -(void)clearModuleRegistry;
 
+
+-(void)registerComponent:(NSString*)component class:(Class)cls;
+-(Class)getComponent:(NSString*)component;
 @end

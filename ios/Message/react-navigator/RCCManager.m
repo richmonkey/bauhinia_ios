@@ -7,6 +7,7 @@
 @property (nonatomic, strong) NSMutableDictionary *modulesRegistry;
 @property (nonatomic, strong) RCTBridge *sharedBridge;
 @property (nonatomic, strong) NSURL *bundleURL;
+@property (nonatomic, strong) NSMutableDictionary *components;
 @end
 
 @implementation RCCManager
@@ -37,10 +38,19 @@
   if (self)
   {
     self.modulesRegistry = [@{} mutableCopy];
+    self.components = [NSMutableDictionary dictionary];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRNReload) name:RCTJavaScriptWillStartLoadingNotification object:nil];
   }
   return self;
+}
+
+-(void)registerComponent:(NSString*)component class:(Class)cls {
+    [self.components setObject:cls forKey:component];
+}
+
+-(Class)getComponent:(NSString*)component {
+    return [self.components objectForKey:component];
 }
 
 -(void)clearModuleRegistry

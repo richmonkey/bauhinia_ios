@@ -46,6 +46,15 @@
 @implementation ConversationViewController
 
 
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge {
+    self = [super init];
+    if (self) {
+        self.filteredArray =  [NSMutableArray array];
+        self.conversations = [NSMutableArray array];
+        self.navigatorID = passProps[@"navigatorID"];
+    }
+    return self;
+}
 
 -(id)init{
     self = [super init];

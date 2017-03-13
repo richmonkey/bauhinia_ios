@@ -29,20 +29,10 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
     NSDictionary *navigatorStyle = props[@"style"];
     
     UIViewController *viewController = nil;
-    if ([component isEqualToString:@"app.Contact"]) {
-        viewController = [[ContactListTableViewController alloc] init];
-    } else if ([component isEqualToString:@"app.Conversation"]) {
-        ConversationViewController *controller = nil;
-        controller = [[ConversationViewController alloc] init];
-        controller.navigatorID = passProps[@"navigatorID"];
-        
-        viewController = controller;
-    } else if ([component isEqualToString:@"app.Status"]) {
-        viewController = [[CustomStatusViewController alloc] init];
-    } else if ([component isEqualToString:@"app.Setting"]) {
-        viewController = [[SettingViewController alloc] init];
-    } else if ([component isEqualToString:@"app.Authentication"]) {
-        viewController = [[AskPhoneNumberViewController alloc] init];
+    
+    Class cls = [[RCCManager sharedIntance] getComponent:component];
+    if (cls) {
+        viewController = [[cls alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:globalProps bridge:bridge];
     } else {
         viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:globalProps bridge:bridge];
     }

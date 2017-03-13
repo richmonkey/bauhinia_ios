@@ -13,6 +13,7 @@
 #import "ContactDB.h"
 
 @class Conversation;
+@class RCTBridge;
 
 @interface ConversationViewController : UIViewController<UITableViewDelegate,
                                                         UITableViewDataSource,
@@ -30,4 +31,6 @@
 @property (strong,nonatomic) UILabel *emputyLabel;
 
 @property (nonatomic, copy) NSString *navigatorID;
+
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge;
 @end

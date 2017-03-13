@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 
-@interface CustomStatusViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@class RCTBridge;
 
+@interface CustomStatusViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic) NSMutableArray *statusArray;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic, copy) NSString *currentStatus;
+
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge;
 @end

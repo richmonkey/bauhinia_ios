@@ -46,14 +46,13 @@
 
 @implementation SettingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge {
+    self = [super init];
     if (self) {
         self.cellTitleArray = @[ @"关于",
                                  @[@"个人资讯",@"会话设置",@"Web端登录"],
                                  @"网络状态"
-                                ];
+                                 ];
         [[IMService instance] addConnectionObserver:self];
     }
     return self;

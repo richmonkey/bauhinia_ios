@@ -10,6 +10,7 @@
 #import <gobelieve/IMService.h>
 #import "ZBarReaderViewController.h"
 
+@class RCTBridge;
 
 @interface SettingViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,TCPConnectionObserver,UIAlertViewDelegate,ZBarReaderDelegate>
 
@@ -17,5 +18,7 @@
 @property (strong,nonatomic) NSArray *cellTitleArray;
 @property (weak,nonatomic) UITableViewCell *statusCell;
 @property (strong,nonatomic) UIView* redScanLine;
+
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge;
 
 @end

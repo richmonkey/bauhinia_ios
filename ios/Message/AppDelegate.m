@@ -17,9 +17,13 @@
 #import "Token.h"
 #import "Profile.h"
 #import "Config.h"
+#import "APIRequest.h"
 #import "MainTabBarController.h"
 #import "AskPhoneNumberViewController.h"
-#import "APIRequest.h"
+#import "ContactListTableViewController.h"
+#import "SettingViewController.h"
+#import "CustomStatusViewController.h"
+#import "ConversationViewController.h"
 
 #import "RCCManager.h"
 
@@ -57,6 +61,14 @@
     [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
     [[IMService instance] startRechabilityNotifier];
+    
+
+    [[RCCManager sharedIntance] registerComponent:@"app.Contact" class:[ContactListTableViewController class]];
+    [[RCCManager sharedIntance] registerComponent:@"app.Conversation" class:[ConversationViewController class]];
+    [[RCCManager sharedIntance] registerComponent:@"app.Status" class:[CustomStatusViewController class]];
+    [[RCCManager sharedIntance] registerComponent:@"app.Setting" class:[SettingViewController class]];
+    [[RCCManager sharedIntance] registerComponent:@"app.Authentication" class:[AskPhoneNumberViewController class]];
+    
     
     //创建bridge对象
     NSURL *jsCodeLocation;
