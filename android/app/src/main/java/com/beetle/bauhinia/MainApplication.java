@@ -35,7 +35,6 @@ import com.beetle.push.IMsgReceiver;
 import com.facebook.react.ReactPackage;
 import com.google.code.p.leveldb.LevelDB;
 import com.imagepicker.ImagePickerPackage;
-import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.reactnativenavigation.NavigationApplication;
 
 import java.io.File;
@@ -67,7 +66,6 @@ public class MainApplication extends NavigationApplication implements Applicatio
         return Arrays.<ReactPackage>asList(
                 new BauhinaPackage(),
                 new ImagePickerPackage(),
-                new ReactNativePermissionsPackage(),
                 new ReactNativeDialogsPackage()
         );
     }

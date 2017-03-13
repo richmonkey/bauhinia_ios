@@ -16,7 +16,6 @@
     "react-native-image-picker": "^0.26.1",
     "react-native-loading-spinner-overlay": "^0.3.0",
     "react-native-navbar": "^1.5.0",
-    "react-native-permissions": "^0.2.7",
     "react-native-toast": "^1.0.1",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0"

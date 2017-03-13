@@ -114,7 +114,6 @@
 		6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4719C4BF340027A658 /* APIRequest.m */; };
 		6DB5B76C1C0858090057D55E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB5B76A1C0858090057D55E /* Localizable.strings */; };
 		6DEC54ED1E2B5DC30018CF94 /* libToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DEC54EC1E2B5DC30018CF94 /* libToast.a */; };
-		8E16D472A1C84D75B073DDCA /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C766DC42DA84AC99CEEB1FA /* libReactNativePermissions.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,13 +144,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 83CBBA2D1A601D0E00E9B192;
 			remoteInfo = React;
-		};
-		6D885FEC1E72C6D6001F2ED4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E998FF3099B4B2F92E2D497 /* ReactNativePermissions.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
-			remoteInfo = ReactNativePermissions;
 		};
 		6D8860101E7437A6001F2ED4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -427,7 +419,6 @@
 		48D83CD919D1CEFF009972B8 /* UIImageView+Letters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+Letters.m"; sourceTree = "<group>"; };
 		48F02E1C19CE6C7E005E6D41 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		51DBC04D2C6C0AB14B313753 /* Pods-Message.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Message.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Message/Pods-Message.debug.xcconfig"; sourceTree = "<group>"; };
-		5E998FF3099B4B2F92E2D497 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		6D032FDB1AA9B31D004AA39F /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		6D032FDC1AA9B31D004AA39F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		6D032FDD1AA9B31D004AA39F /* GroupDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupDB.h; sourceTree = "<group>"; };
@@ -482,7 +473,6 @@
 		6DB5B76D1C0858180057D55E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../node_modules/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
 		6DEC54EC1E2B5DC30018CF94 /* libToast.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libToast.a; path = "../../../../Library/Developer/Xcode/DerivedData/Message-eywqwmqqzmmrlbdzzjmcrigyfprb/Build/Products/Debug-iphonesimulator/Toast/libToast.a"; sourceTree = "<group>"; };
-		7C766DC42DA84AC99CEEB1FA /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		8ED661FB634FC12D0EDDBAA1 /* libPods-Message.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Message.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E408BB9C86D8C815CFEE07F8 /* Pods-Message.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Message.release.xcconfig"; path = "Pods/Target Support Files/Pods-Message/Pods-Message.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -522,7 +512,6 @@
 				21798F9B194E9C4600B67C1F /* UIKit.framework in Frameworks */,
 				21798F97194E9C4600B67C1F /* Foundation.framework in Frameworks */,
 				36FFA767B7D0D505DFD440AB /* libPods-Message.a in Frameworks */,
-				8E16D472A1C84D75B073DDCA /* libReactNativePermissions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,7 +541,6 @@
 				6D88601D1E7437F4001F2ED4 /* RCTWebSocket.xcodeproj */,
 				6D8860141E7437DA001F2ED4 /* RCTLinking.xcodeproj */,
 				6D88600C1E7437A6001F2ED4 /* ART.xcodeproj */,
-				5E998FF3099B4B2F92E2D497 /* ReactNativePermissions.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -877,14 +865,6 @@
 			name = group;
 			sourceTree = "<group>";
 		};
-		6D885FE81E72C6D6001F2ED4 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6D885FED1E72C6D6001F2ED4 /* libReactNativePermissions.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		6D88600D1E7437A6001F2ED4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1116,10 +1096,6 @@
 					ProductGroup = 6D8860391E743835001F2ED4 /* Products */;
 					ProjectRef = 6D8860381E743835001F2ED4 /* React.xcodeproj */;
 				},
-				{
-					ProductGroup = 6D885FE81E72C6D6001F2ED4 /* Products */;
-					ProjectRef = 5E998FF3099B4B2F92E2D497 /* ReactNativePermissions.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1142,13 +1118,6 @@
 			fileType = archive.ar;
 			path = "libRCTText-tvOS.a";
 			remoteRef = 6D16BECB1E744B0E0091B3BA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6D885FED1E72C6D6001F2ED4 /* libReactNativePermissions.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libReactNativePermissions.a;
-			remoteRef = 6D885FEC1E72C6D6001F2ED4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		6D8860111E7437A6001F2ED4 /* libART.a */ = {

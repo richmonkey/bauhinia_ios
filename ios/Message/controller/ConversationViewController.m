@@ -28,8 +28,7 @@
 #import "RCCManager.h"
 #import <React/RCTEventDispatcher.h>
 
-#define kPeerConversationCellHeight         60
-#define kGroupConversationCellHeight        44
+#define kConversationCellHeight         68
 
 #define kActionSheetContact           0
 #define kActionSheetSendHistory       1
@@ -456,7 +455,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return kPeerConversationCellHeight;
+    return kConversationCellHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
