@@ -91,9 +91,6 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self.selectedTableView deselectRowAtIndexPath:self.selectedIndexPath animated:YES];
-//    self.selectedIndexPath = nil;
-//    self.selectedTableView = nil;
 }
 
 -(NSString*)getSectionName:(NSString*)string {
@@ -244,8 +241,6 @@
     }
 }
 
-
-
 - (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section {
 	if (!self.searchDC.active){
         return [[self.sectionArray objectAtIndex:section] count];
@@ -253,8 +248,6 @@
         return self.filteredArray.count;
     }
 }
-
-
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -361,6 +354,10 @@
 }
 
 -(BOOL)searchResult:(NSString *)contactName searchText:(NSString *)searchT{
+    if (searchT.length > contactName.length) {
+        return NO;
+    }
+    
     NSComparisonResult result = [contactName compare:searchT options:NSCaseInsensitiveSearch
                                                range:NSMakeRange(0, searchT.length)];
     if (result == NSOrderedSame) {
