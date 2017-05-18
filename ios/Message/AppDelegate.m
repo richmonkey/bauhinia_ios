@@ -78,33 +78,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     [[RCCManager sharedInstance] initBridgeWithBundleURL:jsCodeLocation];
-    return YES;
-    
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    application.statusBarHidden = NO;
-    
-    
-    Token *token = [Token instance];
-    if (token.accessToken) {
-   
-        UITabBarController *tabController = [[MainTabBarController alloc] init];
-        self.tabBarController = tabController;
-        self.window.rootViewController = tabController;
-    }else{
-        AskPhoneNumberViewController *ctl = [[AskPhoneNumberViewController alloc] init];
-        UINavigationController * navCtr = [[UINavigationController alloc] initWithRootViewController: ctl];
-        self.window.rootViewController = navCtr;
-    }
-    
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
-    
-    
 
-    
     return YES;
 }
-
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {

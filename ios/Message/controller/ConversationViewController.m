@@ -786,8 +786,12 @@
         g.topic = notification.groupName;
         g.masterID = notification.master;
         
-        for (NSNumber *member in notification.members) {
-            [g addMember:[member longLongValue]];
+        for (id member in notification.members) {
+            if ([member isKindOfClass:[NSNumber class]]) {
+                [g addMember:[member longLongValue]];
+            } else if ([member isKindOfClass:[NSDictionary class]]) {
+                [g addMember:[[member objectForKey:@"uid"] longLongValue]];
+            }
         }
         [db addGroup:g];
     } else if (type == NOTIFICATION_GROUP_DISBANDED) {

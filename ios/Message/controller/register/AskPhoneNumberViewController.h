@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AskPhoneNumberViewController : UIViewController <UITextFieldDelegate>
+@class RCTBridge;
 
+@interface AskPhoneNumberViewController : UIViewController <UITextFieldDelegate>
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge;
 @end
