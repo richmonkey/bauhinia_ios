@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PeerMessageActivity"
+            android:name="com.beetle.bauhinia.PeerMessageActivity"
             android:exported="true"
             android:theme="@style/imkit.ActionBar"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -70,20 +70,9 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activity.PhotoActivity"
-            android:label="@string/title_activity_photo"
-            android:theme="@style/imkit.ActionBar" />
-        <activity
-            android:name=".MapActivity"
-            android:label="位置"
-            android:theme="@style/imkit.ActionBar" />
-        <activity
-            android:name=".LocationPickerActivity"
-            android:label="位置"
-            android:theme="@style/imkit.ActionBar" />
-        <activity
-            android:name=".AppGroupMessageActivity"
+            android:name="com.beetle.bauhinia.AppGroupMessageActivity"
             android:exported="true"
             android:theme="@style/imkit.ActionBar"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -91,6 +80,39 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.beetle.bauhinia.MapActivity"
+            android:label="位置"
+            android:theme="@style/imkit.ActionBar" />
+
+        <activity
+            android:name="com.beetle.bauhinia.LocationPickerActivity"
+            android:label="位置"
+            android:theme="@style/imkit.ActionBar" />
+
+        <activity
+            android:name="com.beetle.bauhinia.WebActivity"
+            android:label=""
+            android:theme="@style/imkit.ActionBar">
+        </activity>
+
+        <activity
+            android:name="com.beetle.bauhinia.gallery.ui.GalleryGridUI"
+            android:label="@string/gallery_chat_files"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/imkit.ActionBar">
+        </activity>
+
+        <activity
+            android:name="com.beetle.bauhinia.gallery.ui.GalleryUI"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/imkit.NoActionBar">
+        </activity>
+
+
         <activity
             android:name=".activity.ZBarActivity"
             android:exported="true">
@@ -137,7 +159,6 @@
                 <action android:name="cn.ngds.android.intent.alarm" />
             </intent-filter>
         </receiver>
-
 
 
         <service
