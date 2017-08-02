@@ -389,13 +389,11 @@
 }
 
 -(void)onExternalChange {
-    UserDB *db = [UserDB instance];
     for (Conversation *conv in self.conversations) {
-        User *user = [db loadUser:conv.cid];
-        conv.name = user.displayName;
-        conv.avatarURL = user.avatarURL;
+        if (conv.type == CONVERSATION_PEER) {
+            [self updateConversationName:conv];
+        }
     }
-    [self.tableview reloadData];
 }
 
 - (void)newGroup {
