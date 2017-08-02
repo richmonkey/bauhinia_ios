@@ -15,7 +15,6 @@ public class JsDevReloadHandler {
     public static boolean onKeyUp(View currentFocus, int keyCode) {
         ReactInstanceManager reactInstanceManager = NavigationApplication
                 .instance
-                .getReactGateway()
                 .getReactInstanceManager();
 
         if (reactInstanceManager != null &&

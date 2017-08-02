@@ -178,7 +178,12 @@ public class IMessage {
             JsonArray ary = obj.getAsJsonArray("members");
             Iterator<JsonElement> iter = ary.iterator();
             while (iter.hasNext()) {
-                notification.members.add(iter.next().getAsLong());
+                JsonElement e = iter.next();
+                if (e.isJsonObject()) {
+                    notification.members.add(e.getAsJsonObject().get("uid").getAsLong());
+                } else {
+                    notification.members.add(e.getAsLong());
+                }
             }
             notification.notificationType = GroupNotification.NOTIFICATION_GROUP_CREATED;
         } else if (element.has("disband")) {
@@ -191,12 +196,18 @@ public class IMessage {
             notification.groupID = obj.get("group_id").getAsLong();
             notification.timestamp = obj.get("timestamp").getAsInt();
             notification.member = obj.get("member_id").getAsLong();
+            if (obj.get("name") != null) {
+                notification.memberName = obj.get("name").getAsString();
+            }
             notification.notificationType = GroupNotification.NOTIFICATION_GROUP_MEMBER_LEAVED;
         } else if (element.has("add_member")) {
             JsonObject obj = element.getAsJsonObject("add_member");
             notification.groupID = obj.get("group_id").getAsLong();
             notification.timestamp = obj.get("timestamp").getAsInt();
             notification.member = obj.get("member_id").getAsLong();
+            if (obj.get("name") != null) {
+                notification.memberName = obj.get("name").getAsString();
+            }
             notification.notificationType = GroupNotification.NOTIFICATION_GROUP_MEMBER_ADDED;
         } else if (element.has("update_name")) {
             JsonObject obj = element.getAsJsonObject("update_name");
@@ -312,6 +323,7 @@ public class IMessage {
 
         //NOTIFICATION_GROUP_MEMBER_LEAVED, NOTIFICATION_GROUP_MEMBER_ADDED
         public long member;
+        public String memberName;
     }
 
     public static class Link extends MessageContent {

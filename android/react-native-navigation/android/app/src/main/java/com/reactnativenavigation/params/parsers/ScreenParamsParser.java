@@ -17,8 +17,6 @@ public class ScreenParamsParser extends Parser {
     private static final String KEY_NAVIGATION_PARAMS = "navigationParams";
     private static final String STYLE_PARAMS = "styleParams";
     private static final String TOP_TABS = "topTabs";
-    private static final String FRAGMENT_CREATOR_CLASS_NAME = "fragmentCreatorClassName";
-    private static final String FRAGMENT_CREATOR_PASS_PROPS = "fragmentCreatorPassProps";
     private static final String OVERRIDE_BACK_PRESS = "overrideBackPress";
 
     @SuppressWarnings("ConstantConditions")
@@ -37,11 +35,6 @@ public class ScreenParamsParser extends Parser {
         result.leftButton = ButtonParser.parseLeftButton(params);
 
         result.topTabParams = parseTopTabs(params);
-
-        if (hasKey(params, FRAGMENT_CREATOR_CLASS_NAME)) {
-            result.fragmentCreatorClassName = params.getString(FRAGMENT_CREATOR_CLASS_NAME);
-            result.fragmentCreatorPassProps = params.getBundle(FRAGMENT_CREATOR_PASS_PROPS);
-        }
 
         result.fabParams = ButtonParser.parseFab(params, result.navigationParams.navigatorEventId, result.navigationParams.screenInstanceId);
 

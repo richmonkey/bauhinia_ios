@@ -65,22 +65,4 @@ public class TokenModule extends ReactContextBaseJavaModule {
             promise.reject("non token exists", "");
         }
     }
-
-    @ReactMethod
-    public void handleGroupCreated(final double groupID, final String name) {
-        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
-            @Override
-            public void run() {
-                Activity a = getReactApplicationContext().getCurrentActivity();
-                if (a != null) {
-                    a.finish();
-                }
-
-                GroupEvent event = new GroupEvent();
-                event.groupID = (long)groupID;
-                event.name = name;
-                BusProvider.getInstance().post(event);
-            }
-        });
-     }
 }

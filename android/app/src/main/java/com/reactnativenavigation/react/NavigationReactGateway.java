@@ -9,11 +9,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
-import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.bridge.NavigationReactEventEmitter;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
-import com.reactnativenavigation.events.EventBus;
-import com.reactnativenavigation.events.JsDevReloadEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,21 +123,11 @@ public class NavigationReactGateway implements ReactGateway {
         @Override
         protected ReactInstanceManager createReactInstanceManager() {
             ReactInstanceManager manager = super.createReactInstanceManager();
-            if (NavigationApplication.instance.isDebug()) {
-                replaceJsDevReloadListener(manager);
-            }
             manager.addReactInstanceEventListener(this);
             return manager;
         }
 
-        private void replaceJsDevReloadListener(ReactInstanceManager manager) {
-            new JsDevReloadListenerReplacer(manager, new JsDevReloadListenerReplacer.Listener() {
-                @Override
-                public void onJsDevReload() {
-                    EventBus.instance.post(new JsDevReloadEvent());
-                }
-            }).replace();
-        }
+
 
         @Override
         public void onReactContextInitialized(ReactContext context) {

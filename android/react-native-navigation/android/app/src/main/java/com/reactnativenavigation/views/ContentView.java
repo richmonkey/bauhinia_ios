@@ -3,8 +3,8 @@ package com.reactnativenavigation.views;
 import android.content.Context;
 import android.view.View;
 
-import com.facebook.react.ReactRootView;
 import com.reactnativenavigation.NavigationApplication;
+import com.facebook.react.ReactRootView;
 import com.reactnativenavigation.params.NavigationParams;
 import com.reactnativenavigation.screens.SingleScreen;
 import com.reactnativenavigation.utils.ViewUtils;
@@ -35,7 +35,7 @@ public class ContentView extends ReactRootView {
     }
 
     private void attachToJS() {
-        startReactApplication(NavigationApplication.instance.getReactGateway().getReactInstanceManager(), screenId,
+        startReactApplication(NavigationApplication.instance.getReactInstanceManager(), screenId,
                 navigationParams.toBundle());
     }
 

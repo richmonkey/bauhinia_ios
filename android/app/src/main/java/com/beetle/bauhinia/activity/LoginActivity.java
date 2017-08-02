@@ -43,6 +43,13 @@ public class LoginActivity extends AccountActivity implements TextView.OnEditorA
         if (t.accessToken != null) {
             Log.i(TAG, "current uid:" + Profile.getInstance().uid);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+            intent.putExtra("navigatorID", MainActivity.generateNavigatorID());
+            String screenInstanceID = MainActivity.generateScreenInstanceID();
+            String navigatorEventID = screenInstanceID + "_events";
+            intent.putExtra("screenInstanceID", screenInstanceID);
+            intent.putExtra("navigatorEventID", navigatorEventID);
+
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

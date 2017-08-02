@@ -15,13 +15,12 @@ public class BaseScreenParams {
 
     public boolean overrideBackPressInJs;
     public StyleParams styleParams;
-    public String fragmentCreatorClassName;
-    public Bundle fragmentCreatorPassProps;
+
+
+
     public boolean animateScreenTransitions;
 
-    public boolean isFragmentScreen() {
-        return fragmentCreatorClassName != null;
-    }
+
 
     public String getScreenInstanceId() {
         return navigationParams.screenInstanceId;

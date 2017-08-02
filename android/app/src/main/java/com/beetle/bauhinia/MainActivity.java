@@ -67,7 +67,8 @@ import com.beetle.bauhinia.tools.*;
 import com.beetle.bauhinia.tools.Notification;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.controllers.NavigationCommandsHandler;
+import com.reactnativenavigation.react.NavigationApplication;
 import com.reactnativenavigation.react.JsDevReloadHandler;
 import com.reactnativenavigation.react.ReactDevPermission;
 import com.squareup.otto.Subscribe;
@@ -97,6 +98,26 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
         AdapterView.OnItemClickListener,
         ContactDB.ContactObserver,
         NotificationCenter.NotificationCenterObserver {
+
+    static long id = 0;
+
+    protected String navigatorID;
+    protected String screenInstanceID;
+    protected String navigatorEventID;
+
+
+    public static long generateID() {
+        return ++id;
+    }
+
+    public static String generateNavigatorID() {
+        return "_navigatorID" + generateID();
+    }
+
+    public static String generateScreenInstanceID() {
+        return "_screenInstanceID" + generateID();
+    }
+
 
     private static final int QRCODE_SCAN_REQUEST = 100;
     private static final int GROUP_CREATOR_RESULT = 101;
@@ -191,6 +212,7 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
 
         WritableMap map = Arguments.createMap();
         map.putString("connectState", state);
+        map.putString("navigatorID", navigatorID);
         ReactContext reactContext = NavigationApplication.instance.getReactGateway().getReactContext();
         this.sendEvent(reactContext, "open_setting", map);
     }
@@ -240,10 +262,18 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             users.pushMap(map);
         }
 
+        WritableMap profile = Arguments.createMap();
+        profile.putDouble("uid", Profile.getInstance().uid);
+        profile.putString("gobelieveToken", Token.getInstance().accessToken);
+
+
         WritableMap map = Arguments.createMap();
         map.putArray("users", users);
+        map.putMap("profile", profile);
+        map.putString("navigatorID", navigatorID);
+
         ReactContext reactContext = NavigationApplication.instance.getReactGateway().getReactContext();
-        this.sendEvent(reactContext, "create_group_android", map);
+        this.sendEvent(reactContext, "create_group", map);
     }
 
     private void sendEvent(ReactContext reactContext,
@@ -308,6 +338,19 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "main activity create...");
+
+        Intent intent = getIntent();
+        navigatorID = intent.getStringExtra("navigatorID");
+        screenInstanceID = intent.getStringExtra("screenInstanceID");
+        navigatorEventID = intent.getStringExtra("navigatorEventID");
+
+        if (!TextUtils.isEmpty(navigatorID)) {
+            NavigationCommandsHandler.registerNavigationActivity(this, navigatorID);
+        }
+
+        if (!TextUtils.isEmpty(screenInstanceID)) {
+            NavigationCommandsHandler.registerActivity(this, screenInstanceID);
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -469,6 +512,14 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (!TextUtils.isEmpty(navigatorID)) {
+            NavigationCommandsHandler.unregisterNavigationActivity(this, navigatorID);
+        }
+
+        if (!TextUtils.isEmpty(screenInstanceID)) {
+            NavigationCommandsHandler.unregisterActivity(screenInstanceID);
+        }
+
         BusProvider.getInstance().unregister(this);
         ContactDB.getInstance().removeObserver(this);
         IMService im =  IMService.getInstance();
@@ -755,6 +806,14 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             intent.putExtra("current_uid", profile.uid);
             intent.putExtra("avatar", profile.avatar);
 
+            String screenInstanceID = MainActivity.generateScreenInstanceID();
+            String navigatorEventID = screenInstanceID + "_events";
+
+            intent.putExtra("navigatorID", navigatorID);
+            intent.putExtra("screenInstanceID", screenInstanceID);
+            intent.putExtra("navigatorEventID", navigatorEventID);
+
+
             startActivity(intent);
         } else {
             Log.i(TAG, "group conversation");
@@ -764,6 +823,16 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             intent.putExtra("group_id", conv.cid);
             intent.putExtra("group_name", conv.getName());
             intent.putExtra("current_uid", profile.uid);
+
+
+            String screenInstanceID = MainActivity.generateScreenInstanceID();
+            String navigatorEventID = screenInstanceID + "_events";
+
+            intent.putExtra("navigatorID", navigatorID);
+            intent.putExtra("screenInstanceID", screenInstanceID);
+            intent.putExtra("navigatorEventID", navigatorEventID);
+
+
             startActivity(intent);
 
 

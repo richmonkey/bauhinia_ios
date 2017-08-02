@@ -10,4 +10,8 @@ public class AppStyle {
     public static void setAppStyle(Bundle params) {
         appStyle = new StyleParamsParser(params.getBundle("appStyle")).parse();
     }
+
+    public static void setAppStyle(StyleParams style) {
+        appStyle = style;
+    }
 }

@@ -19,7 +19,6 @@ import {
 } from 'react-native';
 
 import {connect} from 'react-redux'
-var IsAndroid = (Platform.OS == 'android');
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import {API_URL, NAVIGATOR_STYLE} from './config';
@@ -119,27 +118,19 @@ class GroupCreator extends Component {
                 } 
             });
         }).then((groupID) => {
-            if (Platform.OS == 'ios') {
-                this.props.navigator.popToRoot({animated:false});
-                this.props.navigator.push({
-                    title:topic,
-                    screen:"chat.GroupChat",
-                    navigatorStyle:{
-                        tabBarHidden:true
-                    },
-                    passProps:{
-                        sender:this.props.profile.uid,
-                        receiver:groupID,
-                        groupID:groupID,
-                        name:topic,
-                        token:this.props.profile.gobelieveToken,
-                    },
-                });
-            } else {
-                var Token = NativeModules.TokenManager;
-                Token.handleGroupCreated(groupID, topic);
-                                         
-            }
+            this.props.navigator.popToRoot({animated:false});
+            this.props.navigator.push({
+                title:topic,
+                screen:"chat.GroupChat",
+                navigatorStyle:{
+                    tabBarHidden:true
+                },
+                passProps:{
+                    currentUID:this.props.profile.uid,
+                    groupID:groupID,
+                    groupName:topic,
+                },
+            });
         }).catch((error) => {
             console.log("error:", error);
             this.hideSpinner();
@@ -156,7 +147,6 @@ class GroupCreator extends Component {
     }
     
     render() {
-        console.log("render group name");
         return (
             <View style={{flex:1}}>
                 <ScrollView style={{flex:1, backgroundColor:"#F5FCFF"}}>

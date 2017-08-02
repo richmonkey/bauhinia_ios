@@ -52,18 +52,6 @@ public class ScreenStack {
         keyboardVisibilityDetector = new KeyboardVisibilityDetector(parent);
     }
 
-    public void pushInitialScreenWithAnimation(final ScreenParams initialScreenParams, LayoutParams params) {
-        isStackVisible = true;
-        pushInitialScreen(initialScreenParams, params);
-        final Screen screen = stack.peek();
-        screen.setOnDisplayListener(new Screen.OnDisplayListener() {
-            @Override
-            public void onDisplay() {
-                screen.show(initialScreenParams.animateScreenTransitions);
-                screen.setStyle();
-            }
-        });
-    }
 
     public void pushInitialScreen(ScreenParams initialScreenParams, LayoutParams params) {
         Screen initialScreen = ScreenFactory.create(activity, initialScreenParams, leftButtonOnClickListener);
@@ -161,12 +149,6 @@ public class ScreenStack {
     private void readdPrevious(Screen previous) {
         previous.setVisibility(View.VISIBLE);
         parent.addView(previous, 0);
-    }
-
-    public void popToRoot(boolean animated) {
-        while (canPop()) {
-            pop(animated);
-        }
     }
 
     public void destroy() {

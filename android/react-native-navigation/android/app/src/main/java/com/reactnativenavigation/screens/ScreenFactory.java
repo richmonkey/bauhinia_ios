@@ -9,9 +9,7 @@ class ScreenFactory {
     static Screen create(AppCompatActivity activity,
                          ScreenParams screenParams,
                          LeftButtonOnClickListener leftButtonOnClickListener) {
-        if (screenParams.isFragmentScreen()) {
-            return new FragmentScreen(activity, screenParams, leftButtonOnClickListener);
-        } else if (screenParams.hasTopTabs()) {
+         if (screenParams.hasTopTabs()) {
             if (screenParams.hasCollapsingTopBar()) {
                 return new CollapsingViewPagerScreen(activity, screenParams, leftButtonOnClickListener);
             } else {

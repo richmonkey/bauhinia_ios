@@ -47,8 +47,6 @@ class LeftButton extends MaterialMenuDrawable implements View.OnClickListener {
     public void onClick(View v) {
         if (isBackButton()) {
             handleBackButtonClick();
-        } else if (isSideMenuButton()) {
-            onClickListener.onSideMenuButtonClick();
         } else {
             sendClickEvent();
         }
@@ -74,9 +72,6 @@ class LeftButton extends MaterialMenuDrawable implements View.OnClickListener {
         return getIconState() == IconState.ARROW;
     }
 
-    private boolean isSideMenuButton() {
-        return getIconState() == IconState.BURGER;
-    }
 
     private void sendClickEvent() {
         NavigationApplication.instance.getEventEmitter().sendNavigatorEvent(params.eventId, navigatorEventId);

@@ -17,7 +17,6 @@ import com.reactnativenavigation.params.parsers.FabParamsParser;
 import com.reactnativenavigation.params.parsers.SnackbarParamsParser;
 import com.reactnativenavigation.params.parsers.TitleBarButtonParamsParser;
 import com.reactnativenavigation.params.parsers.TitleBarLeftButtonParamsParser;
-import com.reactnativenavigation.views.SideMenu.Side;
 
 import java.util.List;
 
@@ -45,21 +44,6 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
         return NAME;
     }
 
-    @ReactMethod
-    public void startApp(final ReadableMap params) {
-        boolean portraitOnlyMode = false;
-        boolean landscapeOnlyMode = false;
-
-        if (params.hasKey("portraitOnlyMode")) {
-            portraitOnlyMode = params.getBoolean("portraitOnlyMode");
-        }
-
-        if (params.hasKey(("landscapeOnlyMode"))) {
-            landscapeOnlyMode = params.getBoolean("landscapeOnlyMode");
-        }
-
-        NavigationCommandsHandler.startApp(BundleConverter.toBundle(params), portraitOnlyMode, landscapeOnlyMode);
-    }
 
     @ReactMethod
     public void setScreenTitleBarTitle(String screenInstanceId, String title) {
@@ -102,35 +86,6 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
         NavigationCommandsHandler.setScreenFab(screenInstanceId, navigatorEventId, fabParams);
     }
 
-    @ReactMethod
-    public void setBottomTabBadgeByIndex(Integer index, String badge) {
-        NavigationCommandsHandler.setBottomTabBadgeByIndex(index, badge);
-    }
-
-    @ReactMethod
-    public void setBottomTabBadgeByNavigatorId(String navigatorId, String badge) {
-        NavigationCommandsHandler.setBottomTabBadgeByNavigatorId(navigatorId, badge);
-    }
-
-    @ReactMethod
-    public void selectBottomTabByTabIndex(Integer index) {
-        NavigationCommandsHandler.selectBottomTabByTabIndex(index);
-    }
-
-    @ReactMethod
-    public void selectBottomTabByNavigatorId(String navigatorId) {
-        NavigationCommandsHandler.selectBottomTabByNavigatorId(navigatorId);
-    }
-
-    @ReactMethod
-    public void toggleSideMenuVisible(boolean animated, String side) {
-        NavigationCommandsHandler.toggleSideMenuVisible(animated, Side.fromString(side));
-    }
-
-    @ReactMethod
-    public void setSideMenuVisible(boolean animated, boolean visible, String side) {
-        NavigationCommandsHandler.setSideMenuVisible(animated, visible, Side.fromString(side));
-    }
 
     @ReactMethod
     public void toggleTopBarVisible(final ReadableMap params) {
@@ -141,18 +96,36 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
         NavigationCommandsHandler.setTopBarVisible(screenInstanceId, hidden, animated);
     }
 
-    @ReactMethod
-    public void toggleBottomTabsVisible(final ReadableMap params) {
-    }
+
 
     @ReactMethod
-    public void setBottomTabsVisible(boolean hidden, boolean animated) {
-        NavigationCommandsHandler.setBottomTabsVisible(hidden, animated);
+    public void pushScreen(final ReadableMap params) {
+        NavigationCommandsHandler.pushScreen(BundleConverter.toBundle(params));
     }
+
 
     @ReactMethod
     public void push(final ReadableMap params) {
-        NavigationCommandsHandler.push(BundleConverter.toBundle(params));
+        boolean portraitOnlyMode = false;
+        boolean landscapeOnlyMode = false;
+        String navigatorID = "";
+        String screen = "";
+        if (params.hasKey("portraitOnlyMode")) {
+            portraitOnlyMode = params.getBoolean("portraitOnlyMode");
+        }
+
+        if (params.hasKey(("landscapeOnlyMode"))) {
+            landscapeOnlyMode = params.getBoolean("landscapeOnlyMode");
+        }
+
+        if (params.hasKey("navigatorID")) {
+            navigatorID = params.getString("navigatorID");
+        }
+        if (params.hasKey("screen")) {
+            screen = params.getString("screen");
+        }
+
+        NavigationCommandsHandler.push(BundleConverter.toBundle(params), portraitOnlyMode, landscapeOnlyMode, navigatorID, screen);
     }
 
     @ReactMethod
@@ -166,24 +139,29 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void newStack(final ReadableMap params) {
-        NavigationCommandsHandler.newStack(BundleConverter.toBundle(params));
-    }
-
-    @ReactMethod
     public void showModal(final ReadableMap params) {
-        NavigationCommandsHandler.showModal(BundleConverter.toBundle(params));
-    }
+        boolean portraitOnlyMode = false;
+        boolean landscapeOnlyMode = false;
+        String screen = "";
+        if (params.hasKey("portraitOnlyMode")) {
+            portraitOnlyMode = params.getBoolean("portraitOnlyMode");
+        }
 
-    @ReactMethod
-    public void dismissAllModals() {
-        NavigationCommandsHandler.dismissAllModals();
+        if (params.hasKey(("landscapeOnlyMode"))) {
+            landscapeOnlyMode = params.getBoolean("landscapeOnlyMode");
+        }
+        if (params.hasKey("screen")) {
+            screen = params.getString("screen");
+        }
+
+        NavigationCommandsHandler.showModal(BundleConverter.toBundle(params), portraitOnlyMode, landscapeOnlyMode, screen);
     }
 
     @ReactMethod
     public void dismissTopModal() {
         NavigationCommandsHandler.dismissTopModal();
     }
+
 
     @ReactMethod
     public void showSnackbar(final ReadableMap params) {

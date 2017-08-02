@@ -3,6 +3,7 @@ package com.beetle.bauhinia;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,13 +13,15 @@ import com.beetle.bauhinia.model.ContactDB;
 import com.beetle.bauhinia.model.Group;
 import com.beetle.bauhinia.model.GroupDB;
 import com.beetle.bauhinia.model.PhoneNumber;
+import com.beetle.bauhinia.model.Profile;
 import com.beetle.bauhinia.model.UserDB;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.controllers.NavigationCommandsHandler;
+import com.reactnativenavigation.react.NavigationApplication;
 
 import java.util.ArrayList;
 
@@ -28,6 +31,68 @@ import java.util.ArrayList;
 public class AppGroupMessageActivity extends GroupMessageActivity {
     private boolean leaved = false;
 
+    protected String navigatorID;
+    protected String screenInstanceID;
+    protected String navigatorEventID;
+
+    public static void convertBundle(Bundle bundle, Intent intent) {
+        Bundle props = bundle.getBundle("passProps");
+        if (props != null) {
+            String name = props.getString("groupName");
+            if (!TextUtils.isEmpty(name)) {
+                intent.putExtra("group_name", name);
+            }
+
+            //int or double
+            try {
+                double uid = props.getDouble("currentUID", -1);
+                if (uid != -1) {
+                    intent.putExtra("current_uid", (long) uid);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                int uid = props.getInt("currentUID", -1);
+                if (uid != -1) {
+                    intent.putExtra("current_uid", (long) uid);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //int or double
+            try {
+                int gid = props.getInt("groupID", -1);
+                if (gid != -1) {
+                    intent.putExtra("group_id", (long) gid);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                double gid = props.getDouble("groupID", -1);
+                if (gid != -1) {
+                    intent.putExtra("group_id", (long) gid);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Bundle navigationParams = bundle.getBundle("navigationParams");
+        if (navigationParams != null) {
+            String navigatorID = navigationParams.getString("navigatorID", "");
+            String navigatorEventID = navigationParams.getString("navigatorEventID", "");
+            String screenInstanceID = navigationParams.getString("screenInstanceID", "");
+
+            intent.putExtra("navigatorID", navigatorID);
+            intent.putExtra("navigatorEventID", navigatorEventID);
+            intent.putExtra("screenInstanceID", screenInstanceID);
+        }
+    }
 
     @Override
     protected User getUser(long uid) {
@@ -54,9 +119,36 @@ public class AppGroupMessageActivity extends GroupMessageActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        navigatorID = intent.getStringExtra("navigatorID");
+        screenInstanceID = intent.getStringExtra("screenInstanceID");
+        navigatorEventID = intent.getStringExtra("navigatorEventID");
+
         leaved = GroupDB.getInstance().isLeaved(groupID);
         if (leaved) {
             inputMenu.setVisibility(View.GONE);
+        }
+
+
+        if (!TextUtils.isEmpty(navigatorID)) {
+            NavigationCommandsHandler.registerNavigationActivity(this, navigatorID);
+        }
+
+        if (!TextUtils.isEmpty(screenInstanceID)) {
+            NavigationCommandsHandler.registerActivity(this, screenInstanceID);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (!TextUtils.isEmpty(navigatorID)) {
+            NavigationCommandsHandler.unregisterNavigationActivity(this, navigatorID);
+        }
+
+        if (!TextUtils.isEmpty(screenInstanceID)) {
+            NavigationCommandsHandler.unregisterActivity(screenInstanceID);
         }
     }
 
@@ -78,12 +170,19 @@ public class AppGroupMessageActivity extends GroupMessageActivity {
             }
             WritableMap g = this.getGroupMap(group);
             WritableArray contacts = this.getContacts();
+
+            WritableMap profile = Arguments.createMap();
+            profile.putDouble("uid", Profile.getInstance().uid);
+            profile.putString("gobelieveToken", Token.getInstance().accessToken);
+
             WritableMap map = Arguments.createMap();
             map.putMap("group", g);
             map.putArray("contacts", contacts);
+            map.putMap("profile", profile);
+            map.putString("navigatorID", navigatorID);
 
             ReactContext reactContext = NavigationApplication.instance.getReactGateway().getReactContext();
-            this.sendEvent(reactContext, "group_setting_android", map);
+            this.sendEvent(reactContext, "group_setting", map);
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -35,7 +35,8 @@ import com.beetle.push.IMsgReceiver;
 import com.facebook.react.ReactPackage;
 import com.google.code.p.leveldb.LevelDB;
 import com.imagepicker.ImagePickerPackage;
-import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.controllers.NavigationCommandsHandler;
+import com.reactnativenavigation.react.NavigationApplication;
 
 import java.io.File;
 import java.util.Arrays;
@@ -73,6 +74,7 @@ public class MainApplication extends NavigationApplication implements Applicatio
     @Override
     public void onCreate() {
         super.onCreate();
+        NavigationCommandsHandler.registerActivityClass(AppGroupMessageActivity.class, "chat.GroupChat");
 
         if (!isAppProcess()) {
             Log.i(TAG, "service application create");

@@ -106,6 +106,11 @@ public class VerifyActivity extends AccountActivity implements TextView.OnEditor
                         im.start();
 
                         Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
+                        intent.putExtra("navigatorID", MainActivity.generateNavigatorID());
+                        String screenInstanceID = MainActivity.generateScreenInstanceID();
+                        String navigatorEventID = screenInstanceID + "_events";
+                        intent.putExtra("screenInstanceID", screenInstanceID);
+                        intent.putExtra("navigatorEventID", navigatorEventID);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         BusProvider.getInstance().post(new LoginSuccessEvent());

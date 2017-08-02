@@ -121,29 +121,6 @@ var app = {
             }
             Navigation.push(event.navigatorID, params);
         });
-
-        RCTDeviceEventEmitter.addListener('create_group_android', function(event) {
-            console.log("create group android:", event);
-
-            var params = {
-                screen:{
-                    title:"选择成员",
-                    screen:"group.GroupSelectMember",
-                    navigatorStyle:{
-                        tabBarHidden:true
-                    },
-                    leftButton: {
-                        id:"back",
-                    },
-                },
-                passProps:{
-                    users:event.users
-                },
-            };
-            Navigation.startSingleScreenApp(params);
-        });
-        
-
     
 
         RCTDeviceEventEmitter.addListener('group_setting', function(event) {
@@ -164,50 +141,20 @@ var app = {
             Navigation.push(event.navigatorID, params);
         });
 
-
-        
-        RCTDeviceEventEmitter.addListener('group_setting_android', function(event) {
-            console.log("group setting android event:", event);
-
-            self.store.dispatch(setGroup(event.group));
-
-            var params = {
-                screen:{
-                    title:"聊天信息",
-                    screen:"group.GroupSetting",
-                    navigatorStyle:{
-                        tabBarHidden:true
-                    },
-                    leftButton: {
-                        id:"back",
-                    },
-                },
-                passProps:{
-                    contacts:event.contacts
-                },
-            };
-            Navigation.startSingleScreenApp(params);            
-        });
-
         
         RCTDeviceEventEmitter.addListener('open_setting', function(event) {
             console.log("open setting:", event)
             var params = {
-                screen:{
-                    title:"设置",
-                    screen:"app.Setting",
-                    navigatorStyle:{
-                        tabBarHidden:true
-                    },
-                    leftButton: {
-                        id:"back",
-                    },
+                title:"设置",
+                screen:"app.Setting",
+                navigatorStyle:{
+                    tabBarHidden:true
                 },
                 passProps:{
                     connectState:event.connectState,
                 },
             };
-            Navigation.startSingleScreenApp(params);            
+            Navigation.push(event.navigatorID, params);            
         });
         
     },

@@ -59,10 +59,6 @@ public class ContextualMenu extends TitleBar implements LeftButtonOnClickListene
         return true;
     }
 
-    @Override
-    public void onSideMenuButtonClick() {
-        // nothing
-    }
 
     @Override
     public void onClick(int index) {
