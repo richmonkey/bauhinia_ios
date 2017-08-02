@@ -15,13 +15,23 @@
 
 #import "RCCManager.h"
 #import <React/RCTEventDispatcher.h>
+#import "RCCNavigationController.h"
 
 @interface MGroupMessageViewController ()<MessageViewControllerUserDelegate>
 
 @end
 
 @implementation MGroupMessageViewController
-
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge {
+    self = [super init];
+    if (self) {
+        self.currentUID = [[passProps objectForKey:@"currentUID"] longLongValue];
+        self.groupID = [[passProps objectForKey:@"groupID"] longLongValue];
+        self.groupName = [passProps objectForKey:@"groupName"];
+        self.hidesBottomBarWhenPushed = YES;
+    }
+    return self;
+}
 - (void)viewDidLoad {
     
     self.userDelegate = self;
@@ -134,7 +144,13 @@
     
     
     NSArray *contacts = [self getContacts];
-    NSDictionary *body = @{@"group":g, @"contacts":contacts, @"navigatorID":self.navigatorID};
+    NSDictionary *profile = @{@"uid":@([Token instance].uid),
+                              @"gobelieveToken":[Token instance].accessToken};
+    RCCNavigationController *nav = (RCCNavigationController*)self.navigationController;
+    NSDictionary *body = @{@"group":g,
+                           @"contacts":contacts,
+                           @"profile":profile,
+                           @"navigatorID":nav.componentID};
     
     RCTBridge *bridge = [[RCCManager sharedIntance] getBridge];
 

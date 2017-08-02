@@ -27,6 +27,7 @@
 #import "Conversation.h"
 #import "RCCManager.h"
 #import <React/RCTEventDispatcher.h>
+#import "RCCNavigationController.h"
 
 #define kConversationCellHeight         68
 
@@ -51,7 +52,6 @@
     if (self) {
         self.filteredArray =  [NSMutableArray array];
         self.conversations = [NSMutableArray array];
-        self.navigatorID = passProps[@"navigatorID"];
     }
     return self;
 }
@@ -235,7 +235,7 @@
     NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
     [manager.requestSerializer setValue:auth forHTTPHeaderField:@"Authorization"];
     
-    NSString *path = [NSString stringWithFormat:@"groups/%lld", groupID];
+    NSString *path = [NSString stringWithFormat:@"client/groups/%lld", groupID];
     [manager GET:path
        parameters:nil
          progress:nil
@@ -437,10 +437,12 @@
         [users addObject:@{@"id":@([Token instance].uid), @"uid":@([Token instance].uid), @"name":name}];
     }
     
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:users forKey:@"users"];
+    NSDictionary *profile = @{@"uid":@([Token instance].uid),
+                            @"gobelieveToken":[Token instance].accessToken};
     
-    NSDictionary *body = @{@"navigatorID":self.navigatorID,
+    RCCNavigationController *nav = (RCCNavigationController*)self.navigationController;
+    NSDictionary *body = @{@"navigatorID":nav.componentID,
+                           @"profile":profile,
                            @"users":users};
     
     RCTBridge *bridge = [[RCCManager sharedIntance] getBridge];
@@ -570,7 +572,6 @@
         msgController.groupName = con.name;
         
         msgController.currentUID = [Profile instance].uid;
-        msgController.navigatorID = self.navigatorID;
         
         msgController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:msgController animated: YES];

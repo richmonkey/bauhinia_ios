@@ -15,14 +15,9 @@
 #import "Token.h"
 #import "AppDelegate.h"
 #import "UserDB.h"
-
-#import "ProfileViewController.h"
-
 #import "UIView+Toast.h"
 #import "UIApplication+Util.h"
-
-#import <React/RCTEventDispatcher.h>
-#import "RCCManager.h"
+#import "MainTabBarController.h"
 
 @interface CheckVerifyCodeController ()
 
@@ -139,14 +134,10 @@
 
 
 -(void) verifySuccess{
-    RCTBridge *bridge = [[RCCManager sharedIntance] getBridge];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-
-    NSDictionary *token = @{@"uid":@([Token instance].uid),
-                            @"gobelieveToken":[Token instance].accessToken};
-    NSDictionary *body = @{@"token":token};
-    [bridge.eventDispatcher sendAppEventWithName:@"open_app_main" body:body];
-
+    UITabBarController *tabController = [[MainTabBarController alloc] init];
+    AppDelegate *delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    delegate.tabBarController = tabController;
+    delegate.window.rootViewController = tabController;
 }
 
 -(void) showContactButton{

@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RCCTabBarController.h"
 
-@interface MainTabBarController : RCCTabBarController
+
+@interface MainTabBarController : UITabBarController
 
 @end

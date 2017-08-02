@@ -6,21 +6,24 @@
 #import <objc/runtime.h>
 #import "RCCTitleViewHelper.h"
 
-#import "AskPhoneNumberViewController.h"
 
-#import "SettingViewController.h"
-#import "CustomStatusViewController.h"
-#import "ConversationViewController.h"
-#import "ContactListTableViewController.h"
-#import "MGroupMessageViewController.h"
-#import "Profile.h"
 
 @implementation RCCNavigationController
 
 NSString const *CALLBACK_ASSOCIATED_KEY = @"RCCNavigationController.CALLBACK_ASSOCIATED_KEY";
 NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSOCIATED_ID";
 
-- (instancetype)initWithProps:(NSDictionary *)props children:(NSArray *)children globalProps:(NSDictionary*)globalProps bridge:(RCTBridge *)bridge
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController componentID:(NSString*)id{
+    self = [super initWithRootViewController:rootViewController];
+    if (self) {
+        self.componentID = id;
+        self.delegate = self;
+        self.navigationBar.translucent = NO; // default
+    }
+    return self;
+}
+
+- (instancetype)initWithProps:(NSDictionary *)props globalProps:(NSDictionary*)globalProps bridge:(RCTBridge *)bridge
 {
     NSString *component = props[@"component"];
     if (!component) return nil;
@@ -101,16 +104,10 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
         }
         
         UIViewController *viewController;
-        if ([component isEqualToString:@"chat.GroupChat"]) {
-            MGroupMessageViewController *ctrl = [[MGroupMessageViewController alloc] init];
-            
-            ctrl.isShowUserName = YES;
-            ctrl.groupID = [passProps[@"groupID"] longLongValue];
-            ctrl.groupName = passProps[@"name"];
-            ctrl.currentUID = [Profile instance].uid;
-            ctrl.navigatorID = passProps[@"navigatorID"];
-            ctrl.hidesBottomBarWhenPushed = YES;
-            viewController = ctrl;
+        
+        Class cls = [[RCCManager sharedIntance] getComponent:component];
+        if (cls) {
+            viewController = [[cls alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:nil bridge:bridge];
         } else {
             viewController = [[RCCViewController alloc] initWithComponent:component passProps:passProps navigatorStyle:navigatorStyle globalProps:nil bridge:bridge];
         }

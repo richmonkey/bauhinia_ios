@@ -97,6 +97,7 @@
     [self loadConversationData];
 
     //scroll tableview to bottom
+    [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
 }
 

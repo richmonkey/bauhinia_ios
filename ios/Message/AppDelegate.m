@@ -24,7 +24,7 @@
 #import "SettingViewController.h"
 #import "CustomStatusViewController.h"
 #import "ConversationViewController.h"
-
+#import "MGroupMessageViewController.h"
 #import "RCCManager.h"
 
 #import <React/RCTBundleURLProvider.h>
@@ -40,6 +40,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     //配置im server地址
     NSString *path = [self getDocumentPath];
     NSString *peerPath = [NSString stringWithFormat:@"%@/peer", path];
@@ -62,22 +63,35 @@
     [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
     [[IMService instance] startRechabilityNotifier];
     
-
-    [[RCCManager sharedIntance] registerComponent:@"app.Contact" class:[ContactListTableViewController class]];
-    [[RCCManager sharedIntance] registerComponent:@"app.Conversation" class:[ConversationViewController class]];
-    [[RCCManager sharedIntance] registerComponent:@"app.Status" class:[CustomStatusViewController class]];
-    [[RCCManager sharedIntance] registerComponent:@"app.Setting" class:[SettingViewController class]];
-    [[RCCManager sharedIntance] registerComponent:@"app.Authentication" class:[AskPhoneNumberViewController class]];
+   [[RCCManager sharedIntance] registerComponent:@"chat.GroupChat" class:[MGroupMessageViewController class]];
     
+
     
     //创建bridge对象
     NSURL *jsCodeLocation;
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
     // jsCodeLocation = [NSURL URLWithString:@"http://192.168.0.101:8081/index.ios.bundle"];
-    
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = [UIColor whiteColor];
     [[RCCManager sharedInstance] initBridgeWithBundleURL:jsCodeLocation];
+
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    application.statusBarHidden = NO;
+    
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    
+    Token *token = [Token instance];
+    if (token.accessToken) {
+        UITabBarController *tabController = [[MainTabBarController alloc] init];
+        self.tabBarController = tabController;
+        self.window.rootViewController = tabController;
+    }else{
+        AskPhoneNumberViewController *ctl = [[AskPhoneNumberViewController alloc] init];
+        UINavigationController * navCtr = [[UINavigationController alloc] initWithRootViewController: ctl];
+        self.window.rootViewController = navCtr;
+    }
+    
+    [self.window makeKeyAndVisible];
 
     return YES;
 }

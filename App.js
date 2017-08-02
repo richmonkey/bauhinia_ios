@@ -84,120 +84,31 @@ var app = {
         Navigation.registerComponent('group.GroupMemberRemove', () => GroupMemberRemove, this.store, Provider);
     },
 
-
-    //应用主界面
-    openMain: function() {
-        Navigation.startTabBasedApp({
-            tabs: [
-                {
-                    screen: 'app.Status',
-                    icon: require("./img/TabBarIconStatusOff.png"),
-                    selectedIcon: require('./img/TabBarIconStatusOn.png'),
-                    label:"状态",
-                    title:"状态",
-                    navigatorStyle: {
-                        
-                    },
-                },
-            
-                {
-                    screen: 'app.Contact',
-                    icon: require("./img/tabbar_contacts.png"),
-                    label:"联系人",
-                    title:"联系人",
-                    navigatorStyle: {
-                        
-                    },
-                },
-
-                {
-                    screen: 'app.Conversation',
-                    icon: require("./img/TabBarIconChatsOff.png"),
-                    selectedIcon: require("./img/TabBarIconChatsOn.png"),
-                    label:"对话",
-                    title:"对话",
-                    navigatorStyle: {
-                        
-                    },
-                },
-
-                {
-                    screen: 'app.Setting',
-                    icon: require("./img/TabBarIconSettingsOff.png"),
-                    selectedIcon: require("./img/TabBarIconSettingsOn.png"),
-                    label:"设置",
-                    title:"设置",
-                    navigatorStyle: {
-                        
-                    },
-                },
-            ],
-            passProps: {
-                app:this
-            }
-        });        
-    },
-
-    openLogin: function() {
-        Navigation.startSingleScreenApp({
-            screen: {
-                screen: 'app.Authentication',
-                title: '手机验证',
-                navigatorStyle: {
-                },
-            },
-            passProps: {
-                app:this
-            }
-        });
-    },
     
     startApp: function() {
-
         console.log("start app...");
-        
         this.store = createStore(appReducer);
         this.registerScreens();
-
         var self = this;
-
-        if (Platform.OS == 'ios') {
-            var Token = NativeModules.TokenManager;
-            Token.getToken()
-                 .then((t) => {
-                     console.log("token:", t);
-                     if (t.uid && t.gobelieveToken) {
-                         this.store.dispatch({type:"set_profile", profile:t});
-                         this.openMain();
-                     } else {
-                         return Promise.reject("non token exists");
-                     }
-                 })
-                 .catch((e) => {
-                     console.log("err:", e);
-                     this.openLogin();
-                 });
-        } else {
-            console.log("get token...");
-            var Token = NativeModules.TokenManager;
-            Token.getToken()
-                 .then((t) => {
-                     console.log("token:", t);
-                     if (t.uid && t.gobelieveToken) {
-                         this.store.dispatch({type:"set_profile", profile:t});
-                     } else {
-                         return Promise.reject("non token exists");
-                     }
-                 })
-                 .catch((e) => {
-                     console.log("err:", e);
-                });
-        }
-
-        
+      
+        var Token = NativeModules.TokenManager;
+        Token.getToken()
+             .then((t) => {
+                 console.log("token:", t);
+                 if (t.uid && t.gobelieveToken) {
+                     this.store.dispatch({type:"set_profile", profile:t});
+                     
+                 } else {
+                     return Promise.reject("non token exists");
+                 }
+             })
+             .catch((e) => {
+                 console.log("err:", e);
+             });
         
         RCTDeviceEventEmitter.addListener('create_group', function(event) {
             console.log("create group:", event);
+            self.store.dispatch({type:"set_profile", profile:event.profile});
             var params = {
                 title:"选择成员",
                 screen:"group.GroupSelectMember",
@@ -233,15 +144,11 @@ var app = {
         });
         
 
-        RCTDeviceEventEmitter.addListener('open_app_main', function(event) {
-            console.log("open app main:", event);
-            self.store.dispatch({type:"set_profile", profile:event.token});
-            self.openMain();
-        });
+    
 
         RCTDeviceEventEmitter.addListener('group_setting', function(event) {
             console.log("group setting event:", event);
-
+            self.store.dispatch({type:"set_profile", profile:event.profile});
             self.store.dispatch(setGroup(event.group));
 
             var params = {

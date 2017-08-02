@@ -4,5 +4,5 @@
 
 
 @interface RCCManagerModule : NSObject <RCTBridgeModule>
-+(void)cancelAllRCCViewControllerReactTouches;
+
 @end

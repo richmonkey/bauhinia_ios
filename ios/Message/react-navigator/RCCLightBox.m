@@ -64,8 +64,6 @@ const NSInteger kLightBoxTag = 0x101010;
         
         [self.reactView.contentView.layer addObserver:self forKeyPath:@"frame" options:0 context:nil];
         [self.reactView.contentView.layer addObserver:self forKeyPath:@"bounds" options:0 context:NULL];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRNReload) name:RCTJavaScriptWillStartLoadingNotification object:nil];
     }
     return self;
 }
@@ -82,7 +80,6 @@ const NSInteger kLightBoxTag = 0x101010;
 
 -(void)removeAllObservers
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.reactView.contentView.layer removeObserver:self forKeyPath:@"frame" context:nil];
     [self.reactView.contentView.layer removeObserver:self forKeyPath:@"bounds" context:NULL];
 }
@@ -92,12 +89,6 @@ const NSInteger kLightBoxTag = 0x101010;
     [self removeAllObservers];
 }
 
--(void)onRNReload
-{
-    [self removeAllObservers];
-    [self removeFromSuperview];
-    self.reactView = nil;
-}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {

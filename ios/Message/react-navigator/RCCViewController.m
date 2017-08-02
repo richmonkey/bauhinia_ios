@@ -1,7 +1,5 @@
 #import "RCCViewController.h"
 #import "RCCNavigationController.h"
-#import "RCCTabBarController.h"
-#import "MainTabBarController.h"
 
 #import <React/RCTRootView.h>
 #import "RCCManager.h"
@@ -21,6 +19,11 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 @property (nonatomic, strong) NSDictionary *originalNavBarImages;
 @property (nonatomic, strong) UIImageView *navBarHairlineImageView;
 @property (nonatomic, weak) id <UIGestureRecognizerDelegate> originalInteractivePopGestureDelegate;
+
+@property(nonatomic) NSMutableDictionary *props;
+@property(nonatomic) RCTBridge *bridge;
+@property(nonatomic, copy) NSString *component;
+
 @end
 
 @implementation RCCViewController
@@ -32,57 +35,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     return _navBarHairlineImageView;
 }
 
-+ (UIViewController*)controllerWithLayout:(NSDictionary *)layout globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge
-{
-    UIViewController* controller = nil;
-    if (!layout) return nil;
-    
-    // get props
-    if (!layout[@"props"]) return nil;
-    if (![layout[@"props"] isKindOfClass:[NSDictionary class]]) return nil;
-    NSDictionary *props = layout[@"props"];
-    
-    // get children
-    if (!layout[@"children"]) return nil;
-    if (![layout[@"children"] isKindOfClass:[NSArray class]]) return nil;
-    NSArray *children = layout[@"children"];
-    
-    // create according to type
-    NSString *type = layout[@"type"];
-    if (!type) return nil;
-    
-    // regular view controller
-    if ([type isEqualToString:@"ViewControllerIOS"])
-    {
-        controller = [[RCCViewController alloc] initWithProps:props children:children globalProps:globalProps bridge:bridge];
-    }
-    
-    // navigation controller
-    if ([type isEqualToString:@"NavigationControllerIOS"])
-    {
-        controller = [[RCCNavigationController alloc] initWithProps:props children:children globalProps:globalProps bridge:bridge];
-    }
-    
-    // tab bar controller
-    if ([type isEqualToString:@"TabBarControllerIOS"])
-    {
-//        controller = [[RCCTabBarController alloc] initWithProps:props children:children globalProps:globalProps bridge:bridge];
-        
-        controller = [[MainTabBarController alloc] initWithProps:props children:children globalProps:globalProps bridge:bridge];
-    }
-    
-    
-    // register the controller if we have an id
-    NSString *componentId = props[@"id"];
-    if (controller && componentId)
-    {
-        [[RCCManager sharedInstance] registerController:controller componentId:componentId componentType:type];
-    }
-    
-    return controller;
-}
-
-- (instancetype)initWithProps:(NSDictionary *)props children:(NSArray *)children globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge
+- (instancetype)initWithProps:(NSDictionary *)props globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge
 {
     NSString *component = props[@"component"];
     if (!component) return nil;
@@ -92,14 +45,17 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     
     NSMutableDictionary *mergedProps = [NSMutableDictionary dictionaryWithDictionary:globalProps];
     [mergedProps addEntriesFromDictionary:passProps];
-    
-    RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:bridge moduleName:component initialProperties:mergedProps];
-    if (!reactView) return nil;
+
     
     self = [super init];
-    if (!self) return nil;
-    
-    [self commonInit:reactView navigatorStyle:navigatorStyle props:props];
+
+    if (self) {
+        self.props = mergedProps;
+        self.bridge = bridge;
+        self.component = component;
+        self.navigatorStyle = [NSMutableDictionary dictionaryWithDictionary:navigatorStyle];
+        [self setStyleOnInit];
+    }
     
     return self;
 }
@@ -109,31 +65,37 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     NSMutableDictionary *mergedProps = [NSMutableDictionary dictionaryWithDictionary:globalProps];
     [mergedProps addEntriesFromDictionary:passProps];
     
-    RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:bridge moduleName:component initialProperties:mergedProps];
-    if (!reactView) return nil;
-    
     self = [super init];
-    if (!self) return nil;
-    
-    [self commonInit:reactView navigatorStyle:navigatorStyle props:passProps];
-    
+    if (self) {
+        self.props = mergedProps;
+        self.bridge = bridge;
+        self.component = component;
+        self.navigatorStyle = [NSMutableDictionary dictionaryWithDictionary:navigatorStyle];
+        [self setStyleOnInit];
+    }
+
+
     return self;
 }
 
-- (void)commonInit:(RCTRootView*)reactView navigatorStyle:(NSDictionary*)navigatorStyle props:(NSDictionary*)props
+
+- (void)loadView
 {
+    RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:self.bridge moduleName:self.component initialProperties:self.props];
     self.view = reactView;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
     self.edgesForExtendedLayout = UIRectEdgeNone; // default
     self.automaticallyAdjustsScrollViewInsets = NO; // default
     
-    self.navigatorStyle = [NSMutableDictionary dictionaryWithDictionary:navigatorStyle];
-    
-    [self setStyleOnInit];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRNReload) name:RCTJavaScriptWillStartLoadingNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCancelReactTouches) name:RCCViewControllerCancelReactTouchesNotification object:nil];
 }
+
+
 
 - (void)dealloc
 {
@@ -141,11 +103,6 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     self.view = nil;
 }
 
--(void)onRNReload
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    self.view = nil;
-}
 
 -(void)onCancelReactTouches
 {

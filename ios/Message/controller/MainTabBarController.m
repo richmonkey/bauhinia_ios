@@ -21,6 +21,8 @@
 #import <gobelieve/GroupMessageHandler.h>
 #import <gobelieve/CustomerMessageHandler.h>
 #import <gobelieve/SyncKeyHandler.h>
+#import "RCCNavigationController.h"
+#import "RCCManager.h"
 
 @interface MainTabBarController ()
 @property(nonatomic)dispatch_source_t refreshTimer;
@@ -50,42 +52,45 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    CustomStatusViewController* conversationController = [[CustomStatusViewController alloc] init];
-//    conversationController.title = @"状态";
-//    
-//    conversationController.tabBarItem.title = @"状态";
-//    conversationController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconStatusOn"];
-//    conversationController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconStatusOff"];
-//    UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:conversationController];
-//    
-//    ContactListTableViewController* contactViewController = [[ContactListTableViewController alloc] init];
-//    contactViewController.title = @"通讯录";
-//    
-//    contactViewController.tabBarItem.title = @"通讯录";
-//    contactViewController.tabBarItem.selectedImage = [UIImage imageNamed:@"IconContactTemplate"];
-//    contactViewController.tabBarItem.image = [UIImage imageNamed:@"IconContactTemplate"];
-//
-//    UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:contactViewController];
-//    
-//    ConversationViewController* msgController = [[ConversationViewController alloc] init];
-//    msgController.title = @"对话";
-//    msgController.tabBarItem.title = @"对话";
-//    msgController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChatsOn"];
-//    msgController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
-//    
-//    UINavigationController *nav3 = [[UINavigationController alloc] initWithRootViewController:msgController];
-//    
-//    SettingViewController* settingController = [[SettingViewController alloc] init];
-//    settingController.title = @"设置";
-//    settingController.tabBarItem.title = @"设置";
-//    settingController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconSettingsOn"];
-//    settingController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconSettingsOff"];
-//    
-//    UINavigationController *nav4 = [[UINavigationController alloc] initWithRootViewController:settingController];
-//    
-//    
-//    self.viewControllers = [NSArray arrayWithObjects: nav1, nav2, nav3, nav4, nil];
-//    self.selectedIndex = 2;
+    CustomStatusViewController* conversationController = [[CustomStatusViewController alloc] init];
+    conversationController.title = @"状态";
+    
+    conversationController.tabBarItem.title = @"状态";
+    conversationController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconStatusOn"];
+    conversationController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconStatusOff"];
+    UINavigationController *nav1 = [[RCCNavigationController alloc] initWithRootViewController:conversationController componentID:@"_navigatorID1"];
+    [[RCCManager sharedInstance] registerController:nav1 componentId:@"_navigatorID1" componentType:@"NavigationControllerIOS"];
+    
+    ContactListTableViewController* contactViewController = [[ContactListTableViewController alloc] init];
+    contactViewController.title = @"通讯录";
+    
+    contactViewController.tabBarItem.title = @"通讯录";
+    contactViewController.tabBarItem.selectedImage = [UIImage imageNamed:@"IconContactTemplate"];
+    contactViewController.tabBarItem.image = [UIImage imageNamed:@"IconContactTemplate"];
+    
+    UINavigationController *nav2 = [[RCCNavigationController alloc] initWithRootViewController:contactViewController componentID:@"_navigatorID2"];
+    [[RCCManager sharedInstance] registerController:nav2 componentId:@"_navigatorID2" componentType:@"NavigationControllerIOS"];
+    
+    ConversationViewController* msgController = [[ConversationViewController alloc] init];
+    msgController.title = @"对话";
+    msgController.tabBarItem.title = @"对话";
+    msgController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconChatsOn"];
+    msgController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconChatsOff"];
+    
+    UINavigationController *nav3 = [[RCCNavigationController alloc] initWithRootViewController:msgController componentID:@"_navigatorID3"];
+    [[RCCManager sharedInstance] registerController:nav3 componentId:@"_navigatorID3" componentType:@"NavigationControllerIOS"];
+    
+    SettingViewController* settingController = [[SettingViewController alloc] init];
+    settingController.title = @"设置";
+    settingController.tabBarItem.title = @"设置";
+    settingController.tabBarItem.selectedImage = [UIImage imageNamed:@"TabBarIconSettingsOn"];
+    settingController.tabBarItem.image = [UIImage imageNamed:@"TabBarIconSettingsOff"];
+    
+    UINavigationController *nav4 = [[RCCNavigationController alloc] initWithRootViewController:settingController componentID:@"_navigatorID4"];
+    [[RCCManager sharedInstance] registerController:nav4 componentId:@"_navigatorID4" componentType:@"NavigationControllerIOS"];
+    
+    self.viewControllers = [NSArray arrayWithObjects: nav1, nav2, nav3, nav4, nil];
+    self.selectedIndex = 2;
     
     dispatch_queue_t queue = dispatch_get_main_queue();
     self.refreshTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);

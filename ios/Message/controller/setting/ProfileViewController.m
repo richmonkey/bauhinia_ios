@@ -63,45 +63,31 @@
     [self.nameTextField setText: self.name];
     
     if ([Profile instance].avatarURL) {
-        
         NSURL *headUrl = [[NSURL alloc] initWithString:[Profile instance].avatarURL];
         [self.headView sd_setImageWithURL:headUrl];
     
-    }else{
+    } else{
         [self.headView setImage:[UIImage imageNamed:@"BrdtAttachContact"]];
     }
-    if (self.editorState == ProfileEditorSettingType) {
-        
-        [self.netStatusArea setHidden:NO];
-        
-        if ([Profile instance].state.length > 0) {
-            
-            [self.statusBtn setTitle:[Profile instance].state forState:UIControlStateNormal];
-        }else{
-            [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
-        }
-        
-        UIBarButtonItem *item = [[UIBarButtonItem alloc]
-                           initWithTitle:@"设置"
-                           style:UIBarButtonItemStylePlain
-                           target:self
-                           action:@selector(setting)];
-        [self.navigationItem setLeftBarButtonItem:item];
-        
-        [self.scrollView setScrollEnabled:YES];
-        
-    }else if(self.editorState == ProfileEditorLoginingType){
-        [self.navigationItem setHidesBackButton:YES];
-        [self.netStatusArea setHidden: YES];
-        self.nextButton = [[UIBarButtonItem alloc]
-                           initWithTitle:@"下一步"
-                           style:UIBarButtonItemStylePlain
-                           target:self
-                           action:@selector(nextAction)];
-        [self.navigationItem setRightBarButtonItem:self.nextButton];
-        [self.nextButton setEnabled:YES];
-        [self.scrollView setScrollEnabled:NO];
+    
+    [self.netStatusArea setHidden:NO];
+    
+    if ([Profile instance].state.length > 0) {
+        [self.statusBtn setTitle:[Profile instance].state forState:UIControlStateNormal];
+    } else{
+        [self.statusBtn setTitle:@"~没有状态~" forState:UIControlStateNormal];
     }
+    
+    UIBarButtonItem *item = [[UIBarButtonItem alloc]
+                             initWithTitle:@"设置"
+                             style:UIBarButtonItemStylePlain
+                             target:self
+                             action:@selector(setting)];
+    [self.navigationItem setLeftBarButtonItem:item];
+    
+    [self.scrollView setScrollEnabled:YES];
+    
+
     
     [self.scrollView setContentSize:CGSizeMake(0, self.view.frame.size.height)];
     [self.scrollView setClipsToBounds:YES];
@@ -153,19 +139,7 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void) nextAction{
-    [self.view makeToast:@"您可以在设置>个人资讯 重新设置" duration:1.0f position:@"center"];
-    [self performSelector:@selector(jumpToMainController) withObject:nil afterDelay:1.3f];
-}
 
--(void) jumpToMainController{
-    UITabBarController *tabController = [[MainTabBarController alloc] init];
-    UINavigationController *navCtl = [[UINavigationController alloc] initWithRootViewController:tabController];
-    navCtl.navigationBarHidden = YES;
-    AppDelegate *delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    delegate.tabBarController = tabController;
-    delegate.window.rootViewController = navCtl;
-}
 
 -(IBAction) editorNameAction:(id)sender{
     

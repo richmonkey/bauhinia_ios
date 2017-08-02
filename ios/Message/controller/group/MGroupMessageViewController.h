@@ -8,6 +8,7 @@
 
 #import <gobelieve/GroupMessageViewController.h>
 
+@class RCTBridge;
 @interface MGroupMessageViewController : GroupMessageViewController
-@property(nonatomic, copy) NSString *navigatorID;
+- (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge;
 @end
