@@ -13,9 +13,9 @@
 #import "Profile.h"
 #import "ContactDB.h"
 
-#import "RCCManager.h"
+#import <ReactNativeNavigation/RCCManager.h>
+#import <ReactNativeNavigation/RCCNavigationController.h>
 #import <React/RCTEventDispatcher.h>
-#import "RCCNavigationController.h"
 
 @interface MGroupMessageViewController ()<MessageViewControllerUserDelegate>
 

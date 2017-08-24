@@ -11,6 +11,7 @@
     "react": "^15.4.2",
     "react-mixin": "^3.0.5",
     "react-native": "^0.42.0",
+    "react-native-navigation": "github:richmonkey/react-native-navigation", 
     "react-native-alphabetlistview": "^0.2.0",
     "react-native-dialogs": "0.0.19",
     "react-native-image-picker": "^0.26.1",

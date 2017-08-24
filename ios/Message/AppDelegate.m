@@ -25,7 +25,7 @@
 #import "CustomStatusViewController.h"
 #import "ConversationViewController.h"
 #import "MGroupMessageViewController.h"
-#import "RCCManager.h"
+#import <ReactNativeNavigation/RCCManager.h>
 
 #import <React/RCTBundleURLProvider.h>
 

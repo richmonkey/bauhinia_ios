@@ -25,9 +25,10 @@
 #import "Token.h"
 #import "NewCount.h"
 #import "Conversation.h"
-#import "RCCManager.h"
+#import <ReactNativeNavigation/RCCManager.h>
+#import <ReactNativeNavigation/RCCNavigationController.h>
 #import <React/RCTEventDispatcher.h>
-#import "RCCNavigationController.h"
+
 
 #define kConversationCellHeight         68
 
@@ -544,7 +545,13 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    Conversation *con = [self.conversations objectAtIndex:indexPath.row];
+    Conversation *con;
+    if (!self.searchDC.active) {
+        con = [self.conversations objectAtIndex:indexPath.row];
+    } else {
+        con = [self.filteredArray objectAtIndex:indexPath.row];
+    }
+    
     if (con.type == CONVERSATION_PEER) {
         User *rmtUser = [[UserDB instance] loadUser: con.cid];
         

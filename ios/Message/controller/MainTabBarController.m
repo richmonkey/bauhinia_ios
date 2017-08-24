@@ -21,8 +21,8 @@
 #import <gobelieve/GroupMessageHandler.h>
 #import <gobelieve/CustomerMessageHandler.h>
 #import <gobelieve/SyncKeyHandler.h>
-#import "RCCNavigationController.h"
-#import "RCCManager.h"
+#import <ReactNativeNavigation/RCCNavigationController.h>
+#import <ReactNativeNavigation/RCCManager.h>
 
 @interface MainTabBarController ()
 @property(nonatomic)dispatch_source_t refreshTimer;

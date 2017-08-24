@@ -1,12 +1,16 @@
 rootProject.name = 'Bauhinia'
-include ':react-native-dialogs'
-project(':react-native-dialogs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-dialogs/android')
-include ':react-native-image-picker'
-project(':react-native-image-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-picker/android')
-include ':app', ':imsdk', ':imkit', ':pushsdk', ':asynctcp', ':react-native-navigation'
-
+include ':app', ':imsdk', ':imkit', ':pushsdk', ':asynctcp'
 
 project(':asynctcp').projectDir = new File('im/asynctcp')
 project(':imsdk').projectDir = new File('im/imsdk')
 project(':imkit').projectDir = new File('im/imkit')
-project(':react-native-navigation').projectDir = new File('react-native-navigation/android/app')
+
+include ':react-native-dialogs'
+project(':react-native-dialogs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-dialogs/android')
+
+include ':react-native-navigation'
+project(':react-native-navigation').projectDir = new File('../node_modules/react-native-navigation/android/app')
+
+
+
+

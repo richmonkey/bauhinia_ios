@@ -162,7 +162,6 @@ dependencies {
     compile project(':imsdk')
     compile project(':pushsdk')
     compile project(':react-native-dialogs')
-    compile project(':react-native-image-picker')
     compile project(':react-native-navigation')
 }
 

@@ -83,13 +83,6 @@
 		6D0D76A9196910130058DECF /* IMContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D76A8196910130058DECF /* IMContact.m */; };
 		6D11C72F19BB3D3F00E67389 /* APITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D11C72E19BB3D3F00E67389 /* APITests.m */; };
 		6D16BECD1E744B1A0091B3BA /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D16BECA1E744B0E0091B3BA /* libRCTText.a */; };
-		6D25A7771E6EB7E60095E785 /* RCCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25A7701E6EB7E60095E785 /* RCCManager.m */; };
-		6D25A7781E6EB7E60095E785 /* RCCManagerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25A7721E6EB7E60095E785 /* RCCManagerModule.m */; };
-		6D25A7791E6EB7E60095E785 /* RCCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25A7741E6EB7E60095E785 /* RCCNavigationController.m */; };
-		6D25A77A1E6EB7E60095E785 /* RCCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25A7761E6EB7E60095E785 /* RCCViewController.m */; };
-		6D25A77E1E6EB7FE0095E785 /* RCCLightBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25A77D1E6EB7FE0095E785 /* RCCLightBox.m */; };
-		6D25A7841E6EDF7B0095E785 /* RCCTitleViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25A7811E6EDF7B0095E785 /* RCCTitleViewHelper.m */; };
-		6D25A7851E6EDF7B0095E785 /* RCTHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25A7831E6EDF7B0095E785 /* RCTHelpers.m */; };
 		6D2CA5791D58634000AF929B /* MGroupMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */; };
 		6D32393C19BD79C7005A00B2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D32393B19BD79C7005A00B2 /* AVFoundation.framework */; };
 		6D76215B197ECA9300B690D7 /* LevelDB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D76214F197ECA9300B690D7 /* LevelDB.mm */; };
@@ -111,6 +104,7 @@
 		6DA7C4E01E208FF500CC2AC0 /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA7C4DF1E208FF500CC2AC0 /* Conversation.m */; };
 		6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4419C4BE1D0027A658 /* Token.m */; };
 		6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0AA4719C4BF340027A658 /* APIRequest.m */; };
+		6DB218A01F4E84EC00F50334 /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB2189D1F4E844A00F50334 /* libReactNativeNavigation.a */; };
 		6DB5B76C1C0858090057D55E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB5B76A1C0858090057D55E /* Localizable.strings */; };
 		6DEC54ED1E2B5DC30018CF94 /* libToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DEC54EC1E2B5DC30018CF94 /* libToast.a */; };
 /* End PBXBuildFile section */
@@ -298,6 +292,20 @@
 			remoteGlobalIDString = 2D2A28611D9B046600D4039D;
 			remoteInfo = "RCTSettings-tvOS";
 		};
+		6DB2189C1F4E844A00F50334 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6DB218981F4E844A00F50334 /* ReactNativeNavigation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D8AFADBD1BEE6F3F00A4592D;
+			remoteInfo = ReactNativeNavigation;
+		};
+		6DB2189E1F4E846600F50334 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6DB218981F4E844A00F50334 /* ReactNativeNavigation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D8AFADBC1BEE6F3F00A4592D;
+			remoteInfo = ReactNativeNavigation;
+		};
 		6DEC54EA1E2B5D830018CF94 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */;
@@ -426,20 +434,6 @@
 		6D0D76A8196910130058DECF /* IMContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMContact.m; sourceTree = "<group>"; };
 		6D11C72E19BB3D3F00E67389 /* APITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APITests.m; sourceTree = "<group>"; };
 		6D16BEC41E744B0E0091B3BA /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		6D25A76F1E6EB7E60095E785 /* RCCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCManager.h; sourceTree = "<group>"; };
-		6D25A7701E6EB7E60095E785 /* RCCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCManager.m; sourceTree = "<group>"; };
-		6D25A7711E6EB7E60095E785 /* RCCManagerModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCManagerModule.h; sourceTree = "<group>"; };
-		6D25A7721E6EB7E60095E785 /* RCCManagerModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCManagerModule.m; sourceTree = "<group>"; };
-		6D25A7731E6EB7E60095E785 /* RCCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCNavigationController.h; sourceTree = "<group>"; };
-		6D25A7741E6EB7E60095E785 /* RCCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCNavigationController.m; sourceTree = "<group>"; };
-		6D25A7751E6EB7E60095E785 /* RCCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCViewController.h; sourceTree = "<group>"; };
-		6D25A7761E6EB7E60095E785 /* RCCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCViewController.m; sourceTree = "<group>"; };
-		6D25A77C1E6EB7FE0095E785 /* RCCLightBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCLightBox.h; sourceTree = "<group>"; };
-		6D25A77D1E6EB7FE0095E785 /* RCCLightBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCLightBox.m; sourceTree = "<group>"; };
-		6D25A7801E6EDF7B0095E785 /* RCCTitleViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCTitleViewHelper.h; sourceTree = "<group>"; };
-		6D25A7811E6EDF7B0095E785 /* RCCTitleViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCTitleViewHelper.m; sourceTree = "<group>"; };
-		6D25A7821E6EDF7B0095E785 /* RCTHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTHelpers.h; sourceTree = "<group>"; };
-		6D25A7831E6EDF7B0095E785 /* RCTHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTHelpers.m; sourceTree = "<group>"; };
 		6D2CA5771D58634000AF929B /* MGroupMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGroupMessageViewController.h; path = group/MGroupMessageViewController.h; sourceTree = "<group>"; };
 		6D2CA5781D58634000AF929B /* MGroupMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGroupMessageViewController.m; path = group/MGroupMessageViewController.m; sourceTree = "<group>"; };
 		6D32393B19BD79C7005A00B2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -466,6 +460,7 @@
 		6DB0AA4419C4BE1D0027A658 /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6DB0AA4619C4BF340027A658 /* APIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIRequest.h; sourceTree = "<group>"; };
 		6DB0AA4719C4BF340027A658 /* APIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIRequest.m; sourceTree = "<group>"; };
+		6DB218981F4E844A00F50334 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		6DB5B76B1C0858090057D55E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6DB5B76D1C0858180057D55E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToast.xcodeproj; path = "../node_modules/react-native-toast/ios/RCTToast.xcodeproj"; sourceTree = "<group>"; };
@@ -479,6 +474,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DB218A01F4E84EC00F50334 /* libReactNativeNavigation.a in Frameworks */,
 				6D16BECD1E744B1A0091B3BA /* libRCTText.a in Frameworks */,
 				6D8860751E7438CA001F2ED4 /* libReact.a in Frameworks */,
 				6D8860761E7438CA001F2ED4 /* libyoga.a in Frameworks */,
@@ -528,6 +524,8 @@
 		10E11047B0B1460C91D970F0 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				6DB218981F4E844A00F50334 /* ReactNativeNavigation.xcodeproj */,
+				6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */,
 				6D16BEC41E744B0E0091B3BA /* RCTText.xcodeproj */,
 				6D8860621E743883001F2ED4 /* RCTSettings.xcodeproj */,
 				6D8860591E743868001F2ED4 /* RCTAnimation.xcodeproj */,
@@ -640,7 +638,6 @@
 		21798F8A194E9C4600B67C1F = {
 			isa = PBXGroup;
 			children = (
-				6DEC54E51E2B5D6B0018CF94 /* Projects */,
 				21798F9C194E9C4600B67C1F /* Message */,
 				21798FB5194E9C4600B67C1F /* MessageTests */,
 				21798F95194E9C4600B67C1F /* Frameworks */,
@@ -688,7 +685,6 @@
 			isa = PBXGroup;
 			children = (
 				6D82170B1DAE545F00E49821 /* Message.entitlements */,
-				6D25A76E1E6EB7E60095E785 /* react-navigator */,
 				6DB0AA4219C4BDF10027A658 /* request */,
 				2105646619695FC0008D3A83 /* controller */,
 				2105647A19695FC0008D3A83 /* third-party */,
@@ -822,35 +818,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6D25A76E1E6EB7E60095E785 /* react-navigator */ = {
-			isa = PBXGroup;
-			children = (
-				6D25A77F1E6EDF7B0095E785 /* Helpers */,
-				6D25A77C1E6EB7FE0095E785 /* RCCLightBox.h */,
-				6D25A77D1E6EB7FE0095E785 /* RCCLightBox.m */,
-				6D25A76F1E6EB7E60095E785 /* RCCManager.h */,
-				6D25A7701E6EB7E60095E785 /* RCCManager.m */,
-				6D25A7711E6EB7E60095E785 /* RCCManagerModule.h */,
-				6D25A7721E6EB7E60095E785 /* RCCManagerModule.m */,
-				6D25A7731E6EB7E60095E785 /* RCCNavigationController.h */,
-				6D25A7741E6EB7E60095E785 /* RCCNavigationController.m */,
-				6D25A7751E6EB7E60095E785 /* RCCViewController.h */,
-				6D25A7761E6EB7E60095E785 /* RCCViewController.m */,
-			);
-			path = "react-navigator";
-			sourceTree = "<group>";
-		};
-		6D25A77F1E6EDF7B0095E785 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				6D25A7801E6EDF7B0095E785 /* RCCTitleViewHelper.h */,
-				6D25A7811E6EDF7B0095E785 /* RCCTitleViewHelper.m */,
-				6D25A7821E6EDF7B0095E785 /* RCTHelpers.h */,
-				6D25A7831E6EDF7B0095E785 /* RCTHelpers.m */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
 		6D2CA5761D58613300AF929B /* group */ = {
 			isa = PBXGroup;
 			children = (
@@ -954,12 +921,12 @@
 			path = request;
 			sourceTree = "<group>";
 		};
-		6DEC54E51E2B5D6B0018CF94 /* Projects */ = {
+		6DB218991F4E844A00F50334 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6DEC54E61E2B5D830018CF94 /* RCTToast.xcodeproj */,
+				6DB2189D1F4E844A00F50334 /* libReactNativeNavigation.a */,
 			);
-			name = Projects;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		6DEC54E71E2B5D830018CF94 /* Products */ = {
@@ -989,6 +956,7 @@
 			);
 			dependencies = (
 				6D16BECF1E74612B0091B3BA /* PBXTargetDependency */,
+				6DB2189F1F4E846600F50334 /* PBXTargetDependency */,
 			);
 			name = Message;
 			productName = Message;
@@ -1090,6 +1058,10 @@
 				{
 					ProductGroup = 6D8860391E743835001F2ED4 /* Products */;
 					ProjectRef = 6D8860381E743835001F2ED4 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 6DB218991F4E844A00F50334 /* Products */;
+					ProjectRef = 6DB218981F4E844A00F50334 /* ReactNativeNavigation.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1269,6 +1241,13 @@
 			remoteRef = 6D8860691E743883001F2ED4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		6DB2189D1F4E844A00F50334 /* libReactNativeNavigation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeNavigation.a;
+			remoteRef = 6DB2189C1F4E844A00F50334 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		6DEC54EB1E2B5D830018CF94 /* libRCTToast.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1383,18 +1362,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2157372F19850D550071C2EF /* ContactIMUserTableViewCell.m in Sources */,
-				6D25A77A1E6EB7E60095E785 /* RCCViewController.m in Sources */,
 				48731E1F19C5F17900FF8A7C /* CheckVerifyCodeController.m in Sources */,
 				21150CA2196F78A5009DE9DE /* Profile.m in Sources */,
-				6D25A7841E6EDF7B0095E785 /* RCCTitleViewHelper.m in Sources */,
 				6DB0AA4C19C4BF340027A658 /* APIRequest.m in Sources */,
 				6D776315197B6D6B0090D511 /* MainTabBarController.m in Sources */,
 				21798FA7194E9C4600B67C1F /* AppDelegate.m in Sources */,
-				6D25A7781E6EB7E60095E785 /* RCCManagerModule.m in Sources */,
 				6DA7C4E01E208FF500CC2AC0 /* Conversation.m in Sources */,
 				489933DF19C47F5200C56F2D /* UIImage+UKImage.m in Sources */,
 				489933DE19C47F5200C56F2D /* UIImage+Resize.m in Sources */,
-				6D25A7851E6EDF7B0095E785 /* RCTHelpers.m in Sources */,
 				21150CA5196F78C8009DE9DE /* PhoneNumber.m in Sources */,
 				6D0D76A9196910130058DECF /* IMContact.m in Sources */,
 				21FCF22E1968659C00DFA0E5 /* ContactDB.m in Sources */,
@@ -1412,7 +1387,6 @@
 				489933D819C44E3300C56F2D /* CotactMeViewController.m in Sources */,
 				2142CB69196268860002E4A9 /* pinyin.c in Sources */,
 				210564CC19695FC1008D3A83 /* ConversationViewController.m in Sources */,
-				6D25A77E1E6EB7FE0095E785 /* RCCLightBox.m in Sources */,
 				217F2C30196D62680064F478 /* MessageShowThePotraitViewController.m in Sources */,
 				21FCF2381968E6A500DFA0E5 /* MessageConversationCell.m in Sources */,
 				210564C619695FC1008D3A83 /* ContactViewController.m in Sources */,
@@ -1423,9 +1397,7 @@
 				48860CA019CFC8FF00DF7466 /* UIApplication+Util.m in Sources */,
 				21798FA3194E9C4600B67C1F /* main.m in Sources */,
 				2157372919850AEE0071C2EF /* ContactHeaderView.m in Sources */,
-				6D25A7771E6EB7E60095E785 /* RCCManager.m in Sources */,
 				21150CA1196F78A5009DE9DE /* UserDB.m in Sources */,
-				6D25A7791E6EB7E60095E785 /* RCCNavigationController.m in Sources */,
 				48338B3719C5266A00BA2392 /* DownLoadSettingViewController.m in Sources */,
 				6DB0AA4519C4BE1D0027A658 /* Token.m in Sources */,
 				6D032FDF1AA9B31D004AA39F /* Group.m in Sources */,
@@ -1457,6 +1429,11 @@
 			isa = PBXTargetDependency;
 			name = React;
 			targetProxy = 6D16BECE1E74612B0091B3BA /* PBXContainerItemProxy */;
+		};
+		6DB2189F1F4E846600F50334 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ReactNativeNavigation;
+			targetProxy = 6DB2189E1F4E846600F50334 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
