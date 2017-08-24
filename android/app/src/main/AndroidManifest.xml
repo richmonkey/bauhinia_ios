@@ -174,6 +174,9 @@
             android:name=".activity.VerifyActivity"
             android:label="@string/title_activity_verify" />
 
+        <activity android:name=".NavigationActivity"
+            android:theme="@style/NoActionBar"/>
+
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>
 

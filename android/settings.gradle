@@ -13,4 +13,5 @@ project(':react-native-navigation').projectDir = new File('../node_modules/react
 
 
 
-
+include ':react-native-image-picker'
+project(':react-native-image-picker').projectDir = new File('../node_modules/react-native-image-picker/android')

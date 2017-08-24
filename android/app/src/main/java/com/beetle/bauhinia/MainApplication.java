@@ -34,6 +34,7 @@ import com.beetle.push.IMsgReceiver;
 
 import com.facebook.react.ReactPackage;
 import com.google.code.p.leveldb.LevelDB;
+import com.imagepicker.ImagePickerPackage;
 import com.reactnativenavigation.controllers.NavigationCommandsHandler;
 import com.reactnativenavigation.react.NavigationApplication;
 
@@ -65,6 +66,7 @@ public class MainApplication extends NavigationApplication implements Applicatio
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
                 new BauhinaPackage(),
+                new ImagePickerPackage(),
                 new ReactNativeDialogsPackage()
         );
     }
@@ -73,6 +75,7 @@ public class MainApplication extends NavigationApplication implements Applicatio
     public void onCreate() {
         super.onCreate();
         NavigationCommandsHandler.registerActivityClass(AppGroupMessageActivity.class, "chat.GroupChat");
+        NavigationCommandsHandler.setCustomNavigationActivityClass(NavigationActivity.class);
 
         if (!isAppProcess()) {
             Log.i(TAG, "service application create");

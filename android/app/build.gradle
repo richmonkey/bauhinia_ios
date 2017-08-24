@@ -163,6 +163,8 @@ dependencies {
     compile project(':pushsdk')
     compile project(':react-native-dialogs')
     compile project(':react-native-navigation')
+    compile project(':react-native-image-picker')
+
 }
 
 android {
