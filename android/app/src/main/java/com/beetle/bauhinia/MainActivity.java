@@ -210,7 +210,14 @@ public class MainActivity extends BaseActivity implements IMServiceObserver,
             state = "未链接";
         }
 
+        WritableMap profile = Arguments.createMap();
+        profile.putDouble("uid", Profile.getInstance().uid);
+        profile.putString("gobelieveToken", Token.getInstance().accessToken);
+        profile.putString("avatar", Profile.getInstance().avatar);
+        profile.putString("name", Profile.getInstance().name);
+
         WritableMap map = Arguments.createMap();
+        map.putMap("profile", profile);
         map.putString("connectState", state);
         map.putString("navigatorID", navigatorID);
         ReactContext reactContext = NavigationApplication.instance.getReactGateway().getReactContext();

@@ -144,6 +144,7 @@ var app = {
         
         RCTDeviceEventEmitter.addListener('open_setting', function(event) {
             console.log("open setting:", event)
+            self.store.dispatch({type:"set_profile", profile:event.profile});
             var params = {
                 title:"设置",
                 screen:"app.Setting",
