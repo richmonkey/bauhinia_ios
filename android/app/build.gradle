@@ -157,7 +157,7 @@ dependencies {
     compile 'bz.tsung.android:objectify:1.+'
     compile "com.facebook.react:react-native:+"
     compile 'joda-time:joda-time:2.5'
-    compile files('src/main/jniLibs/zbar.jar')
+    compile 'com.yanzhenjie.zbar:zbar:1.0.0'
     compile project(':imkit')
     compile project(':imsdk')
     compile project(':pushsdk')
