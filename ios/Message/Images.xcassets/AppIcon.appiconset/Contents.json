@@ -43,7 +43,7 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "ios120副本.png",
+      "filename" : "ios120.png",
       "scale" : "2x"
     },
     {
@@ -51,6 +51,12 @@
       "idiom" : "iphone",
       "filename" : "ios180.png",
       "scale" : "3x"
+    },
+    {
+      "size" : "1024x1024",
+      "idiom" : "ios-marketing",
+      "filename" : "me1024.png",
+      "scale" : "1x"
     }
   ],
   "info" : {
